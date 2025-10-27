@@ -1,0 +1,57 @@
+@startuml
+title Warehouse Inventory State Transition Diagram
+
+hide empty description
+
+state InventoryPart {
+
+  [*] --> OnOrder : PRE_ORDER
+  OnOrder --> OnOrder : PENDING
+  OnOrder --> OnOrder : BACK_ORDERED
+  OnOrder --> InTransit : SHIPPED
+  OnOrder --> InTransit : INBOUND
+
+  InTransit --> Available : RECEIVING
+  InTransit --> Cancelled : CANCELLED
+
+  state Available {
+    [*] --> Stocked : RECEIVING
+    Stocked --> Stocked : STOCK_ROTATION / RELOCATE
+    Stocked --> Stocked : STORAGE / WAREHOUSE_MANAGEMENT
+    Stocked --> Reserved : ALLOCATE_RESERVE
+    Stocked --> Reserved : ORDER_FULFILLMENT
+    Stocked --> Stocked : LOCATE
+    Stocked --> Inspection : RETURNS_ACTIONS
+    Stocked --> Unavailable : CYCLE_COUNT (variance)
+    Stocked --> Stocked : REPLENISH
+  }
+
+  Available --> Unavailable : DISPOSITION / MAINTENANCE
+
+  Reserved --> Processing : ORDER_FULFILLMENT
+  Reserved --> Available : CANCELLED (Reservation)
+
+  Processing --> Outbound : OUTBOUND / SHIPPED
+  Processing --> InTransit : DELIVERED (to local hub)
+
+  Outbound --> Sold : SHIPPED
+  Outbound --> Sold : DELIVERED
+
+  state Inspection {
+    [*] --> Return_Core : RETURNED_ORDER
+    Return_Core --> Return_Core : REVERSE_LOGISTICS
+    Return_Core --> Available : RECEIVING (Passed)
+    Return_Core --> Scrap : DISPOSITION
+  }
+
+  Unavailable --> Scrap : NO_LONGER_AVAILABLE
+  Unavailable --> Available : CYCLE_COUNT (Correction)
+  Unavailable --> Unavailable : CONSOLIDATE_INVENTORY
+
+  Scrap --> [*] : DISPOSITION (Final)
+
+  Cancelled --> [*] : CANCELLED (Final)
+  Sold --> [*] : DELIVERED (Final)
+
+}
+@enduml

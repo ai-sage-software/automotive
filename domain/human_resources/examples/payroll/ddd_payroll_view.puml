@@ -1,0 +1,62 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam roundcorner 10
+skinparam defaultFontName Arial
+skinparam componentStyle rectangle
+
+title Financial & Payments Domain Map: Payroll Sub-Context
+
+rectangle "External Systems" as External #E0E0E0
+
+package "HR & Master Data Domain" as HRMaster #DDDDFF {
+    component "Party Identifier" as PID
+    component "Tax Configuration" as TAX
+}
+
+package "5. Financial & Payments" as FIN #FFCCCC {
+    package "5A. Payroll Processing" as PAYROLL #FF9999 {
+        component "PayrollRun Service" as PR_SVC
+        component "PayrollCycle Service" as PC_SVC
+        component "Calculation Engine" as CE_SVC
+        component "Events Service (R/W)" as PE_SVC
+        component "PayStub Service" as PS_SVC
+    }
+
+    package "5B. Payroll Data Models" as PAY_DATA #FFDDDD {
+        component "PayrollRun (AR)" as PR_AR
+        component "PayrollCycle (AR)" as PC_AR
+        component "PayrollEvent (AR)" as PE_AR
+        component "PayStub (AR)" as PS_AR
+        component "Payment Amount" as PA_MODEL
+    }
+}
+
+' --------------------------------------------------------------------------
+' DEPENDENCIES (External & Cross-Domain)
+' --------------------------------------------------------------------------
+
+' Corrected Dependencies:
+PR_SVC .up.> PID : queries employee scope
+PC_SVC .up.> TAX : retrieves rules/rates
+
+' Other Dependencies (Keep for context)
+PR_SVC .down.> PC_SVC : initiates cycles (1:N)
+PC_SVC .left.> PE_SVC : requests raw events
+CE_SVC .right.> PE_SVC : reads input / writes results
+PS_SVC .up.> PC_SVC : retrieves final payment/events
+
+' Data Model Dependencies (Services persist data)
+PR_SVC .right.> PR_AR
+PC_SVC .right.> PC_AR
+PE_SVC .right.> PE_AR
+PS_SVC .right.> PS_AR
+PC_SVC .right.> PA_MODEL
+
+' Input Data
+External .left.> PE_SVC : Time & Attendance Events
+
+' Output Data/Action
+PC_SVC .up.> External : Payment Instruction (Bank/ACH)
+PS_SVC .down.> External : PayStub Delivery (Employee)
+
+@enduml

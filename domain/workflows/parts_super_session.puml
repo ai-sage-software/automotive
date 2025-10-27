@@ -1,0 +1,41 @@
+@startuml
+title Part Supersession Lifecycle (Using ProductStageTypes)
+
+hide empty description
+
+state SupersessionLifecycle {
+
+  ' The OLD part's lifecycle (superseded part)
+  state OldPartLifecycle #LightBlue {
+    ACTIVE : Current Part Number is fully supported.
+
+    ACTIVE --> PENDING_OBSOLESCENCE : Supersession Initiated (SUPERSEDE action)
+    PENDING_OBSOLESCENCE : Inventory remains active until consumption strategy is enforced.
+
+    PENDING_OBSOLESCENCE --> USE_UP_STRATEGY : Consumption Type: USE_UP (ProductConsumptionTypes)
+    PENDING_OBSOLESCENCE --> SCRAP_STRATEGY : Consumption Type: SCRAP (ProductConsumptionTypes)
+
+    USE_UP_STRATEGY --> SUPERSEDED : Stock consumed to zero.
+    SCRAP_STRATEGY --> SCRAP_DISPOSE : Stock written off (SCRAP_DISPOSE action).
+  }
+
+  ' The NEW part's lifecycle (superseding part)
+  state NewPartLifecycle #LightGreen {
+    [*] --> PRE_PRODUCTION : Initial Design/Sourcing
+    PRE_PRODUCTION --> PRELIMINARY_SUPERSESSION : Design Lock / Initial Builds
+    PRELIMINARY_SUPERSESSION --> FINAL_SUPERSESSION : Production Release (Supersession Effective Date)
+    FINAL_SUPERSESSION --> ACTIVE : New part is now the standard, supported part.
+  }
+
+  ' Final Transition and Cleanup States
+  SUPERSEDED : Old Part's status after depletion. (isSuperseded = true)
+  SUPERSEDED --> DECOMMISSIONED : Inventory record removed from active catalog.
+
+  DECOMMISSIONED --> SCRAP_DISPOSE : Final system cleanup/audit.
+
+  ' Links to end states
+  SCRAP_DISPOSE --> [*]
+  ACTIVE -[hidden]-> [*] : Normal Lifecycle Continues
+
+}
+@enduml

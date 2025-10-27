@@ -1,0 +1,55 @@
+@startuml
+title PriceList Lifecycle State Diagram
+
+hide empty description
+
+state PriceList_Lifecycle {
+
+  [*] --> INITIALIZED : CREATED
+
+  ' Initialization and Validation Flow
+  state Initialization #LightYellow {
+    INITIALIZED --> INITIALIZING : Submitted to System
+    INITIALIZING --> FAILED : System Error
+    INITIALIZING --> PROCESSED : Initialization Complete
+    PROCESSED --> VALIDATED : System Validation Complete
+  }
+
+  ' Active/Approval Flow
+  VALIDATED --> SUBMITTED : Ready for Review
+  SUBMITTED --> QUALIFIED : Approved / QC Passed (Final Approval)
+
+  ' Operational States
+  state Operational #LightGreen {
+    QUALIFIED --> ACTIVE : ACCESS_ALLOWED
+    ACTIVE --> ACTIVE : UPDATED (Price Changes)
+    ACTIVE --> ACTIVE : PROCESSED (Used in a Transaction)
+  }
+
+  ' Access Control
+  ACTIVE --> ACCESS_DENIED : Security/Rules Change (Temporarily Blocked)
+  ACCESS_DENIED --> ACTIVE : ACCESS_ALLOWED
+
+  ' Retirement and Deletion Flow
+  state Retirement #LightCoral {
+    ACTIVE --> CLOSED : End of Effective Period / Policy Change
+    CLOSED --> CANCELLED : Official Removal from Use
+    CLOSED --> DEAD : Archival Period Ended
+
+    CANCELLED --> CLOSED : Reverted to Closed Status (e.g., error in cancellation)
+    CANCELLED --> DEAD : Final Removal
+
+    DEAD --> DELETE_SOFT : Archival Deletion Request
+    DELETE_SOFT --> DELETE_HARD : Permanent Removal
+
+    FAILED --> CLOSED : Manual Closure after Failure
+
+    ' Direct deletion paths for quick errors
+    INITIALIZED --> DEAD : Quick Delete
+    VALIDATED --> CANCELLED : Pre-Operational Cancellation
+  }
+
+  DELETE_HARD --> [*]
+
+}
+@enduml

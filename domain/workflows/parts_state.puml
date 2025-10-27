@@ -1,0 +1,69 @@
+@startuml
+title Part Processing State Diagram
+
+hide empty description
+
+state Inbound_Flow #LightGreen {
+    [*] --> RECEIVE
+    RECEIVE --> DOCUMENT_RECEIPT : Record Receipt
+    DOCUMENT_RECEIPT --> INSPECT_INBOUND : Inspection Required
+    DOCUMENT_RECEIPT --> QUARANTINE_INBOUND : Hold for Review
+    INSPECT_INBOUND --> PUTAWAY : Inspection Passed
+    INSPECT_INBOUND --> REFURBISH_REPAIR : Needs Rework
+    INSPECT_INBOUND --> SCRAP_DISPOSE : Failed Inspection
+    QUARANTINE_INBOUND --> PUTAWAY : Hold Cleared
+    PUTAWAY --> AVAILABLE_STOCK
+}
+
+state Outbound_Flow #LightBlue {
+    AVAILABLE_STOCK --> PICK : Order Allocated
+    PICK --> PACK : Gathered
+    PACK --> LABEL_TAG : Packaged
+    LABEL_TAG --> KIT_ASSEMBLE : Needs Kitting/Assembly
+    KIT_ASSEMBLE --> VALUE_ADDED_SERVICE : Final V.A.S.
+    VALUE_ADDED_SERVICE --> STAGE_SHIPMENT : Ready for Loading
+
+    STAGE_SHIPMENT --> LOAD_SHIPMENT : Loading Processed
+    STAGE_SHIPMENT --> CROSS_DOCK : Direct Transfer (No Storage)
+
+    LOAD_SHIPMENT --> DOCUMENT_SHIPMENT : Loaded
+    DOCUMENT_SHIPMENT --> SHIP : Shipment Recorded
+}
+
+state Returns_Disposal_Flow #LightCoral {
+    [*] --> RETURN_RECEIVE : Return Initiated
+    RETURN_RECEIVE --> RETURN_INSPECT : Received for Review
+    RETURN_INSPECT --> RETURN_PUTAWAY : Inspection Passed (Resalable)
+    RETURN_INSPECT --> REFURBISH_REPAIR : Inspection Failed (Repairable)
+    RETURN_INSPECT --> DISASSEMBLE : Salvage Parts
+    RETURN_INSPECT --> SCRAP_DISPOSE : Unsalvageable
+
+    DISASSEMBLE --> AVAILABLE_STOCK : Parts Recovered
+    RETURN_PUTAWAY --> AVAILABLE_STOCK : Back to Stock
+}
+
+state LifeCycle_End_States {
+    SCRAP_DISPOSE --> [*] : Final Disposal
+    SHIP --> DELIVERED : Final State
+
+    state Obsolescence {
+        [*] --> SUPERSEDE : Decision Made
+        SUPERSEDE --> SUPERSEDED : Inventory Status Change
+        SUPERSEDED --> SCRAP_DISPOSE : Final Action
+    }
+}
+
+' Transition between main blocks
+CROSS_DOCK --> DOCUMENT_SHIPMENT : Transfer Complete
+REFURBISH_REPAIR --> PUTAWAY : Rework Complete
+
+' Transition to the final states
+SHIP -[hidden]-> DELIVERED
+DELIVERED -[hidden]-> [*]
+SCRAP_DISPOSE -[hidden]-> [*]
+
+' Alias for the general state of inventory
+state AVAILABLE_STOCK as "IN_STOCK / AVAILABLE"
+AVAILABLE_STOCK -[hidden]-> Outbound_Flow
+
+@enduml
