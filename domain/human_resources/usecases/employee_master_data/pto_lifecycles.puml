@@ -1,0 +1,69 @@
+@startuml
+hide empty description
+scale 1.2
+
+title HR Time-Off Request Status Workflow
+
+' --- 1. Consolidated Styling Block ---
+skinparam state {
+    BorderColor black
+    FontColor black
+    ' Apply color based on the Stereotype
+    BackgroundColor<<Initial>> #LightYellow
+    BackgroundColor<<Approval>> #LightSkyBlue
+    BackgroundColor<<Taken>> #LightGreen
+    BackgroundColor<<Final>> #LightGray
+}
+
+' --- 2. State Definitions with Stereotypes ---
+
+' Initial State: DRAFT
+state DRAFT <<Initial>>
+
+' Approval Phase
+state ApprovalPhase <<Approval>> {
+    state PENDING_APPROVAL
+    state APPROVED
+}
+
+' Active Phase
+state SCHEDULED <<Initial>>
+
+' Final Statuses
+state TAKEN <<Taken>>
+state FinalStatus <<Final>> {
+    state DENIED
+    state CANCELED_BY_EMPLOYEE
+    state CANCELED_BY_ADMIN
+}
+
+
+' --- 3. Transitions ---
+
+' Start and Submission
+[*] --> DRAFT : Create Request
+DRAFT --> PENDING_APPROVAL : Submit Request
+
+' Approval/Denial
+PENDING_APPROVAL --> APPROVED : Manager Approves
+PENDING_APPROVAL --> DENIED : Manager Denies
+
+' Scheduling/Taking
+APPROVED --> SCHEDULED : Finalize Details
+SCHEDULED --> TAKEN : Date Arrives/Time Off Taken
+
+' Cancellation Flows
+' Transitions directly to the Final composite state's sub-states
+DRAFT --> CANCELED_BY_EMPLOYEE : Employee Withdraws
+PENDING_APPROVAL --> CANCELED_BY_EMPLOYEE : Employee Withdraws
+PENDING_APPROVAL --> CANCELED_BY_ADMIN : Admin/HR Cancels
+SCHEDULED --> CANCELED_BY_EMPLOYEE : Employee Cancels
+SCHEDULED --> CANCELED_BY_ADMIN : Admin/HR Cancels
+
+' --- 4. Terminal States ---
+DENIED --> [*]
+CANCELED_BY_EMPLOYEE --> [*]
+CANCELED_BY_ADMIN --> [*]
+TAKEN --> [*]
+
+@enduml
