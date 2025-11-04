@@ -1,0 +1,85 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Domain API Specification"
+  description: "API generated from DSL domain ontology."
+  version: "1.0.0"
+components:
+  schemas:
+
+    # ==========================================================
+    # 1. ErrorDetail (The base structure for all API errors)
+    #    Referenced by 401, 404, 500 responses.
+    # ==========================================================
+    ErrorDetail:
+      description: The base standardized error format returned by the API for non-validation errors.
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The time the error occurred (UTC).
+          example: 2025-10-30T13:30:00Z
+        status:
+          type: integer
+          format: int32
+          description: The HTTP status code returned by the server (e.g., 404).
+          example: 404
+        code:
+          type: string
+          description: A unique, system-defined error code for internal lookup (e.g., 'AUTH_001', 'NOT_FOUND_PR').
+          example: NOT_FOUND_RESOURCE
+        message:
+          type: string
+          description: A brief, human-readable summary of the error.
+          example: The requested Personnel Record could not be found.
+        path:
+          type: string
+          description: The request path that generated the error.
+          example: /v1/personnel-records/PR-1234567
+      required:
+        - timestamp
+        - status
+        - code
+        - message
+
+    # ==========================================================
+    # 2. ValidationError (Specific structure for 400 Bad Request)
+    #    Referenced by 400 responses.
+    # ==========================================================
+    ValidationError:
+      description: Error format used for 400 Bad Request responses when input data fails schema validation or business rules.
+      type: object
+      allOf:
+        # Inherits all properties from the base ErrorDetail (timestamp, status, code, message, path)
+        - $ref: '#/components/schemas/ErrorDetail'
+        # Adds the 'errors' array to list specific field failures
+        - type: object
+          properties:
+            errors:
+              type: array
+              description: A list of specific field validation failures.
+              items:
+                $ref: '#/components/schemas/FieldValidationError'
+          required:
+            - errors
+
+    # ==========================================================
+    # 3. FieldValidationError (Schema for individual field failures)
+    #    Referenced by the ValidationError schema.
+    # ==========================================================
+    FieldValidationError:
+      description: Detail about a single field that failed validation.
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field path that failed validation (e.g., 'firstName', 'benefitPlans[0].coverageLevel').
+          example: benefitPlans[0].employeeId
+        problem:
+          type: string
+          description: The specific validation rule that was violated (e.g., 'must be positive', 'required').
+          example: Field must reference an existing, active employee.
+      required:
+        - field
+        - problem
