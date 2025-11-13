@@ -1,0 +1,37 @@
+@startuml
+title Subsidiary Ledger Transaction Lifecycle
+
+hide empty description
+
+state Draft as "Draft\nCreated, details are editable."
+state Submitted as "Submitted\nAwaiting internal authorization."
+state Approved as "Approved\nAuthorized for posting/processing."
+state Posted as "Posted\nRecorded in the Subsidiary Ledger."
+state Reconciled   as "Reconciled\nConfirmed against GL or external data."
+state Voided   as "Voided\nCanceled and removed from flow."
+
+' Initial State
+[*] --> Draft : Create
+
+' Submission and Authorization Flow
+Draft --> Submitted : Submit for Approval
+Draft --> Voided : Cancel Transaction
+
+Submitted --> Approved : Authorize
+Submitted --> Draft : Return for Edit
+
+' Posting
+Approved --> Posted : Execute Posting
+
+' Reconciliation (The key difference for SLT)
+Posted --> Reconciled : Reconcile with GL/Bank
+
+' Error/Reversal Flow
+Approved --> Voided : Void Pre-Posting
+Posted --> Voided : Void After Posting (Reversal Required)
+
+' Revert for Correction
+Voided --> Draft : Reopen/Re-enter
+Reconciled --> Posted : Un-reconcile (High-Privilege Action)
+
+@enduml
