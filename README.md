@@ -2,7 +2,7 @@
 
 ### The Future of Automotive Retail
 
-<img src="ai_sage.png">
+<img src="https://github.com/ai-sage-software/automotive/blob/main/ai_sage.png">
 
 
  <br />
