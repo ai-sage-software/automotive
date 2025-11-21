@@ -6,7 +6,7 @@ Welcome to the **AI Reasoning** project documentation.
 
 [Image of neural network diagram]
 
-This project provides the core infrastructure for executing **complex, multi-step business logic and analytical decision-making** that goes beyond simple database lookups or single-rule checks. It serves as an advanced computational layer, combining data from various domains with analytical models and specialized prompts (from **[ai\_prompt\_mgmt](https://www.google.com/search?q=../ai_prompt_mgmt/README.md)**) to arrive at sophisticated conclusions.
+This project provides the core infrastructure for executing **complex, multi-step business logic and analytical decision-making** that goes beyond simple database lookups or single-rule checks. It serves as an advanced computational layer, combining data from various domains with analytical models and specialized prompts (from **[ai\_prompt\_mgmt](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_prompt_mgmt/README.md)**) to arrive at sophisticated conclusions.
 
 Think of it as the system that answers the platform's toughest "if-then-else" questions that require checking half a dozen different data sources simultaneously.
 
@@ -20,9 +20,9 @@ The primary goal is to **centralize and automate high-value, non-linear analytic
 
 | Domain | Analytical Task | Logic Complexity |
 | :--- | :--- | :--- |
-| **Incentives** | **Stackability Check:** Can a customer use the Military Rebate AND the Student Discount on the same deal? | Requires checking multiple **[Incentive Rules](https://www.google.com/search?q=../domains/incentives_programs/README.md)** and customer profile data. |
-| **Service** | **Predictive Diagnostics:** Based on **[Vehicle State](https://www.google.com/search?q=../domains/telematics.md)**, history, and fault codes, what is the most likely failure mode? | Requires merging time-series data with service history data. |
-| **Finance** | **Anomaly Detection:** Flagging unusual **[Journal Entries](https://www.google.com/search?q=../finance/api/journal_entry_transaction.md)** or **[Payment](https://www.google.com/search?q=../finance/api/payment.md)** patterns for potential fraud. | Requires baseline modeling and continuous comparison against live data. |
+| **Incentives** | **Stackability Check:** Can a customer use the Military Rebate AND the Student Discount on the same deal? | Requires checking multiple **[Incentive Rules](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/incentives_programs/README.md)** and customer profile data. |
+| **Service** | **Predictive Diagnostics:** Based on **[Vehicle State](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/telematics.md)**, history, and fault codes, what is the most likely failure mode? | Requires merging time-series data with service history data. |
+| **Finance** | **Anomaly Detection:** Flagging unusual **[Journal Entries](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/api/journal_entry_transaction.md)** or **[Payment](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/api/payment.md)** patterns for potential fraud. | Requires baseline modeling and continuous comparison against live data. |
 
 -----
 
@@ -39,7 +39,7 @@ This component allows business analysts to define decision logic as a series of 
 
 ### 2\. Analytical Model Hub
 
-This module standardizes the integration of predictive and machine learning models (often sourced from **[ai\_llm\_models](https://www.google.com/search?q=../ai_llm_models/README.md)**) into the decision-making flow.
+This module standardizes the integration of predictive and machine learning models (often sourced from **[ai\_llm\_models](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_llm_models/README.md)**) into the decision-making flow.
 
 * **Scoring Integration:** Allows the system to request a "risk score" or "probability" from a model and use that score as an input for a subsequent logic gate (e.g., if "Fraud Risk Score" \> 0.8, flag the deal).
 
@@ -55,9 +55,9 @@ Because reasoning often requires fresh data from multiple domain endpoints, this
 
 This project is consumed by core transactional domains that need definitive, complex answers to proceed.
 
-* **Sales Closing:** When a **[Deal](https://www.google.com/search?q=../domains/sales_operations/README.md)** is finalized, it calls the Reasoning Engine to ensure all financial and incentive rules have been correctly applied before locking the contract.
-* **Parts Inventory:** Used to optimize stocking levels by analyzing usage patterns, vehicle density, and forecasted **[Repair Orders](https://www.google.com/search?q=../domains/service_parts.md)** to predict future parts demand.
-* **Warranty Claims:** Before the **[Warranty Claim](https://www.google.com/search?q=../domains/warranty_insurance/README.md)** is sent to the manufacturer, the Reasoning Engine verifies internal eligibility, reducing the rejection rate and speeding up dealer reimbursement.
+* **Sales Closing:** When a **[Deal](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations/README.md)** is finalized, it calls the Reasoning Engine to ensure all financial and incentive rules have been correctly applied before locking the contract.
+* **Parts Inventory:** Used to optimize stocking levels by analyzing usage patterns, vehicle density, and forecasted **[Repair Orders](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/service_parts.md)** to predict future parts demand.
+* **Warranty Claims:** Before the **[Warranty Claim](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/warranty_insurance/README.md)** is sent to the manufacturer, the Reasoning Engine verifies internal eligibility, reducing the rejection rate and speeding up dealer reimbursement.
 
 -----
 

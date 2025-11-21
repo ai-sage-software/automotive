@@ -28,8 +28,8 @@ The simulator is built around the concept of a "Digital Twin" for each simulated
 
 This engine maintains the state of every simulated vehicle, ensuring consistency across events.
 
-* **Vehicle State Management:** Tracks the simulated **[Vehicle State](https://www.google.com/search?q=../domains/telematics/README.md)** (mileage, fuel, location, ignition) in a persistence layer to ensure the next event generated is logically possible (e.g., mileage must increase over time).
-* **VIN Generation Logic:** Utilizes standards from the **[Inventory](https://www.google.com/search?q=../domains/inventory_vehicle/README.md)** domain to generate valid, realistic VINs and corresponding **[Model Codes](https://www.google.com/search?q=../domains/inventory_vehicle/README.md)**.
+* **Vehicle State Management:** Tracks the simulated **[Vehicle State](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/telematics/README.md)** (mileage, fuel, location, ignition) in a persistence layer to ensure the next event generated is logically possible (e.g., mileage must increase over time).
+* **VIN Generation Logic:** Utilizes standards from the **[Inventory](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/inventory_vehicle/README.md)** domain to generate valid, realistic VINs and corresponding **[Model Codes](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/inventory_vehicle/README.md)**.
 
 ### 2\. Event Publisher
 
@@ -42,8 +42,8 @@ This module handles the physical output of the simulated data stream.
 
 Pre-built code that executes complex, multi-step actions on a fleet or a single VIN.
 
-* **Service Diagnostics Script:** Simulates a vehicle generating a complex sequence of fault codes that would trigger a **[Service Appointment](https://www.google.com/search?q=../domains/service_parts/README.md)** recommendation.
-* **Logistics Transfer Script:** Simulates a **[Vehicle Transfer Order](https://www.google.com/search?q=../domains/logistics/README.md)** by having a VIN travel between two defined **[Geographic Boundaries](https://www.google.com/search?q=../domains/core_common/README.md)** over a set time period.
+* **Service Diagnostics Script:** Simulates a vehicle generating a complex sequence of fault codes that would trigger a **[Service Appointment](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/service_parts/README.md)** recommendation.
+* **Logistics Transfer Script:** Simulates a **[Vehicle Transfer Order](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/logistics/README.md)** by having a VIN travel between two defined **[Geographic Boundaries](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common/README.md)** over a set time period.
 
 -----
 
@@ -52,8 +52,8 @@ Pre-built code that executes complex, multi-step actions on a fleet or a single 
 The simulation is primarily used to stress-test the **Telematics & Vehicle Events** domain and validate the business logic of its consumers.
 
 * **Telematics Validation:** Confirms that the data ingestion pipeline can handle the volume, velocity, and variety of real-time vehicle data.
-* **Service Logic Testing:** Ensures that automated service alerts (e.g., "Engine Light On") correctly trigger in the **Service** domain, creating the appropriate **[Service Order](https://www.google.com/search?q=../domains/service_parts/README.md)**.
-* **Subscriptions Testing:** Used to verify that activation/deactivation signals from the **[Subscription Management](https://www.google.com/search?q=../domains/subscriptions/README.md)** domain correctly stop or start the data stream for a specific VIN.
+* **Service Logic Testing:** Ensures that automated service alerts (e.g., "Engine Light On") correctly trigger in the **Service** domain, creating the appropriate **[Service Order](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/service_parts/README.md)**.
+* **Subscriptions Testing:** Used to verify that activation/deactivation signals from the **[Subscription Management](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/subscriptions/README.md)** domain correctly stop or start the data stream for a specific VIN.
 
 ### Configuration (YAML Example)
 

@@ -15,7 +15,7 @@ The primary goal of this project is to shift data quality enforcement left—mov
 | Focus Area | Description | Example |
 | :--- | :--- | :--- |
 | **Integrity** | Ensuring data is structurally correct and complete. | A required field (like `Dealer ID`) is never null. |
-| **Consistency** | Ensuring data adheres to shared business rules and standards defined in the **[Core Entities](https://www.google.com/search?q=../core_common/README.md)** domain. | All dates are stored in ISO 8601 format. |
+| **Consistency** | Ensuring data adheres to shared business rules and standards defined in the **[Core Entities](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/core_common/README.md)** domain. | All dates are stored in ISO 8601 format. |
 | **Timeliness** | Ensuring data arrives when expected (e.g., Telematics data within 5 seconds of the event). | Monitored by integrating with **Telematics** streams. |
 
 -----
@@ -28,8 +28,8 @@ The library is built around modular, extensible checks.
 
 These are plug-and-play functions that check data against rules defined by the business domains.
 
-* **Schema Validator:** Checks if an incoming JSON payload conforms to the expected API schema (e.g., the structure of an **[Invoice](https://www.google.com/search?q=../finance/README.md)**).
-* **Reference Data Validator:** Ensures foreign keys and lookup values exist (e.g., verifying that a `Customer ID` in a **[Deal](https://www.google.com/search?q=../domains/sales_operations/README.md)** exists in the **Identity** domain).
+* **Schema Validator:** Checks if an incoming JSON payload conforms to the expected API schema (e.g., the structure of an **[Invoice](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/README.md)**).
+* **Reference Data Validator:** Ensures foreign keys and lookup values exist (e.g., verifying that a `Customer ID` in a **[Deal](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations/README.md)** exists in the **Identity** domain).
 * **Pattern Matcher:** Enforces specific formats (e.g., checking that a VIN matches the 17-character alpha-numeric standard).
 
 ### 2\. Quality Score Engine
@@ -40,9 +40,9 @@ This module takes the results from all Validators and generates a measurable, ag
 
 ### 3\. Anomaly Detection (AI Integration)
 
-Integrated with the **[ai\_reasoning](https://www.google.com/search?q=../ai_reasoning/README.md)** project, this module uses machine learning models to identify deviations from expected data patterns that traditional rules might miss.
+Integrated with the **[ai\_reasoning](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_reasoning/README.md)** project, this module uses machine learning models to identify deviations from expected data patterns that traditional rules might miss.
 
-* **Example:** Flagging a **[Payment Event](https://www.google.com/search?q=../finance/README.md)** where the amount is two standard deviations outside the average for that specific transaction type.
+* **Example:** Flagging a **[Payment Event](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/README.md)** where the amount is two standard deviations outside the average for that specific transaction type.
 
 -----
 
@@ -52,7 +52,7 @@ This tool is designed to be injected into existing data pipelines and domain ser
 
 ### Integration Points
 
-1.  **Ingress Layers:** Applied immediately upon data entry (e.g., when a new **[Sales Lead](https://www.google.com/search?q=../domains/sales_operations/README.md)** is created) to prevent bad data from entering the system.
+1.  **Ingress Layers:** Applied immediately upon data entry (e.g., when a new **[Sales Lead](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations/README.md)** is created) to prevent bad data from entering the system.
 2.  **ETL/Data Warehouse:** Used to cleanse and reconcile data before it is used for reporting and analytics.
 3.  **Cross-Domain:** The Reference Data Validator is critical when two domains interact (e.g., **Service** pulling a part number from the **Parts Master** list).
 

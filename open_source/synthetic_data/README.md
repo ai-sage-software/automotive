@@ -20,8 +20,8 @@ The primary goal is to **decouple development and testing pipelines from sensiti
 
 | Domain | Data Required | Synthetic Data Use |
 | :--- | :--- | :--- |
-| **Testing/QA** | Complex scenarios involving **[Deals](https://www.google.com/search?q=../domains/sales_operations/README.md)**, **[Invoices](https://www.google.com/search?q=../finance/api/invoice.md)**, and **[Warranty Claims](https://www.google.com/search?q=../domains/warranty_insurance/README.md)**. | Running large-scale performance tests and regression tests in safe, non-production environments. |
-| **AI/ML Training** | Thousands of examples of historical **[Service Orders](https://www.google.com/search?q=../domains/service_parts.md)** and customer interactions. | Training **[ai\_llm\_models](https://www.google.com/search?q=../ai_llm_models.md)** without exposing PII, ensuring the models learn accurate patterns. |
+| **Testing/QA** | Complex scenarios involving **[Deals](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations/README.md)**, **[Invoices](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/api/invoice.md)**, and **[Warranty Claims](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/warranty_insurance/README.md)**. | Running large-scale performance tests and regression tests in safe, non-production environments. |
+| **AI/ML Training** | Thousands of examples of historical **[Service Orders](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/service_parts.md)** and customer interactions. | Training **[ai\_llm\_models](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_llm_models.md)** without exposing PII, ensuring the models learn accurate patterns. |
 | **Developer Sandbox** | Representative data for all domain entities (**Vehicle**, **Staff**, **Payment**). | Providing every developer with a complete, fresh, and compliant database copy for local work. |
 
 -----
@@ -34,8 +34,8 @@ The project uses advanced techniques, often integrating with AI/ML methods, to g
 
 This is the core generator, built to replicate real-world data distributions.
 
-* **Distribution Replication:** Analyzes production data to capture statistical relationships (e.g., "75% of **[Sales Leads](https://www.google.com/search?q=../domains/sales_operations.md)** convert within 90 days; 80% of **[Vehicle](https://www.google.com/search?q=../domains/inventory_vehicle.md)** sales are trucks"). The engine then generates synthetic data that adheres to these rules.
-* **Correlations Enforcement:** Ensures logical relationships are maintained (e.g., if a synthetic customer's **[Credit Score](https://www.google.com/search?q=../finance/api/payment_method.md)** is high, their synthetic interest rate must be low).
+* **Distribution Replication:** Analyzes production data to capture statistical relationships (e.g., "75% of **[Sales Leads](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations.md)** convert within 90 days; 80% of **[Vehicle](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/inventory_vehicle.md)** sales are trucks"). The engine then generates synthetic data that adheres to these rules.
+* **Correlations Enforcement:** Ensures logical relationships are maintained (e.g., if a synthetic customer's **[Credit Score](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/finance/api/payment_method.md)** is high, their synthetic interest rate must be low).
 
 ### 2\. Anonymization Pipeline (Pre-Processing)
 
@@ -47,8 +47,8 @@ Used to create a masked version of production data for use in creating the synth
 
 The tools required to generate and load the final data into the testing environments.
 
-* **Domain-Specific Loaders:** Specialized scripts that understand the required schemas for each domain (e.g., ensuring a synthetic **[Personnel Record](https://www.google.com/search?q=../domains/human_resources.md)** links to a synthetic **[Staff Member](https://www.google.com/search?q=../domains/human_resources.md)**).
-* **Volume Control:** Allows users to specify the exact number of records needed (e.g., "Generate 1,000,000 **[Telematics](https://www.google.com/search?q=../domains/telematics.md)** events and 500 **[Deal](https://www.google.com/search?q=../domains/sales_operations.md)** records").
+* **Domain-Specific Loaders:** Specialized scripts that understand the required schemas for each domain (e.g., ensuring a synthetic **[Personnel Record](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/human_resources.md)** links to a synthetic **[Staff Member](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/human_resources.md)**).
+* **Volume Control:** Allows users to specify the exact number of records needed (e.g., "Generate 1,000,000 **[Telematics](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/telematics.md)** events and 500 **[Deal](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/sales_operations.md)** records").
 
 -----
 
@@ -57,8 +57,8 @@ The tools required to generate and load the final data into the testing environm
 This project acts as the primary data supplier for all non-production environments.
 
 * **Testing Environment Refresh:** Automatically executed prior to every major release cycle to ensure QA is testing against a fresh, representative data set.
-* **AI Training Integration:** Training pipelines for **[ai\_llm\_models](https://www.google.com/search?q=../ai_llm_models.md)** ingest data generated here instead of accessing production lakes, guaranteeing privacy compliance.
-* \**Collaboration with **[ai\_data\_quality](https://www.google.com/search?q=../ai_data_quality.md)***: The **`synthetic_data`** output is often checked by the **`ai_data_quality`** validators to ensure the generator itself is producing clean, compliant data.
+* **AI Training Integration:** Training pipelines for **[ai\_llm\_models](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_llm_models.md)** ingest data generated here instead of accessing production lakes, guaranteeing privacy compliance.
+* \**Collaboration with **[ai\_data\_quality](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/ai_data_quality.md)***: The **`synthetic_data`** output is often checked by the **`ai_data_quality`** validators to ensure the generator itself is producing clean, compliant data.
 
 -----
 
@@ -69,7 +69,7 @@ We welcome expertise in differential privacy techniques and generative adversari
 ### Roadmap Focus Areas
 
 * Implementing differential privacy guarantees to mathematically limit the risk of reverse-engineering PII from the synthetic data.
-* Integrating the generator directly with the **[Core/Effective Date](https://www.google.com/search?q=../domains/core_common.md)** component to create time-aware data sets (e.g., simulating a full year of transactions).
+* Integrating the generator directly with the **[Core/Effective Date](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common.md)** component to create time-aware data sets (e.g., simulating a full year of transactions).
 * Building a self-service portal for developers to request customized synthetic data bundles.
 
 <img src="https://github.com/ai-sage-software/automotive/blob/main/ai_sage.png">
