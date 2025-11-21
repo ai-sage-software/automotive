@@ -28,18 +28,18 @@ In the **[`/api`](https://www.google.com/search?q=./api)** folder, you will find
 
 These are the small, reusable pieces of data that appear almost everywhere.
 
-* **[`money_price`](https://www.google.com/search?q=./api/money_price)**: Defines how we store currency. It ensures we always capture the Amount *and* the Currency Code (e.g., `{ "amount": 100.00, "currency": "USD" }`).
-* **[`effective_date`](https://www.google.com/search?q=./api/effective_date)**: Handles time-sensitive data (e.g., "This price is valid *from* Jan 1st *to* Dec 31st").
-* **[`unit_of_measure`](https://www.google.com/search?q=./api/unit_of_measure)**: Standardization for weights and dimensions (kg, lbs, meters, feet) so **Logistics** and **Parts** calculate shipping correctly.
-* **[`enums_types`](https://www.google.com/search?q=./api/enums_types)**: The master lists of fixed options (e.g., Dropdown menu choices, status codes, color codes).
+* **[`money_price`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/money_price)**: Defines how we store currency. It ensures we always capture the Amount *and* the Currency Code (e.g., `{ "amount": 100.00, "currency": "USD" }`).
+* **[`effective_date`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/effective_date)**: Handles time-sensitive data (e.g., "This price is valid *from* Jan 1st *to* Dec 31st").
+* **[`unit_of_measure`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/unit_of_measure)**: Standardization for weights and dimensions (kg, lbs, meters, feet) so **Logistics** and **Parts** calculate shipping correctly.
+* **[`enums_types`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/enums_types)**: The master lists of fixed options (e.g., Dropdown menu choices, status codes, color codes).
 
 ### 2\. Shared Services
 
 These are larger components that provide utility to multiple domains.
 
-* **[`geographic_boundary`](https://www.google.com/search?q=./api/geographic_boundary)**: Defines regions, states, postal codes, and territories. Used by **Sales** for territories and **Logistics** for shipping zones.
-* **[`large_file`](https://www.google.com/search?q=./api/large_file)**: A standard way to handle document attachments (PDFs, Images). Whether it's a Scanned Invoice (**Finance**) or a Picture of a scratch on a car (**Service**), we handle the file storage the same way.
-* **[`lifecycle_event`](https://www.google.com/search?q=./api/lifecycle_event)**: A standardized audit trail. Every time a record changes status (Created → Pending → Approved), we use this structure to record *Who*, *When*, and *Why*.
+* **[`geographic_boundary`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/geographic_boundary)**: Defines regions, states, postal codes, and territories. Used by **Sales** for territories and **Logistics** for shipping zones.
+* **[`large_file`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/large_file)**: A standard way to handle document attachments (PDFs, Images). Whether it's a Scanned Invoice (**Finance**) or a Picture of a scratch on a car (**Service**), we handle the file storage the same way.
+* **[`lifecycle_event`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/lifecycle_event)**: A standardized audit trail. Every time a record changes status (Created → Pending → Approved), we use this structure to record *Who*, *When*, and *Why*.
 
 -----
 
