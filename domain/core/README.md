@@ -1,85 +1,77 @@
+# Core & Common Entities
 
------
+Welcome to the **Core & Common Entities** domain.
 
-# Party & Identity Management (PIM)
+If you are new to the system, think of this domain as the **"Dictionary"** or the **"LEGO Box"** for our platform.
 
-Welcome to the **Party & Identity Management** domain.
-
-If you are new to the system, think of this domain as the **"Global Address Book"** or the **"Passport Office"** for the entire platform.
-
-Whether it is a Customer buying a car, a Vendor selling us parts, a Staff member fixing an engine, or a Dealership franchise—they all start here. This domain is the **Source of Truth** for who everyone is.
+This domain does not process sales or manage employees directly. Instead, it defines the **standards** that everyone else uses. When the **Finance** team records a transaction, they use the `Money` definition found here. When **Logistics** ships a part, they use the `Unit of Measure` defined here. This ensures that "100 Dollars" means the same thing to every part of the system.
 
 -----
 
 ## 📂 How to Navigate This Directory
 
-We have organized the information into four distinct areas to help you find what you need quickly.
+We have organized the information to distinguish between simple data types and complex shared utilities.
 
 | Folder / Path | Description | Best For... |
 | :--- | :--- | :--- |
-| **[`/api`](https://www.google.com/search?q=./api)** | **The Data Definitions.** Contains the schemas for People, Organizations, and their specific Profiles. | Developers looking for field names (e.g., `first_name`, `tax_id`). |
-| **[`/specs`](https://www.google.com/search?q=./specs)** | **The Business Rules.** Documentation explaining how we handle privacy, profile merging, and identity validation. | Product Managers and Business Analysts. |
-| **[`/examples`](https://www.google.com/search?q=./examples)** | **Sample Data.** JSON examples of what a Customer or Dealer profile actually looks like. | Testers and Developers. |
-| **[`/model_diagrams`](https://www.google.com/search?q=./model_diagrams)** | **Visual Maps.** Images showing how generic "Parties" transform into specific roles. | Everyone needing a "Big Picture" view. |
+| **[`/api`](https://www.google.com/search?q=./api)** | **The Definitions.** The schemas for shared objects like Money, Addresses, and Enums. | Developers needing standard field formats. |
+| **[`/specs`](https://www.google.com/search?q=./specs)** | **The Standards.** Documentation on formatting rules (e.g., Date formats, Currency precision). | Architects and QA Engineers. |
+| **[`/examples`](https://www.google.com/search?q=./examples)** | **Snippets.** JSON snippets showing how to embed these core objects into larger documents. | Developers building new features. |
 
 -----
 
-## 🆔 Core Concepts (The API)
+## 🧱 Core Building Blocks (The API)
 
-In the **[`/api`](https://www.google.com/search?q=./api)** folder, you will find the "Aggregate Roots" (AR) that define our users.
+In the **[`/api`](https://www.google.com/search?q=./api)** folder, you will find the shared components used across the 12 other domains.
 
-### 1\. The "Party" Concept
+### 1\. The Value Objects (The Atoms)
 
-In our system, we use a standard industry pattern called "Party." A Party is the abstract parent of any entity we do business with.
+These are the small, reusable pieces of data that appear almost everywhere.
 
-* **[`party`](https://www.google.com/search?q=./api/party)**: The base record. A Party is either an **Individual** (a human) or an **Organization** (a business).
+* **[`money_price`](https://www.google.com/search?q=./api/money_price)**: Defines how we store currency. It ensures we always capture the Amount *and* the Currency Code (e.g., `{ "amount": 100.00, "currency": "USD" }`).
+* **[`effective_date`](https://www.google.com/search?q=./api/effective_date)**: Handles time-sensitive data (e.g., "This price is valid *from* Jan 1st *to* Dec 31st").
+* **[`unit_of_measure`](https://www.google.com/search?q=./api/unit_of_measure)**: Standardization for weights and dimensions (kg, lbs, meters, feet) so **Logistics** and **Parts** calculate shipping correctly.
+* **[`enums_types`](https://www.google.com/search?q=./api/enums_types)**: The master lists of fixed options (e.g., Dropdown menu choices, status codes, color codes).
 
-### 2\. Profiles (Roles)
+### 2\. Shared Services
 
-A "Party" is just a name and an address. A "Profile" is what they *do*.
+These are larger components that provide utility to multiple domains.
 
-* **[`customer_profile`](https://www.google.com/search?q=./api/customer_profile)**: When a Party buys a car, they gain this profile. It holds data like preferences and buying history.
-* **[`dealer_profile`](https://www.google.com/search?q=./api/dealer_profile)**: Represents a franchise location. Contains data like store hours, franchise codes, and certifications.
-* **[`organization_profile`](https://www.google.com/search?q=./api/organization_profile)**: Represents a business entity that *isn't* a dealer (e.g., a Vendor supplying parts or a Bank providing loans).
-* **[`staff`](https://www.google.com/search?q=./api/staff)**: (Linked to HR) Represents a human Party acting as an employee.
-
-### 3\. Location & Discovery
-
-* **[`dealer_locator`](https://www.google.com/search?q=./api/dealer_locator)**: APIs used by the public website to find the nearest dealership based on zip code or GPS.
-* **[`dealer_locator_extended`](https://www.google.com/search?q=./api/dealer_locator_extended)**: Detailed metadata for the locator, including specific services offered (e.g., "Has EV Charging Station," "Body Shop on site").
+* **[`geographic_boundary`](https://www.google.com/search?q=./api/geographic_boundary)**: Defines regions, states, postal codes, and territories. Used by **Sales** for territories and **Logistics** for shipping zones.
+* **[`large_file`](https://www.google.com/search?q=./api/large_file)**: A standard way to handle document attachments (PDFs, Images). Whether it's a Scanned Invoice (**Finance**) or a Picture of a scratch on a car (**Service**), we handle the file storage the same way.
+* **[`lifecycle_event`](https://www.google.com/search?q=./api/lifecycle_event)**: A standardized audit trail. Every time a record changes status (Created → Pending → Approved), we use this structure to record *Who*, *When*, and *Why*.
 
 -----
 
-## 🔄 Key Functionality & Rules
+## 📏 The Rules (The Specs)
 
-The **[`/specs`](https://www.google.com/search?q=./specs)** folder details how we manage these identities.
+The **[`/specs`](https://www.google.com/search?q=./specs)** folder details the strict rules for data consistency.
 
-* **Identity Resolution:** How we ensure we don't have duplicate records for the same person (e.g., "John Smith" vs "J. Smith").
-* **GDPR/CCPA Compliance:** How we handle "Right to be Forgotten" and data privacy requests for Customer Profiles.
-* **Role Assignment:** How a single `Party` (Person) can be both a `Customer` (bought a car) and `Staff` (works here) simultaneously without duplicating their personal data.
+* **Currency Precision:** How many decimal places do we use? (2 for USD, 0 for JPY).
+* **Date/Time Zones:** All `Effective Date` fields must be stored in UTC.
+* **Localization:** How `Textual Detail` handles multiple languages for description fields.
 
 -----
 
-## 🔗 Domain Relationships
+## 🔗 Why This Matters (Dependencies)
 
-[Image of entity relationship diagram customer profile]
+The Core domain has **incoming** dependencies from everywhere, but **outgoing** dependencies to nowhere. This is the foundation.
 
-The Identity domain is the foundation for almost every other part of the system. If PIM goes down, nobody knows who anyone is.
+* **Finance** uses `Money/Price` to ensure ledgers balance.
+* **Inventory** uses `Unit of Measure` to calculate warehouse space.
+* **Identity** uses `Geographic Boundary` to validate addresses.
+* **Service** uses `Large File` to attach diagnostic reports.
 
-* **Sales (Deals):** A Deal cannot exist without linking to a `Customer Profile` (buyer) and a `Dealer Profile` (seller).
-* **Finance (Invoices):** An Invoice requires a `Party` address to know where to send the bill.
-* **Marketing:** Campaigns target specific lists of `Customer Profiles`.
-* **HR:** Personnel records link back to the `Staff` identity established here.
-* **Logistics:** Shipments use `Organization Profiles` to identify Vendor locations.
+[Image of dependency diagram showing Core at the bottom]
 
 -----
 
 ## 🚀 Getting Started Checklist
 
-If you are new to this specific domain, we recommend this order:
+If you are developing a new feature in *any* domain, you should check here first to avoid "reinventing the wheel."
 
-1.  **Understanding the Base:** Look at the **[`party`](https://www.google.com/search?q=./api/party)** schema first. Understand the distinction between an *Individual* and an *Organization*.
-2.  **The Customer View:** Look at **[`customer_profile`](https://www.google.com/search?q=./api/customer_profile)** to see how we extend a basic person with retail data.
-3.  **The Network:** Check out **[`dealer_locator`](https://www.google.com/search?q=./api/dealer_locator)** to see how we map our physical stores geographically.
+1.  **Check `enums_types`**: Before you create a new status code or category list, see if one already exists.
+2.  **Review `money_price`**: Never store money as a simple "Float" or "Integer." Always use the structure defined here.
+3.  **Understand `identifier`**: Read how we generate unique IDs (UUIDs vs. Readable IDs) for system objects.
 
-*For questions regarding Data Privacy or Identity Security, please contact the Data Governance Lead.*
+*For requests to add new Units of Measure or Currency Codes, please submit a Pull Request to the Core Standards Committee.*
