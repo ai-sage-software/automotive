@@ -16,62 +16,62 @@ We have organized the information into four distinct areas to help you find what
 
 | Folder / Path | Description | Best For... |
 | :--- | :--- | :--- |
-| **[`/api`](https://www.google.com/search?q=./api)** | **The Data Definitions.** Contains the technical "blueprints" (schemas) for our financial objects like Invoices, Payments, and Ledgers. | Developers looking for field names and data types. |
-| **[`/specs`](https://www.google.com/search?q=./specs)** | **The Business Rules.** Documentation explaining *how* the system behaves during specific events (e.g., "What happens when we void a check?"). | Product Managers and Business Analysts. |
-| **[`/examples`](https://www.google.com/search?q=./examples)** | **Sample Data.** JSON or YAML files showing real-world examples of what the data looks like. | Testers and Developers needing mock data. |
-| **[`/model_diagrams`](https://www.google.com/search?q=./model_diagrams)** | **Visual Maps.** Images and UML charts showing how these financial pieces fit together. | Everyone needing a "Big Picture" view. |
+| **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api)** | **The Data Definitions.** Contains the technical "blueprints" (schemas) for our financial objects like Invoices, Payments, and Ledgers. | Developers looking for field names and data types. |
+| **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)** | **The Business Rules.** Documentation explaining *how* the system behaves during specific events (e.g., "What happens when we void a check?"). | Product Managers and Business Analysts. |
+| **[`/examples`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/examples)** | **Sample Data.** JSON or YAML files showing real-world examples of what the data looks like. | Testers and Developers needing mock data. |
+| **[`/model_diagrams`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/model_diagrams)** | **Visual Maps.** Images and UML charts showing how these financial pieces fit together. | Everyone needing a "Big Picture" view. |
 
 -----
 
 ## 🏦 Core Concepts (The API)
 
-In the **[`/api`](https://www.google.com/search?q=./api)** folder, you will find the building blocks of our financial system. Here is a breakdown of what each component does:
+In the **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api)** folder, you will find the building blocks of our financial system. Here is a breakdown of what each component does:
 
 ### 1\. The Ledger (The Source of Truth)
 
 Everything in finance relies on the "General Ledger" (GL). It is the master record of all transactions.
 
-* **[`general_ledger_account`](https://www.google.com/search?q=./api/general_ledger_account)**: Represents the specific buckets where money lives (e.g., "Cash," "Inventory Assets," "Sales Revenue").
-* **[`control_account`](https://www.google.com/search?q=./api/control_account)**: A special summary account used to keep the ledger balanced without showing every single tiny detail in the main view.
-* **[`subsidiary_ledger_transaction`](https://www.google.com/search?q=./api/subsidiary_ledger_transaction)**: The detailed records. While the General Ledger might just say "Customers owe us $50k," the Subsidiary Ledger lists exactly *which* customers owe *what* amount.
+* **[`general_ledger_account`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/general_ledger_account)**: Represents the specific buckets where money lives (e.g., "Cash," "Inventory Assets," "Sales Revenue").
+* **[`control_account`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/control_account)**: A special summary account used to keep the ledger balanced without showing every single tiny detail in the main view.
+* **[`subsidiary_ledger_transaction`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/subsidiary_ledger_transaction)**: The detailed records. While the General Ledger might just say "Customers owe us $50k," the Subsidiary Ledger lists exactly *which* customers owe *what* amount.
 
 ### 2\. Money Movement (In & Out)
 
-* **[`invoice`](https://www.google.com/search?q=./api/invoice)**: A request for payment. This is generated when we sell a vehicle (from the Sales domain) or service a car.
-* **[`payment`](https://www.google.com/search?q=./api/payment)**: The actual act of money changing hands to settle an invoice.
-* **[`payment_method`](https://www.google.com/search?q=./api/payment_method)**: How the payment was made (Credit Card, ACH, Cash, Wire).
-* **[`payment_event`](https://www.google.com/search?q=./api/payment_event)**: Tracks the status of the money. Just because a user clicked "Pay" doesn't mean the bank approved it. This tracks `Pending`, `Success`, or `Failed`.
+* **[`invoice`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/invoice)**: A request for payment. This is generated when we sell a vehicle (from the Sales domain) or service a car.
+* **[`payment`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/payment)**: The actual act of money changing hands to settle an invoice.
+* **[`payment_method`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/payment_method)**: How the payment was made (Credit Card, ACH, Cash, Wire).
+* **[`payment_event`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/payment_event)**: Tracks the status of the money. Just because a user clicked "Pay" doesn't mean the bank approved it. This tracks `Pending`, `Success`, or `Failed`.
 
 ### 3\. Accounting Records
 
-* **[`journal_entry_transaction`](https://www.google.com/search?q=./api/journal_entry_transaction)**: The fundamental unit of accounting. Every time money moves, a "Journal Entry" is created to record it using the double-entry system (Debits must equal Credits).
+* **[`journal_entry_transaction`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api/journal_entry_transaction)**: The fundamental unit of accounting. Every time money moves, a "Journal Entry" is created to record it using the double-entry system (Debits must equal Credits).
 
 -----
 
 ## 🔄 Business Lifecycles (The Specs)
 
-The **[`/specs/lifecycle`](https://www.google.com/search?q=./specs/lifecycle)** directory is critical for understanding the **flows** of the system. Data isn't static; it moves through states.
+The **[`/specs/lifecycle`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs/lifecycle)** directory is critical for understanding the **flows** of the system. Data isn't static; it moves through states.
 
 We have documented the most complex financial workflows here:
 
 * **Manual Adjustments**
-    * 📄 **[`1_manual_journal_entry_push.md`](https://www.google.com/search?q=./specs/lifecycle/_1_manual_journal_entry_push.md)**
+    * 📄 **[`1_manual_journal_entry_push.md`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs/lifecycle/_1_manual_journal_entry_push.md)**
     * *What it is:* How an accountant manually fixes numbers in the ledger.
 * **Allocations**
-    * 📄 **[`2_automated_allocations.md`](https://www.google.com/search?q=./specs/lifecycle/_2_automated_allocations.md)**
+    * 📄 **[`2_automated_allocations.md`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs/lifecycle/_2_automated_allocations.md)**
     * *What it is:* How the system automatically splits money across different departments (e.g., splitting a utility bill between Sales and Service departments).
 * **Corrections**
-    * 📄 **[`3_reversal_voiding.md`](https://www.google.com/search?q=./specs/lifecycle/_3_reversal_voiding.md)**
+    * 📄 **[`3_reversal_voiding.md`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs/lifecycle/_3_reversal_voiding.md)**
     * *What it is:* The "Undo" button. How to properly void a transaction while keeping a transparent audit trail.
 * **Corporate Finance**
-    * 📄 **[`4_financial_consolidation...`](https://www.google.com/search?q=./specs/lifecycle/_4_financial_consolidation_intercompany_adjustment.md)**
+    * 📄 **[`4_financial_consolidation...`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs/lifecycle/_4_financial_consolidation_intercompany_adjustment.md)**
     * *What it is:* How we combine the finances of multiple dealership locations into one big report for headquarters.
 
 -----
 
 ## 🔗 Domain Relationships
 
-The Finance domain does not exist in a vacuum. Based on our [System Architecture Map](https://www.google.com/search?q=./model_diagrams), here is how we connect to the rest of the business:
+The Finance domain does not exist in a vacuum. Based on our [System Architecture Map](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/model_diagrams), here is how we connect to the rest of the business:
 
 * **Sales (Dealership Ops):** When a `Deal` is finalized, it triggers an `Invoice` and a `Journal Entry` in our system.
 * **HR (Human Resources):** `Payroll Runs` send data here to generate `Payroll Payments` and record labor costs in the Ledger.

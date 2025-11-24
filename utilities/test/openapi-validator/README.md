@@ -1,7 +1,11 @@
 ### 1. Installation:
+https://www.npmjs.com/package/express-openapi-validator
+
+
+
 
 ```json5
-
+npm install -g npm@11.6.2
 npm install express-openapi-validator
 
 ```
@@ -45,3 +49,9 @@ app.use((err, req, res, next) => {
 ```
 
 ### 3. Testing: 
+
+* If a client sends a request with a missing required parameter, an incorrect data type, or extra fields not defined in the spec, the middleware will reject the request and return a 400 Bad Request with validation details.
+
+<br />
+
+* If your route handler returns a response that doesn't match the schema for the specified status code (e.g., missing a required field in the 200 response), the middleware will throw an error on the server side (if validateResponses is true).

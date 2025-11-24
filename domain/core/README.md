@@ -14,15 +14,15 @@ We have organized the information to distinguish between simple data types and c
 
 | Folder / Path | Description | Best For... |
 | :--- | :--- | :--- |
-| **[`/api`](https://www.google.com/search?q=./api)** | **The Definitions.** The schemas for shared objects like Money, Addresses, and Enums. | Developers needing standard field formats. |
-| **[`/specs`](https://www.google.com/search?q=./specs)** | **The Standards.** Documentation on formatting rules (e.g., Date formats, Currency precision). | Architects and QA Engineers. |
-| **[`/examples`](https://www.google.com/search?q=./examples)** | **Snippets.** JSON snippets showing how to embed these core objects into larger documents. | Developers building new features. |
+| **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api)** | **The Definitions.** The schemas for shared objects like Money, Addresses, and Enums. | Developers needing standard field formats. |
+| **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)** | **The Standards.** Documentation on formatting rules (e.g., Date formats, Currency precision). | Architects and QA Engineers. |
+| **[`/examples`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/examples)** | **Snippets.** JSON snippets showing how to embed these core objects into larger documents. | Developers building new features. |
 
 -----
 
 ## 🧱 Core Building Blocks (The API)
 
-In the **[`/api`](https://www.google.com/search?q=./api)** folder, you will find the shared components used across the 12 other domains.
+In the **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api)** folder, you will find the shared components used across the 12 other domains.
 
 ### 1\. The Value Objects (The Atoms)
 
@@ -45,7 +45,7 @@ These are larger components that provide utility to multiple domains.
 
 ## 📏 The Rules (The Specs)
 
-The **[`/specs`](https://www.google.com/search?q=./specs)** folder details the strict rules for data consistency.
+The **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)** folder details the strict rules for data consistency.
 
 * **Currency Precision:** How many decimal places do we use? (2 for USD, 0 for JPY).
 * **Date/Time Zones:** All `Effective Date` fields must be stored in UTC.
