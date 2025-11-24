@@ -60,7 +60,7 @@ If we give a customer $1,000 off because the Manufacturer promised a rebate, we 
 The **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/core/specs)** folder is crucial because incentive logic is notoriously difficult.
 
 * **Stackability Logic:** Can a customer use the "Military Discount" AND the "Summer Sale Discount" at the same time? This spec defines exclusive vs. additive rules.
-* **Geo-Fencing:** How we handle programs that only apply to specific zip codes (handled via **[Core/Geographic Boundary](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common/README.md)**).
+* **Geo-Fencing:** How we handle programs that only apply to specific zip codes (handled via **[Core/Geographic Boundary](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core/README.md)**).
 * **Expiration Handling:** What happens if a program expires *while* a deal is being negotiated?
 
 -----

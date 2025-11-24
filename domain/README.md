@@ -103,7 +103,7 @@ Handles real-time data coming *from* the vehicles. This includes the Vehicle Sta
 
 *The "glue" that holds it all together.*
 
-### 📂 [Core & Common Entities](https://github.com/ai-sage-software/automotive/tree/main/domain/core_common/README.md)
+### 📂 [Core & Common Entities](https://github.com/ai-sage-software/automotive/tree/main/domain/core/README.md)
 
 **"The Dictionary"**
 Contains data standards used by *everyone*. If you are looking for standard definitions of currency (Money), dates, units of measure, or geography, look here.

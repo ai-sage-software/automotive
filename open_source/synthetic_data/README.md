@@ -69,7 +69,7 @@ We welcome expertise in differential privacy techniques and generative adversari
 ### Roadmap Focus Areas
 
 * Implementing differential privacy guarantees to mathematically limit the risk of reverse-engineering PII from the synthetic data.
-* Integrating the generator directly with the **[Core/Effective Date](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common.md)** component to create time-aware data sets (e.g., simulating a full year of transactions).
+* Integrating the generator directly with the **[Core/Effective Date](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core.md)** component to create time-aware data sets (e.g., simulating a full year of transactions).
 * Building a self-service portal for developers to request customized synthetic data bundles.
 
 <img src="https://github.com/ai-sage-software/automotive/blob/main/ai_sage.png">

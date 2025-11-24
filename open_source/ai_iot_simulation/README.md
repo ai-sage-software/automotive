@@ -43,7 +43,7 @@ This module handles the physical output of the simulated data stream.
 Pre-built code that executes complex, multi-step actions on a fleet or a single VIN.
 
 * **Service Diagnostics Script:** Simulates a vehicle generating a complex sequence of fault codes that would trigger a **[Service Appointment](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/service_parts/README.md)** recommendation.
-* **Logistics Transfer Script:** Simulates a **[Vehicle Transfer Order](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/logistics/README.md)** by having a VIN travel between two defined **[Geographic Boundaries](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common/README.md)** over a set time period.
+* **Logistics Transfer Script:** Simulates a **[Vehicle Transfer Order](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/logistics/README.md)** by having a VIN travel between two defined **[Geographic Boundaries](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core/README.md)** over a set time period.
 
 -----
 

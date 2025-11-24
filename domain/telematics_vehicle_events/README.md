@@ -41,7 +41,7 @@ In the **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domai
 The **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)** folder details how we process the continuous stream of raw data into actionable information.
 
 * **Alert Thresholds:** Specs defining the logic for when a data point becomes an "event" (e.g., if oil temperature exceeds $250^{\circ}F$, trigger a critical alert).
-* **Data Transformation:** Rules for converting proprietary Manufacturer/OEM codes into standardized **[Core](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core_common/README.md)** domain error codes for universal use.
+* **Data Transformation:** Rules for converting proprietary Manufacturer/OEM codes into standardized **[Core](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/core/README.md)** domain error codes for universal use.
 * **Privacy Controls:** Specs detailing how customer consent (from the **[Identity](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/domains/party_identity/README.md)** domain) limits the recording or transmission of location-based data.
 
 -----

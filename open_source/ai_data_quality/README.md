@@ -12,11 +12,11 @@ This project provides a suite of tools and libraries for measuring, monitoring, 
 
 The primary goal of this project is to shift data quality enforcement left—moving from retrospective cleanup to **proactive validation**.
 
-| Focus Area | Description | Example |
-| :--- | :--- | :--- |
-| **Integrity** | Ensuring data is structurally correct and complete. | A required field (like `Dealer ID`) is never null. |
-| **Consistency** | Ensuring data adheres to shared business rules and standards defined in the **[Core Entities](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/core_common/README.md)** domain. | All dates are stored in ISO 8601 format. |
-| **Timeliness** | Ensuring data arrives when expected (e.g., Telematics data within 5 seconds of the event). | Monitored by integrating with **Telematics** streams. |
+| Focus Area | Description                                                                                                                                                                                     | Example |
+| :--- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| :--- |
+| **Integrity** | Ensuring data is structurally correct and complete.                                                                                                                                             | A required field (like `Dealer ID`) is never null. |
+| **Consistency** | Ensuring data adheres to shared business rules and standards defined in the **[Core Entities](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/core/README.md)** domain. | All dates are stored in ISO 8601 format. |
+| **Timeliness** | Ensuring data arrives when expected (e.g., Telematics data within 5 seconds of the event).                                                                                                      | Monitored by integrating with **Telematics** streams. |
 
 -----
 
