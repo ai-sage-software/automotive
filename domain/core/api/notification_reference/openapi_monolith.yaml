@@ -58,7 +58,7 @@ paths:
               description: "The URI of the newly created resource."
               schema:
                 type: "string"
-                example: "//notification-references/PR-1234567"
+                example: "/notification-references/PR-1234567"
           content:
             application/json:
               schema:
@@ -87,10 +87,10 @@ paths:
     put:
       tags:
       - "NotificationReference"
-      summary: "replace a NotificationReference record."
+      summary: "Replace a NotificationReference record."
       operationId: "replaceNotificationReference"
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: "Full record data to replace the existing resource."
         content:
           application/json:
             schema:
@@ -103,7 +103,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotificationReference"
-                
         "400":
           $ref: "#/components/responses/BadRequestError"
         "404":
@@ -156,8 +155,8 @@ paths:
     get:
       tags:
       - "Identifier"
-      summary: "Retrieve a list of all Identifier records."
-      operationId: "listIdentifiers"
+      summary: "Retrieve a list of Identifier records scoped by..."
+      operationId: "listIdentifiersByNotificationReferenceKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -205,7 +204,7 @@ paths:
               description: "The URI of the newly created resource."
               schema:
                 type: "string"
-                example: "//notification-references/{notificationReferenceKey}/identifiers/PR-1234567"
+                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
           content:
             application/json:
               schema:
@@ -214,6 +213,13 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "409":
           $ref: "#/components/responses/ConflictError"
+    parameters:
+    - name: "notificationReferenceKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
   /notification-references/{notificationReferenceKey}/identifiers/{identifierKey}:
     get:
       tags:
@@ -234,15 +240,14 @@ paths:
     put:
       tags:
       - "Identifier"
-      summary: "replace a Identifier record."
+      summary: "Replace a Identifier record."
       operationId: "replaceIdentifier"
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: "Full record data to replace the existing resource."
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Identifier"
-              
         required: true
       responses:
         "200":
@@ -251,7 +256,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
-                
         "400":
           $ref: "#/components/responses/BadRequestError"
         "404":
@@ -280,7 +284,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Identifier_Update"
-              
         required: true
       responses:
         "200":
@@ -289,12 +292,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
-                
         "400":
           $ref: "#/components/responses/BadRequestError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
+    - name: "notificationReferenceKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
     - name: "identifierKey"
       in: "path"
       description: "The unique identifier for the specific Identifier."
@@ -302,16 +310,13 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-        exampleSetFlag: true
 components:
   schemas:
     Codes:
       type: "array"
       description: "List of Codes"
-      
       items:
         type: "string"
-        
     ErrorDetail:
       required:
       - "code"
@@ -323,16 +328,13 @@ components:
           type: "string"
           description: "A unique, system-defined error code (e.g., 'AUT..."
           example: "NOT_FOUND_PR"
-          exampleSetFlag: true
         message:
           type: "string"
           description: "A human-readable summary providing specific det..."
           example: "Personnel Record with ID PR-1234567 was not found."
-          exampleSetFlag: true
         details:
           type: "array"
           description: "Optional array of specific field-level validati..."
-          
           items:
             type: "object"
             properties:
@@ -340,255 +342,45 @@ components:
                 type: "string"
                 description: "The specific field that failed validation (e.g., 'firstName')."
                 example: "payrollId"
-
               issue:
                 type: "string"
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
                 example: "must be unique"
-
-            
         timestamp:
           type: "string"
           description: "The time the error occurred, in ISO 8601 format."
           format: "date-time"
           example: "2025-11-10T10:30:00Z"
-          exampleSetFlag: true
       description: "Standard format for all API error responses."
-      
     EventTypes:
       type: "string"
       description: "types of events."
-      extensions:
-        x-governance:
-          ITEM_SHIPPED:
-            description: "event.types.item_shipped.desc"
-            published: false
-            is_unique: true
-            sortIndex: 0
-            id: 1
-            depreciated: false
-          INVOICE_RECEIVED:
-            description: "event.types.invoice_received.desc"
-            published: false
-            is_unique: true
-            sortIndex: 0
-            id: 0
-            depreciated: false
-      
       enum:
       - "INVOICE_RECEIVED"
       - "ITEM_SHIPPED"
     Identifier:
-      type: "object"
-      properties:
-        identifier_id:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
-          nullable: false
-          
-        identifier_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Business key for the identifier Pattern: ^[a-zA..."
-          nullable: false
-          
-        context:
-          type: "string"
-          description: "Context or domain of the identifier"
-          nullable: true
-          
-        value:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-        detail:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-        identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-        system_codes:
-          description: "Associated system codes for this identifier"
-          $ref: "#/components/schemas/Codes"
-          nullable: true
-          
-      description: "External system identifier"
-      
+      $ref: "#/components/schemas/Codes"
     Identifier_Create:
       required:
       - "identifier_key"
       type: "object"
       description: "Identifier Create for Post"
-      exampleSetFlag: true
       allOf:
       - $ref: "#/components/schemas/Identifier"
-        
     Identifier_Update:
-      type: "object"
-      properties:
-        system_codes:
-          description: "Associated system codes for this identifier"
-          $ref: "#/components/schemas/Codes"
-          nullable: true
-          
-        identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-        context:
-          type: "string"
-          description: "Context or domain of the identifier"
-          nullable: true
-          
-        detail:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-        value:
-          type: "string"
-          description: "The monetary or hours-based value of the event."
-          nullable: false
-          
-      description: "Identifier Update for Patch and Put"
-      exampleSetFlag: true
-    Link:
-      type: "array"
-      description: "Quick Link"
-      
-      items:
-        type: "string"
-        
-    Links:
-      type: "array"
-      description: "List of Links"
-      
-      items:
-        type: "string"
-        
+      $ref: "#/components/schemas/Codes"
     NotificationReference:
-      type: "object"
-      properties:
-        notification_reference_id:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the reference recor..."
-          nullable: false
-          
-        notification_reference_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference record. Patt..."
-          nullable: false
-          
-        source_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the referenced PartO..."
-          nullable: false
-          
-        source_actor:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the referenced PartO..."
-          nullable: false
-          
-        context:
-          type: "string"
-          description: "Context or domain of the identifier (e.g., 'CRM..."
-          nullable: true
-          
-        system_codes:
-          description: "Associated system codes for this identifier"
-          $ref: "#/components/schemas/Codes"
-          nullable: true
-          
-        identifier:
-          description: "Details of the PartOrder reference, potentially..."
-          $ref: "#/components/schemas/Identifier"
-          nullable: false
-          
-        occurrence_date_time:
-          type: "string"
-          description: "The date and time the reference was created or ..."
-          format: "date-time"
-          nullable: false
-          
-        event_type:
-          description: "The date and time the reference was created or ..."
-          $ref: "#/components/schemas/EventTypes"
-          nullable: false
-          
-      description: "Reference to a PartOrder Aggregate Root, often ..."
-      
+      $ref: "#/components/schemas/EventTypes"
     NotificationReference_Create:
       required:
       - "notification_reference_key"
       type: "object"
       description: "NotificationReference Create for Post"
-      exampleSetFlag: true
       allOf:
       - $ref: "#/components/schemas/NotificationReference"
-        
     NotificationReference_Update:
-      type: "object"
-      properties:
-        system_codes:
-          description: "Associated system codes for this identifier"
-          $ref: "#/components/schemas/Codes"
-          nullable: true
-          
-        identifier:
-          description: "Details of the PartOrder reference, potentially..."
-          $ref: "#/components/schemas/Identifier"
-          nullable: false
-          
-        event_type:
-          description: "The date and time the reference was created or ..."
-          $ref: "#/components/schemas/EventTypes"
-          nullable: false
-          
-        context:
-          type: "string"
-          description: "Context or domain of the identifier (e.g., 'CRM..."
-          nullable: true
-          
-        source_actor:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the referenced PartO..."
-          nullable: false
-          
-        occurrence_date_time:
-          type: "string"
-          description: "The date and time the reference was created or ..."
-          format: "date-time"
-          nullable: false
-          
-      description: "NotificationReference Update for Patch and Put"
-      exampleSetFlag: true
+      $ref: "#/components/schemas/EventTypes"
   responses:
     NotFoundError:
       description: "The requested resource was not found."
@@ -596,39 +388,33 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
     BadRequestError:
       description: "The request was malformed, failed validation, o..."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
     UnauthorizedError:
       description: "Authentication failed. The access token is miss..."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
     ForbiddenError:
       description: "The authenticated user does not have the necess..."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
     ConflictError:
       description: "The request could not be completed because it c..."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
     ServerError:
       description: "An unexpected error occurred on the server whil..."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-            
