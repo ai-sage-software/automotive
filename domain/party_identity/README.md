@@ -15,11 +15,11 @@ Whether it is a Customer buying a car, a Vendor selling us parts, a Staff member
 
 We have organized the information into four distinct areas to help you find what you need quickly.
 
-| Folder / Path | Description | Best For... |
-| :--- | :--- | :--- |
-| **[`/api`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/api)** | **The Data Definitions.** Contains the schemas for People, Organizations, and their specific Profiles. | Developers looking for field names (e.g., `first_name`, `tax_id`). |
-| **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)** | **The Business Rules.** Documentation explaining how we handle privacy, profile merging, and identity validation. | Product Managers and Business Analysts. |
-| **[`/examples`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/examples)** | **Sample Data.** JSON examples of what a Customer or Dealer profile actually looks like. | Testers and Developers. |
+| Folder / Path                                                                                                   | Description | Best For... |
+|:----------------------------------------------------------------------------------------------------------------| :--- | :--- |
+| **[`/api`](./api)**                                                                                             | **The Data Definitions.** Contains the schemas for People, Organizations, and their specific Profiles. | Developers looking for field names (e.g., `first_name`, `tax_id`). |
+| **[`/specs`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/specs)**                   | **The Business Rules.** Documentation explaining how we handle privacy, profile merging, and identity validation. | Product Managers and Business Analysts. |
+| **[`/examples`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/examples)**             | **Sample Data.** JSON examples of what a Customer or Dealer profile actually looks like. | Testers and Developers. |
 | **[`/model_diagrams`](https://github.com/ai-sage-software/automotive/tree/main/domain/finance/model_diagrams)** | **Visual Maps.** Images showing how generic "Parties" transform into specific roles. | Everyone needing a "Big Picture" view. |
 
 -----
