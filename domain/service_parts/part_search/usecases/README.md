@@ -1,1 +1,0 @@
-<img src="hr_payroll_usecases.png">
