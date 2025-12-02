@@ -16,20 +16,30 @@ The API is structured around the domain **service_parts** and **PartMaster** res
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **PartMaster** | /part-masters | Manages PartMasters |
-    | **UnitOfMeasure** | /part-masters/{partMasterKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartMasters |
-    | **PricePlanReference** | /part-masters/{partMasterKey}/price-plan-references | Manages PricePlanReferences belonging to PartMasters |
-    | **PartSpecification** | /part-masters/{partMasterKey}/part-specifications | Manages PartSpecifications belonging to PartMasters |
-    | **PartyIdentifier** | /part-masters/{partMasterKey}/party-identifiers | Manages PartyIdentifiers belonging to PartMasters |
+    | **DiscountReference** | /part-masters/{partMasterKey}/discount-references | Manages DiscountReferences belonging to PartMasters |
     | **PartMasterProfile** | /part-masters/{partMasterKey}/part-master-profiles | Manages PartMasterProfiles belonging to PartMasters |
+    | **TimeSlot** | /part-masters/{partMasterKey}/time-slots | Manages TimeSlots belonging to PartMasters |
     | **PartCategorie** | /part-masters/{partMasterKey}/part-categories | Manages PartCategories belonging to PartMasters |
+    | **FinancialCategoryReference** | /part-masters/{partMasterKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartMasters |
+    | **FeeReference** | /part-masters/{partMasterKey}/fee-references | Manages FeeReferences belonging to PartMasters |
     | **Identifier** | /part-masters/{partMasterKey}/identifiers | Manages Identifiers belonging to PartMasters |
-    | **PartInventoryReference** | /part-masters/{partMasterKey}/part-inventory-references | Manages PartInventoryReferences belonging to PartMasters |
     | **PartName** | /part-masters/{partMasterKey}/part-names | Manages PartNames belonging to PartMasters |
-    | **LeadTime** | /part-masters/{partMasterKey}/lead-times | Manages LeadTimes belonging to PartMasters |
-    | **SuperSession** | /part-masters/{partMasterKey}/super-sessions | Manages SuperSessions belonging to PartMasters |
     | **PartIdentifier** | /part-masters/{partMasterKey}/part-identifiers | Manages PartIdentifiers belonging to PartMasters |
     | **EffectivePeriod** | /part-masters/{partMasterKey}/effective-periods | Manages EffectivePeriods belonging to PartMasters |
     | **PartLifecycle** | /part-masters/{partMasterKey}/part-lifecycles | Manages PartLifecycles belonging to PartMasters |
+    | **CreditReference** | /part-masters/{partMasterKey}/credit-references | Manages CreditReferences belonging to PartMasters |
+    | **RebateReference** | /part-masters/{partMasterKey}/rebate-references | Manages RebateReferences belonging to PartMasters |
+    | **UnitOfMeasure** | /part-masters/{partMasterKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartMasters |
+    | **TaxSplit** | /part-masters/{partMasterKey}/tax-splits | Manages TaxSplits belonging to PartMasters |
+    | **PricePlanReference** | /part-masters/{partMasterKey}/price-plan-references | Manages PricePlanReferences belonging to PartMasters |
+    | **PartSpecification** | /part-masters/{partMasterKey}/part-specifications | Manages PartSpecifications belonging to PartMasters |
+    | **ControlAccountReference** | /part-masters/{partMasterKey}/control-account-references | Manages ControlAccountReferences belonging to PartMasters |
+    | **RewardReference** | /part-masters/{partMasterKey}/reward-references | Manages RewardReferences belonging to PartMasters |
+    | **PartyIdentifier** | /part-masters/{partMasterKey}/party-identifiers | Manages PartyIdentifiers belonging to PartMasters |
+    | **PartInventoryReference** | /part-masters/{partMasterKey}/part-inventory-references | Manages PartInventoryReferences belonging to PartMasters |
+    | **LeadTime** | /part-masters/{partMasterKey}/lead-times | Manages LeadTimes belonging to PartMasters |
+    | **SuperSession** | /part-masters/{partMasterKey}/super-sessions | Manages SuperSessions belonging to PartMasters |
+    | **Price** | /part-masters/{partMasterKey}/prices | Manages Prices belonging to PartMasters |
     | **TextualDetail** | /part-masters/{partMasterKey}/textual-details | Manages TextualDetails belonging to PartMasters |
     | **PartMasterRegulatorie** | /part-masters/{partMasterKey}/part-master-regulatories | Manages PartMasterRegulatories belonging to PartMasters |
     | **FinancialSplit** | /part-masters/{partMasterKey}/financial-splits | Manages FinancialSplits belonging to PartMasters |
@@ -92,7 +102,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -101,6 +111,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **HazardClassTypes** : types of hazard class.<br/>
@@ -114,54 +125,27 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
 💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductStageTypes** : types of product stages.<br/>
 💠 **SalesStatusTypes** : types of sales status.<br/>
+💠 **TaxTypes** : types of taxs.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMLeadTimeTypes** : types of u o m lead times.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 💠 **UOMTimeTypes** : types of u o m times.<br/>
-💠 **TaxTypes** : Defines various types of taxes, such as sales t...<br/>
-💠 **PriceTypes** : entity<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 💠 **PartMasterSuperSessionTypes** : entity<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Codes** : List of Codes<br/>
-✅ **CreditReferences** : List of CreditReference<br/>
-✅ **DiscountReferences** : List of DiscountReference<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **FeeReferences** : List of FeeReference<br/>
-✅ **FinancialCategoryReferences** : List of FinancialCategoryReference<br/>
-✅ **FinancialSplits** : List of FinancialSplit<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **LeadTimes** : List of LeadTime<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PartyRelationshipTypes<br/>
-✅ **Memo** : List of String<br/>
-✅ **PartCategories** : List of PartCategory<br/>
-✅ **PartIdentifiers** : List of PartIdentifier<br/>
-✅ **PartInventoryReferences** : List of PartInventoryReference<br/>
-✅ **PartLifecycles** : List of PartLifecycle<br/>
-✅ **PartNames** : List of PartName<br/>
-✅ **PartSpecifications** : List of PartSpecification<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PricePlanReferences** : List of PricePlanReference<br/>
-✅ **RebateReferences** : List of RebateReference<br/>
-✅ **RewardReferences** : List of RewardReference<br/>
-✅ **SuperSessions** : List of SuperSession<br/>
-✅ **TaxSplits** : List of TaxSplit<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TextualDetails** : List of TextualDetail<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -293,179 +277,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /part-masters/{partMasterKey}/unit-of-measures
+### /part-masters/{partMasterKey}/discount-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by partMasterKey. getUnitOfMeasuresByPartMasterKey</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/price-plan-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PricePlanReference records scoped by partMasterKey. getPricePlanReferencesByPartMasterKey</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references</span> <br/>
+        <span class="api-summary">Retrieve a list of DiscountReference records scoped by partMasterKey. getDiscountReferencesByPartMasterKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Create a new PricePlanReference record. createPricePlanReference</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references</span> <br/>
+        <span class="api-summary">Create a new DiscountReference record. createDiscountReference</span>
     </span>
 </div>
 
-### /part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}
+### /part-masters/{partMasterKey}/discount-references/{discountReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PricePlanReference record. getricePlanReferenceById</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DiscountReference record. getiscountReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PricePlanReference record. replacePricePlanReference</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a DiscountReference record. replaceDiscountReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlanReference record. updatePricePlanReference</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a DiscountReference record. updateDiscountReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PricePlanReference Record deletePricePlanReferenceRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/part-specifications
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications</span> <br/>
-        <span class="api-summary">Retrieve a list of PartSpecification records scoped by partMasterKey. getPartSpecificationsByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications</span> <br/>
-        <span class="api-summary">Create a new PartSpecification record. createPartSpecification</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSpecification record. getartSpecificationById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Replace a PartSpecification record. replacePartSpecification</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSpecification record. updatePartSpecification</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partMasterKey. getPartyIdentifiersByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
+        <span class="api-path">/part-masters/{partMasterKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
     </span>
 </div>
 
@@ -519,6 +377,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-masters/{partMasterKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partMasterKey. getTimeSlotsByPartMasterKey</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### /part-masters/{partMasterKey}/part-categories
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -566,6 +450,106 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-categories/{partCategoryKey}</span> <br/>
         <span class="api-summary">Delete a PartCategory Record deletePartCategoryRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/financial-category-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference records scoped by partMasterKey. getFinancialCategoryReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Create a new FinancialCategoryReference record. createFinancialCategoryReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference record. getinancialCategoryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialCategoryReference record. replaceFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialCategoryReference record. updateFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialCategoryReference Record deleteFinancialCategoryReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/fee-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FeeReference records scoped by partMasterKey. getFeeReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references</span> <br/>
+        <span class="api-summary">Create a new FeeReference record. createFeeReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/fee-references/{feeReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FeeReference record. geteeReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FeeReference record. replaceFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FeeReference record. updateFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FeeReference Record deleteFeeReferenceRecord</span>
     </span>
 </div>
 
@@ -619,56 +603,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /part-masters/{partMasterKey}/part-inventory-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartInventoryReference records scoped by partMasterKey. getPartInventoryReferencesByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references</span> <br/>
-        <span class="api-summary">Create a new PartInventoryReference record. createPartInventoryReference</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartInventoryReference record. getartInventoryReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartInventoryReference record. replacePartInventoryReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartInventoryReference record. updatePartInventoryReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartInventoryReference Record deletePartInventoryReferenceRecord</span>
-    </span>
-</div>
-
 ### /part-masters/{partMasterKey}/part-names
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -716,106 +650,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-names/{partNameKey}</span> <br/>
         <span class="api-summary">Delete a PartName Record deletePartNameRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/lead-times
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times</span> <br/>
-        <span class="api-summary">Retrieve a list of LeadTime records scoped by partMasterKey. getLeadTimesByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times</span> <br/>
-        <span class="api-summary">Create a new LeadTime record. createLeadTime</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/lead-times/{leadTimeKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific LeadTime record. geteadTimeById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
-        <span class="api-summary">Replace a LeadTime record. replaceLeadTime</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
-        <span class="api-summary">Partially update a LeadTime record. updateLeadTime</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
-        <span class="api-summary">Delete a LeadTime Record deleteLeadTimeRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/super-sessions
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions</span> <br/>
-        <span class="api-summary">Retrieve a list of SuperSession records scoped by partMasterKey. getSuperSessionsByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions</span> <br/>
-        <span class="api-summary">Create a new SuperSession record. createSuperSession</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/super-sessions/{superSessionKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific SuperSession record. getuperSessionById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Replace a SuperSession record. replaceSuperSession</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Partially update a SuperSession record. updateSuperSession</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Delete a SuperSession Record deleteSuperSessionRecord</span>
     </span>
 </div>
 
@@ -942,6 +776,632 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
         <span class="api-summary">Delete a PartLifecycle Record deletePartLifecycleRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/credit-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references</span> <br/>
+        <span class="api-summary">Retrieve a list of CreditReference records scoped by partMasterKey. getCreditReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references</span> <br/>
+        <span class="api-summary">Create a new CreditReference record. createCreditReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/credit-references/{creditReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CreditReference record. getreditReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a CreditReference record. replaceCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a CreditReference record. updateCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a CreditReference Record deleteCreditReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/rebate-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RebateReference records scoped by partMasterKey. getRebateReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references</span> <br/>
+        <span class="api-summary">Create a new RebateReference record. createRebateReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RebateReference record. getebateReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RebateReference record. replaceRebateReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RebateReference record. updateRebateReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RebateReference Record deleteRebateReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/unit-of-measures
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures</span> <br/>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by partMasterKey. getUnitOfMeasuresByPartMasterKey</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/tax-splits
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits</span> <br/>
+        <span class="api-summary">Retrieve a list of TaxSplit records scoped by partMasterKey. getTaxSplitsByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits</span> <br/>
+        <span class="api-summary">Create a new TaxSplit record. createTaxSplit</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/tax-splits/{taxSplitKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TaxSplit record. getaxSplitById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Replace a TaxSplit record. replaceTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Partially update a TaxSplit record. updateTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Delete a TaxSplit Record deleteTaxSplitRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/price-plan-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PricePlanReference records scoped by partMasterKey. getPricePlanReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references</span> <br/>
+        <span class="api-summary">Create a new PricePlanReference record. createPricePlanReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PricePlanReference record. getricePlanReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PricePlanReference record. replacePricePlanReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PricePlanReference record. updatePricePlanReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PricePlanReference Record deletePricePlanReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/part-specifications
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications</span> <br/>
+        <span class="api-summary">Retrieve a list of PartSpecification records scoped by partMasterKey. getPartSpecificationsByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications</span> <br/>
+        <span class="api-summary">Create a new PartSpecification record. createPartSpecification</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartSpecification record. getartSpecificationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Replace a PartSpecification record. replacePartSpecification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Partially update a PartSpecification record. updatePartSpecification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/control-account-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references</span> <br/>
+        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by partMasterKey. getControlAccountReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references</span> <br/>
+        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/reward-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RewardReference records scoped by partMasterKey. getRewardReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references</span> <br/>
+        <span class="api-summary">Create a new RewardReference record. createRewardReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RewardReference record. getewardReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RewardReference record. replaceRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RewardReference record. updateRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RewardReference Record deleteRewardReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/party-identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partMasterKey. getPartyIdentifiersByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
+        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/part-inventory-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartInventoryReference records scoped by partMasterKey. getPartInventoryReferencesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references</span> <br/>
+        <span class="api-summary">Create a new PartInventoryReference record. createPartInventoryReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartInventoryReference record. getartInventoryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartInventoryReference record. replacePartInventoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartInventoryReference record. updatePartInventoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartInventoryReference Record deletePartInventoryReferenceRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/lead-times
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times</span> <br/>
+        <span class="api-summary">Retrieve a list of LeadTime records scoped by partMasterKey. getLeadTimesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times</span> <br/>
+        <span class="api-summary">Create a new LeadTime record. createLeadTime</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/lead-times/{leadTimeKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific LeadTime record. geteadTimeById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
+        <span class="api-summary">Replace a LeadTime record. replaceLeadTime</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
+        <span class="api-summary">Partially update a LeadTime record. updateLeadTime</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
+        <span class="api-summary">Delete a LeadTime Record deleteLeadTimeRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/super-sessions
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions</span> <br/>
+        <span class="api-summary">Retrieve a list of SuperSession records scoped by partMasterKey. getSuperSessionsByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions</span> <br/>
+        <span class="api-summary">Create a new SuperSession record. createSuperSession</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/super-sessions/{superSessionKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific SuperSession record. getuperSessionById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Replace a SuperSession record. replaceSuperSession</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Partially update a SuperSession record. updateSuperSession</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Delete a SuperSession Record deleteSuperSessionRecord</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/prices
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices</span> <br/>
+        <span class="api-summary">Retrieve a list of Price records scoped by partMasterKey. getPricesByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices</span> <br/>
+        <span class="api-summary">Create a new Price record. createPrice</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/prices/{priceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices/{priceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices/{priceKey}</span> <br/>
+        <span class="api-summary">Replace a Price record. replacePrice</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices/{priceKey}</span> <br/>
+        <span class="api-summary">Partially update a Price record. updatePrice</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/prices/{priceKey}</span> <br/>
+        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
     </span>
 </div>
 
@@ -1102,20 +1562,30 @@ The following resources follow a consistent pattern under PartMasterroot with ke
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **part-master** | /part-masters | listPartMasters | createPartMaster | getPartMasters | updatePartMasters | deletePartMasters |
-    | **unit-of-measure** | /part-masters/{partMasterKey}/unit-of-measures | listUnitOfMeasuresByPartMasterKey |  | getUnitOfMeasuresByPartMasterKey | updateUnitOfMeasuresByPartMasterKey | deleteUnitOfMeasuresByPartMasterKey |
-    | **price-plan-reference** | /part-masters/{partMasterKey}/price-plan-references | listPricePlanReferencesByPartMasterKey | createPricePlanReference | getPricePlanReferencesByPartMasterKey | updatePricePlanReferencesByPartMasterKey | deletePricePlanReferencesByPartMasterKey |
-    | **part-specification** | /part-masters/{partMasterKey}/part-specifications | listPartSpecificationsByPartMasterKey | createPartSpecification | getPartSpecificationsByPartMasterKey | updatePartSpecificationsByPartMasterKey | deletePartSpecificationsByPartMasterKey |
-    | **party-identifier** | /part-masters/{partMasterKey}/party-identifiers | listPartyIdentifiersByPartMasterKey | createPartyIdentifier | getPartyIdentifiersByPartMasterKey | updatePartyIdentifiersByPartMasterKey | deletePartyIdentifiersByPartMasterKey |
+    | **discount-reference** | /part-masters/{partMasterKey}/discount-references | listDiscountReferencesByPartMasterKey | createDiscountReference | getDiscountReferencesByPartMasterKey | updateDiscountReferencesByPartMasterKey | deleteDiscountReferencesByPartMasterKey |
     | **part-master-profile** | /part-masters/{partMasterKey}/part-master-profiles | listPartMasterProfilesByPartMasterKey | createPartMasterProfile | getPartMasterProfilesByPartMasterKey | updatePartMasterProfilesByPartMasterKey | deletePartMasterProfilesByPartMasterKey |
+    | **time-slot** | /part-masters/{partMasterKey}/time-slots | listTimeSlotsByPartMasterKey |  | getTimeSlotsByPartMasterKey | updateTimeSlotsByPartMasterKey | deleteTimeSlotsByPartMasterKey |
     | **part-categorie** | /part-masters/{partMasterKey}/part-categories | listPartCategorysByPartMasterKey | createPartCategory | getPartCategorysByPartMasterKey | updatePartCategorysByPartMasterKey | deletePartCategorysByPartMasterKey |
+    | **financial-category-reference** | /part-masters/{partMasterKey}/financial-category-references | listFinancialCategoryReferencesByPartMasterKey | createFinancialCategoryReference | getFinancialCategoryReferencesByPartMasterKey | updateFinancialCategoryReferencesByPartMasterKey | deleteFinancialCategoryReferencesByPartMasterKey |
+    | **fee-reference** | /part-masters/{partMasterKey}/fee-references | listFeeReferencesByPartMasterKey | createFeeReference | getFeeReferencesByPartMasterKey | updateFeeReferencesByPartMasterKey | deleteFeeReferencesByPartMasterKey |
     | **identifier** | /part-masters/{partMasterKey}/identifiers | listIdentifiersByPartMasterKey | createIdentifier | getIdentifiersByPartMasterKey | updateIdentifiersByPartMasterKey | deleteIdentifiersByPartMasterKey |
-    | **part-inventory-reference** | /part-masters/{partMasterKey}/part-inventory-references | listPartInventoryReferencesByPartMasterKey | createPartInventoryReference | getPartInventoryReferencesByPartMasterKey | updatePartInventoryReferencesByPartMasterKey | deletePartInventoryReferencesByPartMasterKey |
     | **part-name** | /part-masters/{partMasterKey}/part-names | listPartNamesByPartMasterKey | createPartName | getPartNamesByPartMasterKey | updatePartNamesByPartMasterKey | deletePartNamesByPartMasterKey |
-    | **lead-time** | /part-masters/{partMasterKey}/lead-times | listLeadTimesByPartMasterKey | createLeadTime | getLeadTimesByPartMasterKey | updateLeadTimesByPartMasterKey | deleteLeadTimesByPartMasterKey |
-    | **super-session** | /part-masters/{partMasterKey}/super-sessions | listSuperSessionsByPartMasterKey | createSuperSession | getSuperSessionsByPartMasterKey | updateSuperSessionsByPartMasterKey | deleteSuperSessionsByPartMasterKey |
     | **part-identifier** | /part-masters/{partMasterKey}/part-identifiers | listPartIdentifiersByPartMasterKey | createPartIdentifier | getPartIdentifiersByPartMasterKey | updatePartIdentifiersByPartMasterKey | deletePartIdentifiersByPartMasterKey |
     | **effective-period** | /part-masters/{partMasterKey}/effective-periods | listEffectivePeriodsByPartMasterKey |  | getEffectivePeriodsByPartMasterKey | updateEffectivePeriodsByPartMasterKey | deleteEffectivePeriodsByPartMasterKey |
     | **part-lifecycle** | /part-masters/{partMasterKey}/part-lifecycles | listPartLifecyclesByPartMasterKey | createPartLifecycle | getPartLifecyclesByPartMasterKey | updatePartLifecyclesByPartMasterKey | deletePartLifecyclesByPartMasterKey |
+    | **credit-reference** | /part-masters/{partMasterKey}/credit-references | listCreditReferencesByPartMasterKey | createCreditReference | getCreditReferencesByPartMasterKey | updateCreditReferencesByPartMasterKey | deleteCreditReferencesByPartMasterKey |
+    | **rebate-reference** | /part-masters/{partMasterKey}/rebate-references | listRebateReferencesByPartMasterKey | createRebateReference | getRebateReferencesByPartMasterKey | updateRebateReferencesByPartMasterKey | deleteRebateReferencesByPartMasterKey |
+    | **unit-of-measure** | /part-masters/{partMasterKey}/unit-of-measures | listUnitOfMeasuresByPartMasterKey |  | getUnitOfMeasuresByPartMasterKey | updateUnitOfMeasuresByPartMasterKey | deleteUnitOfMeasuresByPartMasterKey |
+    | **tax-split** | /part-masters/{partMasterKey}/tax-splits | listTaxSplitsByPartMasterKey | createTaxSplit | getTaxSplitsByPartMasterKey | updateTaxSplitsByPartMasterKey | deleteTaxSplitsByPartMasterKey |
+    | **price-plan-reference** | /part-masters/{partMasterKey}/price-plan-references | listPricePlanReferencesByPartMasterKey | createPricePlanReference | getPricePlanReferencesByPartMasterKey | updatePricePlanReferencesByPartMasterKey | deletePricePlanReferencesByPartMasterKey |
+    | **part-specification** | /part-masters/{partMasterKey}/part-specifications | listPartSpecificationsByPartMasterKey | createPartSpecification | getPartSpecificationsByPartMasterKey | updatePartSpecificationsByPartMasterKey | deletePartSpecificationsByPartMasterKey |
+    | **control-account-reference** | /part-masters/{partMasterKey}/control-account-references | listControlAccountReferencesByPartMasterKey | createControlAccountReference | getControlAccountReferencesByPartMasterKey | updateControlAccountReferencesByPartMasterKey | deleteControlAccountReferencesByPartMasterKey |
+    | **reward-reference** | /part-masters/{partMasterKey}/reward-references | listRewardReferencesByPartMasterKey | createRewardReference | getRewardReferencesByPartMasterKey | updateRewardReferencesByPartMasterKey | deleteRewardReferencesByPartMasterKey |
+    | **party-identifier** | /part-masters/{partMasterKey}/party-identifiers | listPartyIdentifiersByPartMasterKey | createPartyIdentifier | getPartyIdentifiersByPartMasterKey | updatePartyIdentifiersByPartMasterKey | deletePartyIdentifiersByPartMasterKey |
+    | **part-inventory-reference** | /part-masters/{partMasterKey}/part-inventory-references | listPartInventoryReferencesByPartMasterKey | createPartInventoryReference | getPartInventoryReferencesByPartMasterKey | updatePartInventoryReferencesByPartMasterKey | deletePartInventoryReferencesByPartMasterKey |
+    | **lead-time** | /part-masters/{partMasterKey}/lead-times | listLeadTimesByPartMasterKey | createLeadTime | getLeadTimesByPartMasterKey | updateLeadTimesByPartMasterKey | deleteLeadTimesByPartMasterKey |
+    | **super-session** | /part-masters/{partMasterKey}/super-sessions | listSuperSessionsByPartMasterKey | createSuperSession | getSuperSessionsByPartMasterKey | updateSuperSessionsByPartMasterKey | deleteSuperSessionsByPartMasterKey |
+    | **price** | /part-masters/{partMasterKey}/prices | listPricesByPartMasterKey | createPrice | getPricesByPartMasterKey | updatePricesByPartMasterKey | deletePricesByPartMasterKey |
     | **textual-detail** | /part-masters/{partMasterKey}/textual-details | listTextualDetailsByPartMasterKey | createTextualDetail | getTextualDetailsByPartMasterKey | updateTextualDetailsByPartMasterKey | deleteTextualDetailsByPartMasterKey |
     | **part-master-regulatorie** | /part-masters/{partMasterKey}/part-master-regulatories | listPartMasterRegulatorysByPartMasterKey | createPartMasterRegulatory | getPartMasterRegulatorysByPartMasterKey | updatePartMasterRegulatorysByPartMasterKey | deletePartMasterRegulatorysByPartMasterKey |
     | **financial-split** | /part-masters/{partMasterKey}/financial-splits | listFinancialSplitsByPartMasterKey | createFinancialSplit | getFinancialSplitsByPartMasterKey | updateFinancialSplitsByPartMasterKey | deleteFinancialSplitsByPartMasterKey |

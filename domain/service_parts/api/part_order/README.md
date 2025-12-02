@@ -18,6 +18,7 @@ The API is structured around the domain **service_parts** and **PartOrder** reso
     | **PartOrder** | /part-orders | Manages PartOrders |
     | **PaymentTermReference** | /part-orders/{partOrderKey}/payment-term-references | Manages PaymentTermReferences belonging to PartOrders |
     | **DiscountReference** | /part-orders/{partOrderKey}/discount-references | Manages DiscountReferences belonging to PartOrders |
+    | **TimeSlot** | /part-orders/{partOrderKey}/time-slots | Manages TimeSlots belonging to PartOrders |
     | **AddressReference** | /part-orders/{partOrderKey}/address-references | Manages AddressReferences belonging to PartOrders |
     | **FinancialCategoryReference** | /part-orders/{partOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartOrders |
     | **StaffAssignmentReference** | /part-orders/{partOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to PartOrders |
@@ -30,6 +31,7 @@ The API is structured around the domain **service_parts** and **PartOrder** reso
     | **SalesProfileReference** | /part-orders/{partOrderKey}/sales-profile-references | Manages SalesProfileReferences belonging to PartOrders |
     | **RebateReference** | /part-orders/{partOrderKey}/rebate-references | Manages RebateReferences belonging to PartOrders |
     | **ShipmentReference** | /part-orders/{partOrderKey}/shipment-references | Manages ShipmentReferences belonging to PartOrders |
+    | **UnitOfMeasure** | /part-orders/{partOrderKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartOrders |
     | **TaxSplit** | /part-orders/{partOrderKey}/tax-splits | Manages TaxSplits belonging to PartOrders |
     | **PaymentScheduleReference** | /part-orders/{partOrderKey}/payment-schedule-references | Manages PaymentScheduleReferences belonging to PartOrders |
     | **PricePlanReference** | /part-orders/{partOrderKey}/price-plan-references | Manages PricePlanReferences belonging to PartOrders |
@@ -102,7 +104,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -112,6 +114,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
@@ -130,47 +133,17 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **SalesPipelineStageTypes** : types of sales pipeline stages.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
-💠 **UOMQuantityCategoryTypes** : entity<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AddressReferences** : List of AddressReference<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CreditReferences** : List of CreditReference<br/>
-✅ **CustomerOrderReferences** : List of CustomerOrderReference<br/>
-✅ **DiscountReferences** : List of DiscountReference<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **FeeReferences** : List of FeeReference<br/>
-✅ **FinancialCategoryReferences** : List of FinancialCategoryReference<br/>
-✅ **FinancialEvents** : List of FinancialEvent<br/>
-✅ **FinancialSplits** : List of FinancialSplit<br/>
-✅ **FinancialTrackReferences** : List of FinancialTrackReference<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **LenderReferences** : List of LenderReference<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PaymentTransactionStatusTypes<br/>
-✅ **Memo** : List of String<br/>
-✅ **PartOrderItems** : List of PartOrderItem<br/>
-✅ **PartReferences** : List of PartReference<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PaymentScheduleReferences** : List of PaymentScheduleReference<br/>
-✅ **PaymentTermReferences** : List of PaymentTermReference<br/>
-✅ **PricePlanReferences** : List of PricePlanReference<br/>
-✅ **RebateReferences** : List of RebateReference<br/>
-✅ **RewardReferences** : List of RewardReference<br/>
-✅ **SalesProfileReferences** : List of SalesProfileReference<br/>
-✅ **ShipmentReferences** : List of ShipmentReference<br/>
-✅ **StaffAssignmentReferences** : List of StaffAssignmentReference<br/>
-✅ **TaxSplits** : List of TaxSplit<br/>
 ✅ **TextualDetail** : not nullable<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -399,6 +372,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partOrderKey. getTimeSlotsByPartOrderKey</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -975,6 +974,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
         <span class="api-summary">Delete a ShipmentReference Record deleteShipmentReferenceRecord</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/unit-of-measures
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures</span> <br/>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by partOrderKey. getUnitOfMeasuresByPartOrderKey</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/unit-of-measures/{unitOfMeasureKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -1637,6 +1662,7 @@ The following resources follow a consistent pattern under PartOrderroot with key
     | **part-order** | /part-orders | listPartOrders | createPartOrder | getPartOrders | updatePartOrders | deletePartOrders |
     | **payment-term-reference** | /part-orders/{partOrderKey}/payment-term-references | listPaymentTermReferencesByPartOrderKey | createPaymentTermReference | getPaymentTermReferencesByPartOrderKey | updatePaymentTermReferencesByPartOrderKey | deletePaymentTermReferencesByPartOrderKey |
     | **discount-reference** | /part-orders/{partOrderKey}/discount-references | listDiscountReferencesByPartOrderKey | createDiscountReference | getDiscountReferencesByPartOrderKey | updateDiscountReferencesByPartOrderKey | deleteDiscountReferencesByPartOrderKey |
+    | **time-slot** | /part-orders/{partOrderKey}/time-slots | listTimeSlotsByPartOrderKey |  | getTimeSlotsByPartOrderKey | updateTimeSlotsByPartOrderKey | deleteTimeSlotsByPartOrderKey |
     | **address-reference** | /part-orders/{partOrderKey}/address-references | listAddressReferencesByPartOrderKey | createAddressReference | getAddressReferencesByPartOrderKey | updateAddressReferencesByPartOrderKey | deleteAddressReferencesByPartOrderKey |
     | **financial-category-reference** | /part-orders/{partOrderKey}/financial-category-references | listFinancialCategoryReferencesByPartOrderKey | createFinancialCategoryReference | getFinancialCategoryReferencesByPartOrderKey | updateFinancialCategoryReferencesByPartOrderKey | deleteFinancialCategoryReferencesByPartOrderKey |
     | **staff-assignment-reference** | /part-orders/{partOrderKey}/staff-assignment-references | listStaffAssignmentReferencesByPartOrderKey | createStaffAssignmentReference | getStaffAssignmentReferencesByPartOrderKey | updateStaffAssignmentReferencesByPartOrderKey | deleteStaffAssignmentReferencesByPartOrderKey |
@@ -1649,6 +1675,7 @@ The following resources follow a consistent pattern under PartOrderroot with key
     | **sales-profile-reference** | /part-orders/{partOrderKey}/sales-profile-references | listSalesProfileReferencesByPartOrderKey | createSalesProfileReference | getSalesProfileReferencesByPartOrderKey | updateSalesProfileReferencesByPartOrderKey | deleteSalesProfileReferencesByPartOrderKey |
     | **rebate-reference** | /part-orders/{partOrderKey}/rebate-references | listRebateReferencesByPartOrderKey | createRebateReference | getRebateReferencesByPartOrderKey | updateRebateReferencesByPartOrderKey | deleteRebateReferencesByPartOrderKey |
     | **shipment-reference** | /part-orders/{partOrderKey}/shipment-references | listShipmentReferencesByPartOrderKey | createShipmentReference | getShipmentReferencesByPartOrderKey | updateShipmentReferencesByPartOrderKey | deleteShipmentReferencesByPartOrderKey |
+    | **unit-of-measure** | /part-orders/{partOrderKey}/unit-of-measures | listUnitOfMeasuresByPartOrderKey |  | getUnitOfMeasuresByPartOrderKey | updateUnitOfMeasuresByPartOrderKey | deleteUnitOfMeasuresByPartOrderKey |
     | **tax-split** | /part-orders/{partOrderKey}/tax-splits | listTaxSplitsByPartOrderKey | createTaxSplit | getTaxSplitsByPartOrderKey | updateTaxSplitsByPartOrderKey | deleteTaxSplitsByPartOrderKey |
     | **payment-schedule-reference** | /part-orders/{partOrderKey}/payment-schedule-references | listPaymentScheduleReferencesByPartOrderKey | createPaymentScheduleReference | getPaymentScheduleReferencesByPartOrderKey | updatePaymentScheduleReferencesByPartOrderKey | deletePaymentScheduleReferencesByPartOrderKey |
     | **price-plan-reference** | /part-orders/{partOrderKey}/price-plan-references | listPricePlanReferencesByPartOrderKey | createPricePlanReference | getPricePlanReferencesByPartOrderKey | updatePricePlanReferencesByPartOrderKey | deletePricePlanReferencesByPartOrderKey |

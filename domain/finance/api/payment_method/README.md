@@ -16,15 +16,18 @@ The API is structured around the domain **finance** and **PaymentMethod** resour
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **PaymentMethod** | /payment-methods | Manages PaymentMethods |
-    | **BankIntermediarie** | /payment-methods/{paymentMethodKey}/bank-intermediaries | Manages BankIntermediaries belonging to PaymentMethods |
     | **RewardPayment** | /payment-methods/{paymentMethodKey}/reward-payments | Manages RewardPayments belonging to PaymentMethods |
     | **PersonName** | /payment-methods/{paymentMethodKey}/person-names | Manages PersonNames belonging to PaymentMethods |
-    | **Identifier** | /payment-methods/{paymentMethodKey}/identifiers | Manages Identifiers belonging to PaymentMethods |
     | **Addresse** | /payment-methods/{paymentMethodKey}/addresses | Manages Addresses belonging to PaymentMethods |
-    | **CheckPayment** | /payment-methods/{paymentMethodKey}/check-payments | Manages CheckPayments belonging to PaymentMethods |
+    | **Position** | /payment-methods/{paymentMethodKey}/positions | Manages Positions belonging to PaymentMethods |
     | **CashPayment** | /payment-methods/{paymentMethodKey}/cash-payments | Manages CashPayments belonging to PaymentMethods |
     | **BankBeneficiarie** | /payment-methods/{paymentMethodKey}/bank-beneficiaries | Manages BankBeneficiaries belonging to PaymentMethods |
     | **CreditCard** | /payment-methods/{paymentMethodKey}/credit-cards | Manages CreditCards belonging to PaymentMethods |
+    | **AddressLocale** | /payment-methods/{paymentMethodKey}/address-locales | Manages AddressLocales belonging to PaymentMethods |
+    | **BankIntermediarie** | /payment-methods/{paymentMethodKey}/bank-intermediaries | Manages BankIntermediaries belonging to PaymentMethods |
+    | **Authorization** | /payment-methods/{paymentMethodKey}/authorizations | Manages Authorizations belonging to PaymentMethods |
+    | **Identifier** | /payment-methods/{paymentMethodKey}/identifiers | Manages Identifiers belonging to PaymentMethods |
+    | **CheckPayment** | /payment-methods/{paymentMethodKey}/check-payments | Manages CheckPayments belonging to PaymentMethods |
     | **ElectronicPayment** | /payment-methods/{paymentMethodKey}/electronic-payments | Manages ElectronicPayments belonging to PaymentMethods |
     | **PlatformPayment** | /payment-methods/{paymentMethodKey}/platform-payments | Manages PlatformPayments belonging to PaymentMethods |
 
@@ -86,7 +89,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -100,28 +103,14 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **CreditCardStatusTypes** : types of credit card status.<br/>
 💠 **CreditCardTypes** : types of credit cards.<br/>
 💠 **FundingTypes** : types of fundings.<br/>
+💠 **LocationTypes** : types of locations.<br/>
 💠 **PaymentStatusTypes** : types of payment status.<br/>
 💠 **RewardEventTypes** : types of reward events.<br/>
-💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AddressLocales** : List of AddressLocale<br/>
-✅ **Authorizations** : List of Authorization<br/>
-✅ **CashPayments** : List of CashPayment<br/>
-✅ **CheckPayments** : List of CheckPayment<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CreditCards** : List of CreditCard<br/>
-✅ **ElectronicPayments** : List of ElectronicPayment<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **Memo** : List of String<br/>
-✅ **PlatformPayments** : List of PlatformPayment<br/>
-✅ **RewardPayments** : List of RewardPayment<br/>
 
 ---
 
@@ -253,56 +242,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payment-methods/{paymentMethodKey}/bank-intermediaries
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries</span> <br/>
-        <span class="api-summary">Retrieve a list of BankIntermediary records scoped by paymentMethodKey. getBankIntermediarysByPaymentMethodKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries</span> <br/>
-        <span class="api-summary">Create a new BankIntermediary record. createBankIntermediary</span>
-    </span>
-</div>
-
-### /payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific BankIntermediary record. getankIntermediaryById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
-        <span class="api-summary">Replace a BankIntermediary record. replaceBankIntermediary</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
-        <span class="api-summary">Partially update a BankIntermediary record. updateBankIntermediary</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
-        <span class="api-summary">Delete a BankIntermediary Record deleteBankIntermediaryRecord</span>
-    </span>
-</div>
-
 ### /payment-methods/{paymentMethodKey}/reward-payments
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -403,56 +342,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payment-methods/{paymentMethodKey}/identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by paymentMethodKey. getIdentifiersByPaymentMethodKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
-    </span>
-</div>
-
-### /payment-methods/{paymentMethodKey}/identifiers/{identifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
-    </span>
-</div>
-
 ### /payment-methods/{paymentMethodKey}/addresses
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -503,53 +392,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payment-methods/{paymentMethodKey}/check-payments
+### /payment-methods/{paymentMethodKey}/positions
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments</span> <br/>
-        <span class="api-summary">Retrieve a list of CheckPayment records scoped by paymentMethodKey. getCheckPaymentsByPaymentMethodKey</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions</span> <br/>
+        <span class="api-summary">Retrieve a list of Position records scoped by paymentMethodKey. getPositionsByPaymentMethodKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments</span> <br/>
-        <span class="api-summary">Create a new CheckPayment record. createCheckPayment</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions</span> <br/>
+        <span class="api-summary">Create a new Position record. createPosition</span>
     </span>
 </div>
 
-### /payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}
+### /payment-methods/{paymentMethodKey}/positions/{positionKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CheckPayment record. getheckPaymentById</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Position record. getositionById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
-        <span class="api-summary">Replace a CheckPayment record. replaceCheckPayment</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Replace a Position record. replacePosition</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a CheckPayment record. updateCheckPayment</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Partially update a Position record. updatePosition</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
-        <span class="api-summary">Delete a CheckPayment Record deleteCheckPaymentRecord</span>
+        <span class="api-path">/payment-methods/{paymentMethodKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Delete a Position Record deletePositionRecord</span>
     </span>
 </div>
 
@@ -703,6 +592,256 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /payment-methods/{paymentMethodKey}/address-locales
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales</span> <br/>
+        <span class="api-summary">Retrieve a list of AddressLocale records scoped by paymentMethodKey. getAddressLocalesByPaymentMethodKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales</span> <br/>
+        <span class="api-summary">Create a new AddressLocale record. createAddressLocale</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AddressLocale record. getddressLocaleById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Replace a AddressLocale record. replaceAddressLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Partially update a AddressLocale record. updateAddressLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Delete a AddressLocale Record deleteAddressLocaleRecord</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/bank-intermediaries
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries</span> <br/>
+        <span class="api-summary">Retrieve a list of BankIntermediary records scoped by paymentMethodKey. getBankIntermediarysByPaymentMethodKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries</span> <br/>
+        <span class="api-summary">Create a new BankIntermediary record. createBankIntermediary</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific BankIntermediary record. getankIntermediaryById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
+        <span class="api-summary">Replace a BankIntermediary record. replaceBankIntermediary</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
+        <span class="api-summary">Partially update a BankIntermediary record. updateBankIntermediary</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
+        <span class="api-summary">Delete a BankIntermediary Record deleteBankIntermediaryRecord</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/authorizations
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations</span> <br/>
+        <span class="api-summary">Retrieve a list of Authorization records scoped by paymentMethodKey. getAuthorizationsByPaymentMethodKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations</span> <br/>
+        <span class="api-summary">Create a new Authorization record. createAuthorization</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Authorization record. getuthorizationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Replace a Authorization record. replaceAuthorization</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Partially update a Authorization record. updateAuthorization</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Delete a Authorization Record deleteAuthorizationRecord</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier records scoped by paymentMethodKey. getIdentifiersByPaymentMethodKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers</span> <br/>
+        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/identifiers/{identifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/check-payments
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments</span> <br/>
+        <span class="api-summary">Retrieve a list of CheckPayment records scoped by paymentMethodKey. getCheckPaymentsByPaymentMethodKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments</span> <br/>
+        <span class="api-summary">Create a new CheckPayment record. createCheckPayment</span>
+    </span>
+</div>
+
+### /payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CheckPayment record. getheckPaymentById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
+        <span class="api-summary">Replace a CheckPayment record. replaceCheckPayment</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
+        <span class="api-summary">Partially update a CheckPayment record. updateCheckPayment</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
+        <span class="api-summary">Delete a CheckPayment Record deleteCheckPaymentRecord</span>
+    </span>
+</div>
+
 ### /payment-methods/{paymentMethodKey}/electronic-payments
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -810,15 +949,18 @@ The following resources follow a consistent pattern under PaymentMethodroot with
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **payment-method** | /payment-methods | listPaymentMethods | createPaymentMethod | getPaymentMethods | updatePaymentMethods | deletePaymentMethods |
-    | **bank-intermediarie** | /payment-methods/{paymentMethodKey}/bank-intermediaries | listBankIntermediarysByPaymentMethodKey | createBankIntermediary | getBankIntermediarysByPaymentMethodKey | updateBankIntermediarysByPaymentMethodKey | deleteBankIntermediarysByPaymentMethodKey |
     | **reward-payment** | /payment-methods/{paymentMethodKey}/reward-payments | listRewardPaymentsByPaymentMethodKey | createRewardPayment | getRewardPaymentsByPaymentMethodKey | updateRewardPaymentsByPaymentMethodKey | deleteRewardPaymentsByPaymentMethodKey |
     | **person-name** | /payment-methods/{paymentMethodKey}/person-names | listPersonNamesByPaymentMethodKey | createPersonName | getPersonNamesByPaymentMethodKey | updatePersonNamesByPaymentMethodKey | deletePersonNamesByPaymentMethodKey |
-    | **identifier** | /payment-methods/{paymentMethodKey}/identifiers | listIdentifiersByPaymentMethodKey | createIdentifier | getIdentifiersByPaymentMethodKey | updateIdentifiersByPaymentMethodKey | deleteIdentifiersByPaymentMethodKey |
     | **addresse** | /payment-methods/{paymentMethodKey}/addresses | listAddresssByPaymentMethodKey | createAddress | getAddresssByPaymentMethodKey | updateAddresssByPaymentMethodKey | deleteAddresssByPaymentMethodKey |
-    | **check-payment** | /payment-methods/{paymentMethodKey}/check-payments | listCheckPaymentsByPaymentMethodKey | createCheckPayment | getCheckPaymentsByPaymentMethodKey | updateCheckPaymentsByPaymentMethodKey | deleteCheckPaymentsByPaymentMethodKey |
+    | **position** | /payment-methods/{paymentMethodKey}/positions | listPositionsByPaymentMethodKey | createPosition | getPositionsByPaymentMethodKey | updatePositionsByPaymentMethodKey | deletePositionsByPaymentMethodKey |
     | **cash-payment** | /payment-methods/{paymentMethodKey}/cash-payments | listCashPaymentsByPaymentMethodKey | createCashPayment | getCashPaymentsByPaymentMethodKey | updateCashPaymentsByPaymentMethodKey | deleteCashPaymentsByPaymentMethodKey |
     | **bank-beneficiarie** | /payment-methods/{paymentMethodKey}/bank-beneficiaries | listBankBeneficiarysByPaymentMethodKey | createBankBeneficiary | getBankBeneficiarysByPaymentMethodKey | updateBankBeneficiarysByPaymentMethodKey | deleteBankBeneficiarysByPaymentMethodKey |
     | **credit-card** | /payment-methods/{paymentMethodKey}/credit-cards | listCreditCardsByPaymentMethodKey | createCreditCard | getCreditCardsByPaymentMethodKey | updateCreditCardsByPaymentMethodKey | deleteCreditCardsByPaymentMethodKey |
+    | **address-locale** | /payment-methods/{paymentMethodKey}/address-locales | listAddressLocalesByPaymentMethodKey | createAddressLocale | getAddressLocalesByPaymentMethodKey | updateAddressLocalesByPaymentMethodKey | deleteAddressLocalesByPaymentMethodKey |
+    | **bank-intermediarie** | /payment-methods/{paymentMethodKey}/bank-intermediaries | listBankIntermediarysByPaymentMethodKey | createBankIntermediary | getBankIntermediarysByPaymentMethodKey | updateBankIntermediarysByPaymentMethodKey | deleteBankIntermediarysByPaymentMethodKey |
+    | **authorization** | /payment-methods/{paymentMethodKey}/authorizations | listAuthorizationsByPaymentMethodKey | createAuthorization | getAuthorizationsByPaymentMethodKey | updateAuthorizationsByPaymentMethodKey | deleteAuthorizationsByPaymentMethodKey |
+    | **identifier** | /payment-methods/{paymentMethodKey}/identifiers | listIdentifiersByPaymentMethodKey | createIdentifier | getIdentifiersByPaymentMethodKey | updateIdentifiersByPaymentMethodKey | deleteIdentifiersByPaymentMethodKey |
+    | **check-payment** | /payment-methods/{paymentMethodKey}/check-payments | listCheckPaymentsByPaymentMethodKey | createCheckPayment | getCheckPaymentsByPaymentMethodKey | updateCheckPaymentsByPaymentMethodKey | deleteCheckPaymentsByPaymentMethodKey |
     | **electronic-payment** | /payment-methods/{paymentMethodKey}/electronic-payments | listElectronicPaymentsByPaymentMethodKey | createElectronicPayment | getElectronicPaymentsByPaymentMethodKey | updateElectronicPaymentsByPaymentMethodKey | deleteElectronicPaymentsByPaymentMethodKey |
     | **platform-payment** | /payment-methods/{paymentMethodKey}/platform-payments | listPlatformPaymentsByPaymentMethodKey | createPlatformPayment | getPlatformPaymentsByPaymentMethodKey | updatePlatformPaymentsByPaymentMethodKey | deletePlatformPaymentsByPaymentMethodKey |
 

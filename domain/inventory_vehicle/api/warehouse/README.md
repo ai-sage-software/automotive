@@ -80,7 +80,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -97,14 +97,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **AddressLocales** : List of AddressLocale<br/>
-✅ **Addresses** : List of Address<br/>
-✅ **Authorizations** : List of Authorization<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of WarehouseTypes<br/>
 
 ---
 

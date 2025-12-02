@@ -563,6 +563,100 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods:
+    get:
+      tags:
+      - "EffectivePeriod"
+      summary: "Retrieve a list of EffectivePeriod records scop..."
+      operationId: "listEffectivePeriodsByJournalEntryTransactionKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of EffectivePeriod records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/EffectivePeriod"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: "journalEntryTransactionKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods/{effectivePeriodKey}:
+    get:
+      tags:
+      - "EffectivePeriod"
+      summary: "Retrieve a specific EffectivePeriod record."
+      operationId: "getEffectivePeriodById"
+      responses:
+        "200":
+          description: "The requested EffectivePeriod record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EffectivePeriod"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "EffectivePeriod"
+      summary: "Replace a EffectivePeriod record."
+      operationId: "replaceEffectivePeriod"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EffectivePeriod"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EffectivePeriod"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "journalEntryTransactionKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "effectivePeriodKey"
+      in: "path"
+      description: "The unique identifier for the specific EffectivePeriod."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
   /journal-entry-transactions/{journalEntryTransactionKey}/control-account-references:
     get:
       tags:
@@ -1203,11 +1297,41 @@ components:
   schemas:
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     ControlAccountReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        control_account_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "External system identifier"
     ControlAccountReferenceCreate:
       required:
       - "control_account_reference_key"
@@ -1216,25 +1340,38 @@ components:
       allOf:
       - $ref: "#/components/schemas/ControlAccountReference"
     ControlAccountReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "ControlAccountReference Update for Patch and Put"
     ControlAccountReferences:
       type: "array"
-      description: "List of ControlAccountReference"
       items:
         $ref: "#/components/schemas/ControlAccountReference"
-    ControlAccountReferencesCreate:
-      type: "array"
-      description: "ControlAccountReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/ControlAccountReferences"
-    ControlAccountReferencesUpdate:
-      type: "array"
-      description: "ControlAccountReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/ControlAccountReferences"
+    DaysOfWeekTypes:
+      type: "string"
+      description: "Status of the account"
+      enum:
+      - "SUN"
+      - "MON"
+      - "TUES"
+      - "WED"
+      - "THURS"
+      - "FRI"
+      - "SAT"
     DurationUOMTypes:
       type: "string"
-      description: "Units of Measure for Durations"
+      description: "types of duration u o ms."
       enum:
       - "MINUTES"
       - "HOURS"
@@ -1254,7 +1391,49 @@ components:
       - "NONE"
       - "OTHER"
     EffectivePeriod:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        effective_period_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the effective per... Pat..."
+        active_indicator:
+          type: "boolean"
+          description: "Indicator if the period is currently act..."
+        exclusive_indicator:
+          type: "boolean"
+          description: "Indicator if the period is exclusive"
+        start_date_time:
+          type: "string"
+          description: "Start date and time of the effective per..."
+          format: "date-time"
+        complete_date_time:
+          type: "string"
+          description: "Completion date and time of the effectiv..."
+          format: "date-time"
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        duration_value:
+          type: "string"
+          description: "Value of the duration"
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        recur_count:
+          type: "string"
+          description: "Count of recurrence"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: "string"
+          description: "Criteria defining recurrence"
+        recur_indicator:
+          type: "boolean"
+          description: "Indicator if recurrence is enabled"
+        timeslot:
+          $ref: "#/components/schemas/TimeSlot"
+      description: "Effective Period"
     EntryResourceTypes:
       type: "string"
       description: "types of entry resources."
@@ -1344,7 +1523,38 @@ components:
       - "FINANCE_HOLD"
       - "CUSTOMER_HOLD"
     GeneralLedgerReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique reference value Pattern: ^[a-zA-Z0-9_]+$..."
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique reference value Pattern: ^[a-zA-Z0-9_]+$..."
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique reference value Pattern: ^[a-zA-Z0-9_]+$..."
+        context:
+          type: "string"
+          description: "Context or domain of the reference"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "External system reference"
     GeneralLedgerReferenceCreate:
       required:
       - "general_ledger_reference_key"
@@ -1353,24 +1563,54 @@ components:
       allOf:
       - $ref: "#/components/schemas/GeneralLedgerReference"
     GeneralLedgerReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        context:
+          type: "string"
+          description: "Context or domain of the reference"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "GeneralLedgerReference Update for Patch and Put"
     GeneralLedgerReferences:
       type: "array"
-      description: "List of GeneralLedgerReference"
       items:
         $ref: "#/components/schemas/GeneralLedgerReference"
-    GeneralLedgerReferencesCreate:
-      type: "array"
-      description: "GeneralLedgerReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/GeneralLedgerReferences"
-    GeneralLedgerReferencesUpdate:
-      type: "array"
-      description: "GeneralLedgerReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/GeneralLedgerReferences"
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -1379,39 +1619,97 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     Identifiers:
       type: "array"
-      description: "List of Identifier"
       items:
         $ref: "#/components/schemas/Identifier"
-    IdentifiersCreate:
-      type: "array"
-      description: "Identifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/Identifiers"
-    IdentifiersUpdate:
-      type: "array"
-      description: "Identifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/Identifiers"
     JournalEntries:
       type: "array"
-      description: "List of JournalEntry"
       items:
         $ref: "#/components/schemas/JournalEntry"
-    JournalEntriesCreate:
-      type: "array"
-      description: "JournalEntries Create for Post"
-      items:
-        $ref: "#/components/schemas/JournalEntries"
-    JournalEntriesUpdate:
-      type: "array"
-      description: "JournalEntries Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/JournalEntries"
     JournalEntry:
-      $ref: "#/components/schemas/Identifiers"
+      type: "object"
+      properties:
+        journal_entry_id:
+          type: "string"
+          description: "natural immutable identifier"
+        journal_entry_key:
+          type: "string"
+          description: "natural immutable identifier"
+        entry_sequence:
+          type: "string"
+          description: "entry sequence"
+        financial_transaction_key:
+          type: "string"
+          description: "Unique identifier of the financial trans..."
+        control_account_references:
+          $ref: "#/components/schemas/ControlAccountReferences"
+        general_ledger_references:
+          $ref: "#/components/schemas/GeneralLedgerReferences"
+        subsidiary_ledger_reference:
+          $ref: "#/components/schemas/SubsidiaryLedgerReference"
+        desc:
+          type: "string"
+          description: "A description for the journal entry."
+          example: "Sales - Extended Service Contract"
+        detail_sequence:
+          type: "string"
+          description: "A sequence number for batch updates for ..."
+        journal_type:
+          $ref: "#/components/schemas/JournalTypes"
+        org_href:
+          type: "string"
+          description: "A reference link to the organization ass..."
+          format: "href"
+          example: "1"
+        org_id:
+          type: "string"
+          description: "The ID of the organization (cost or prof..."
+          example: "1"
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        org_type:
+          $ref: "#/components/schemas/OrganizationTypes"
+        money:
+          $ref: "#/components/schemas/Money"
+        entry_reference_account_desc:
+          type: "string"
+          description: "A description of the reference account."
+          example: "Cost of Goods"
+        reference_account_id:
+          type: "string"
+          description: "The ID of the reference account."
+          example: "54322"
+        resource_href:
+          type: "string"
+          description: "A unique identifier (link) to the root r..."
+          format: "href"
+        resource_id:
+          type: "string"
+          description: "The unique identifier of the root resour..."
+          example: "543"
+        resource_type:
+          $ref: "#/components/schemas/EntryResourceTypes"
+        gl_segments:
+          $ref: "#/components/schemas/Identifiers"
+      description: "journal entry for general ledger"
     JournalEntryCreate:
       required:
       - "journal_entry_key"
@@ -1420,7 +1718,42 @@ components:
       allOf:
       - $ref: "#/components/schemas/JournalEntry"
     JournalEntryTransaction:
-      $ref: "#/components/schemas/JournalEntries"
+      type: "object"
+      properties:
+        journal_entry_transaction_id:
+          type: "string"
+          description: "A unique system-generated identifier for..."
+          example: "gle_700123"
+        journal_entry_transaction_key:
+          type: "string"
+          description: "A unique system-generated identifier for..."
+          example: "gle_700123"
+        provider_key:
+          type: "string"
+          description: "Identifier for the payroll system or pro..."
+          example: "PAY-PRO-2"
+        cycle_id:
+          type: "string"
+          description: "Identifier for the specific payroll cycl..."
+          example: "2025-09-WEEK2"
+        entry_date:
+          type: "string"
+          description: "The date the journal entry was recorded ..."
+          format: "date"
+          example: "2025-09-30T00:00:00Z"
+        total_debit_amount:
+          $ref: "#/components/schemas/Money"
+        total_credit_amount:
+          $ref: "#/components/schemas/Money"
+        is_balanced:
+          type: "boolean"
+          description: "A flag indicating if the total debits eq..."
+          example: "true"
+        financial_flow_status_type:
+          $ref: "#/components/schemas/FinancialFlowStatusTypes"
+        journal_entries:
+          $ref: "#/components/schemas/JournalEntries"
+      description: "Represents the header of a General Ledger (GL) ..."
     JournalEntryTransactionCreate:
       required:
       - "journal_entry_transaction_key"
@@ -1429,52 +1762,98 @@ components:
       allOf:
       - $ref: "#/components/schemas/JournalEntryTransaction"
     JournalEntryTransactionUpdate:
-      $ref: "#/components/schemas/Money"
+      type: "object"
+      properties:
+        financial_flow_status_type:
+          $ref: "#/components/schemas/FinancialFlowStatusTypes"
+        journal_entries:
+          $ref: "#/components/schemas/JournalEntries"
+        total_credit_amount:
+          $ref: "#/components/schemas/Money"
+        total_debit_amount:
+          $ref: "#/components/schemas/Money"
+        is_balanced:
+          type: "boolean"
+          description: "A flag indicating if the total debits eq..."
+          example: "true"
+        entry_date:
+          type: "string"
+          description: "The date the journal entry was recorded ..."
+          format: "date"
+          example: "2025-09-30T00:00:00Z"
+      description: "JournalEntryTransaction Update for Patch and Put"
     JournalEntryUpdate:
-      $ref: "#/components/schemas/JournalTypes"
+      type: "object"
+      properties:
+        resource_href:
+          type: "string"
+          description: "A unique identifier (link) to the root r..."
+          format: "href"
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        control_account_references:
+          $ref: "#/components/schemas/ControlAccountReferences"
+        org_type:
+          $ref: "#/components/schemas/OrganizationTypes"
+        resource_type:
+          $ref: "#/components/schemas/EntryResourceTypes"
+        subsidiary_ledger_reference:
+          $ref: "#/components/schemas/SubsidiaryLedgerReference"
+        detail_sequence:
+          type: "string"
+          description: "A sequence number for batch updates for ..."
+        gl_segments:
+          $ref: "#/components/schemas/Identifiers"
+        org_href:
+          type: "string"
+          description: "A reference link to the organization ass..."
+          format: "href"
+          example: "1"
+        money:
+          $ref: "#/components/schemas/Money"
+        entry_reference_account_desc:
+          type: "string"
+          description: "A description of the reference account."
+          example: "Cost of Goods"
+        general_ledger_references:
+          $ref: "#/components/schemas/GeneralLedgerReferences"
+        entry_sequence:
+          type: "string"
+          description: "entry sequence"
+        journal_type:
+          $ref: "#/components/schemas/JournalTypes"
+        desc:
+          type: "string"
+          description: "A description for the journal entry."
+          example: "Sales - Extended Service Contract"
+      description: "JournalEntry Update for Patch and Put"
     JournalTypes:
       type: "string"
       description: "types of journals."
       enum:
       - "DEBIT"
       - "CREDIT"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
     Money:
       type: "object"
       properties:
         money_key:
           type: "string"
           description: "The unique key for the monetary value."
-          nullable: false
         money_id:
           type: "string"
           description: "The unique ID for the monetary value."
-          nullable: false
         currency_code:
           type: "string"
           description: "ISO currency code, e.g., 'USD'."
-          nullable: false
         display_value:
           type: "string"
-          description: "The locale-specific display format for the valu..."
-          nullable: false
+          description: "The locale-specific display format for t..."
         locale:
           type: "string"
           description: "The locale code (e.g., en-US, fr-FR)."
-          nullable: false
         value:
           type: "string"
           description: "The monetary value."
-          nullable: false
       description: "Represents a monetary value, including its curr..."
     OrganizationTypes:
       type: "string"
@@ -1492,7 +1871,54 @@ components:
       - "TEAM"
       - "OTHER"
     PartyIdentifier:
-      $ref: "#/components/schemas/EffectivePeriod"
+      type: "object"
+      properties:
+        party_identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        party:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+      description: "External system identifier"
     PartyIdentifierCreate:
       required:
       - "party_identifier_key"
@@ -1501,22 +1927,40 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartyIdentifier"
     PartyIdentifierUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        party:
+          $ref: "#/components/schemas/Identifier"
+      description: "PartyIdentifier Update for Patch and Put"
     PartyIdentifiers:
       type: "array"
-      description: "List of PartyIdentifier"
       items:
         $ref: "#/components/schemas/PartyIdentifier"
-    PartyIdentifiersCreate:
-      type: "array"
-      description: "PartyIdentifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
-    PartyIdentifiersUpdate:
-      type: "array"
-      description: "PartyIdentifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
     PartyRelationshipTypes:
       type: "string"
       description: "types of party relationships."
@@ -1619,7 +2063,38 @@ components:
       - "REMOVE"
       - "OTHER"
     SubsidiaryLedgerReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        subsidiary_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the Subsidiary Led... Pat..."
+        subsidiary_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the Subsidiary Ledger r... Pat..."
+        subsidiary_ledger_transaction_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "The key of the referenced Subsidiary Led... Pat..."
+        context:
+          type: "string"
+          description: "Context or domain of the Sub-Ledger tran..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        subsidiary_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the Journal Entry refe..."
+          format: "date-time"
+      description: "Immutable reference from a Journal Entry back t..."
     SubsidiaryLedgerReferenceCreate:
       required:
       - "subsidiary_ledger_reference_key"
@@ -1628,7 +2103,84 @@ components:
       allOf:
       - $ref: "#/components/schemas/SubsidiaryLedgerReference"
     SubsidiaryLedgerReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the Sub-Ledger tran..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the Journal Entry refe..."
+          format: "date-time"
+        subsidiary_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+      description: "SubsidiaryLedgerReference Update for Patch and Put"
+    TimeSlot:
+      type: "object"
+      properties:
+        time_slot_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique business key for the time slot. Pattern:..."
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
+          format: "date-time"
+        recurring_indicator:
+          type: "boolean"
+          description: "Indicates if the time slot is recurring."
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
+          format: "date-time"
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the time slot reco... Pat..."
+        week_of_date:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          format: "date"
+          items:
+            type: "string"
+      description: "Range of time for the appointment including sta..."
+    TimeslotDirectiveTypes:
+      type: "string"
+      description: "Represents the directive for a timeslot."
+      enum:
+      - "AFTER"
+      - "ANYTIME"
+      - "BEFORE"
+      - "BETWEEN"
+      - "BLOCK"
+      - "UNKNOWN"
   responses:
     NotFoundError:
       description: "The requested resource was not found."

@@ -19,6 +19,7 @@ The API is structured around the domain **human_resources** and **Invoice** reso
     | **PaymentTermReference** | /invoices/{invoiceKey}/payment-term-references | Manages PaymentTermReferences belonging to Invoices |
     | **InvoiceItem** | /invoices/{invoiceKey}/invoice-items | Manages InvoiceItems belonging to Invoices |
     | **DiscountReference** | /invoices/{invoiceKey}/discount-references | Manages DiscountReferences belonging to Invoices |
+    | **TimeSlot** | /invoices/{invoiceKey}/time-slots | Manages TimeSlots belonging to Invoices |
     | **AddressReference** | /invoices/{invoiceKey}/address-references | Manages AddressReferences belonging to Invoices |
     | **FinancialCategoryReference** | /invoices/{invoiceKey}/financial-category-references | Manages FinancialCategoryReferences belonging to Invoices |
     | **FeeReference** | /invoices/{invoiceKey}/fee-references | Manages FeeReferences belonging to Invoices |
@@ -28,6 +29,7 @@ The API is structured around the domain **human_resources** and **Invoice** reso
     | **CreditReference** | /invoices/{invoiceKey}/credit-references | Manages CreditReferences belonging to Invoices |
     | **RebateReference** | /invoices/{invoiceKey}/rebate-references | Manages RebateReferences belonging to Invoices |
     | **ShipmentReference** | /invoices/{invoiceKey}/shipment-references | Manages ShipmentReferences belonging to Invoices |
+    | **UnitOfMeasure** | /invoices/{invoiceKey}/unit-of-measures | Manages UnitOfMeasures belonging to Invoices |
     | **TaxSplit** | /invoices/{invoiceKey}/tax-splits | Manages TaxSplits belonging to Invoices |
     | **PaymentScheduleReference** | /invoices/{invoiceKey}/payment-schedule-references | Manages PaymentScheduleReferences belonging to Invoices |
     | **PricePlanReference** | /invoices/{invoiceKey}/price-plan-references | Manages PricePlanReferences belonging to Invoices |
@@ -99,7 +101,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -109,6 +111,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
@@ -130,44 +133,17 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
-💠 **UOMQuantityCategoryTypes** : entity<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AddressReferences** : List of AddressReference<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CreditReferences** : List of CreditReference<br/>
-✅ **DiscountReferences** : List of DiscountReference<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **FeeReferences** : List of FeeReference<br/>
-✅ **FinancialCategoryReferences** : List of FinancialCategoryReference<br/>
-✅ **FinancialEvents** : List of FinancialEvent<br/>
-✅ **FinancialSplits** : List of FinancialSplit<br/>
-✅ **FinancialTracks** : List of FinancialTrack<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **InvoiceItems** : List of InvoiceItem<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PaymentTransactionStatusTypes<br/>
-✅ **Memo** : List of String<br/>
-✅ **PartReferences** : List of PartReference<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PaymentMethodReferences** : List of PaymentMethodReference<br/>
-✅ **PaymentScheduleReferences** : List of PaymentScheduleReference<br/>
-✅ **PaymentTermReferences** : List of PaymentTermReference<br/>
-✅ **PricePlanReferences** : List of PricePlanReference<br/>
-✅ **RebateReferences** : List of RebateReference<br/>
-✅ **RewardReferences** : List of RewardReference<br/>
-✅ **ShipmentReferences** : List of ShipmentReference<br/>
-✅ **TaxSplits** : List of TaxSplit<br/>
 ✅ **TextualDetail** : not nullable<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -446,6 +422,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references/{discountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by invoiceKey. getTimeSlotsByInvoiceKey</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -872,6 +874,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
         <span class="api-summary">Delete a ShipmentReference Record deleteShipmentReferenceRecord</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/unit-of-measures
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/unit-of-measures</span> <br/>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by invoiceKey. getUnitOfMeasuresByInvoiceKey</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/unit-of-measures/{unitOfMeasureKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -1485,6 +1513,7 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **payment-term-reference** | /invoices/{invoiceKey}/payment-term-references | listPaymentTermReferencesByInvoiceKey | createPaymentTermReference | getPaymentTermReferencesByInvoiceKey | updatePaymentTermReferencesByInvoiceKey | deletePaymentTermReferencesByInvoiceKey |
     | **invoice-item** | /invoices/{invoiceKey}/invoice-items | listInvoiceItemsByInvoiceKey | createInvoiceItem | getInvoiceItemsByInvoiceKey | updateInvoiceItemsByInvoiceKey | deleteInvoiceItemsByInvoiceKey |
     | **discount-reference** | /invoices/{invoiceKey}/discount-references | listDiscountReferencesByInvoiceKey | createDiscountReference | getDiscountReferencesByInvoiceKey | updateDiscountReferencesByInvoiceKey | deleteDiscountReferencesByInvoiceKey |
+    | **time-slot** | /invoices/{invoiceKey}/time-slots | listTimeSlotsByInvoiceKey |  | getTimeSlotsByInvoiceKey | updateTimeSlotsByInvoiceKey | deleteTimeSlotsByInvoiceKey |
     | **address-reference** | /invoices/{invoiceKey}/address-references | listAddressReferencesByInvoiceKey | createAddressReference | getAddressReferencesByInvoiceKey | updateAddressReferencesByInvoiceKey | deleteAddressReferencesByInvoiceKey |
     | **financial-category-reference** | /invoices/{invoiceKey}/financial-category-references | listFinancialCategoryReferencesByInvoiceKey | createFinancialCategoryReference | getFinancialCategoryReferencesByInvoiceKey | updateFinancialCategoryReferencesByInvoiceKey | deleteFinancialCategoryReferencesByInvoiceKey |
     | **fee-reference** | /invoices/{invoiceKey}/fee-references | listFeeReferencesByInvoiceKey | createFeeReference | getFeeReferencesByInvoiceKey | updateFeeReferencesByInvoiceKey | deleteFeeReferencesByInvoiceKey |
@@ -1494,6 +1523,7 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **credit-reference** | /invoices/{invoiceKey}/credit-references | listCreditReferencesByInvoiceKey | createCreditReference | getCreditReferencesByInvoiceKey | updateCreditReferencesByInvoiceKey | deleteCreditReferencesByInvoiceKey |
     | **rebate-reference** | /invoices/{invoiceKey}/rebate-references | listRebateReferencesByInvoiceKey | createRebateReference | getRebateReferencesByInvoiceKey | updateRebateReferencesByInvoiceKey | deleteRebateReferencesByInvoiceKey |
     | **shipment-reference** | /invoices/{invoiceKey}/shipment-references | listShipmentReferencesByInvoiceKey | createShipmentReference | getShipmentReferencesByInvoiceKey | updateShipmentReferencesByInvoiceKey | deleteShipmentReferencesByInvoiceKey |
+    | **unit-of-measure** | /invoices/{invoiceKey}/unit-of-measures | listUnitOfMeasuresByInvoiceKey |  | getUnitOfMeasuresByInvoiceKey | updateUnitOfMeasuresByInvoiceKey | deleteUnitOfMeasuresByInvoiceKey |
     | **tax-split** | /invoices/{invoiceKey}/tax-splits | listTaxSplitsByInvoiceKey | createTaxSplit | getTaxSplitsByInvoiceKey | updateTaxSplitsByInvoiceKey | deleteTaxSplitsByInvoiceKey |
     | **payment-schedule-reference** | /invoices/{invoiceKey}/payment-schedule-references | listPaymentScheduleReferencesByInvoiceKey | createPaymentScheduleReference | getPaymentScheduleReferencesByInvoiceKey | updatePaymentScheduleReferencesByInvoiceKey | deletePaymentScheduleReferencesByInvoiceKey |
     | **price-plan-reference** | /invoices/{invoiceKey}/price-plan-references | listPricePlanReferencesByInvoiceKey | createPricePlanReference | getPricePlanReferencesByInvoiceKey | updatePricePlanReferencesByInvoiceKey | deletePricePlanReferencesByInvoiceKey |

@@ -18,6 +18,7 @@ The API is structured around the domain **finance** and **Payment** resource as 
     | **Payment** | /payments | Manages Payments |
     | **PaymentTransaction** | /payments/{paymentKey}/payment-transactions | Manages PaymentTransactions belonging to Payments |
     | **Money** | /payments/{paymentKey}/moneys | Manages Moneys belonging to Payments |
+    | **Identifier** | /payments/{paymentKey}/identifiers | Manages Identifiers belonging to Payments |
     | **PaymentMethodReference** | /payments/{paymentKey}/payment-method-references | Manages PaymentMethodReferences belonging to Payments |
 
 
@@ -78,7 +79,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -96,11 +97,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Codes** : List of Codes<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
 ✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
-✅ **PaymentTransactions** : List of PaymentTransaction<br/>
 
 ---
 
@@ -308,6 +305,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /payments/{paymentKey}/identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier records scoped by paymentKey. getIdentifiersByPaymentKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers</span> <br/>
+        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+    </span>
+</div>
+
+### /payments/{paymentKey}/identifiers/{identifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+    </span>
+</div>
+
 ### /payments/{paymentKey}/payment-method-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -367,6 +414,7 @@ The following resources follow a consistent pattern under Paymentroot with key {
     | **payment** | /payments | listPayments | createPayment | getPayments | updatePayments | deletePayments |
     | **payment-transaction** | /payments/{paymentKey}/payment-transactions | listPaymentTransactionsByPaymentKey | createPaymentTransaction | getPaymentTransactionsByPaymentKey | updatePaymentTransactionsByPaymentKey | deletePaymentTransactionsByPaymentKey |
     | **money** | /payments/{paymentKey}/moneys | listMoneysByPaymentKey |  | getMoneysByPaymentKey | updateMoneysByPaymentKey | deleteMoneysByPaymentKey |
+    | **identifier** | /payments/{paymentKey}/identifiers | listIdentifiersByPaymentKey | createIdentifier | getIdentifiersByPaymentKey | updateIdentifiersByPaymentKey | deleteIdentifiersByPaymentKey |
     | **payment-method-reference** | /payments/{paymentKey}/payment-method-references | listPaymentMethodReferencesByPaymentKey | createPaymentMethodReference | getPaymentMethodReferencesByPaymentKey | updatePaymentMethodReferencesByPaymentKey | deletePaymentMethodReferencesByPaymentKey |
 
 ***Note on List Operations:***

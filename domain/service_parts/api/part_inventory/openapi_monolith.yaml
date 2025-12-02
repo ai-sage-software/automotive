@@ -1040,6 +1040,100 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /part-inventories/{partInventoryKey}/time-slots:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a list of TimeSlot records scoped by p..."
+      operationId: "listTimeSlotsByPartInventoryKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of TimeSlot records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TimeSlot"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: "partInventoryKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a specific TimeSlot record."
+      operationId: "getTimeSlotById"
+      responses:
+        "200":
+          description: "The requested TimeSlot record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "TimeSlot"
+      summary: "Replace a TimeSlot record."
+      operationId: "replaceTimeSlot"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeSlot"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "partInventoryKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "timeSlotKey"
+      in: "path"
+      description: "The unique identifier for the specific TimeSlot."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
   /part-inventories/{partInventoryKey}/part-inventory-metrics:
     get:
       tags:
@@ -1203,11 +1297,41 @@ components:
   schemas:
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     ControlAccountReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        control_account_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "External system identifier"
     ControlAccountReferenceCreate:
       required:
       - "control_account_reference_key"
@@ -1216,25 +1340,27 @@ components:
       allOf:
       - $ref: "#/components/schemas/ControlAccountReference"
     ControlAccountReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "ControlAccountReference Update for Patch and Put"
     ControlAccountReferences:
       type: "array"
-      description: "List of ControlAccountReference"
       items:
         $ref: "#/components/schemas/ControlAccountReference"
-    ControlAccountReferencesCreate:
-      type: "array"
-      description: "ControlAccountReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/ControlAccountReferences"
-    ControlAccountReferencesUpdate:
-      type: "array"
-      description: "ControlAccountReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/ControlAccountReferences"
     DaysOfWeekTypes:
       type: "string"
-      description: "Status of the account"
+      description: "types of days of weeks."
       enum:
       - "SUN"
       - "MON"
@@ -1265,7 +1391,49 @@ components:
       - "NONE"
       - "OTHER"
     EffectivePeriod:
-      $ref: "#/components/schemas/TimeSlot"
+      type: "object"
+      properties:
+        effective_period_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the effective per... Pat..."
+        active_indicator:
+          type: "boolean"
+          description: "Indicator if the period is currently act..."
+        exclusive_indicator:
+          type: "boolean"
+          description: "Indicator if the period is exclusive"
+        start_date_time:
+          type: "string"
+          description: "Start date and time of the effective per..."
+          format: "date-time"
+        complete_date_time:
+          type: "string"
+          description: "Completion date and time of the effectiv..."
+          format: "date-time"
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        duration_value:
+          type: "string"
+          description: "Value of the duration"
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        recur_count:
+          type: "string"
+          description: "Count of recurrence"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: "string"
+          description: "Criteria defining recurrence"
+        recur_indicator:
+          type: "boolean"
+          description: "Indicator if recurrence is enabled"
+        timeslot:
+          $ref: "#/components/schemas/TimeSlot"
+      description: "Effective Period"
     ErrorDetail:
       required:
       - "code"
@@ -1303,7 +1471,35 @@ components:
           example: "2025-11-10T10:30:00Z"
       description: "Standard format for all API error responses."
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -1312,22 +1508,27 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     Identifiers:
       type: "array"
-      description: "List of Identifier"
       items:
         $ref: "#/components/schemas/Identifier"
-    IdentifiersCreate:
-      type: "array"
-      description: "Identifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/Identifiers"
-    IdentifiersUpdate:
-      type: "array"
-      description: "Identifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/Identifiers"
     InventoryStatusTypes:
       type: "string"
       description: "types of inventory status."
@@ -1353,18 +1554,39 @@ components:
       - "RETURNED"
       - "DISPOSAL"
       - "UNKNOWN"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
     PartInventory:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        part_master_id:
+          type: "string"
+          description: "Unique identifier for the Part Master re..."
+        part_inventory_id:
+          type: "string"
+          description: "Unique identifier for the PartInventory ..."
+        part_inventory_key:
+          type: "string"
+          description: "Natural key or business-friendly key for..."
+        last_inventory_date:
+          type: "string"
+          description: "The date of the most recent physical inv..."
+          format: "date"
+        inventory_status_type:
+          $ref: "#/components/schemas/InventoryStatusTypes"
+        prices:
+          $ref: "#/components/schemas/Prices"
+        part_references:
+          $ref: "#/components/schemas/PartReferences"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_inventory_events:
+          $ref: "#/components/schemas/PartInventoryEvents"
+        part_inventory_metrics:
+          $ref: "#/components/schemas/PartInventoryMetrics"
+        control_account_references:
+          $ref: "#/components/schemas/ControlAccountReferences"
+        warehouse_identifier:
+          $ref: "#/components/schemas/Identifier"
+      description: "The aggregated quantity of a specific Part Mast..."
     PartInventoryCreate:
       required:
       - "part_inventory_key"
@@ -1373,7 +1595,51 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartInventory"
     PartInventoryEvent:
-      $ref: "#/components/schemas/PartInventoryOrderTypes"
+      type: "object"
+      properties:
+        warehouse_event_key:
+          type: "string"
+          description: "The unique key for the part inventory ev..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time of the event's occurre..."
+          format: "date-time"
+        actor_id:
+          type: "string"
+          description: "The unique ID of the actor involved in t..."
+        actor_name:
+          type: "string"
+          description: "The name of the actor involved in the ev..."
+        actor_href:
+          type: "string"
+          description: "The URI to the actor resource."
+          format: "href"
+        event_category:
+          type: "string"
+          description: "The category of the event."
+        event_action:
+          type: "string"
+          description: "The action performed in the event."
+        event_label:
+          type: "string"
+          description: "A label for the event."
+        event_values:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            type: "string"
+        part_inventory_action_type:
+          $ref: "#/components/schemas/PartInventoryOrderTypes"
+        warehouse_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            type: "string"
+      description: "Represents a part event, typically related to i..."
     PartInventoryEventCreate:
       required:
       - "part_inventory_event_key"
@@ -1382,24 +1648,64 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartInventoryEvent"
     PartInventoryEventUpdate:
-      $ref: "#/components/schemas/PartInventoryOrderTypes"
+      type: "object"
+      properties:
+        event_action:
+          type: "string"
+          description: "The action performed in the event."
+        warehouse_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            type: "string"
+        actor_name:
+          type: "string"
+          description: "The name of the actor involved in the ev..."
+        event_values:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            type: "string"
+        event_label:
+          type: "string"
+          description: "A label for the event."
+        event_category:
+          type: "string"
+          description: "The category of the event."
+        part_inventory_action_type:
+          $ref: "#/components/schemas/PartInventoryOrderTypes"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time of the event's occurre..."
+          format: "date-time"
+        actor_href:
+          type: "string"
+          description: "The URI to the actor resource."
+          format: "href"
+      description: "PartInventoryEvent Update for Patch and Put"
     PartInventoryEvents:
       type: "array"
-      description: "List of PartInventoryEvent"
       items:
         $ref: "#/components/schemas/PartInventoryEvent"
-    PartInventoryEventsCreate:
-      type: "array"
-      description: "PartInventoryEvents Create for Post"
-      items:
-        $ref: "#/components/schemas/PartInventoryEvents"
-    PartInventoryEventsUpdate:
-      type: "array"
-      description: "PartInventoryEvents Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartInventoryEvents"
     PartInventoryMetric:
-      $ref: "#/components/schemas/PartInventoryMetricTypes"
+      type: "object"
+      properties:
+        uom_value:
+          maxLength: 20
+          type: "string"
+          description: "Unit of Measure (UOM) code representing ..."
+        part_inventory_metric_type:
+          $ref: "#/components/schemas/PartInventoryMetricTypes"
+        metric_value:
+          maxLength: 50
+          pattern: "^[0-9]+(\\.[0-9]{1,3})?$"
+          type: "string"
+          description: "The numerical value for the specified in... Pat..."
+      description: "Value price with unit of measure for inventory ..."
     PartInventoryMetricCreate:
       required:
       - "part_inventory_metric_key"
@@ -1437,22 +1743,24 @@ components:
       - "QUANTITY_DAILY_USAGE"
       - "OTHER"
     PartInventoryMetricUpdate:
-      $ref: "#/components/schemas/PartInventoryMetricTypes"
+      type: "object"
+      properties:
+        part_inventory_metric_type:
+          $ref: "#/components/schemas/PartInventoryMetricTypes"
+        metric_value:
+          maxLength: 50
+          pattern: "^[0-9]+(\\.[0-9]{1,3})?$"
+          type: "string"
+          description: "The numerical value for the specified in... Pat..."
+        uom_value:
+          maxLength: 20
+          type: "string"
+          description: "Unit of Measure (UOM) code representing ..."
+      description: "PartInventoryMetric Update for Patch and Put"
     PartInventoryMetrics:
       type: "array"
-      description: "List of PartInventoryMetric"
       items:
         $ref: "#/components/schemas/PartInventoryMetric"
-    PartInventoryMetricsCreate:
-      type: "array"
-      description: "PartInventoryMetrics Create for Post"
-      items:
-        $ref: "#/components/schemas/PartInventoryMetrics"
-    PartInventoryMetricsUpdate:
-      type: "array"
-      description: "PartInventoryMetrics Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartInventoryMetrics"
     PartInventoryOrderTypes:
       type: "string"
       description: "types of part inventory orders."
@@ -1485,9 +1793,78 @@ components:
       - "RETURNED_ORDER"
       - "NO_LONGER_AVAILABLE"
     PartInventoryUpdate:
-      $ref: "#/components/schemas/PartInventoryEvents"
+      type: "object"
+      properties:
+        last_inventory_date:
+          type: "string"
+          description: "The date of the most recent physical inv..."
+          format: "date"
+        inventory_status_type:
+          $ref: "#/components/schemas/InventoryStatusTypes"
+        part_inventory_metrics:
+          $ref: "#/components/schemas/PartInventoryMetrics"
+        control_account_references:
+          $ref: "#/components/schemas/ControlAccountReferences"
+        warehouse_identifier:
+          $ref: "#/components/schemas/Identifier"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        prices:
+          $ref: "#/components/schemas/Prices"
+        part_references:
+          $ref: "#/components/schemas/PartReferences"
+        part_inventory_events:
+          $ref: "#/components/schemas/PartInventoryEvents"
+      description: "PartInventory Update for Patch and Put"
     PartReference:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        part_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        part_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        name:
+          type: "string"
+          description: "Product Name."
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        part_master_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        product_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProductTypes"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "External system identifier"
     PartReferenceCreate:
       required:
       - "part_reference_key"
@@ -1496,24 +1873,89 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartReference"
     PartReferenceUpdate:
-      $ref: "#/components/schemas/Identifiers"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        product_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProductTypes"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        name:
+          type: "string"
+          description: "Product Name."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "PartReference Update for Patch and Put"
     PartReferences:
       type: "array"
-      description: "List of PartReference"
       items:
         $ref: "#/components/schemas/PartReference"
-    PartReferencesCreate:
-      type: "array"
-      description: "PartReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/PartReferences"
-    PartReferencesUpdate:
-      type: "array"
-      description: "PartReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartReferences"
     Price:
-      $ref: "#/components/schemas/EffectivePeriod"
+      type: "object"
+      properties:
+        display_value:
+          type: "string"
+          description: "Human-readable display value for the pri..."
+        locale:
+          type: "string"
+          description: "Locale used for formatting display value..."
+        value:
+          type: "string"
+          description: "The numeric value of the price (before t..."
+        tax_value:
+          type: "string"
+          description: "The calculated amount of tax applied to ..."
+        taxable_amount:
+          type: "string"
+          description: "The portion of the price subject to tax."
+        non_taxable_amount:
+          type: "string"
+          description: "The portion of the price not subject to ..."
+        total_amount:
+          type: "string"
+          description: "The total final price including all comp..."
+        total_cost_amount:
+          type: "string"
+          description: "The total cost to the provider/seller."
+        unit_cost_amount:
+          type: "string"
+          description: "The unit cost to the provider/seller."
+        price_description:
+          type: "string"
+          description: "A descriptive title for the price (e.g.,..."
+        price_key:
+          type: "string"
+          description: "Natural key or business identifier for t..."
+        tax_included_indicator:
+          type: "boolean"
+          description: "Indicates whether tax is included in the..."
+        currency_code:
+          type: "string"
+          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
+        price_id:
+          type: "string"
+          description: "Unique system identifier for the price r..."
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        price_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceTypes"
+      description: "Price that includes display value, currency, lo..."
     PriceCreate:
       required:
       - "price_key"
@@ -1574,22 +2016,58 @@ components:
       - "TAX"
       - "OTHER"
     PriceUpdate:
-      $ref: "#/components/schemas/EffectivePeriod"
+      type: "object"
+      properties:
+        display_value:
+          type: "string"
+          description: "Human-readable display value for the pri..."
+        unit_cost_amount:
+          type: "string"
+          description: "The unit cost to the provider/seller."
+        locale:
+          type: "string"
+          description: "Locale used for formatting display value..."
+        currency_code:
+          type: "string"
+          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        tax_value:
+          type: "string"
+          description: "The calculated amount of tax applied to ..."
+        total_amount:
+          type: "string"
+          description: "The total final price including all comp..."
+        total_cost_amount:
+          type: "string"
+          description: "The total cost to the provider/seller."
+        price_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceTypes"
+        tax_included_indicator:
+          type: "boolean"
+          description: "Indicates whether tax is included in the..."
+        price_description:
+          type: "string"
+          description: "A descriptive title for the price (e.g.,..."
+        non_taxable_amount:
+          type: "string"
+          description: "The portion of the price not subject to ..."
+        value:
+          type: "string"
+          description: "The numeric value of the price (before t..."
+        taxable_amount:
+          type: "string"
+          description: "The portion of the price subject to tax."
+      description: "Price Update for Patch and Put"
     Prices:
       type: "array"
-      description: "List of Price"
       items:
         $ref: "#/components/schemas/Price"
-    PricesCreate:
-      type: "array"
-      description: "Prices Create for Post"
-      items:
-        $ref: "#/components/schemas/Prices"
-    PricesUpdate:
-      type: "array"
-      description: "Prices Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/Prices"
     ProductTypes:
       type: "string"
       description: "types of products."
@@ -1614,10 +2092,62 @@ components:
       - "SUBSCRIPTION"
       - "OTHER"
     TimeSlot:
-      $ref: "#/components/schemas/DaysOfWeekTypes"
+      type: "object"
+      properties:
+        time_slot_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique business key for the time slot. Pattern:..."
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
+          format: "date-time"
+        recurring_indicator:
+          type: "boolean"
+          description: "Indicates if the time slot is recurring."
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
+          format: "date-time"
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the time slot reco... Pat..."
+        week_of_date:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          format: "date"
+          items:
+            type: "string"
+      description: "Range of time for the appointment including sta..."
     TimeslotDirectiveTypes:
       type: "string"
-      description: "Represents the directive for a timeslot."
+      description: "types of timeslot directives."
       enum:
       - "AFTER"
       - "ANYTIME"

@@ -24,6 +24,7 @@ The API is structured around the domain **service_parts** and **BillOfMaterial**
     | **EffectivePeriod** | /bill-of-materials/{billOfMaterialKey}/effective-periods | Manages EffectivePeriods belonging to BillOfMaterials |
     | **PartSpecification** | /bill-of-materials/{billOfMaterialKey}/part-specifications | Manages PartSpecifications belonging to BillOfMaterials |
     | **TextualDetail** | /bill-of-materials/{billOfMaterialKey}/textual-details | Manages TextualDetails belonging to BillOfMaterials |
+    | **TimeSlot** | /bill-of-materials/{billOfMaterialKey}/time-slots | Manages TimeSlots belonging to BillOfMaterials |
 
 
 ---
@@ -83,7 +84,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -92,6 +93,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PartConditionGradeTypes** : types of part condition grades.<br/>
 💠 **PartConditionTypes** : types of part conditions.<br/>
@@ -99,29 +101,17 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
 💠 **ProductStatusTypes** : types of product status.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **BomComponents** : List of BomComponent<br/>
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PartConditionTypes<br/>
-✅ **Memo** : List of String<br/>
-✅ **PartIdentifiers** : List of PartIdentifier<br/>
-✅ **PartNames** : List of PartName<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TextualDetails** : List of TextualDetail<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -605,6 +595,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /bill-of-materials/{billOfMaterialKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by billOfMaterialKey. getTimeSlotsByBillOfMaterialKey</span>
+    </span>
+</div>
+
+### /bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under BillOfMaterialroot with key {BillOfMaterialKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -620,6 +636,7 @@ The following resources follow a consistent pattern under BillOfMaterialroot wit
     | **effective-period** | /bill-of-materials/{billOfMaterialKey}/effective-periods | listEffectivePeriodsByBillOfMaterialKey |  | getEffectivePeriodsByBillOfMaterialKey | updateEffectivePeriodsByBillOfMaterialKey | deleteEffectivePeriodsByBillOfMaterialKey |
     | **part-specification** | /bill-of-materials/{billOfMaterialKey}/part-specifications | listPartSpecificationsByBillOfMaterialKey | createPartSpecification | getPartSpecificationsByBillOfMaterialKey | updatePartSpecificationsByBillOfMaterialKey | deletePartSpecificationsByBillOfMaterialKey |
     | **textual-detail** | /bill-of-materials/{billOfMaterialKey}/textual-details | listTextualDetailsByBillOfMaterialKey | createTextualDetail | getTextualDetailsByBillOfMaterialKey | updateTextualDetailsByBillOfMaterialKey | deleteTextualDetailsByBillOfMaterialKey |
+    | **time-slot** | /bill-of-materials/{billOfMaterialKey}/time-slots | listTimeSlotsByBillOfMaterialKey |  | getTimeSlotsByBillOfMaterialKey | updateTimeSlotsByBillOfMaterialKey | deleteTimeSlotsByBillOfMaterialKey |
 
 ***Note on List Operations:***
 

@@ -23,6 +23,7 @@ The API is structured around the domain **logistics_fulfillment** and **Shipment
     | **Position** | /shipments/{shipmentKey}/positions | Manages Positions belonging to Shipments |
     | **EffectivePeriod** | /shipments/{shipmentKey}/effective-periods | Manages EffectivePeriods belonging to Shipments |
     | **PartyIdentifier** | /shipments/{shipmentKey}/party-identifiers | Manages PartyIdentifiers belonging to Shipments |
+    | **TimeSlot** | /shipments/{shipmentKey}/time-slots | Manages TimeSlots belonging to Shipments |
     | **AddressReference** | /shipments/{shipmentKey}/address-references | Manages AddressReferences belonging to Shipments |
 
 
@@ -83,7 +84,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -93,31 +94,22 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **InvoiceTypes** : types of invoices.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **ShipmentStateTypes** : types of shipment states.<br/>
 💠 **ShippingMethodTypes** : types of shipping methods.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AddressReferences** : List of AddressReference<br/>
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **InvoiceReferences** : List of InvoiceReference<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **ShipmentEvents** : List of ShipmentEvent<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -551,6 +543,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /shipments/{shipmentKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by shipmentKey. getTimeSlotsByShipmentKey</span>
+    </span>
+</div>
+
+### /shipments/{shipmentKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### /shipments/{shipmentKey}/address-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -615,6 +633,7 @@ The following resources follow a consistent pattern under Shipmentroot with key 
     | **position** | /shipments/{shipmentKey}/positions | listPositionsByShipmentKey | createPosition | getPositionsByShipmentKey | updatePositionsByShipmentKey | deletePositionsByShipmentKey |
     | **effective-period** | /shipments/{shipmentKey}/effective-periods | listEffectivePeriodsByShipmentKey |  | getEffectivePeriodsByShipmentKey | updateEffectivePeriodsByShipmentKey | deleteEffectivePeriodsByShipmentKey |
     | **party-identifier** | /shipments/{shipmentKey}/party-identifiers | listPartyIdentifiersByShipmentKey | createPartyIdentifier | getPartyIdentifiersByShipmentKey | updatePartyIdentifiersByShipmentKey | deletePartyIdentifiersByShipmentKey |
+    | **time-slot** | /shipments/{shipmentKey}/time-slots | listTimeSlotsByShipmentKey |  | getTimeSlotsByShipmentKey | updateTimeSlotsByShipmentKey | deleteTimeSlotsByShipmentKey |
     | **address-reference** | /shipments/{shipmentKey}/address-references | listAddressReferencesByShipmentKey | createAddressReference | getAddressReferencesByShipmentKey | updateAddressReferencesByShipmentKey | deleteAddressReferencesByShipmentKey |
 
 ***Note on List Operations:***

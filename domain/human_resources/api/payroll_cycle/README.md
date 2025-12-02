@@ -79,7 +79,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -98,13 +98,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---

@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PartyIdentifier**, **PayrollPayment**, **PayrollRun**, **ProductSubject**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PartyIdentifier**, **PayrollPayment**, **PayrollRun**, **Position**, **ProductSubject**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -17,12 +17,14 @@ The API is structured around the domain **human_resources** and **PayrollRun** r
 | :--- | :--- | :--- |
     | **PayrollRun** | /payroll-runs | Manages PayrollRuns |
     | **Identifier** | /payroll-runs/{payrollRunKey}/identifiers | Manages Identifiers belonging to PayrollRuns |
+    | **Addresse** | /payroll-runs/{payrollRunKey}/addresses | Manages Addresses belonging to PayrollRuns |
     | **EffectivePeriod** | /payroll-runs/{payrollRunKey}/effective-periods | Manages EffectivePeriods belonging to PayrollRuns |
     | **PartyIdentifier** | /payroll-runs/{payrollRunKey}/party-identifiers | Manages PartyIdentifiers belonging to PayrollRuns |
     | **ProductSubject** | /payroll-runs/{payrollRunKey}/product-subjects | Manages ProductSubjects belonging to PayrollRuns |
     | **PayrollPayment** | /payroll-runs/{payrollRunKey}/payroll-payments | Manages PayrollPayments belonging to PayrollRuns |
     | **TimeSlot** | /payroll-runs/{payrollRunKey}/time-slots | Manages TimeSlots belonging to PayrollRuns |
     | **ContactMethod** | /payroll-runs/{payrollRunKey}/contact-methods | Manages ContactMethods belonging to PayrollRuns |
+    | **CommunicationChannel** | /payroll-runs/{payrollRunKey}/communication-channels | Manages CommunicationChannels belonging to PayrollRuns |
 
 
 ---
@@ -82,7 +84,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -91,6 +93,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **AddressTypes** : types of address.<br/>
+💠 **CommunicationChannelTypes** : types of communication channels.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
@@ -99,22 +103,13 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PayrollRunStatusTypes** : types of payroll run status.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
-💠 **AddressTypes** : AddressTypes<br/>
-💠 **CommunicationChannelTypes** : Defines the various types of communication chan...<br/>
+💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Addresses** : List of Address<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CommunicationChannels** : List of CommunicationChannel<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PayrollPayments** : List of PayrollPayment<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -294,6 +289,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+    </span>
+</div>
+
+### /payroll-runs/{payrollRunKey}/addresses
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses</span> <br/>
+        <span class="api-summary">Retrieve a list of Address records scoped by payrollRunKey. getAddresssByPayrollRunKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses</span> <br/>
+        <span class="api-summary">Create a new Address record. createAddress</span>
+    </span>
+</div>
+
+### /payroll-runs/{payrollRunKey}/addresses/{addressKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Replace a Address record. replaceAddress</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Partially update a Address record. updateAddress</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
     </span>
 </div>
 
@@ -549,6 +594,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /payroll-runs/{payrollRunKey}/communication-channels
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels</span> <br/>
+        <span class="api-summary">Retrieve a list of CommunicationChannel records scoped by payrollRunKey. getCommunicationChannelsByPayrollRunKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels</span> <br/>
+        <span class="api-summary">Create a new CommunicationChannel record. createCommunicationChannel</span>
+    </span>
+</div>
+
+### /payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CommunicationChannel record. getommunicationChannelById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
+        <span class="api-summary">Replace a CommunicationChannel record. replaceCommunicationChannel</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
+        <span class="api-summary">Partially update a CommunicationChannel record. updateCommunicationChannel</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
+        <span class="api-summary">Delete a CommunicationChannel Record deleteCommunicationChannelRecord</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under PayrollRunroot with key {PayrollRunKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -557,12 +652,14 @@ The following resources follow a consistent pattern under PayrollRunroot with ke
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **payroll-run** | /payroll-runs | listPayrollRuns | createPayrollRun | getPayrollRuns | updatePayrollRuns | deletePayrollRuns |
     | **identifier** | /payroll-runs/{payrollRunKey}/identifiers | listIdentifiersByPayrollRunKey | createIdentifier | getIdentifiersByPayrollRunKey | updateIdentifiersByPayrollRunKey | deleteIdentifiersByPayrollRunKey |
+    | **addresse** | /payroll-runs/{payrollRunKey}/addresses | listAddresssByPayrollRunKey | createAddress | getAddresssByPayrollRunKey | updateAddresssByPayrollRunKey | deleteAddresssByPayrollRunKey |
     | **effective-period** | /payroll-runs/{payrollRunKey}/effective-periods | listEffectivePeriodsByPayrollRunKey |  | getEffectivePeriodsByPayrollRunKey | updateEffectivePeriodsByPayrollRunKey | deleteEffectivePeriodsByPayrollRunKey |
     | **party-identifier** | /payroll-runs/{payrollRunKey}/party-identifiers | listPartyIdentifiersByPayrollRunKey | createPartyIdentifier | getPartyIdentifiersByPayrollRunKey | updatePartyIdentifiersByPayrollRunKey | deletePartyIdentifiersByPayrollRunKey |
     | **product-subject** | /payroll-runs/{payrollRunKey}/product-subjects | listProductSubjectsByPayrollRunKey | createProductSubject | getProductSubjectsByPayrollRunKey | updateProductSubjectsByPayrollRunKey | deleteProductSubjectsByPayrollRunKey |
     | **payroll-payment** | /payroll-runs/{payrollRunKey}/payroll-payments | listPayrollPaymentsByPayrollRunKey | createPayrollPayment | getPayrollPaymentsByPayrollRunKey | updatePayrollPaymentsByPayrollRunKey | deletePayrollPaymentsByPayrollRunKey |
     | **time-slot** | /payroll-runs/{payrollRunKey}/time-slots | listTimeSlotsByPayrollRunKey |  | getTimeSlotsByPayrollRunKey | updateTimeSlotsByPayrollRunKey | deleteTimeSlotsByPayrollRunKey |
     | **contact-method** | /payroll-runs/{payrollRunKey}/contact-methods | listContactMethodsByPayrollRunKey | createContactMethod | getContactMethodsByPayrollRunKey | updateContactMethodsByPayrollRunKey | deleteContactMethodsByPayrollRunKey |
+    | **communication-channel** | /payroll-runs/{payrollRunKey}/communication-channels | listCommunicationChannelsByPayrollRunKey | createCommunicationChannel | getCommunicationChannelsByPayrollRunKey | updateCommunicationChannelsByPayrollRunKey | deleteCommunicationChannelsByPayrollRunKey |
 
 ***Note on List Operations:***
 

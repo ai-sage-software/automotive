@@ -20,6 +20,7 @@ The API is structured around the domain **service_parts** and **Receipt** resour
     | **UnitOfMeasure** | /receipts/{receiptKey}/unit-of-measures | Manages UnitOfMeasures belonging to Receipts |
     | **Position** | /receipts/{receiptKey}/positions | Manages Positions belonging to Receipts |
     | **PartyIdentifier** | /receipts/{receiptKey}/party-identifiers | Manages PartyIdentifiers belonging to Receipts |
+    | **TimeSlot** | /receipts/{receiptKey}/time-slots | Manages TimeSlots belonging to Receipts |
     | **AddressReference** | /receipts/{receiptKey}/address-references | Manages AddressReferences belonging to Receipts |
     | **StaffAssignmentReference** | /receipts/{receiptKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to Receipts |
     | **ShipmentEvent** | /receipts/{receiptKey}/shipment-events | Manages ShipmentEvents belonging to Receipts |
@@ -91,7 +92,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -101,6 +102,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **LifecycleEventTypes** : types of lifecycle events.<br/>
 💠 **OrderTypes** : types of orders.<br/>
@@ -110,30 +112,16 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ReceiptStatusTypes** : types of receipt status.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **ShipmentStateTypes** : types of shipment states.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **FinancialTrackReferences** : List of FinancialTrackReference<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **LifecycleEvents** : List of LifecycleEvent<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **PartReferences** : List of PartReference<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **ReceiptLineItems** : List of ReceiptLineItem<br/>
-✅ **ShipmentEvents** : List of ShipmentEvent<br/>
-✅ **ShipmentReferences** : List of ShipmentReference<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -438,6 +426,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
         <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by receiptKey. getTimeSlotsByReceiptKey</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -1028,6 +1042,7 @@ The following resources follow a consistent pattern under Receiptroot with key {
     | **unit-of-measure** | /receipts/{receiptKey}/unit-of-measures | listUnitOfMeasuresByReceiptKey |  | getUnitOfMeasuresByReceiptKey | updateUnitOfMeasuresByReceiptKey | deleteUnitOfMeasuresByReceiptKey |
     | **position** | /receipts/{receiptKey}/positions | listPositionsByReceiptKey | createPosition | getPositionsByReceiptKey | updatePositionsByReceiptKey | deletePositionsByReceiptKey |
     | **party-identifier** | /receipts/{receiptKey}/party-identifiers | listPartyIdentifiersByReceiptKey | createPartyIdentifier | getPartyIdentifiersByReceiptKey | updatePartyIdentifiersByReceiptKey | deletePartyIdentifiersByReceiptKey |
+    | **time-slot** | /receipts/{receiptKey}/time-slots | listTimeSlotsByReceiptKey |  | getTimeSlotsByReceiptKey | updateTimeSlotsByReceiptKey | deleteTimeSlotsByReceiptKey |
     | **address-reference** | /receipts/{receiptKey}/address-references | listAddressReferencesByReceiptKey | createAddressReference | getAddressReferencesByReceiptKey | updateAddressReferencesByReceiptKey | deleteAddressReferencesByReceiptKey |
     | **staff-assignment-reference** | /receipts/{receiptKey}/staff-assignment-references | listStaffAssignmentReferencesByReceiptKey | createStaffAssignmentReference | getStaffAssignmentReferencesByReceiptKey | updateStaffAssignmentReferencesByReceiptKey | deleteStaffAssignmentReferencesByReceiptKey |
     | **shipment-event** | /receipts/{receiptKey}/shipment-events | listShipmentEventsByReceiptKey | createShipmentEvent | getShipmentEventsByReceiptKey | updateShipmentEventsByReceiptKey | deleteShipmentEventsByReceiptKey |

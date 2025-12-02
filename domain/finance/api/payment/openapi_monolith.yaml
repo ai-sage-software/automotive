@@ -404,6 +404,165 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /payments/{paymentKey}/identifiers:
+    get:
+      tags:
+      - "Identifier"
+      summary: "Retrieve a list of Identifier records scoped by..."
+      operationId: "listIdentifiersByPaymentKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of Identifier records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Identifier"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - "Identifier"
+      summary: "Create a new Identifier record."
+      operationId: "createIdentifier"
+      requestBody:
+        description: "Identifier data to create the new resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentifierCreate"
+        required: true
+      responses:
+        "201":
+          description: "Identifier created successfully."
+          headers:
+            Location:
+              description: "The URI of the newly created resource."
+              schema:
+                type: "string"
+                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+    parameters:
+    - name: "paymentKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /payments/{paymentKey}/identifiers/{identifierKey}:
+    get:
+      tags:
+      - "Identifier"
+      summary: "Retrieve a specific Identifier record."
+      operationId: "getIdentifierById"
+      responses:
+        "200":
+          description: "The requested Identifier record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "Identifier"
+      summary: "Replace a Identifier record."
+      operationId: "replaceIdentifier"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Identifier"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    delete:
+      tags:
+      - "Identifier"
+      summary: "Delete a Identifier Record"
+      description: "Marks the Identifier record as inactive or remo..."
+      operationId: "deleteIdentifierRecord"
+      responses:
+        "204":
+          description: "Record successfully deleted (or deactivated)."
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    patch:
+      tags:
+      - "Identifier"
+      summary: "Partially update a Identifier record."
+      operationId: "updateIdentifier"
+      requestBody:
+        description: "Included Fields to be updated will be modified."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentifierUpdate"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "paymentKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "identifierKey"
+      in: "path"
+      description: "The unique identifier for the specific Identifier."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
   /payments/{paymentKey}/payment-method-references:
     get:
       tags:
@@ -567,7 +726,6 @@ components:
   schemas:
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     ErrorDetail:
@@ -607,7 +765,35 @@ components:
           example: "2025-11-10T10:30:00Z"
       description: "Standard format for all API error responses."
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -616,47 +802,74 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     Money:
       type: "object"
       properties:
         money_key:
           type: "string"
           description: "The unique key for the monetary value."
-          nullable: false
         money_id:
           type: "string"
           description: "The unique ID for the monetary value."
-          nullable: false
         currency_code:
           type: "string"
           description: "ISO currency code, e.g., 'USD'."
-          nullable: false
         display_value:
           type: "string"
-          description: "The locale-specific display format for the valu..."
-          nullable: false
+          description: "The locale-specific display format for t..."
         locale:
           type: "string"
           description: "The locale code (e.g., en-US, fr-FR)."
-          nullable: false
         value:
           type: "string"
           description: "The monetary value."
-          nullable: false
       description: "Represents a monetary value, including its curr..."
     Payment:
-      $ref: "#/components/schemas/PaymentStatusTypes"
+      type: "object"
+      properties:
+        payment_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value for the referenc... Pat..."
+        payment_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key value for the reference recor... Pat..."
+        payment_transactions:
+          $ref: "#/components/schemas/PaymentTransactions"
+        target_amount:
+          $ref: "#/components/schemas/Money"
+        payment_status_type:
+          $ref: "#/components/schemas/PaymentStatusTypes"
+        context:
+          type: "string"
+          description: "Context or domain of the reference."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the payment was associ..."
+          format: "date-time"
+      description: "Reference to a PaymentMethod (Party) Aggregate ..."
     PaymentAmountTypes:
       type: "string"
       description: "types of payment amounts."
@@ -691,7 +904,40 @@ components:
       allOf:
       - $ref: "#/components/schemas/Payment"
     PaymentMethodReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        payment_method_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value for the referenc... Pat..."
+        payment_method_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key value for the reference recor... Pat..."
+        payment_method_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "The unique key identifying the reference... Pat..."
+        context:
+          type: "string"
+          description: "Context or domain of the reference."
+        payment_method_type:
+          $ref: "#/components/schemas/PaymentMethodTypes"
+        processor_options:
+          $ref: "#/components/schemas/Identifier"
+        snapshot_details:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the paymentMethod was ..."
+          format: "date-time"
+      description: "Reference to a PaymentMethod (Party) Aggregate ..."
     PaymentMethodReferenceCreate:
       required:
       - "payment_method_reference_key"
@@ -700,7 +946,22 @@ components:
       allOf:
       - $ref: "#/components/schemas/PaymentMethodReference"
     PaymentMethodReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        payment_method_type:
+          $ref: "#/components/schemas/PaymentMethodTypes"
+        processor_options:
+          $ref: "#/components/schemas/Identifier"
+        snapshot_details:
+          $ref: "#/components/schemas/Identifier"
+        context:
+          type: "string"
+          description: "Context or domain of the reference."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the paymentMethod was ..."
+          format: "date-time"
+      description: "PaymentMethodReference Update for Patch and Put"
     PaymentMethodTypes:
       type: "string"
       description: "types of payment methods."
@@ -769,7 +1030,23 @@ components:
       - "FUNDED"
       - "RETURNED"
     PaymentTransaction:
-      $ref: "#/components/schemas/PaymentTransactionStatusTypes"
+      type: "object"
+      properties:
+        payment_amount_key:
+          type: "string"
+          description: "A unique key for the payment amount."
+        payment_amount_id:
+          type: "string"
+          description: "A unique key for the payment amount."
+        payment_amount_type:
+          $ref: "#/components/schemas/PaymentAmountTypes"
+        payment_method_reference:
+          $ref: "#/components/schemas/PaymentMethodReference"
+        amount:
+          $ref: "#/components/schemas/Money"
+        payment_transaction_status_type:
+          $ref: "#/components/schemas/PaymentTransactionStatusTypes"
+      description: "Represents the type and value of a payment amount."
     PaymentTransactionCreate:
       required:
       - "payment_transaction_key"
@@ -815,24 +1092,38 @@ components:
       - "PAYMENT"
       - "DOWNGRADE"
     PaymentTransactionUpdate:
-      $ref: "#/components/schemas/PaymentAmountTypes"
+      type: "object"
+      properties:
+        amount:
+          $ref: "#/components/schemas/Money"
+        payment_transaction_status_type:
+          $ref: "#/components/schemas/PaymentTransactionStatusTypes"
+        payment_method_reference:
+          $ref: "#/components/schemas/PaymentMethodReference"
+        payment_amount_type:
+          $ref: "#/components/schemas/PaymentAmountTypes"
+      description: "PaymentTransaction Update for Patch and Put"
     PaymentTransactions:
       type: "array"
-      description: "List of PaymentTransaction"
       items:
         $ref: "#/components/schemas/PaymentTransaction"
-    PaymentTransactionsCreate:
-      type: "array"
-      description: "PaymentTransactions Create for Post"
-      items:
-        $ref: "#/components/schemas/PaymentTransactions"
-    PaymentTransactionsUpdate:
-      type: "array"
-      description: "PaymentTransactions Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PaymentTransactions"
     PaymentUpdate:
-      $ref: "#/components/schemas/PaymentStatusTypes"
+      type: "object"
+      properties:
+        target_amount:
+          $ref: "#/components/schemas/Money"
+        context:
+          type: "string"
+          description: "Context or domain of the reference."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the payment was associ..."
+          format: "date-time"
+        payment_transactions:
+          $ref: "#/components/schemas/PaymentTransactions"
+        payment_status_type:
+          $ref: "#/components/schemas/PaymentStatusTypes"
+      description: "Payment Update for Patch and Put"
   responses:
     NotFoundError:
       description: "The requested resource was not found."

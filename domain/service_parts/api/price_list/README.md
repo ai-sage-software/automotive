@@ -22,6 +22,7 @@ The API is structured around the domain **service_parts** and **PriceList** reso
     | **EffectivePeriod** | /price-lists/{priceListKey}/effective-periods | Manages EffectivePeriods belonging to PriceLists |
     | **LifecycleEvent** | /price-lists/{priceListKey}/lifecycle-events | Manages LifecycleEvents belonging to PriceLists |
     | **PartyIdentifier** | /price-lists/{priceListKey}/party-identifiers | Manages PartyIdentifiers belonging to PriceLists |
+    | **TimeSlot** | /price-lists/{priceListKey}/time-slots | Manages TimeSlots belonging to PriceLists |
 
 
 ---
@@ -81,7 +82,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -90,6 +91,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **LifecycleEventTypes** : types of lifecycle events.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
@@ -97,21 +99,13 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PriceSensitivityTypes** : types of price sensitivitys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **LifecycleEvents** : List of LifecycleEvent<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PriceTypes<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -520,6 +514,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /price-lists/{priceListKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-lists/{priceListKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by priceListKey. getTimeSlotsByPriceListKey</span>
+    </span>
+</div>
+
+### /price-lists/{priceListKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-lists/{priceListKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-lists/{priceListKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under PriceListroot with key {PriceListKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -533,6 +553,7 @@ The following resources follow a consistent pattern under PriceListroot with key
     | **effective-period** | /price-lists/{priceListKey}/effective-periods | listEffectivePeriodsByPriceListKey |  | getEffectivePeriodsByPriceListKey | updateEffectivePeriodsByPriceListKey | deleteEffectivePeriodsByPriceListKey |
     | **lifecycle-event** | /price-lists/{priceListKey}/lifecycle-events | listLifecycleEventsByPriceListKey | createLifecycleEvent | getLifecycleEventsByPriceListKey | updateLifecycleEventsByPriceListKey | deleteLifecycleEventsByPriceListKey |
     | **party-identifier** | /price-lists/{priceListKey}/party-identifiers | listPartyIdentifiersByPriceListKey | createPartyIdentifier | getPartyIdentifiersByPriceListKey | updatePartyIdentifiersByPriceListKey | deletePartyIdentifiersByPriceListKey |
+    | **time-slot** | /price-lists/{priceListKey}/time-slots | listTimeSlotsByPriceListKey |  | getTimeSlotsByPriceListKey | updateTimeSlotsByPriceListKey | deleteTimeSlotsByPriceListKey |
 
 ***Note on List Operations:***
 

@@ -22,6 +22,7 @@ The API is structured around the domain **service_parts** and **PartInventory** 
     | **Price** | /part-inventories/{partInventoryKey}/prices | Manages Prices belonging to PartInventories |
     | **EffectivePeriod** | /part-inventories/{partInventoryKey}/effective-periods | Manages EffectivePeriods belonging to PartInventories |
     | **ControlAccountReference** | /part-inventories/{partInventoryKey}/control-account-references | Manages ControlAccountReferences belonging to PartInventories |
+    | **TimeSlot** | /part-inventories/{partInventoryKey}/time-slots | Manages TimeSlots belonging to PartInventories |
     | **PartInventoryMetric** | /part-inventories/{partInventoryKey}/part-inventory-metrics | Manages PartInventoryMetrics belonging to PartInventories |
 
 
@@ -82,7 +83,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -91,30 +92,20 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **InventoryStatusTypes** : types of inventory status.<br/>
 💠 **PartInventoryMetricTypes** : types of part inventory metrics.<br/>
 💠 **PartInventoryOrderTypes** : types of part inventory orders.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductTypes** : types of products.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Codes** : List of Codes<br/>
-✅ **ControlAccountReferences** : List of ControlAccountReference<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of String<br/>
-✅ **PartInventoryEvents** : List of PartInventoryEvent<br/>
-✅ **PartInventoryMetrics** : List of PartInventoryMetric<br/>
-✅ **PartReferences** : List of PartReference<br/>
-✅ **Prices** : List of Price<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -523,6 +514,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-inventories/{partInventoryKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-inventories/{partInventoryKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partInventoryKey. getTimeSlotsByPartInventoryKey</span>
+    </span>
+</div>
+
+### /part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### /part-inventories/{partInventoryKey}/part-inventory-metrics
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -586,6 +603,7 @@ The following resources follow a consistent pattern under PartInventoryroot with
     | **price** | /part-inventories/{partInventoryKey}/prices | listPricesByPartInventoryKey | createPrice | getPricesByPartInventoryKey | updatePricesByPartInventoryKey | deletePricesByPartInventoryKey |
     | **effective-period** | /part-inventories/{partInventoryKey}/effective-periods | listEffectivePeriodsByPartInventoryKey |  | getEffectivePeriodsByPartInventoryKey | updateEffectivePeriodsByPartInventoryKey | deleteEffectivePeriodsByPartInventoryKey |
     | **control-account-reference** | /part-inventories/{partInventoryKey}/control-account-references | listControlAccountReferencesByPartInventoryKey | createControlAccountReference | getControlAccountReferencesByPartInventoryKey | updateControlAccountReferencesByPartInventoryKey | deleteControlAccountReferencesByPartInventoryKey |
+    | **time-slot** | /part-inventories/{partInventoryKey}/time-slots | listTimeSlotsByPartInventoryKey |  | getTimeSlotsByPartInventoryKey | updateTimeSlotsByPartInventoryKey | deleteTimeSlotsByPartInventoryKey |
     | **part-inventory-metric** | /part-inventories/{partInventoryKey}/part-inventory-metrics | listPartInventoryMetricsByPartInventoryKey | createPartInventoryMetric | getPartInventoryMetricsByPartInventoryKey | updatePartInventoryMetricsByPartInventoryKey | deletePartInventoryMetricsByPartInventoryKey |
 
 ***Note on List Operations:***

@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PartyIdentifier**, **PayrollRate**, **Person**, **PersonName**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PartyIdentifier**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -16,15 +16,25 @@ The API is structured around the domain **party_identity** and **Dealer** resour
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **Dealer** | /dealers | Manages Dealers |
-    | **Department** | /dealers/{dealerKey}/departments | Manages Departments belonging to Dealers |
-    | **Identifier** | /dealers/{dealerKey}/identifiers | Manages Identifiers belonging to Dealers |
+    | **PersonName** | /dealers/{dealerKey}/person-names | Manages PersonNames belonging to Dealers |
     | **PayrollRate** | /dealers/{dealerKey}/payroll-rates | Manages PayrollRates belonging to Dealers |
-    | **DealerService** | /dealers/{dealerKey}/dealer-services | Manages DealerServices belonging to Dealers |
+    | **Addresse** | /dealers/{dealerKey}/addresses | Manages Addresses belonging to Dealers |
     | **PartyIdentifier** | /dealers/{dealerKey}/party-identifiers | Manages PartyIdentifiers belonging to Dealers |
-    | **PrivacyItem** | /dealers/{dealerKey}/privacy-items | Manages PrivacyItems belonging to Dealers |
     | **StaffMember** | /dealers/{dealerKey}/staff-members | Manages StaffMembers belonging to Dealers |
-    | **People** | /dealers/{dealerKey}/people | Manages People belonging to Dealers |
+    | **PrivacyEvent** | /dealers/{dealerKey}/privacy-events | Manages PrivacyEvents belonging to Dealers |
+    | **TimeSlot** | /dealers/{dealerKey}/time-slots | Manages TimeSlots belonging to Dealers |
+    | **ControlAccount** | /dealers/{dealerKey}/control-accounts | Manages ControlAccounts belonging to Dealers |
     | **CommunicationChannel** | /dealers/{dealerKey}/communication-channels | Manages CommunicationChannels belonging to Dealers |
+    | **Authorization** | /dealers/{dealerKey}/authorizations | Manages Authorizations belonging to Dealers |
+    | **Money** | /dealers/{dealerKey}/moneys | Manages Moneys belonging to Dealers |
+    | **Department** | /dealers/{dealerKey}/departments | Manages Departments belonging to Dealers |
+    | **MetricNameValue** | /dealers/{dealerKey}/metric-name-values | Manages MetricNameValues belonging to Dealers |
+    | **Identifier** | /dealers/{dealerKey}/identifiers | Manages Identifiers belonging to Dealers |
+    | **DealerService** | /dealers/{dealerKey}/dealer-services | Manages DealerServices belonging to Dealers |
+    | **EffectivePeriod** | /dealers/{dealerKey}/effective-periods | Manages EffectivePeriods belonging to Dealers |
+    | **PrivacyItem** | /dealers/{dealerKey}/privacy-items | Manages PrivacyItems belonging to Dealers |
+    | **TextualDetail** | /dealers/{dealerKey}/textual-details | Manages TextualDetails belonging to Dealers |
+    | **People** | /dealers/{dealerKey}/people | Manages People belonging to Dealers |
 
 
 ---
@@ -84,7 +94,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -93,54 +103,39 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **AddressTypes** : types of address.<br/>
 💠 **CommunicationChannelTypes** : types of communication channels.<br/>
+💠 **ControlAccountRoleTypes** : types of control account roles.<br/>
+💠 **ControlAccountStatusTypes** : types of control account status.<br/>
+💠 **ControlAccountTypes** : types of control accounts.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DealerServiceTypes** : types of dealer services.<br/>
 💠 **DepartmentTypes** : types of departments.<br/>
+💠 **DurationUOMTypes** : types of duration u o ms.<br/>
+💠 **FinancialCategoryTypes** : types of financial categorys.<br/>
 💠 **GenderTypes** : types of genders.<br/>
 💠 **MaritalStatusTypes** : types of marital status.<br/>
+💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
+💠 **PrivacyContextTypes** : types of privacy contexts.<br/>
+💠 **PrivacyLegalBasisTypes** : types of privacy legal basis.<br/>
+💠 **PrivacyStateTypes** : types of privacy states.<br/>
 💠 **PrivacyTypes** : types of privacys.<br/>
 💠 **RoleTypes** : types of roles.<br/>
 💠 **StaffPayTypes** : types of staff pays.<br/>
-💠 **NarrativeUomTypes** : entity<br/>
-💠 **AddressTypes** : AddressTypes<br/>
-💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
-💠 **PrivacyContextTypes** : Undocumented Enum<br/>
-💠 **PrivacyLegalBasisTypes** : Defines the legal basis for processing personal...<br/>
-💠 **PrivacyStateTypes** : Undocumented Enum<br/>
-💠 **FinancialCategoryTypes** : Financial Category Types<br/>
-💠 **ControlAccountTypes** : entity<br/>
-💠 **ControlAccountRoleTypes** : Control Account Role.<br/>
-💠 **ControlAccountStatusTypes** : Defines the various states or statuses for a fi...<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Addresses** : List of Address<br/>
-✅ **Authorizations** : List of Authorization<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CommunicationChannels** : List of CommunicationChannel<br/>
-✅ **ControlAccounts** : List of ControlAccount<br/>
-✅ **DealerServices** : List of DealerService<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of RoleTypes<br/>
-✅ **MetricNameValues** : List of MetricNameValue<br/>
+✅ **Link** : Represents a Hypermedia as the Engine of Application State (HATEOS) link, providing information on how to interact with a related resource.<br/>
 ✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PayrollRates** : List of PayrollRate<br/>
-✅ **PrivacyEvents** : List of PrivacyEvent<br/>
-✅ **PrivacyItems** : List of PrivacyItem<br/>
-✅ **Staff** : List of StaffMember<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TextualDetails** : List of TextualDetail<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -273,103 +268,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /dealers/{dealerKey}/departments
+### /dealers/{dealerKey}/person-names
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
-        <span class="api-summary">Retrieve a list of Department records scoped by dealerKey. getDepartmentsByDealerKey</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names</span> <br/>
+        <span class="api-summary">Retrieve a list of PersonName records scoped by dealerKey. getPersonNamesByDealerKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
-        <span class="api-summary">Create a new Department record. createDepartment</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names</span> <br/>
+        <span class="api-summary">Create a new PersonName record. createPersonName</span>
     </span>
 </div>
 
-### /dealers/{dealerKey}/departments/{departmentKey}
+### /dealers/{dealerKey}/person-names/{personNameKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Department record. getepartmentById</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PersonName record. getersonNameById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Replace a Department record. replaceDepartment</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
+        <span class="api-summary">Replace a PersonName record. replacePersonName</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department record. updateDepartment</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
+        <span class="api-summary">Partially update a PersonName record. updatePersonName</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Delete a Department Record deleteDepartmentRecord</span>
-    </span>
-</div>
-
-### /dealers/{dealerKey}/identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by dealerKey. getIdentifiersByDealerKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
-    </span>
-</div>
-
-### /dealers/{dealerKey}/identifiers/{identifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
+        <span class="api-summary">Delete a PersonName Record deletePersonNameRecord</span>
     </span>
 </div>
 
@@ -423,53 +368,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /dealers/{dealerKey}/dealer-services
+### /dealers/{dealerKey}/addresses
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
-        <span class="api-summary">Retrieve a list of DealerService records scoped by dealerKey. getDealerServicesByDealerKey</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses</span> <br/>
+        <span class="api-summary">Retrieve a list of Address records scoped by dealerKey. getAddresssByDealerKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
-        <span class="api-summary">Create a new DealerService record. createDealerService</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses</span> <br/>
+        <span class="api-summary">Create a new Address record. createAddress</span>
     </span>
 </div>
 
-### /dealers/{dealerKey}/dealer-services/{dealerServiceKey}
+### /dealers/{dealerKey}/addresses/{addressKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DealerService record. getealerServiceById</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Replace a DealerService record. replaceDealerService</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Replace a Address record. replaceAddress</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Partially update a DealerService record. updateDealerService</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Partially update a Address record. updateAddress</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Delete a DealerService Record deleteDealerServiceRecord</span>
+        <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
+        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
     </span>
 </div>
 
@@ -523,56 +468,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /dealers/{dealerKey}/privacy-items
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
-        <span class="api-summary">Retrieve a list of PrivacyItem records scoped by dealerKey. getPrivacyItemsByDealerKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
-        <span class="api-summary">Create a new PrivacyItem record. createPrivacyItem</span>
-    </span>
-</div>
-
-### /dealers/{dealerKey}/privacy-items/{privacyItemKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PrivacyItem record. getrivacyItemById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Replace a PrivacyItem record. replacePrivacyItem</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyItem record. updatePrivacyItem</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Delete a PrivacyItem Record deletePrivacyItemRecord</span>
-    </span>
-</div>
-
 ### /dealers/{dealerKey}/staff-members
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -623,53 +518,129 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /dealers/{dealerKey}/people
+### /dealers/{dealerKey}/privacy-events
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
-        <span class="api-summary">Retrieve a list of Person records scoped by dealerKey. getPersonsByDealerKey</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events</span> <br/>
+        <span class="api-summary">Retrieve a list of PrivacyEvent records scoped by dealerKey. getPrivacyEventsByDealerKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
-        <span class="api-summary">Create a new Person record. createPerson</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events</span> <br/>
+        <span class="api-summary">Create a new PrivacyEvent record. createPrivacyEvent</span>
     </span>
 </div>
 
-### /dealers/{dealerKey}/people/{personKey}
+### /dealers/{dealerKey}/privacy-events/{privacyEventKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Person record. getersonById</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PrivacyEvent record. getrivacyEventById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Replace a Person record. replacePerson</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
+        <span class="api-summary">Replace a PrivacyEvent record. replacePrivacyEvent</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person record. updatePerson</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
+        <span class="api-summary">Partially update a PrivacyEvent record. updatePrivacyEvent</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Delete a Person Record deletePersonRecord</span>
+        <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
+        <span class="api-summary">Delete a PrivacyEvent Record deletePrivacyEventRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by dealerKey. getTimeSlotsByDealerKey</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/control-accounts
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts</span> <br/>
+        <span class="api-summary">Retrieve a list of ControlAccount records scoped by dealerKey. getControlAccountsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts</span> <br/>
+        <span class="api-summary">Create a new ControlAccount record. createControlAccount</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/control-accounts/{controlAccountKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific ControlAccount record. getontrolAccountById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
+        <span class="api-summary">Replace a ControlAccount record. replaceControlAccount</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
+        <span class="api-summary">Partially update a ControlAccount record. updateControlAccount</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
+        <span class="api-summary">Delete a ControlAccount Record deleteControlAccountRecord</span>
     </span>
 </div>
 
@@ -723,6 +694,458 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /dealers/{dealerKey}/authorizations
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations</span> <br/>
+        <span class="api-summary">Retrieve a list of Authorization records scoped by dealerKey. getAuthorizationsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations</span> <br/>
+        <span class="api-summary">Create a new Authorization record. createAuthorization</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/authorizations/{authorizationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Authorization record. getuthorizationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Replace a Authorization record. replaceAuthorization</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Partially update a Authorization record. updateAuthorization</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
+        <span class="api-summary">Delete a Authorization Record deleteAuthorizationRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/moneys
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/moneys</span> <br/>
+        <span class="api-summary">Retrieve a list of Money records scoped by dealerKey. getMoneysByDealerKey</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/moneys/{moneyKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Replace a Money record. replaceMoney</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/departments
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
+        <span class="api-summary">Retrieve a list of Department records scoped by dealerKey. getDepartmentsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
+        <span class="api-summary">Create a new Department record. createDepartment</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/departments/{departmentKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Department record. getepartmentById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
+        <span class="api-summary">Replace a Department record. replaceDepartment</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
+        <span class="api-summary">Partially update a Department record. updateDepartment</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
+        <span class="api-summary">Delete a Department Record deleteDepartmentRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/metric-name-values
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values</span> <br/>
+        <span class="api-summary">Retrieve a list of MetricNameValue records scoped by dealerKey. getMetricNameValuesByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values</span> <br/>
+        <span class="api-summary">Create a new MetricNameValue record. createMetricNameValue</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/metric-name-values/{metricNameValueKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific MetricNameValue record. getetricNameValueById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
+        <span class="api-summary">Replace a MetricNameValue record. replaceMetricNameValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
+        <span class="api-summary">Partially update a MetricNameValue record. updateMetricNameValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
+        <span class="api-summary">Delete a MetricNameValue Record deleteMetricNameValueRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier records scoped by dealerKey. getIdentifiersByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
+        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/identifiers/{identifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/dealer-services
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
+        <span class="api-summary">Retrieve a list of DealerService records scoped by dealerKey. getDealerServicesByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
+        <span class="api-summary">Create a new DealerService record. createDealerService</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/dealer-services/{dealerServiceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DealerService record. getealerServiceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
+        <span class="api-summary">Replace a DealerService record. replaceDealerService</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
+        <span class="api-summary">Partially update a DealerService record. updateDealerService</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
+        <span class="api-summary">Delete a DealerService Record deleteDealerServiceRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/effective-periods
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/effective-periods</span> <br/>
+        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by dealerKey. getEffectivePeriodsByDealerKey</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/effective-periods/{effectivePeriodKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/privacy-items
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
+        <span class="api-summary">Retrieve a list of PrivacyItem records scoped by dealerKey. getPrivacyItemsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
+        <span class="api-summary">Create a new PrivacyItem record. createPrivacyItem</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/privacy-items/{privacyItemKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PrivacyItem record. getrivacyItemById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
+        <span class="api-summary">Replace a PrivacyItem record. replacePrivacyItem</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
+        <span class="api-summary">Partially update a PrivacyItem record. updatePrivacyItem</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
+        <span class="api-summary">Delete a PrivacyItem Record deletePrivacyItemRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/textual-details
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details</span> <br/>
+        <span class="api-summary">Retrieve a list of TextualDetail records scoped by dealerKey. getTextualDetailsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details</span> <br/>
+        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/textual-details/{textualDetailKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
+        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
+        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
+        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/people
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
+        <span class="api-summary">Retrieve a list of Person records scoped by dealerKey. getPersonsByDealerKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
+        <span class="api-summary">Create a new Person record. createPerson</span>
+    </span>
+</div>
+
+### /dealers/{dealerKey}/people/{personKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Person record. getersonById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
+        <span class="api-summary">Replace a Person record. replacePerson</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
+        <span class="api-summary">Partially update a Person record. updatePerson</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
+        <span class="api-summary">Delete a Person Record deletePersonRecord</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under Dealerroot with key {DealerKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -730,15 +1153,25 @@ The following resources follow a consistent pattern under Dealerroot with key {D
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **dealer** | /dealers | listDealers | createDealer | getDealers | updateDealers | deleteDealers |
-    | **department** | /dealers/{dealerKey}/departments | listDepartmentsByDealerKey | createDepartment | getDepartmentsByDealerKey | updateDepartmentsByDealerKey | deleteDepartmentsByDealerKey |
-    | **identifier** | /dealers/{dealerKey}/identifiers | listIdentifiersByDealerKey | createIdentifier | getIdentifiersByDealerKey | updateIdentifiersByDealerKey | deleteIdentifiersByDealerKey |
+    | **person-name** | /dealers/{dealerKey}/person-names | listPersonNamesByDealerKey | createPersonName | getPersonNamesByDealerKey | updatePersonNamesByDealerKey | deletePersonNamesByDealerKey |
     | **payroll-rate** | /dealers/{dealerKey}/payroll-rates | listPayrollRatesByDealerKey | createPayrollRate | getPayrollRatesByDealerKey | updatePayrollRatesByDealerKey | deletePayrollRatesByDealerKey |
-    | **dealer-service** | /dealers/{dealerKey}/dealer-services | listDealerServicesByDealerKey | createDealerService | getDealerServicesByDealerKey | updateDealerServicesByDealerKey | deleteDealerServicesByDealerKey |
+    | **addresse** | /dealers/{dealerKey}/addresses | listAddresssByDealerKey | createAddress | getAddresssByDealerKey | updateAddresssByDealerKey | deleteAddresssByDealerKey |
     | **party-identifier** | /dealers/{dealerKey}/party-identifiers | listPartyIdentifiersByDealerKey | createPartyIdentifier | getPartyIdentifiersByDealerKey | updatePartyIdentifiersByDealerKey | deletePartyIdentifiersByDealerKey |
-    | **privacy-item** | /dealers/{dealerKey}/privacy-items | listPrivacyItemsByDealerKey | createPrivacyItem | getPrivacyItemsByDealerKey | updatePrivacyItemsByDealerKey | deletePrivacyItemsByDealerKey |
     | **staff-member** | /dealers/{dealerKey}/staff-members | listStaffMembersByDealerKey | createStaffMember | getStaffMembersByDealerKey | updateStaffMembersByDealerKey | deleteStaffMembersByDealerKey |
-    | **people** | /dealers/{dealerKey}/people | listPersonsByDealerKey | createPerson | getPersonsByDealerKey | updatePersonsByDealerKey | deletePersonsByDealerKey |
+    | **privacy-event** | /dealers/{dealerKey}/privacy-events | listPrivacyEventsByDealerKey | createPrivacyEvent | getPrivacyEventsByDealerKey | updatePrivacyEventsByDealerKey | deletePrivacyEventsByDealerKey |
+    | **time-slot** | /dealers/{dealerKey}/time-slots | listTimeSlotsByDealerKey |  | getTimeSlotsByDealerKey | updateTimeSlotsByDealerKey | deleteTimeSlotsByDealerKey |
+    | **control-account** | /dealers/{dealerKey}/control-accounts | listControlAccountsByDealerKey | createControlAccount | getControlAccountsByDealerKey | updateControlAccountsByDealerKey | deleteControlAccountsByDealerKey |
     | **communication-channel** | /dealers/{dealerKey}/communication-channels | listCommunicationChannelsByDealerKey | createCommunicationChannel | getCommunicationChannelsByDealerKey | updateCommunicationChannelsByDealerKey | deleteCommunicationChannelsByDealerKey |
+    | **authorization** | /dealers/{dealerKey}/authorizations | listAuthorizationsByDealerKey | createAuthorization | getAuthorizationsByDealerKey | updateAuthorizationsByDealerKey | deleteAuthorizationsByDealerKey |
+    | **money** | /dealers/{dealerKey}/moneys | listMoneysByDealerKey |  | getMoneysByDealerKey | updateMoneysByDealerKey | deleteMoneysByDealerKey |
+    | **department** | /dealers/{dealerKey}/departments | listDepartmentsByDealerKey | createDepartment | getDepartmentsByDealerKey | updateDepartmentsByDealerKey | deleteDepartmentsByDealerKey |
+    | **metric-name-value** | /dealers/{dealerKey}/metric-name-values | listMetricNameValuesByDealerKey | createMetricNameValue | getMetricNameValuesByDealerKey | updateMetricNameValuesByDealerKey | deleteMetricNameValuesByDealerKey |
+    | **identifier** | /dealers/{dealerKey}/identifiers | listIdentifiersByDealerKey | createIdentifier | getIdentifiersByDealerKey | updateIdentifiersByDealerKey | deleteIdentifiersByDealerKey |
+    | **dealer-service** | /dealers/{dealerKey}/dealer-services | listDealerServicesByDealerKey | createDealerService | getDealerServicesByDealerKey | updateDealerServicesByDealerKey | deleteDealerServicesByDealerKey |
+    | **effective-period** | /dealers/{dealerKey}/effective-periods | listEffectivePeriodsByDealerKey |  | getEffectivePeriodsByDealerKey | updateEffectivePeriodsByDealerKey | deleteEffectivePeriodsByDealerKey |
+    | **privacy-item** | /dealers/{dealerKey}/privacy-items | listPrivacyItemsByDealerKey | createPrivacyItem | getPrivacyItemsByDealerKey | updatePrivacyItemsByDealerKey | deletePrivacyItemsByDealerKey |
+    | **textual-detail** | /dealers/{dealerKey}/textual-details | listTextualDetailsByDealerKey | createTextualDetail | getTextualDetailsByDealerKey | updateTextualDetailsByDealerKey | deleteTextualDetailsByDealerKey |
+    | **people** | /dealers/{dealerKey}/people | listPersonsByDealerKey | createPerson | getPersonsByDealerKey | updatePersonsByDealerKey | deletePersonsByDealerKey |
 
 ***Note on List Operations:***
 

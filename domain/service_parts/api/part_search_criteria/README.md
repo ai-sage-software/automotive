@@ -18,6 +18,8 @@ The API is structured around the domain **service_parts** and **PartSearchCriter
     | **PartSearchCriteria** | /part-search-criterias | Manages PartSearchCriterias |
     | **UnitOfMeasure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartSearchCriterias |
     | **PartSpecification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | Manages PartSpecifications belonging to PartSearchCriterias |
+    | **PartyIdentifier** | /part-search-criterias/{partSearchCriteriaKey}/party-identifiers | Manages PartyIdentifiers belonging to PartSearchCriterias |
+    | **TimeSlot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | Manages TimeSlots belonging to PartSearchCriterias |
     | **AdvancedSearchCriteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | Manages AdvancedSearchCriterias belonging to PartSearchCriterias |
     | **PartPriceCriteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | Manages PartPriceCriterias belonging to PartSearchCriterias |
     | **Identifier** | /part-search-criterias/{partSearchCriteriaKey}/identifiers | Manages Identifiers belonging to PartSearchCriterias |
@@ -88,7 +90,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -98,6 +100,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AdvanceSearchTypes** : types of advance searchs.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PartConditionGradeTypes** : types of part condition grades.<br/>
 💠 **PartConditionTypes** : types of part conditions.<br/>
@@ -106,39 +109,25 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
 💠 **ProductStageTypes** : types of product stages.<br/>
 💠 **ShippingMethodTypes** : types of shipping methods.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMLengthTypes** : types of u o m lengths.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 💠 **WarehouseTypes** : types of warehouses.<br/>
 💠 **WarrantyTypes** : types of warrantys.<br/>
-💠 **PartyRelationshipTypes** : Party Relationship<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AdvanceSearchValues** : List of AdvanceSearchValue<br/>
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PartConditionTypes<br/>
-✅ **PartIdentifiers** : List of PartIdentifier<br/>
-✅ **PartLifecycles** : List of PartLifecycle<br/>
-✅ **PartNames** : List of PartName<br/>
-✅ **PartSpecifications** : List of PartSpecification<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **SuperSessions** : List of SuperSession<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
-✅ **UnitOfMeasures** : List of UnitOfMeasure<br/>
 
 ---
 
@@ -343,6 +332,82 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
         <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
+    </span>
+</div>
+
+### /part-search-criterias/{partSearchCriteriaKey}/party-identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partSearchCriteriaKey. getPartyIdentifiersByPartSearchCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers</span> <br/>
+        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
+    </span>
+</div>
+
+### /part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
+        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
+    </span>
+</div>
+
+### /part-search-criterias/{partSearchCriteriaKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partSearchCriteriaKey. getTimeSlotsByPartSearchCriteriaKey</span>
+    </span>
+</div>
+
+### /part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -881,6 +946,8 @@ The following resources follow a consistent pattern under PartSearchCriteriaroot
     | **part-search-criteria** | /part-search-criterias | listPartSearchCriterias | createPartSearchCriteria | getPartSearchCriterias | updatePartSearchCriterias | deletePartSearchCriterias |
     | **unit-of-measure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | listUnitOfMeasuresByPartSearchCriteriaKey |  | getUnitOfMeasuresByPartSearchCriteriaKey | updateUnitOfMeasuresByPartSearchCriteriaKey | deleteUnitOfMeasuresByPartSearchCriteriaKey |
     | **part-specification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | listPartSpecificationsByPartSearchCriteriaKey | createPartSpecification | getPartSpecificationsByPartSearchCriteriaKey | updatePartSpecificationsByPartSearchCriteriaKey | deletePartSpecificationsByPartSearchCriteriaKey |
+    | **party-identifier** | /part-search-criterias/{partSearchCriteriaKey}/party-identifiers | listPartyIdentifiersByPartSearchCriteriaKey | createPartyIdentifier | getPartyIdentifiersByPartSearchCriteriaKey | updatePartyIdentifiersByPartSearchCriteriaKey | deletePartyIdentifiersByPartSearchCriteriaKey |
+    | **time-slot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | listTimeSlotsByPartSearchCriteriaKey |  | getTimeSlotsByPartSearchCriteriaKey | updateTimeSlotsByPartSearchCriteriaKey | deleteTimeSlotsByPartSearchCriteriaKey |
     | **advanced-search-criteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | listAdvancedSearchCriteriasByPartSearchCriteriaKey | createAdvancedSearchCriteria | getAdvancedSearchCriteriasByPartSearchCriteriaKey | updateAdvancedSearchCriteriasByPartSearchCriteriaKey | deleteAdvancedSearchCriteriasByPartSearchCriteriaKey |
     | **part-price-criteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | listPartPriceCriteriasByPartSearchCriteriaKey | createPartPriceCriteria | getPartPriceCriteriasByPartSearchCriteriaKey | updatePartPriceCriteriasByPartSearchCriteriaKey | deletePartPriceCriteriasByPartSearchCriteriaKey |
     | **identifier** | /part-search-criterias/{partSearchCriteriaKey}/identifiers | listIdentifiersByPartSearchCriteriaKey | createIdentifier | getIdentifiersByPartSearchCriteriaKey | updateIdentifiersByPartSearchCriteriaKey | deleteIdentifiersByPartSearchCriteriaKey |

@@ -23,6 +23,7 @@ The API is structured around the domain **subscriptions** and **PricePlan** reso
     | **EffectivePeriod** | /price-plans/{pricePlanKey}/effective-periods | Manages EffectivePeriods belonging to PricePlans |
     | **PartyIdentifier** | /price-plans/{pricePlanKey}/party-identifiers | Manages PartyIdentifiers belonging to PricePlans |
     | **FinancialSplitReference** | /price-plans/{pricePlanKey}/financial-split-references | Manages FinancialSplitReferences belonging to PricePlans |
+    | **TimeSlot** | /price-plans/{pricePlanKey}/time-slots | Manages TimeSlots belonging to PricePlans |
 
 
 ---
@@ -82,7 +83,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -91,28 +92,20 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceClassTypes** : types of price class.<br/>
 💠 **PriceSensitivityTypes** : types of price sensitivitys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **Codes** : List of Codes<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **FinancialSplitReferences** : List of FinancialSplitReference<br/>
-✅ **GeographicBoundaryReferences** : List of GeographicBoundaryReference<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of PriceTypes<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **ProductScheduleReferences** : List of ProductScheduleReference<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -571,6 +564,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /price-plans/{pricePlanKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by pricePlanKey. getTimeSlotsByPricePlanKey</span>
+    </span>
+</div>
+
+### /price-plans/{pricePlanKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under PricePlanroot with key {PricePlanKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -585,6 +604,7 @@ The following resources follow a consistent pattern under PricePlanroot with key
     | **effective-period** | /price-plans/{pricePlanKey}/effective-periods | listEffectivePeriodsByPricePlanKey |  | getEffectivePeriodsByPricePlanKey | updateEffectivePeriodsByPricePlanKey | deleteEffectivePeriodsByPricePlanKey |
     | **party-identifier** | /price-plans/{pricePlanKey}/party-identifiers | listPartyIdentifiersByPricePlanKey | createPartyIdentifier | getPartyIdentifiersByPricePlanKey | updatePartyIdentifiersByPricePlanKey | deletePartyIdentifiersByPricePlanKey |
     | **financial-split-reference** | /price-plans/{pricePlanKey}/financial-split-references | listFinancialSplitReferencesByPricePlanKey | createFinancialSplitReference | getFinancialSplitReferencesByPricePlanKey | updateFinancialSplitReferencesByPricePlanKey | deleteFinancialSplitReferencesByPricePlanKey |
+    | **time-slot** | /price-plans/{pricePlanKey}/time-slots | listTimeSlotsByPricePlanKey |  | getTimeSlotsByPricePlanKey | updateTimeSlotsByPricePlanKey | deleteTimeSlotsByPricePlanKey |
 
 ***Note on List Operations:***
 

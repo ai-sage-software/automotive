@@ -1293,10 +1293,135 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /bill-of-materials/{billOfMaterialKey}/time-slots:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a list of TimeSlot records scoped by b..."
+      operationId: "listTimeSlotsByBillOfMaterialKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of TimeSlot records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TimeSlot"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: "billOfMaterialKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a specific TimeSlot record."
+      operationId: "getTimeSlotById"
+      responses:
+        "200":
+          description: "The requested TimeSlot record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "TimeSlot"
+      summary: "Replace a TimeSlot record."
+      operationId: "replaceTimeSlot"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeSlot"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "billOfMaterialKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "timeSlotKey"
+      in: "path"
+      description: "The unique identifier for the specific TimeSlot."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
 components:
   schemas:
     BillOfMaterial:
-      $ref: "#/components/schemas/PartSpecification"
+      type: "object"
+      properties:
+        bill_of_material_key:
+          type: "string"
+          description: "Unique identifier for the Bill of Materi..."
+          example: "BOM-PROD-001-REV01"
+        bill_of_material_id:
+          type: "string"
+          description: "Unique identifier for the Bill of Materi..."
+          example: "BOM-PROD-001-REV01"
+        identifiers:
+          $ref: "#/components/schemas/PartIdentifiers"
+        product_identifier:
+          type: "string"
+          description: "Identifier for the finished product or a..."
+          example: "PROD-XYZ-ASSEMBLY"
+        revision:
+          type: "string"
+          description: "Revision number or code for this specifi..."
+          example: "A"
+        effective_date:
+          type: "string"
+          description: "The date from which this BOM revision be..."
+          format: "date"
+          example: "2024-07-01"
+        product_status_type:
+          $ref: "#/components/schemas/ProductStatusTypes"
+        components:
+          $ref: "#/components/schemas/BomComponents"
+        part_specification:
+          $ref: "#/components/schemas/PartSpecification"
+      description: "Represents a Bill of Material (BOM), detailing ..."
     BillOfMaterialCreate:
       required:
       - "bill_of_material_key"
@@ -1305,9 +1430,60 @@ components:
       allOf:
       - $ref: "#/components/schemas/BillOfMaterial"
     BillOfMaterialUpdate:
-      $ref: "#/components/schemas/PartSpecification"
+      type: "object"
+      properties:
+        product_identifier:
+          type: "string"
+          description: "Identifier for the finished product or a..."
+          example: "PROD-XYZ-ASSEMBLY"
+        components:
+          $ref: "#/components/schemas/BomComponents"
+        identifiers:
+          $ref: "#/components/schemas/PartIdentifiers"
+        effective_date:
+          type: "string"
+          description: "The date from which this BOM revision be..."
+          format: "date"
+          example: "2024-07-01"
+        product_status_type:
+          $ref: "#/components/schemas/ProductStatusTypes"
+        part_specification:
+          $ref: "#/components/schemas/PartSpecification"
+        revision:
+          type: "string"
+          description: "Revision number or code for this specifi..."
+          example: "A"
+      description: "BillOfMaterial Update for Patch and Put"
     BomComponent:
-      $ref: "#/components/schemas/PartSpecification"
+      type: "object"
+      properties:
+        bom_component_id:
+          type: "string"
+          description: "Identifier for the component or sub-asse..."
+          example: "PART-12345"
+        bom_component_key:
+          type: "string"
+          description: "Identifier for the component or sub-asse..."
+          example: "PART-12345"
+        quantity:
+          type: "string"
+          description: "The required quantity of this component ..."
+          example: "5"
+        textual_details:
+          $ref: "#/components/schemas/TextualDetails"
+        component_identifiers:
+          $ref: "#/components/schemas/PartIdentifiers"
+        revision:
+          type: "string"
+          description: "Revision number or code for this specifi..."
+          example: "A"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        product_status_type:
+          $ref: "#/components/schemas/ProductStatusTypes"
+        part_specification:
+          $ref: "#/components/schemas/PartSpecification"
+      description: "Represents a single component or sub-assembly w..."
     BomComponentCreate:
       required:
       - "bom_component_key"
@@ -1316,30 +1492,38 @@ components:
       allOf:
       - $ref: "#/components/schemas/BomComponent"
     BomComponentUpdate:
-      $ref: "#/components/schemas/PartSpecification"
+      type: "object"
+      properties:
+        textual_details:
+          $ref: "#/components/schemas/TextualDetails"
+        quantity:
+          type: "string"
+          description: "The required quantity of this component ..."
+          example: "5"
+        component_identifiers:
+          $ref: "#/components/schemas/PartIdentifiers"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        product_status_type:
+          $ref: "#/components/schemas/ProductStatusTypes"
+        part_specification:
+          $ref: "#/components/schemas/PartSpecification"
+        revision:
+          type: "string"
+          description: "Revision number or code for this specifi..."
+          example: "A"
+      description: "BomComponent Update for Patch and Put"
     BomComponents:
       type: "array"
-      description: "List of BomComponent"
       items:
         $ref: "#/components/schemas/BomComponent"
-    BomComponentsCreate:
-      type: "array"
-      description: "BomComponents Create for Post"
-      items:
-        $ref: "#/components/schemas/BomComponents"
-    BomComponentsUpdate:
-      type: "array"
-      description: "BomComponents Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/BomComponents"
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     DaysOfWeekTypes:
       type: "string"
-      description: "Status of the account"
+      description: "types of days of weeks."
       enum:
       - "SUN"
       - "MON"
@@ -1370,7 +1554,49 @@ components:
       - "NONE"
       - "OTHER"
     EffectivePeriod:
-      $ref: "#/components/schemas/TimeSlot"
+      type: "object"
+      properties:
+        effective_period_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the effective per... Pat..."
+        active_indicator:
+          type: "boolean"
+          description: "Indicator if the period is currently act..."
+        exclusive_indicator:
+          type: "boolean"
+          description: "Indicator if the period is exclusive"
+        start_date_time:
+          type: "string"
+          description: "Start date and time of the effective per..."
+          format: "date-time"
+        complete_date_time:
+          type: "string"
+          description: "Completion date and time of the effectiv..."
+          format: "date-time"
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        duration_value:
+          type: "string"
+          description: "Value of the duration"
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        recur_count:
+          type: "string"
+          description: "Count of recurrence"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: "string"
+          description: "Criteria defining recurrence"
+        recur_indicator:
+          type: "boolean"
+          description: "Indicator if recurrence is enabled"
+        timeslot:
+          $ref: "#/components/schemas/TimeSlot"
+      description: "Effective Period"
     ErrorDetail:
       required:
       - "code"
@@ -1408,7 +1634,35 @@ components:
           example: "2025-11-10T10:30:00Z"
       description: "Standard format for all API error responses."
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -1417,47 +1671,31 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     Identifiers:
       type: "array"
-      description: "List of Identifier"
       items:
         $ref: "#/components/schemas/Identifier"
-    IdentifiersCreate:
-      type: "array"
-      description: "Identifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/Identifiers"
-    IdentifiersUpdate:
-      type: "array"
-      description: "Identifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/Identifiers"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
     Memo:
       type: "array"
-      description: "List of String"
       items:
         type: "string"
-    MemoCreate:
-      type: "array"
-      description: "Memo Create for Post"
-      items:
-        $ref: "#/components/schemas/Memo"
-    MemoUpdate:
-      type: "array"
-      description: "Memo Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/Memo"
     PartConditionGradeTypes:
       type: "string"
       description: "types of part condition grades."
@@ -1489,7 +1727,36 @@ components:
       - "COLLECTIBLE"
       - "OTHER"
     PartIdentifier:
-      $ref: "#/components/schemas/PartNames"
+      type: "object"
+      properties:
+        part_identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the part identifi... Pat..."
+        part_identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier ID for the part identi... Pat..."
+        part_identifier_type:
+          $ref: "#/components/schemas/PartIdentifierTypes"
+        part_identifier_value:
+          maxLength: 255
+          minLength: 1
+          type: "string"
+          description: "Value of the part identifier"
+        description:
+          maxLength: 500
+          type: "string"
+          description: "Optional description for the part identi..."
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_names:
+          $ref: "#/components/schemas/PartNames"
+      description: "nullable"
     PartIdentifierCreate:
       required:
       - "part_identifier_key"
@@ -1530,24 +1797,65 @@ components:
       - "DRAWING_NUMBER"
       - "OTHER"
     PartIdentifierUpdate:
-      $ref: "#/components/schemas/PartNames"
+      type: "object"
+      properties:
+        part_identifier_type:
+          $ref: "#/components/schemas/PartIdentifierTypes"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_identifier_value:
+          maxLength: 255
+          minLength: 1
+          type: "string"
+          description: "Value of the part identifier"
+        description:
+          maxLength: 500
+          type: "string"
+          description: "Optional description for the part identi..."
+        part_names:
+          $ref: "#/components/schemas/PartNames"
+      description: "PartIdentifier Update for Patch and Put"
     PartIdentifiers:
       type: "array"
-      description: "List of PartIdentifier"
       items:
         $ref: "#/components/schemas/PartIdentifier"
-    PartIdentifiersCreate:
-      type: "array"
-      description: "PartIdentifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/PartIdentifiers"
-    PartIdentifiersUpdate:
-      type: "array"
-      description: "PartIdentifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartIdentifiers"
     PartName:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        part_name_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the part name Pattern: ^[..."
+        part_name_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the part name Pattern: ^[a-zA-..."
+        part_prefix:
+          $ref: "#/components/schemas/Codes"
+        part_suffix:
+          $ref: "#/components/schemas/Codes"
+        description:
+          type: "string"
+          description: "Description of the part name"
+        language:
+          $ref: "#/components/schemas/Codes"
+        locale:
+          $ref: "#/components/schemas/Codes"
+        alias:
+          $ref: "#/components/schemas/Codes"
+        long_name:
+          $ref: "#/components/schemas/Codes"
+        marketing_name:
+          $ref: "#/components/schemas/Codes"
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        part_number:
+          $ref: "#/components/schemas/Codes"
+      description: "nullable"
     PartNameCreate:
       required:
       - "part_name_key"
@@ -1569,24 +1877,94 @@ components:
       - "SUPERSEDING"
       - "SUPERSEDED"
     PartNameUpdate:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        part_prefix:
+          $ref: "#/components/schemas/Codes"
+        marketing_name:
+          $ref: "#/components/schemas/Codes"
+        description:
+          type: "string"
+          description: "Description of the part name"
+        alias:
+          $ref: "#/components/schemas/Codes"
+        part_number:
+          $ref: "#/components/schemas/Codes"
+        language:
+          $ref: "#/components/schemas/Codes"
+        part_suffix:
+          $ref: "#/components/schemas/Codes"
+        locale:
+          $ref: "#/components/schemas/Codes"
+        long_name:
+          $ref: "#/components/schemas/Codes"
+      description: "PartName Update for Patch and Put"
     PartNames:
       type: "array"
-      description: "List of PartName"
       items:
         $ref: "#/components/schemas/PartName"
-    PartNamesCreate:
-      type: "array"
-      description: "PartNames Create for Post"
-      items:
-        $ref: "#/components/schemas/PartNames"
-    PartNamesUpdate:
-      type: "array"
-      description: "PartNames Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartNames"
     PartSpecification:
-      $ref: "#/components/schemas/ProductPackageTypes"
+      type: "object"
+      properties:
+        part_specification_id:
+          maxLength: 50
+          minLength: 5
+          type: "string"
+          description: "Unique identifier ID for the supersessio..."
+        part_specification_key:
+          maxLength: 50
+          minLength: 5
+          type: "string"
+          description: "Unique identifier ID for the supersessio..."
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        part_condition_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartConditionTypes"
+        part_condition_grade_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartConditionGradeTypes"
+        unit_of_measures:
+          $ref: "#/components/schemas/UnitOfMeasures"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        minimum_order_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Minimum quantity allowed per order."
+          format: "int32"
+          example: "10"
+        fixed_order_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Fixed quantity required for ordering thi..."
+          format: "int32"
+          example: "25"
+        package_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Quantity of items per package unit."
+          format: "int32"
+          example: "50"
+        item_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Base item quantity if the part represent..."
+          format: "int32"
+          example: "1"
+        product_package_type:
+          $ref: "#/components/schemas/ProductPackageTypes"
+      description: "Criteria for filtering by specific part attribu..."
     PartSpecificationCreate:
       required:
       - "part_specification_key"
@@ -1595,7 +1973,55 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartSpecification"
     PartSpecificationUpdate:
-      $ref: "#/components/schemas/ProductPackageTypes"
+      type: "object"
+      properties:
+        part_condition_grade_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartConditionGradeTypes"
+        package_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Quantity of items per package unit."
+          format: "int32"
+          example: "50"
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_condition_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartConditionTypes"
+        minimum_order_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Minimum quantity allowed per order."
+          format: "int32"
+          example: "10"
+        fixed_order_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Fixed quantity required for ordering thi..."
+          format: "int32"
+          example: "25"
+        item_quantity:
+          minimum: 0
+          type: "integer"
+          description: "Base item quantity if the part represent..."
+          format: "int32"
+          example: "1"
+        unit_of_measures:
+          $ref: "#/components/schemas/UnitOfMeasures"
+        product_package_type:
+          $ref: "#/components/schemas/ProductPackageTypes"
+      description: "PartSpecification Update for Patch and Put"
     ProductPackageTypes:
       type: "string"
       description: "types of product packages."
@@ -1635,27 +2061,118 @@ components:
       - "UNAVAILABLE"
       - "TERMINATED"
     TextualDetail:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        textual_detail_key:
+          type: "string"
+          description: "Natural key or business-friendly key for..."
+        textual_detail_id:
+          type: "string"
+          description: "Unique identifier for textual detail."
+        comments:
+          $ref: "#/components/schemas/Memo"
+        locale_codes:
+          $ref: "#/components/schemas/Codes"
+        notes:
+          $ref: "#/components/schemas/Memo"
+        short_description:
+          type: "string"
+          description: "Short description for the detail."
+        description:
+          type: "string"
+          description: "Full description in memo format."
+        text_key:
+          type: "string"
+          description: "Key reference for reusable text blocks."
+        name:
+          type: "string"
+          description: "Name or title of the textual detail."
+        value:
+          type: "string"
+          description: "Value associated with the textual detail..."
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        groups:
+          $ref: "#/components/schemas/Codes"
+        label:
+          type: "string"
+          description: "Label for UI representation."
+        alt_text:
+          type: "string"
+          description: "Alternative text for accessibility or im..."
+        textual_detail_code:
+          type: "string"
+          description: "Code identifier for textual detail refer..."
+        tags:
+          $ref: "#/components/schemas/Codes"
+        uom_display:
+          type: "string"
+          description: "Unit of Measure display value."
+        uom_code:
+          type: "string"
+          description: "Unit of Measure code (e.g., EA, PR)."
+      description: "not nullable"
     TextualDetails:
       type: "array"
-      description: "List of TextualDetail"
       items:
         $ref: "#/components/schemas/TextualDetail"
-    TextualDetailsCreate:
-      type: "array"
-      description: "TextualDetails Create for Post"
-      items:
-        $ref: "#/components/schemas/TextualDetails"
-    TextualDetailsUpdate:
-      type: "array"
-      description: "TextualDetails Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/TextualDetails"
     TimeSlot:
-      $ref: "#/components/schemas/DaysOfWeekTypes"
+      type: "object"
+      properties:
+        time_slot_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique business key for the time slot. Pattern:..."
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
+          format: "date-time"
+        recurring_indicator:
+          type: "boolean"
+          description: "Indicates if the time slot is recurring."
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
+          format: "date-time"
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the time slot reco... Pat..."
+        week_of_date:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          format: "date"
+          items:
+            type: "string"
+      description: "Range of time for the appointment including sta..."
     TimeslotDirectiveTypes:
       type: "string"
-      description: "Represents the directive for a timeslot."
+      description: "types of timeslot directives."
       enum:
       - "AFTER"
       - "ANYTIME"
@@ -1703,22 +2220,33 @@ components:
       - "SHELF_LIFE_HOURS"
       - "EXPIRATION_DATE"
     UnitOfMeasure:
-      $ref: "#/components/schemas/UOMQuantityCategoryTypes"
+      type: "object"
+      properties:
+        unit_of_measure_key:
+          maxLength: 100
+          minLength: 1
+          pattern: "^[a-zA-Z0-9_.-]+$"
+          type: "string"
+          description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
+        uom_value:
+          maxLength: 100
+          minLength: 1
+          pattern: "^[a-zA-Z0-9_.-]+$"
+          type: "string"
+          description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
+        quantity:
+          maxLength: 100
+          minLength: 1
+          pattern: "^[a-zA-Z0-9_.-]+$"
+          type: "string"
+          description: "quantity of items Pattern: ^[a-zA-Z0-9_.-]+$ (A..."
+        uom_quantity_category_type:
+          $ref: "#/components/schemas/UOMQuantityCategoryTypes"
+      description: "value price with unit of measure"
     UnitOfMeasures:
       type: "array"
-      description: "List of UnitOfMeasure"
       items:
         $ref: "#/components/schemas/UnitOfMeasure"
-    UnitOfMeasuresCreate:
-      type: "array"
-      description: "UnitOfMeasures Create for Post"
-      items:
-        $ref: "#/components/schemas/UnitOfMeasures"
-    UnitOfMeasuresUpdate:
-      type: "array"
-      description: "UnitOfMeasures Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/UnitOfMeasures"
   responses:
     NotFoundError:
       description: "The requested resource was not found."

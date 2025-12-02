@@ -1199,16 +1199,109 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /price-plans/{pricePlanKey}/time-slots:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a list of TimeSlot records scoped by p..."
+      operationId: "listTimeSlotsByPricePlanKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of TimeSlot records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TimeSlot"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: "pricePlanKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /price-plans/{pricePlanKey}/time-slots/{timeSlotKey}:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a specific TimeSlot record."
+      operationId: "getTimeSlotById"
+      responses:
+        "200":
+          description: "The requested TimeSlot record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "TimeSlot"
+      summary: "Replace a TimeSlot record."
+      operationId: "replaceTimeSlot"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeSlot"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "pricePlanKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "timeSlotKey"
+      in: "path"
+      description: "The unique identifier for the specific TimeSlot."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
 components:
   schemas:
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     DaysOfWeekTypes:
       type: "string"
-      description: "Status of the account"
+      description: "types of days of weeks."
       enum:
       - "SUN"
       - "MON"
@@ -1239,7 +1332,49 @@ components:
       - "NONE"
       - "OTHER"
     EffectivePeriod:
-      $ref: "#/components/schemas/TimeSlot"
+      type: "object"
+      properties:
+        effective_period_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the effective per... Pat..."
+        active_indicator:
+          type: "boolean"
+          description: "Indicator if the period is currently act..."
+        exclusive_indicator:
+          type: "boolean"
+          description: "Indicator if the period is exclusive"
+        start_date_time:
+          type: "string"
+          description: "Start date and time of the effective per..."
+          format: "date-time"
+        complete_date_time:
+          type: "string"
+          description: "Completion date and time of the effectiv..."
+          format: "date-time"
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        duration_value:
+          type: "string"
+          description: "Value of the duration"
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        recur_count:
+          type: "string"
+          description: "Count of recurrence"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: "string"
+          description: "Criteria defining recurrence"
+        recur_indicator:
+          type: "boolean"
+          description: "Indicator if recurrence is enabled"
+        timeslot:
+          $ref: "#/components/schemas/TimeSlot"
+      description: "Effective Period"
     ErrorDetail:
       required:
       - "code"
@@ -1277,7 +1412,36 @@ components:
           example: "2025-11-10T10:30:00Z"
       description: "Standard format for all API error responses."
     FinancialSplitReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        financial_split_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value for the referenc... Pat..."
+        financial_split_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key value for the reference recor... Pat..."
+        financial_split_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "The unique key identifying the reference... Pat..."
+        context:
+          type: "string"
+          description: "Context or domain of the payment financi..."
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the financialSplit was..."
+          format: "date-time"
+      description: "Reference to a Payment FinancialSplit Aggregate..."
     FinancialSplitReferenceCreate:
       required:
       - "financial_split_reference_key"
@@ -1286,24 +1450,53 @@ components:
       allOf:
       - $ref: "#/components/schemas/FinancialSplitReference"
     FinancialSplitReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        context:
+          type: "string"
+          description: "Context or domain of the payment financi..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the financialSplit was..."
+          format: "date-time"
+      description: "FinancialSplitReference Update for Patch and Put"
     FinancialSplitReferences:
       type: "array"
-      description: "List of FinancialSplitReference"
       items:
         $ref: "#/components/schemas/FinancialSplitReference"
-    FinancialSplitReferencesCreate:
-      type: "array"
-      description: "FinancialSplitReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/FinancialSplitReferences"
-    FinancialSplitReferencesUpdate:
-      type: "array"
-      description: "FinancialSplitReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/FinancialSplitReferences"
     GeographicBoundaryReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        geographic_boundary_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value for the referenc... Pat..."
+        geographic_boundary_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key value for the reference recor... Pat..."
+        geographic_boundary_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "The unique key identifying the reference... Pat..."
+        context:
+          type: "string"
+          description: "Context or domain of the payment schedul..."
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the schedule was assoc..."
+          format: "date-time"
+      description: "Reference to a Payment Schedule Aggregate Root."
     GeographicBoundaryReferenceCreate:
       required:
       - "geographic_boundary_reference_key"
@@ -1312,24 +1505,52 @@ components:
       allOf:
       - $ref: "#/components/schemas/GeographicBoundaryReference"
     GeographicBoundaryReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        context:
+          type: "string"
+          description: "Context or domain of the payment schedul..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the schedule was assoc..."
+          format: "date-time"
+      description: "GeographicBoundaryReference Update for Patch an..."
     GeographicBoundaryReferences:
       type: "array"
-      description: "List of GeographicBoundaryReference"
       items:
         $ref: "#/components/schemas/GeographicBoundaryReference"
-    GeographicBoundaryReferencesCreate:
-      type: "array"
-      description: "GeographicBoundaryReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/GeographicBoundaryReferences"
-    GeographicBoundaryReferencesUpdate:
-      type: "array"
-      description: "GeographicBoundaryReferences Update for Patch a..."
-      items:
-        $ref: "#/components/schemas/GeographicBoundaryReferences"
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -1338,19 +1559,72 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     PartyIdentifier:
-      $ref: "#/components/schemas/EffectivePeriod"
+      type: "object"
+      properties:
+        party_identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        party:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+      description: "External system identifier"
     PartyIdentifierCreate:
       required:
       - "party_identifier_key"
@@ -1359,22 +1633,40 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartyIdentifier"
     PartyIdentifierUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        party:
+          $ref: "#/components/schemas/Identifier"
+      description: "PartyIdentifier Update for Patch and Put"
     PartyIdentifiers:
       type: "array"
-      description: "List of PartyIdentifier"
       items:
         $ref: "#/components/schemas/PartyIdentifier"
-    PartyIdentifiersCreate:
-      type: "array"
-      description: "PartyIdentifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
-    PartyIdentifiersUpdate:
-      type: "array"
-      description: "PartyIdentifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
     PartyRelationshipTypes:
       type: "string"
       description: "types of party relationships."
@@ -1519,7 +1811,69 @@ components:
       - "REQUESTED"
       - "OTHER"
     PricePlan:
-      $ref: "#/components/schemas/ResourceTypes"
+      type: "object"
+      properties:
+        price_plan_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the price plan. Pattern: ..."
+        price_plan_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the price plan. Pattern: ..."
+        price_description:
+          maxLength: 255
+          type: "string"
+          description: "Description of the price plan."
+        price_sensitivity:
+          $ref: "#/components/schemas/PriceSensitivity"
+        price_class_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceClassTypes"
+        locale:
+          maxLength: 10
+          type: "string"
+          description: "Locale information for regional pricing."
+        currency:
+          maxLength: 5
+          type: "string"
+          description: "Currency code for the price (ISO 4217)."
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        codes:
+          $ref: "#/components/schemas/Codes"
+        price_group:
+          maxLength: 100
+          type: "string"
+          description: "Group categorization for pricing."
+        price_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceTypes"
+        geographic_boundaries:
+          $ref: "#/components/schemas/GeographicBoundaryReferences"
+        financial_splits:
+          $ref: "#/components/schemas/FinancialSplitReferences"
+        schedules:
+          $ref: "#/components/schemas/ProductScheduleReferences"
+        resource_types:
+          $ref: "#/components/schemas/ResourceTypes"
+      description: "Price details for this product, including sched..."
     PricePlanCreate:
       required:
       - "price_plan_key"
@@ -1528,9 +1882,78 @@ components:
       allOf:
       - $ref: "#/components/schemas/PricePlan"
     PricePlanUpdate:
-      $ref: "#/components/schemas/ResourceTypes"
+      type: "object"
+      properties:
+        codes:
+          $ref: "#/components/schemas/Codes"
+        price_sensitivity:
+          $ref: "#/components/schemas/PriceSensitivity"
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        financial_splits:
+          $ref: "#/components/schemas/FinancialSplitReferences"
+        geographic_boundaries:
+          $ref: "#/components/schemas/GeographicBoundaryReferences"
+        locale:
+          maxLength: 10
+          type: "string"
+          description: "Locale information for regional pricing."
+        price_class_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceClassTypes"
+        price_group:
+          maxLength: 100
+          type: "string"
+          description: "Group categorization for pricing."
+        price_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceTypes"
+        schedules:
+          $ref: "#/components/schemas/ProductScheduleReferences"
+        price_description:
+          maxLength: 255
+          type: "string"
+          description: "Description of the price plan."
+        currency:
+          maxLength: 5
+          type: "string"
+          description: "Currency code for the price (ISO 4217)."
+        resource_types:
+          $ref: "#/components/schemas/ResourceTypes"
+      description: "PricePlan Update for Patch and Put"
     PriceSensitivity:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        price_sensitivity_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the price sensitiv... Pat..."
+        price_sensitivity_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the price sensitivity c... Pat..."
+        sensitivity_level_types:
+          $ref: "#/components/schemas/PriceSensitivityTypes"
+        quantity_level_types:
+          $ref: "#/components/schemas/PriceSensitivityTypes"
+        description:
+          type: "string"
+          description: "Description of this price sensitivity cl..."
+        alias:
+          $ref: "#/components/schemas/Codes"
+      description: "nullable"
     PriceSensitivityCreate:
       required:
       - "price_sensitivity_key"
@@ -1548,7 +1971,18 @@ components:
       - "ELASTIC"
       - "INELASTIC"
     PriceSensitivityUpdate:
-      $ref: "#/components/schemas/PriceSensitivityTypes"
+      type: "object"
+      properties:
+        quantity_level_types:
+          $ref: "#/components/schemas/PriceSensitivityTypes"
+        description:
+          type: "string"
+          description: "Description of this price sensitivity cl..."
+        alias:
+          $ref: "#/components/schemas/Codes"
+        sensitivity_level_types:
+          $ref: "#/components/schemas/PriceSensitivityTypes"
+      description: "PriceSensitivity Update for Patch and Put"
     PriceTypes:
       type: "string"
       description: "types of prices."
@@ -1602,7 +2036,36 @@ components:
       - "TAX"
       - "OTHER"
     ProductScheduleReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        schedule_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value for the referenc... Pat..."
+        schedule_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key value for the reference recor... Pat..."
+        schedule_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "The unique key identifying the reference... Pat..."
+        context:
+          type: "string"
+          description: "Context or domain of the payment schedul..."
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the schedule was assoc..."
+          format: "date-time"
+      description: "Reference to a Payment Schedule Aggregate Root."
     ProductScheduleReferenceCreate:
       required:
       - "product_schedule_reference_key"
@@ -1611,22 +2074,22 @@ components:
       allOf:
       - $ref: "#/components/schemas/ProductScheduleReference"
     ProductScheduleReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        identifier:
+          $ref: "#/components/schemas/Identifier"
+        context:
+          type: "string"
+          description: "Context or domain of the payment schedul..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the schedule was assoc..."
+          format: "date-time"
+      description: "ProductScheduleReference Update for Patch and Put"
     ProductScheduleReferences:
       type: "array"
-      description: "List of ProductScheduleReference"
       items:
         $ref: "#/components/schemas/ProductScheduleReference"
-    ProductScheduleReferencesCreate:
-      type: "array"
-      description: "ProductScheduleReferences Create for Post"
-      items:
-        $ref: "#/components/schemas/ProductScheduleReferences"
-    ProductScheduleReferencesUpdate:
-      type: "array"
-      description: "ProductScheduleReferences Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/ProductScheduleReferences"
     ResourceTypes:
       type: "string"
       description: "types of resources."
@@ -1667,10 +2130,62 @@ components:
       - "APPOINTMENT"
       - "OTHER"
     TimeSlot:
-      $ref: "#/components/schemas/DaysOfWeekTypes"
+      type: "object"
+      properties:
+        time_slot_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique business key for the time slot. Pattern:..."
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
+          format: "date-time"
+        recurring_indicator:
+          type: "boolean"
+          description: "Indicates if the time slot is recurring."
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
+          format: "date-time"
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the time slot reco... Pat..."
+        week_of_date:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          format: "date"
+          items:
+            type: "string"
+      description: "Range of time for the appointment including sta..."
     TimeslotDirectiveTypes:
       type: "string"
-      description: "Represents the directive for a timeslot."
+      description: "types of timeslot directives."
       enum:
       - "AFTER"
       - "ANYTIME"

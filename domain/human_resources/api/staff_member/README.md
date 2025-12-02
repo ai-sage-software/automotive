@@ -19,11 +19,13 @@ The API is structured around the domain **human_resources** and **StaffMember** 
     | **PersonName** | /staff-members/{staffMemberKey}/person-names | Manages PersonNames belonging to StaffMembers |
     | **PayrollRate** | /staff-members/{staffMemberKey}/payroll-rates | Manages PayrollRates belonging to StaffMembers |
     | **Addresse** | /staff-members/{staffMemberKey}/addresses | Manages Addresses belonging to StaffMembers |
+    | **Position** | /staff-members/{staffMemberKey}/positions | Manages Positions belonging to StaffMembers |
     | **PartyIdentifier** | /staff-members/{staffMemberKey}/party-identifiers | Manages PartyIdentifiers belonging to StaffMembers |
     | **PrivacyEvent** | /staff-members/{staffMemberKey}/privacy-events | Manages PrivacyEvents belonging to StaffMembers |
     | **TimeSlot** | /staff-members/{staffMemberKey}/time-slots | Manages TimeSlots belonging to StaffMembers |
     | **ControlAccount** | /staff-members/{staffMemberKey}/control-accounts | Manages ControlAccounts belonging to StaffMembers |
     | **CommunicationChannel** | /staff-members/{staffMemberKey}/communication-channels | Manages CommunicationChannels belonging to StaffMembers |
+    | **AddressLocale** | /staff-members/{staffMemberKey}/address-locales | Manages AddressLocales belonging to StaffMembers |
     | **Authorization** | /staff-members/{staffMemberKey}/authorizations | Manages Authorizations belonging to StaffMembers |
     | **Money** | /staff-members/{staffMemberKey}/moneys | Manages Moneys belonging to StaffMembers |
     | **Department** | /staff-members/{staffMemberKey}/departments | Manages Departments belonging to StaffMembers |
@@ -92,7 +94,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -111,6 +113,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **FinancialCategoryTypes** : types of financial categorys.<br/>
 💠 **GenderTypes** : types of genders.<br/>
+💠 **LocationTypes** : types of locations.<br/>
 💠 **MaritalStatusTypes** : types of marital status.<br/>
 💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
@@ -123,32 +126,15 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **RoleTypes** : types of roles.<br/>
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
-💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **AddressLocales** : List of AddressLocale<br/>
-✅ **Addresses** : List of Address<br/>
-✅ **Authorizations** : List of Authorization<br/>
-✅ **Codes** : List of Codes<br/>
-✅ **CommunicationChannels** : List of CommunicationChannel<br/>
-✅ **ControlAccounts** : List of ControlAccount<br/>
 ✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Identifiers** : List of Identifier<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
-✅ **List** : List of RoleTypes<br/>
-✅ **Memo** : List of String<br/>
-✅ **MetricNameValues** : List of MetricNameValue<br/>
+✅ **Link** : Represents a Hypermedia as the Engine of Application State (HATEOS) link, providing information on how to interact with a related resource.<br/>
 ✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
-✅ **PartyIdentifiers** : List of PartyIdentifier<br/>
-✅ **PayrollRates** : List of PayrollRate<br/>
-✅ **PrivacyEvents** : List of PrivacyEvent<br/>
-✅ **PrivacyItems** : List of PrivacyItem<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TextualDetails** : List of TextualDetail<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
@@ -431,6 +417,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /staff-members/{staffMemberKey}/positions
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions</span> <br/>
+        <span class="api-summary">Retrieve a list of Position records scoped by staffMemberKey. getPositionsByStaffMemberKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions</span> <br/>
+        <span class="api-summary">Create a new Position record. createPosition</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/positions/{positionKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Position record. getositionById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Replace a Position record. replacePosition</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Partially update a Position record. updatePosition</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
+        <span class="api-summary">Delete a Position Record deletePositionRecord</span>
+    </span>
+</div>
+
 ### /staff-members/{staffMemberKey}/party-identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -654,6 +690,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/staff-members/{staffMemberKey}/communication-channels/{communicationChannelKey}</span> <br/>
         <span class="api-summary">Delete a CommunicationChannel Record deleteCommunicationChannelRecord</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/address-locales
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales</span> <br/>
+        <span class="api-summary">Retrieve a list of AddressLocale records scoped by staffMemberKey. getAddressLocalesByStaffMemberKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales</span> <br/>
+        <span class="api-summary">Create a new AddressLocale record. createAddressLocale</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AddressLocale record. getddressLocaleById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Replace a AddressLocale record. replaceAddressLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Partially update a AddressLocale record. updateAddressLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
+        <span class="api-summary">Delete a AddressLocale Record deleteAddressLocaleRecord</span>
     </span>
 </div>
 
@@ -1069,11 +1155,13 @@ The following resources follow a consistent pattern under StaffMemberroot with k
     | **person-name** | /staff-members/{staffMemberKey}/person-names | listPersonNamesByStaffMemberKey | createPersonName | getPersonNamesByStaffMemberKey | updatePersonNamesByStaffMemberKey | deletePersonNamesByStaffMemberKey |
     | **payroll-rate** | /staff-members/{staffMemberKey}/payroll-rates | listPayrollRatesByStaffMemberKey | createPayrollRate | getPayrollRatesByStaffMemberKey | updatePayrollRatesByStaffMemberKey | deletePayrollRatesByStaffMemberKey |
     | **addresse** | /staff-members/{staffMemberKey}/addresses | listAddresssByStaffMemberKey | createAddress | getAddresssByStaffMemberKey | updateAddresssByStaffMemberKey | deleteAddresssByStaffMemberKey |
+    | **position** | /staff-members/{staffMemberKey}/positions | listPositionsByStaffMemberKey | createPosition | getPositionsByStaffMemberKey | updatePositionsByStaffMemberKey | deletePositionsByStaffMemberKey |
     | **party-identifier** | /staff-members/{staffMemberKey}/party-identifiers | listPartyIdentifiersByStaffMemberKey | createPartyIdentifier | getPartyIdentifiersByStaffMemberKey | updatePartyIdentifiersByStaffMemberKey | deletePartyIdentifiersByStaffMemberKey |
     | **privacy-event** | /staff-members/{staffMemberKey}/privacy-events | listPrivacyEventsByStaffMemberKey | createPrivacyEvent | getPrivacyEventsByStaffMemberKey | updatePrivacyEventsByStaffMemberKey | deletePrivacyEventsByStaffMemberKey |
     | **time-slot** | /staff-members/{staffMemberKey}/time-slots | listTimeSlotsByStaffMemberKey |  | getTimeSlotsByStaffMemberKey | updateTimeSlotsByStaffMemberKey | deleteTimeSlotsByStaffMemberKey |
     | **control-account** | /staff-members/{staffMemberKey}/control-accounts | listControlAccountsByStaffMemberKey | createControlAccount | getControlAccountsByStaffMemberKey | updateControlAccountsByStaffMemberKey | deleteControlAccountsByStaffMemberKey |
     | **communication-channel** | /staff-members/{staffMemberKey}/communication-channels | listCommunicationChannelsByStaffMemberKey | createCommunicationChannel | getCommunicationChannelsByStaffMemberKey | updateCommunicationChannelsByStaffMemberKey | deleteCommunicationChannelsByStaffMemberKey |
+    | **address-locale** | /staff-members/{staffMemberKey}/address-locales | listAddressLocalesByStaffMemberKey | createAddressLocale | getAddressLocalesByStaffMemberKey | updateAddressLocalesByStaffMemberKey | deleteAddressLocalesByStaffMemberKey |
     | **authorization** | /staff-members/{staffMemberKey}/authorizations | listAuthorizationsByStaffMemberKey | createAuthorization | getAuthorizationsByStaffMemberKey | updateAuthorizationsByStaffMemberKey | deleteAuthorizationsByStaffMemberKey |
     | **money** | /staff-members/{staffMemberKey}/moneys | listMoneysByStaffMemberKey |  | getMoneysByStaffMemberKey | updateMoneysByStaffMemberKey | deleteMoneysByStaffMemberKey |
     | **department** | /staff-members/{staffMemberKey}/departments | listDepartmentsByStaffMemberKey | createDepartment | getDepartmentsByStaffMemberKey | updateDepartmentsByStaffMemberKey | deleteDepartmentsByStaffMemberKey |

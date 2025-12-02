@@ -816,15 +816,139 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
+  /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a list of TimeSlot records scoped by s..."
+      operationId: "listTimeSlotsBySubsidiaryLedgerTransactionKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of TimeSlot records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TimeSlot"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: "subsidiaryLedgerTransactionKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots/{timeSlotKey}:
+    get:
+      tags:
+      - "TimeSlot"
+      summary: "Retrieve a specific TimeSlot record."
+      operationId: "getTimeSlotById"
+      responses:
+        "200":
+          description: "The requested TimeSlot record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "TimeSlot"
+      summary: "Replace a TimeSlot record."
+      operationId: "replaceTimeSlot"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeSlot"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "subsidiaryLedgerTransactionKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "timeSlotKey"
+      in: "path"
+      description: "The unique identifier for the specific TimeSlot."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
 components:
   schemas:
     Codes:
       type: "array"
-      description: "List of Codes"
       items:
         type: "string"
     ControlAccountReference:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        control_account_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        control_account_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "External system identifier"
     ControlAccountReferenceCreate:
       required:
       - "control_account_reference_key"
@@ -833,10 +957,23 @@ components:
       allOf:
       - $ref: "#/components/schemas/ControlAccountReference"
     ControlAccountReferenceUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+      description: "ControlAccountReference Update for Patch and Put"
     DaysOfWeekTypes:
       type: "string"
-      description: "Status of the account"
+      description: "types of days of weeks."
       enum:
       - "SUN"
       - "MON"
@@ -867,7 +1004,49 @@ components:
       - "NONE"
       - "OTHER"
     EffectivePeriod:
-      $ref: "#/components/schemas/TimeSlot"
+      type: "object"
+      properties:
+        effective_period_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique key identifying the effective per... Pat..."
+        active_indicator:
+          type: "boolean"
+          description: "Indicator if the period is currently act..."
+        exclusive_indicator:
+          type: "boolean"
+          description: "Indicator if the period is exclusive"
+        start_date_time:
+          type: "string"
+          description: "Start date and time of the effective per..."
+          format: "date-time"
+        complete_date_time:
+          type: "string"
+          description: "Completion date and time of the effectiv..."
+          format: "date-time"
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        duration_value:
+          type: "string"
+          description: "Value of the duration"
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUOMTypes"
+        recur_count:
+          type: "string"
+          description: "Count of recurrence"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: "string"
+          description: "Criteria defining recurrence"
+        recur_indicator:
+          type: "boolean"
+          description: "Indicator if recurrence is enabled"
+        timeslot:
+          $ref: "#/components/schemas/TimeSlot"
+      description: "Effective Period"
     ErrorDetail:
       required:
       - "code"
@@ -954,7 +1133,35 @@ components:
       - "OTHER"
       - "CUSTOM"
     Identifier:
-      $ref: "#/components/schemas/Codes"
+      type: "object"
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: "External system identifier"
     IdentifierCreate:
       required:
       - "identifier_key"
@@ -963,44 +1170,44 @@ components:
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      $ref: "#/components/schemas/Codes"
-    Link:
-      type: "array"
-      description: "Quick Link"
-      items:
-        type: "string"
-    Links:
-      type: "array"
-      description: "List of Links"
-      items:
-        type: "string"
+      type: "object"
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        detail:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+        value:
+          type: "string"
+          description: "The monetary or hours-based value of the..."
+      description: "Identifier Update for Patch and Put"
     Money:
       type: "object"
       properties:
         money_key:
           type: "string"
           description: "The unique key for the monetary value."
-          nullable: false
         money_id:
           type: "string"
           description: "The unique ID for the monetary value."
-          nullable: false
         currency_code:
           type: "string"
           description: "ISO currency code, e.g., 'USD'."
-          nullable: false
         display_value:
           type: "string"
-          description: "The locale-specific display format for the valu..."
-          nullable: false
+          description: "The locale-specific display format for t..."
         locale:
           type: "string"
           description: "The locale code (e.g., en-US, fr-FR)."
-          nullable: false
         value:
           type: "string"
           description: "The monetary value."
-          nullable: false
       description: "Represents a monetary value, including its curr..."
     OrganizationTypes:
       type: "string"
@@ -1018,7 +1225,54 @@ components:
       - "TEAM"
       - "OTHER"
     PartyIdentifier:
-      $ref: "#/components/schemas/EffectivePeriod"
+      type: "object"
+      properties:
+        party_identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        party:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+      description: "External system identifier"
     PartyIdentifierCreate:
       required:
       - "party_identifier_key"
@@ -1027,22 +1281,40 @@ components:
       allOf:
       - $ref: "#/components/schemas/PartyIdentifier"
     PartyIdentifierUpdate:
-      $ref: "#/components/schemas/Identifier"
+      type: "object"
+      properties:
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: "string"
+          description: "Context or domain of the identifier"
+        party_relationship_types:
+          pattern: "^[a-zA-Z0-9_]+$"
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        party_identifier_type:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        occurrence_date_time:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date-time"
+        party:
+          $ref: "#/components/schemas/Identifier"
+      description: "PartyIdentifier Update for Patch and Put"
     PartyIdentifiers:
       type: "array"
-      description: "List of PartyIdentifier"
       items:
         $ref: "#/components/schemas/PartyIdentifier"
-    PartyIdentifiersCreate:
-      type: "array"
-      description: "PartyIdentifiers Create for Post"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
-    PartyIdentifiersUpdate:
-      type: "array"
-      description: "PartyIdentifiers Update for Patch and Put"
-      items:
-        $ref: "#/components/schemas/PartyIdentifiers"
     PartyRelationshipTypes:
       type: "string"
       description: "types of party relationships."
@@ -1145,7 +1417,53 @@ components:
       - "REMOVE"
       - "OTHER"
     SubsidiaryLedgerTransaction:
-      $ref: "#/components/schemas/SubsidiaryLedgerTransactionStatusTypes"
+      type: "object"
+      properties:
+        subsidiary_ledger_transaction_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the Subsidiary Led... Pat..."
+        subsidiary_ledger_transaction_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the Subsidiary Led... Pat..."
+        control_account_key:
+          $ref: "#/components/schemas/ControlAccountReference"
+        transaction_date:
+          type: "string"
+          description: "The date the source transaction occurred..."
+          format: "date"
+        posting_date:
+          type: "string"
+          description: "The date the source transaction occurred..."
+          format: "date"
+        transaction_type:
+          $ref: "#/components/schemas/FinancialTransactionTypes"
+        org_id:
+          type: "string"
+          description: "The ID of the organization (cost or prof..."
+          example: "1"
+        account_key:
+          type: "string"
+          description: "specific account (e.g., A/R account ID, ..."
+          example: "1"
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        org_type:
+          $ref: "#/components/schemas/OrganizationTypes"
+        total_money:
+          $ref: "#/components/schemas/Money"
+        description:
+          maxLength: 255
+          type: "string"
+          description: "A description of the transaction."
+        subsidiary_ledger_transaction_status_type:
+          $ref: "#/components/schemas/SubsidiaryLedgerTransactionStatusTypes"
+      description: "nullable"
     SubsidiaryLedgerTransactionCreate:
       required:
       - "subsidiary_ledger_transaction_key"
@@ -1164,12 +1482,88 @@ components:
       - "RECONCILED"
       - "VOIDED"
     SubsidiaryLedgerTransactionUpdate:
-      $ref: "#/components/schemas/FinancialTransactionTypes"
+      type: "object"
+      properties:
+        transaction_date:
+          type: "string"
+          description: "The date the source transaction occurred..."
+          format: "date"
+        party_identifiers:
+          $ref: "#/components/schemas/PartyIdentifiers"
+        subsidiary_ledger_transaction_status_type:
+          $ref: "#/components/schemas/SubsidiaryLedgerTransactionStatusTypes"
+        org_type:
+          $ref: "#/components/schemas/OrganizationTypes"
+        description:
+          maxLength: 255
+          type: "string"
+          description: "A description of the transaction."
+        total_money:
+          $ref: "#/components/schemas/Money"
+        posting_date:
+          type: "string"
+          description: "The date the source transaction occurred..."
+          format: "date"
+        transaction_type:
+          $ref: "#/components/schemas/FinancialTransactionTypes"
+      description: "SubsidiaryLedgerTransaction Update for Patch an..."
     TimeSlot:
-      $ref: "#/components/schemas/DaysOfWeekTypes"
+      type: "object"
+      properties:
+        time_slot_key:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique business key for the time slot. Pattern:..."
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
+          format: "date-time"
+        recurring_indicator:
+          type: "boolean"
+          description: "Indicates if the time slot is recurring."
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          type: "string"
+          description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
+          format: "date-time"
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maximum: 100
+          minimum: 0
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unique identifier for the time slot reco... Pat..."
+        week_of_date:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          format: "date"
+          items:
+            type: "string"
+      description: "Range of time for the appointment including sta..."
     TimeslotDirectiveTypes:
       type: "string"
-      description: "Represents the directive for a timeslot."
+      description: "types of timeslot directives."
       enum:
       - "AFTER"
       - "ANYTIME"

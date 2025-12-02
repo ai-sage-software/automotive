@@ -42,7 +42,7 @@ Enhanced entities are used for Create and Update operations.  This allows the tr
 
 1.  **View the Interactive Docs:** Load the `openapi_monolith.yaml` file into an interactive tool like **Swagger UI**, **Redoc**, or **Postman** to browse endpoints, schemas, and test calls.
 2.  **Make a First Call:** To retrieve the base list of resources, you can make an unauthenticated **GET** request to:
-> `https://[Your-API-Host]/GeographicBoundary`
+> `https://[Your-API-Host]/geographic-boundary`
 
 ### C. Integrate the API into Your Application 💻
 
@@ -75,7 +75,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
     ---
 
-## 🔑 Key Concepts & Schemas
+    ## 🔑 Key Concepts & Schemas
 
 ---
 
@@ -91,9 +91,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Codes** : List of Codes<br/>
-✅ **Link** : Quick Link<br/>
-✅ **Links** : List of Links<br/>
 
 ---
 
