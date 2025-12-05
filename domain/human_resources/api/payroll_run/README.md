@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PartyIdentifier**, **PayrollPayment**, **PayrollRun**, **Position**, **ProductSubject**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PayrollPayment**, **PayrollRun**, **Position**, **ProductSubject**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -19,7 +19,6 @@ The API is structured around the domain **human_resources** and **PayrollRun** r
     | **Identifier** | /payroll-runs/{payrollRunKey}/identifiers | Manages Identifiers belonging to PayrollRuns |
     | **Addresse** | /payroll-runs/{payrollRunKey}/addresses | Manages Addresses belonging to PayrollRuns |
     | **EffectivePeriod** | /payroll-runs/{payrollRunKey}/effective-periods | Manages EffectivePeriods belonging to PayrollRuns |
-    | **PartyIdentifier** | /payroll-runs/{payrollRunKey}/party-identifiers | Manages PartyIdentifiers belonging to PayrollRuns |
     | **ProductSubject** | /payroll-runs/{payrollRunKey}/product-subjects | Manages ProductSubjects belonging to PayrollRuns |
     | **PayrollPayment** | /payroll-runs/{payrollRunKey}/payroll-payments | Manages PayrollPayments belonging to PayrollRuns |
     | **TimeSlot** | /payroll-runs/{payrollRunKey}/time-slots | Manages TimeSlots belonging to PayrollRuns |
@@ -97,7 +96,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **CommunicationChannelTypes** : types of communication channels.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PaymentExecutionContextTypes** : types of payment execution contexts.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **PayrollRunStatusTypes** : types of payroll run status.<br/>
@@ -368,56 +366,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payroll-runs/{payrollRunKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by payrollRunKey. getPartyIdentifiersByPayrollRunKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /payroll-runs/{payrollRunKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-runs/{payrollRunKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /payroll-runs/{payrollRunKey}/product-subjects
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -654,7 +602,6 @@ The following resources follow a consistent pattern under PayrollRunroot with ke
     | **identifier** | /payroll-runs/{payrollRunKey}/identifiers | listIdentifiersByPayrollRunKey | createIdentifier | getIdentifiersByPayrollRunKey | updateIdentifiersByPayrollRunKey | deleteIdentifiersByPayrollRunKey |
     | **addresse** | /payroll-runs/{payrollRunKey}/addresses | listAddresssByPayrollRunKey | createAddress | getAddresssByPayrollRunKey | updateAddresssByPayrollRunKey | deleteAddresssByPayrollRunKey |
     | **effective-period** | /payroll-runs/{payrollRunKey}/effective-periods | listEffectivePeriodsByPayrollRunKey |  | getEffectivePeriodsByPayrollRunKey | updateEffectivePeriodsByPayrollRunKey | deleteEffectivePeriodsByPayrollRunKey |
-    | **party-identifier** | /payroll-runs/{payrollRunKey}/party-identifiers | listPartyIdentifiersByPayrollRunKey | createPartyIdentifier | getPartyIdentifiersByPayrollRunKey | updatePartyIdentifiersByPayrollRunKey | deletePartyIdentifiersByPayrollRunKey |
     | **product-subject** | /payroll-runs/{payrollRunKey}/product-subjects | listProductSubjectsByPayrollRunKey | createProductSubject | getProductSubjectsByPayrollRunKey | updateProductSubjectsByPayrollRunKey | deleteProductSubjectsByPayrollRunKey |
     | **payroll-payment** | /payroll-runs/{payrollRunKey}/payroll-payments | listPayrollPaymentsByPayrollRunKey | createPayrollPayment | getPayrollPaymentsByPayrollRunKey | updatePayrollPaymentsByPayrollRunKey | deletePayrollPaymentsByPayrollRunKey |
     | **time-slot** | /payroll-runs/{payrollRunKey}/time-slots | listTimeSlotsByPayrollRunKey |  | getTimeSlotsByPayrollRunKey | updateTimeSlotsByPayrollRunKey | deleteTimeSlotsByPayrollRunKey |

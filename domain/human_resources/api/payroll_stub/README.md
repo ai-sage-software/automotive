@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PartyIdentifier**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -20,7 +20,6 @@ The API is structured around the domain **human_resources** and **PayrollStub** 
     | **Money** | /payroll-stubs/{payrollStubKey}/moneys | Manages Moneys belonging to PayrollStubs |
     | **Identifier** | /payroll-stubs/{payrollStubKey}/identifiers | Manages Identifiers belonging to PayrollStubs |
     | **EffectivePeriod** | /payroll-stubs/{payrollStubKey}/effective-periods | Manages EffectivePeriods belonging to PayrollStubs |
-    | **PartyIdentifier** | /payroll-stubs/{payrollStubKey}/party-identifiers | Manages PartyIdentifiers belonging to PayrollStubs |
     | **PayrollComponent** | /payroll-stubs/{payrollStubKey}/payroll-components | Manages PayrollComponents belonging to PayrollStubs |
     | **TimeSlot** | /payroll-stubs/{payrollStubKey}/time-slots | Manages TimeSlots belonging to PayrollStubs |
 
@@ -93,7 +92,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayerTypes** : types of payers.<br/>
 💠 **PayrollAggregateTypes** : types of payroll aggregates.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
@@ -392,56 +390,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payroll-stubs/{payrollStubKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by payrollStubKey. getPartyIdentifiersByPayrollStubKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /payroll-stubs/{payrollStubKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /payroll-stubs/{payrollStubKey}/payroll-components
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -529,7 +477,6 @@ The following resources follow a consistent pattern under PayrollStubroot with k
     | **money** | /payroll-stubs/{payrollStubKey}/moneys | listMoneysByPayrollStubKey |  | getMoneysByPayrollStubKey | updateMoneysByPayrollStubKey | deleteMoneysByPayrollStubKey |
     | **identifier** | /payroll-stubs/{payrollStubKey}/identifiers | listIdentifiersByPayrollStubKey | createIdentifier | getIdentifiersByPayrollStubKey | updateIdentifiersByPayrollStubKey | deleteIdentifiersByPayrollStubKey |
     | **effective-period** | /payroll-stubs/{payrollStubKey}/effective-periods | listEffectivePeriodsByPayrollStubKey |  | getEffectivePeriodsByPayrollStubKey | updateEffectivePeriodsByPayrollStubKey | deleteEffectivePeriodsByPayrollStubKey |
-    | **party-identifier** | /payroll-stubs/{payrollStubKey}/party-identifiers | listPartyIdentifiersByPayrollStubKey | createPartyIdentifier | getPartyIdentifiersByPayrollStubKey | updatePartyIdentifiersByPayrollStubKey | deletePartyIdentifiersByPayrollStubKey |
     | **payroll-component** | /payroll-stubs/{payrollStubKey}/payroll-components | listPayrollComponentsByPayrollStubKey | createPayrollComponent | getPayrollComponentsByPayrollStubKey | updatePayrollComponentsByPayrollStubKey | deletePayrollComponentsByPayrollStubKey |
     | **time-slot** | /payroll-stubs/{payrollStubKey}/time-slots | listTimeSlotsByPayrollStubKey |  | getTimeSlotsByPayrollStubKey | updateTimeSlotsByPayrollStubKey | deleteTimeSlotsByPayrollStubKey |
 

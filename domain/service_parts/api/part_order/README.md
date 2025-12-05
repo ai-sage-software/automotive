@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrackReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PartyIdentifier**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **TaxSplit**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrackReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,7 +18,6 @@ The API is structured around the domain **service_parts** and **PartOrder** reso
     | **PartOrder** | /part-orders | Manages PartOrders |
     | **PaymentTermReference** | /part-orders/{partOrderKey}/payment-term-references | Manages PaymentTermReferences belonging to PartOrders |
     | **DiscountReference** | /part-orders/{partOrderKey}/discount-references | Manages DiscountReferences belonging to PartOrders |
-    | **TimeSlot** | /part-orders/{partOrderKey}/time-slots | Manages TimeSlots belonging to PartOrders |
     | **AddressReference** | /part-orders/{partOrderKey}/address-references | Manages AddressReferences belonging to PartOrders |
     | **FinancialCategoryReference** | /part-orders/{partOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartOrders |
     | **StaffAssignmentReference** | /part-orders/{partOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to PartOrders |
@@ -38,7 +37,6 @@ The API is structured around the domain **service_parts** and **PartOrder** reso
     | **ControlAccountReference** | /part-orders/{partOrderKey}/control-account-references | Manages ControlAccountReferences belonging to PartOrders |
     | **RewardReference** | /part-orders/{partOrderKey}/reward-references | Manages RewardReferences belonging to PartOrders |
     | **CustomerOrderReference** | /part-orders/{partOrderKey}/customer-order-references | Manages CustomerOrderReferences belonging to PartOrders |
-    | **PartyIdentifier** | /part-orders/{partOrderKey}/party-identifiers | Manages PartyIdentifiers belonging to PartOrders |
     | **Price** | /part-orders/{partOrderKey}/prices | Manages Prices belonging to PartOrders |
     | **FinancialEvent** | /part-orders/{partOrderKey}/financial-events | Manages FinancialEvents belonging to PartOrders |
     | **TextualDetail** | /part-orders/{partOrderKey}/textual-details | Manages TextualDetails belonging to PartOrders |
@@ -114,7 +112,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
-💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
@@ -123,7 +120,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **OrderTypes** : types of orders.<br/>
 💠 **PartInvoiceStatusTypes** : types of part invoice status.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
@@ -133,8 +129,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **SalesPipelineStageTypes** : types of sales pipeline stages.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
-💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
+💠 **DaysOfWeekTypes** : Status of the account<br/>
+💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
@@ -372,32 +369,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
-    </span>
-</div>
-
-### /part-orders/{partOrderKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partOrderKey. getTimeSlotsByPartOrderKey</span>
-    </span>
-</div>
-
-### /part-orders/{partOrderKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -1303,56 +1274,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /part-orders/{partOrderKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partOrderKey. getPartyIdentifiersByPartOrderKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /part-orders/{partOrderKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-orders/{partOrderKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /part-orders/{partOrderKey}/prices
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1662,7 +1583,6 @@ The following resources follow a consistent pattern under PartOrderroot with key
     | **part-order** | /part-orders | listPartOrders | createPartOrder | getPartOrders | updatePartOrders | deletePartOrders |
     | **payment-term-reference** | /part-orders/{partOrderKey}/payment-term-references | listPaymentTermReferencesByPartOrderKey | createPaymentTermReference | getPaymentTermReferencesByPartOrderKey | updatePaymentTermReferencesByPartOrderKey | deletePaymentTermReferencesByPartOrderKey |
     | **discount-reference** | /part-orders/{partOrderKey}/discount-references | listDiscountReferencesByPartOrderKey | createDiscountReference | getDiscountReferencesByPartOrderKey | updateDiscountReferencesByPartOrderKey | deleteDiscountReferencesByPartOrderKey |
-    | **time-slot** | /part-orders/{partOrderKey}/time-slots | listTimeSlotsByPartOrderKey |  | getTimeSlotsByPartOrderKey | updateTimeSlotsByPartOrderKey | deleteTimeSlotsByPartOrderKey |
     | **address-reference** | /part-orders/{partOrderKey}/address-references | listAddressReferencesByPartOrderKey | createAddressReference | getAddressReferencesByPartOrderKey | updateAddressReferencesByPartOrderKey | deleteAddressReferencesByPartOrderKey |
     | **financial-category-reference** | /part-orders/{partOrderKey}/financial-category-references | listFinancialCategoryReferencesByPartOrderKey | createFinancialCategoryReference | getFinancialCategoryReferencesByPartOrderKey | updateFinancialCategoryReferencesByPartOrderKey | deleteFinancialCategoryReferencesByPartOrderKey |
     | **staff-assignment-reference** | /part-orders/{partOrderKey}/staff-assignment-references | listStaffAssignmentReferencesByPartOrderKey | createStaffAssignmentReference | getStaffAssignmentReferencesByPartOrderKey | updateStaffAssignmentReferencesByPartOrderKey | deleteStaffAssignmentReferencesByPartOrderKey |
@@ -1682,7 +1602,6 @@ The following resources follow a consistent pattern under PartOrderroot with key
     | **control-account-reference** | /part-orders/{partOrderKey}/control-account-references | listControlAccountReferencesByPartOrderKey | createControlAccountReference | getControlAccountReferencesByPartOrderKey | updateControlAccountReferencesByPartOrderKey | deleteControlAccountReferencesByPartOrderKey |
     | **reward-reference** | /part-orders/{partOrderKey}/reward-references | listRewardReferencesByPartOrderKey | createRewardReference | getRewardReferencesByPartOrderKey | updateRewardReferencesByPartOrderKey | deleteRewardReferencesByPartOrderKey |
     | **customer-order-reference** | /part-orders/{partOrderKey}/customer-order-references | listCustomerOrderReferencesByPartOrderKey | createCustomerOrderReference | getCustomerOrderReferencesByPartOrderKey | updateCustomerOrderReferencesByPartOrderKey | deleteCustomerOrderReferencesByPartOrderKey |
-    | **party-identifier** | /part-orders/{partOrderKey}/party-identifiers | listPartyIdentifiersByPartOrderKey | createPartyIdentifier | getPartyIdentifiersByPartOrderKey | updatePartyIdentifiersByPartOrderKey | deletePartyIdentifiersByPartOrderKey |
     | **price** | /part-orders/{partOrderKey}/prices | listPricesByPartOrderKey | createPrice | getPricesByPartOrderKey | updatePricesByPartOrderKey | deletePricesByPartOrderKey |
     | **financial-event** | /part-orders/{partOrderKey}/financial-events | listFinancialEventsByPartOrderKey | createFinancialEvent | getFinancialEventsByPartOrderKey | updateFinancialEventsByPartOrderKey | deleteFinancialEventsByPartOrderKey |
     | **textual-detail** | /part-orders/{partOrderKey}/textual-details | listTextualDetailsByPartOrderKey | createTextualDetail | getTextualDetailsByPartOrderKey | updateTextualDetailsByPartOrderKey | deleteTextualDetailsByPartOrderKey |

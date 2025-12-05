@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **LifecycleEvent**, **PartyIdentifier**, **Price**, **PriceList**, **PriceSensitivity**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **LifecycleEvent**, **Price**, **PriceList**, **PriceSensitivity**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -21,7 +21,6 @@ The API is structured around the domain **service_parts** and **PriceList** reso
     | **PriceSensitivitie** | /price-lists/{priceListKey}/price-sensitivities | Manages PriceSensitivities belonging to PriceLists |
     | **EffectivePeriod** | /price-lists/{priceListKey}/effective-periods | Manages EffectivePeriods belonging to PriceLists |
     | **LifecycleEvent** | /price-lists/{priceListKey}/lifecycle-events | Manages LifecycleEvents belonging to PriceLists |
-    | **PartyIdentifier** | /price-lists/{priceListKey}/party-identifiers | Manages PartyIdentifiers belonging to PriceLists |
     | **TimeSlot** | /price-lists/{priceListKey}/time-slots | Manages TimeSlots belonging to PriceLists |
 
 
@@ -94,7 +93,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **LifecycleEventTypes** : types of lifecycle events.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceClassTypes** : types of price class.<br/>
 💠 **PriceSensitivityTypes** : types of price sensitivitys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
@@ -464,56 +462,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /price-lists/{priceListKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by priceListKey. getPartyIdentifiersByPriceListKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /price-lists/{priceListKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/price-lists/{priceListKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /price-lists/{priceListKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -552,7 +500,6 @@ The following resources follow a consistent pattern under PriceListroot with key
     | **price-sensitivitie** | /price-lists/{priceListKey}/price-sensitivities | listPriceSensitivitysByPriceListKey | createPriceSensitivity | getPriceSensitivitysByPriceListKey | updatePriceSensitivitysByPriceListKey | deletePriceSensitivitysByPriceListKey |
     | **effective-period** | /price-lists/{priceListKey}/effective-periods | listEffectivePeriodsByPriceListKey |  | getEffectivePeriodsByPriceListKey | updateEffectivePeriodsByPriceListKey | deleteEffectivePeriodsByPriceListKey |
     | **lifecycle-event** | /price-lists/{priceListKey}/lifecycle-events | listLifecycleEventsByPriceListKey | createLifecycleEvent | getLifecycleEventsByPriceListKey | updateLifecycleEventsByPriceListKey | deleteLifecycleEventsByPriceListKey |
-    | **party-identifier** | /price-lists/{priceListKey}/party-identifiers | listPartyIdentifiersByPriceListKey | createPartyIdentifier | getPartyIdentifiersByPriceListKey | updatePartyIdentifiersByPriceListKey | deletePartyIdentifiersByPriceListKey |
     | **time-slot** | /price-lists/{priceListKey}/time-slots | listTimeSlotsByPriceListKey |  | getTimeSlotsByPriceListKey | updateTimeSlotsByPriceListKey | deleteTimeSlotsByPriceListKey |
 
 ***Note on List Operations:***

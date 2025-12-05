@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AdvanceSearchValue**, **AdvancedSearchCriteria**, **Identifier**, **PartIdentifier**, **PartLifecycle**, **PartLogisticsCriteria**, **PartName**, **PartPriceCriteria**, **PartSearchCriteria**, **PartSpecification**, **PartyIdentifier**, **SuperSession**, **WarehouseReference**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AdvanceSearchValue**, **AdvancedSearchCriteria**, **Identifier**, **PartIdentifier**, **PartLifecycle**, **PartLogisticsCriteria**, **PartName**, **PartPriceCriteria**, **PartSearchCriteria**, **PartSpecification**, **SuperSession**, **WarehouseReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,7 +18,6 @@ The API is structured around the domain **service_parts** and **PartSearchCriter
     | **PartSearchCriteria** | /part-search-criterias | Manages PartSearchCriterias |
     | **UnitOfMeasure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartSearchCriterias |
     | **PartSpecification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | Manages PartSpecifications belonging to PartSearchCriterias |
-    | **PartyIdentifier** | /part-search-criterias/{partSearchCriteriaKey}/party-identifiers | Manages PartyIdentifiers belonging to PartSearchCriterias |
     | **TimeSlot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | Manages TimeSlots belonging to PartSearchCriterias |
     | **AdvancedSearchCriteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | Manages AdvancedSearchCriterias belonging to PartSearchCriterias |
     | **PartPriceCriteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | Manages PartPriceCriterias belonging to PartSearchCriterias |
@@ -109,7 +108,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
@@ -332,56 +330,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
         <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
-    </span>
-</div>
-
-### /part-search-criterias/{partSearchCriteriaKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partSearchCriteriaKey. getPartyIdentifiersByPartSearchCriteriaKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
     </span>
 </div>
 
@@ -946,7 +894,6 @@ The following resources follow a consistent pattern under PartSearchCriteriaroot
     | **part-search-criteria** | /part-search-criterias | listPartSearchCriterias | createPartSearchCriteria | getPartSearchCriterias | updatePartSearchCriterias | deletePartSearchCriterias |
     | **unit-of-measure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | listUnitOfMeasuresByPartSearchCriteriaKey |  | getUnitOfMeasuresByPartSearchCriteriaKey | updateUnitOfMeasuresByPartSearchCriteriaKey | deleteUnitOfMeasuresByPartSearchCriteriaKey |
     | **part-specification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | listPartSpecificationsByPartSearchCriteriaKey | createPartSpecification | getPartSpecificationsByPartSearchCriteriaKey | updatePartSpecificationsByPartSearchCriteriaKey | deletePartSpecificationsByPartSearchCriteriaKey |
-    | **party-identifier** | /part-search-criterias/{partSearchCriteriaKey}/party-identifiers | listPartyIdentifiersByPartSearchCriteriaKey | createPartyIdentifier | getPartyIdentifiersByPartSearchCriteriaKey | updatePartyIdentifiersByPartSearchCriteriaKey | deletePartyIdentifiersByPartSearchCriteriaKey |
     | **time-slot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | listTimeSlotsByPartSearchCriteriaKey |  | getTimeSlotsByPartSearchCriteriaKey | updateTimeSlotsByPartSearchCriteriaKey | deleteTimeSlotsByPartSearchCriteriaKey |
     | **advanced-search-criteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | listAdvancedSearchCriteriasByPartSearchCriteriaKey | createAdvancedSearchCriteria | getAdvancedSearchCriteriasByPartSearchCriteriaKey | updateAdvancedSearchCriteriasByPartSearchCriteriaKey | deleteAdvancedSearchCriteriasByPartSearchCriteriaKey |
     | **part-price-criteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | listPartPriceCriteriasByPartSearchCriteriaKey | createPartPriceCriteria | getPartPriceCriteriasByPartSearchCriteriaKey | updatePartPriceCriteriasByPartSearchCriteriaKey | deletePartPriceCriteriasByPartSearchCriteriaKey |

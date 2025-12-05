@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyIdentifier**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **WarehouseReference**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyReference**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **WarehouseReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -19,9 +19,9 @@ The API is structured around the domain **service_parts** and **Receipt** resour
     | **ShipmentReference** | /receipts/{receiptKey}/shipment-references | Manages ShipmentReferences belonging to Receipts |
     | **UnitOfMeasure** | /receipts/{receiptKey}/unit-of-measures | Manages UnitOfMeasures belonging to Receipts |
     | **Position** | /receipts/{receiptKey}/positions | Manages Positions belonging to Receipts |
-    | **PartyIdentifier** | /receipts/{receiptKey}/party-identifiers | Manages PartyIdentifiers belonging to Receipts |
     | **TimeSlot** | /receipts/{receiptKey}/time-slots | Manages TimeSlots belonging to Receipts |
     | **AddressReference** | /receipts/{receiptKey}/address-references | Manages AddressReferences belonging to Receipts |
+    | **PartyReference** | /receipts/{receiptKey}/party-references | Manages PartyReferences belonging to Receipts |
     | **StaffAssignmentReference** | /receipts/{receiptKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to Receipts |
     | **ShipmentEvent** | /receipts/{receiptKey}/shipment-events | Manages ShipmentEvents belonging to Receipts |
     | **Identifier** | /receipts/{receiptKey}/identifiers | Manages Identifiers belonging to Receipts |
@@ -379,56 +379,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /receipts/{receiptKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by receiptKey. getPartyIdentifiersByReceiptKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/receipts/{receiptKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /receipts/{receiptKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -502,6 +452,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/receipts/{receiptKey}/address-references/{addressReferenceKey}</span> <br/>
         <span class="api-summary">Delete a AddressReference Record deleteAddressReferenceRecord</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference records scoped by receiptKey. getPartyReferencesByReceiptKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference record. createPartyReference</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference record. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference record. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference record. updatePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference Record deletePartyReferenceRecord</span>
     </span>
 </div>
 
@@ -1041,9 +1041,9 @@ The following resources follow a consistent pattern under Receiptroot with key {
     | **shipment-reference** | /receipts/{receiptKey}/shipment-references | listShipmentReferencesByReceiptKey | createShipmentReference | getShipmentReferencesByReceiptKey | updateShipmentReferencesByReceiptKey | deleteShipmentReferencesByReceiptKey |
     | **unit-of-measure** | /receipts/{receiptKey}/unit-of-measures | listUnitOfMeasuresByReceiptKey |  | getUnitOfMeasuresByReceiptKey | updateUnitOfMeasuresByReceiptKey | deleteUnitOfMeasuresByReceiptKey |
     | **position** | /receipts/{receiptKey}/positions | listPositionsByReceiptKey | createPosition | getPositionsByReceiptKey | updatePositionsByReceiptKey | deletePositionsByReceiptKey |
-    | **party-identifier** | /receipts/{receiptKey}/party-identifiers | listPartyIdentifiersByReceiptKey | createPartyIdentifier | getPartyIdentifiersByReceiptKey | updatePartyIdentifiersByReceiptKey | deletePartyIdentifiersByReceiptKey |
     | **time-slot** | /receipts/{receiptKey}/time-slots | listTimeSlotsByReceiptKey |  | getTimeSlotsByReceiptKey | updateTimeSlotsByReceiptKey | deleteTimeSlotsByReceiptKey |
     | **address-reference** | /receipts/{receiptKey}/address-references | listAddressReferencesByReceiptKey | createAddressReference | getAddressReferencesByReceiptKey | updateAddressReferencesByReceiptKey | deleteAddressReferencesByReceiptKey |
+    | **party-reference** | /receipts/{receiptKey}/party-references | listPartyReferencesByReceiptKey | createPartyReference | getPartyReferencesByReceiptKey | updatePartyReferencesByReceiptKey | deletePartyReferencesByReceiptKey |
     | **staff-assignment-reference** | /receipts/{receiptKey}/staff-assignment-references | listStaffAssignmentReferencesByReceiptKey | createStaffAssignmentReference | getStaffAssignmentReferencesByReceiptKey | updateStaffAssignmentReferencesByReceiptKey | deleteStaffAssignmentReferencesByReceiptKey |
     | **shipment-event** | /receipts/{receiptKey}/shipment-events | listShipmentEventsByReceiptKey | createShipmentEvent | getShipmentEventsByReceiptKey | updateShipmentEventsByReceiptKey | deleteShipmentEventsByReceiptKey |
     | **identifier** | /receipts/{receiptKey}/identifiers | listIdentifiersByReceiptKey | createIdentifier | getIdentifiersByReceiptKey | updateIdentifiersByReceiptKey | deleteIdentifiersByReceiptKey |

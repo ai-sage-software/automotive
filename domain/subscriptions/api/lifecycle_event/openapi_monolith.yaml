@@ -1,0 +1,399 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Domain API Specification"
+  description: "Automotive Retail Ontology."
+  version: "1.0.0"
+paths:
+  /lifecycle-events:
+    get:
+      tags:
+      - "LifecycleEvent"
+      summary: "Retrieve a list of all LifecycleEvent records."
+      operationId: "listLifecycleEvents"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of LifecycleEvent records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LifecycleEvent"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - "LifecycleEvent"
+      summary: "Create a new LifecycleEvent record."
+      operationId: "createLifecycleEvent"
+      requestBody:
+        description: "LifecycleEvent data to create the new resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEventCreate"
+        required: true
+      responses:
+        "201":
+          description: "LifecycleEvent created successfully."
+          headers:
+            Location:
+              description: "The URI of the newly created resource."
+              schema:
+                type: "string"
+                example: "/lifecycle-events/PR-1234567"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+  /lifecycle-events/{lifecycleEventKey}:
+    get:
+      tags:
+      - "LifecycleEvent"
+      summary: "Retrieve a specific LifecycleEvent record."
+      operationId: "getLifecycleEventById"
+      responses:
+        "200":
+          description: "The requested LifecycleEvent record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "LifecycleEvent"
+      summary: "Replace a LifecycleEvent record."
+      operationId: "replaceLifecycleEvent"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEvent"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    delete:
+      tags:
+      - "LifecycleEvent"
+      summary: "Delete a LifecycleEvent Record"
+      description: "Marks the LifecycleEvent record as inactive or ..."
+      operationId: "deleteLifecycleEventRecord"
+      responses:
+        "204":
+          description: "Record successfully deleted (or deactivated)."
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    patch:
+      tags:
+      - "LifecycleEvent"
+      summary: "Partially update a LifecycleEvent record."
+      operationId: "updateLifecycleEvent"
+      requestBody:
+        description: "Included Fields to be updated will be modified."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEventUpdate"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "lifecycleEventKey"
+      in: "path"
+      description: "The unique identifier for the specific LifecycleEvent."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
+components:
+  schemas:
+    ErrorDetail:
+      required:
+      - "code"
+      - "message"
+      - "timestamp"
+      type: "object"
+      properties:
+        code:
+          type: "string"
+          description: "A unique, system-defined error code (e.g., 'AUT..."
+          example: "NOT_FOUND_PR"
+        message:
+          type: "string"
+          description: "A human-readable summary providing specific det..."
+          example: "Personnel Record with ID PR-1234567 was not found."
+        details:
+          type: "array"
+          description: "Optional array of specific field-level validati..."
+          items:
+            type: "object"
+            properties:
+              field:
+                type: "string"
+                description: "The specific field that failed validation (e.g., 'firstName')."
+                example: "payrollId"
+              issue:
+                type: "string"
+                description: "The validation message for the field (e.g., 'must be\
+                  \ numeric')."
+                example: "must be unique"
+        timestamp:
+          type: "string"
+          description: "The time the error occurred, in ISO 8601 format."
+          format: "date-time"
+          example: "2025-11-10T10:30:00Z"
+      description: "Standard format for all API error responses."
+    LifecycleEvent:
+      type: "object"
+      properties:
+        lifecycle_event_id:
+          type: "string"
+          description: "The unique ID for the lifecycle event."
+          example: "EVT-99887766"
+        lifecycle_event_key:
+          type: "string"
+          description: "The unique external key or business iden..."
+          example: "LIFECYCLE-879234"
+        actor_href:
+          type: "string"
+          description: "The href of the actor who initiated the ..."
+          format: "href"
+        actor_id:
+          type: "string"
+          description: "The unique identifier of the actor who i..."
+          example: "USR-24681357"
+        actor_name:
+          type: "string"
+          description: "The name of the actor who initiated the ..."
+          example: "John Doe"
+        lifecycle_event_type:
+          $ref: "#/components/schemas/LifecycleEventTypes"
+        occurrence_date:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date"
+        resource_href:
+          type: "string"
+          description: "The href of the resource associated with..."
+          format: "href"
+        resource_identifier:
+          type: "string"
+          description: "The unique identifier of the resource as..."
+          example: "RSC-88776655"
+        detail_name:
+          type: "string"
+          description: "The name of the event detail."
+          example: "Order ID"
+        detail_desc:
+          type: "string"
+          description: "A description of the event detail."
+          example: "The unique ID of the order being processed."
+        detail_value:
+          type: "string"
+          description: "The value of the event detail."
+          example: "ORD-44556677"
+        detail_key:
+          type: "string"
+          description: "The unique key for the event detail."
+          example: "ORDER_ID"
+        detail_code:
+          type: "string"
+          description: "The code for the event detail."
+          example: "ORDER_STATUS_CHANGED"
+        resource_types:
+          $ref: "#/components/schemas/ResourceTypes"
+      description: "Lifecycle Event"
+    LifecycleEventCreate:
+      required:
+      - "lifecycle_event_key"
+      type: "object"
+      description: "LifecycleEvent Create for Post"
+      allOf:
+      - $ref: "#/components/schemas/LifecycleEvent"
+    LifecycleEventTypes:
+      type: "string"
+      description: "types of lifecycle events."
+      enum:
+      - "CREATED"
+      - "UPDATED"
+      - "DELETE_HARD"
+      - "DELETE_SOFT"
+      - "ACCESS_ALLOWED"
+      - "ACCESS_DENIED"
+      - "SUBMITTED"
+      - "CLOSED"
+      - "CANCELLED"
+      - "DEAD"
+      - "INITIALIZED"
+      - "INITIALIZING"
+      - "PROCESSING"
+      - "PROCESSED"
+      - "FAILED"
+      - "VALIDATED"
+      - "QUALIFIED"
+    LifecycleEventUpdate:
+      type: "object"
+      properties:
+        occurrence_date:
+          type: "string"
+          description: "The date and time the event occurred."
+          format: "date"
+        resource_href:
+          type: "string"
+          description: "The href of the resource associated with..."
+          format: "href"
+        detail_name:
+          type: "string"
+          description: "The name of the event detail."
+          example: "Order ID"
+        lifecycle_event_type:
+          $ref: "#/components/schemas/LifecycleEventTypes"
+        resource_identifier:
+          type: "string"
+          description: "The unique identifier of the resource as..."
+          example: "RSC-88776655"
+        actor_name:
+          type: "string"
+          description: "The name of the actor who initiated the ..."
+          example: "John Doe"
+        detail_desc:
+          type: "string"
+          description: "A description of the event detail."
+          example: "The unique ID of the order being processed."
+        detail_value:
+          type: "string"
+          description: "The value of the event detail."
+          example: "ORD-44556677"
+        detail_code:
+          type: "string"
+          description: "The code for the event detail."
+          example: "ORDER_STATUS_CHANGED"
+        actor_href:
+          type: "string"
+          description: "The href of the actor who initiated the ..."
+          format: "href"
+        resource_types:
+          $ref: "#/components/schemas/ResourceTypes"
+      description: "LifecycleEvent Update for Patch and Put"
+    ResourceTypes:
+      type: "string"
+      description: "types of resources."
+      enum:
+      - "SYSTEM"
+      - "WORKFLOW"
+      - "ACTIVITY"
+      - "FUNCTION"
+      - "PROCESS"
+      - "INCIDENT"
+      - "PARTY"
+      - "CUSTOMER"
+      - "APPLICANT"
+      - "VENDOR"
+      - "DEALER_STAFF"
+      - "DRIVER"
+      - "ADDRESS"
+      - "BILL_ADDRESS"
+      - "BILL_CONTACT"
+      - "COMM_CHANNEL"
+      - "ACCOUNT"
+      - "VEHICLE"
+      - "TRADE_IN"
+      - "PRODUCT"
+      - "MANUFACTURER"
+      - "LEAD"
+      - "OPPORTUNITY"
+      - "DEAL"
+      - "FINANCE"
+      - "INVOICE"
+      - "LINEITEM"
+      - "EXPENSE"
+      - "DISCOUNT"
+      - "TAX"
+      - "FEE"
+      - "INCENTIVE"
+      - "DEALERSHIP"
+      - "APPOINTMENT"
+      - "OTHER"
+  responses:
+    NotFoundError:
+      description: "The requested resource was not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    BadRequestError:
+      description: "The request was malformed, failed validation, o..."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    UnauthorizedError:
+      description: "Authentication failed. The access token is miss..."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    ForbiddenError:
+      description: "The authenticated user does not have the necess..."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    ConflictError:
+      description: "The request could not be completed because it c..."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    ServerError:
+      description: "An unexpected error occurred on the server whil..."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"

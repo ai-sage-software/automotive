@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Department**, **Identifier**, **MetricNameValue**, **PartyIdentifier**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Department**, **Identifier**, **MetricNameValue**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -20,7 +20,6 @@ The API is structured around the domain **human_resources** and **StaffMember** 
     | **PayrollRate** | /staff-members/{staffMemberKey}/payroll-rates | Manages PayrollRates belonging to StaffMembers |
     | **Addresse** | /staff-members/{staffMemberKey}/addresses | Manages Addresses belonging to StaffMembers |
     | **Position** | /staff-members/{staffMemberKey}/positions | Manages Positions belonging to StaffMembers |
-    | **PartyIdentifier** | /staff-members/{staffMemberKey}/party-identifiers | Manages PartyIdentifiers belonging to StaffMembers |
     | **PrivacyEvent** | /staff-members/{staffMemberKey}/privacy-events | Manages PrivacyEvents belonging to StaffMembers |
     | **TimeSlot** | /staff-members/{staffMemberKey}/time-slots | Manages TimeSlots belonging to StaffMembers |
     | **ControlAccount** | /staff-members/{staffMemberKey}/control-accounts | Manages ControlAccounts belonging to StaffMembers |
@@ -116,7 +115,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **LocationTypes** : types of locations.<br/>
 💠 **MaritalStatusTypes** : types of marital status.<br/>
 💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **PrivacyContextTypes** : types of privacy contexts.<br/>
@@ -464,56 +462,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
         <span class="api-summary">Delete a Position Record deletePositionRecord</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by staffMemberKey. getPartyIdentifiersByStaffMemberKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
     </span>
 </div>
 
@@ -1156,7 +1104,6 @@ The following resources follow a consistent pattern under StaffMemberroot with k
     | **payroll-rate** | /staff-members/{staffMemberKey}/payroll-rates | listPayrollRatesByStaffMemberKey | createPayrollRate | getPayrollRatesByStaffMemberKey | updatePayrollRatesByStaffMemberKey | deletePayrollRatesByStaffMemberKey |
     | **addresse** | /staff-members/{staffMemberKey}/addresses | listAddresssByStaffMemberKey | createAddress | getAddresssByStaffMemberKey | updateAddresssByStaffMemberKey | deleteAddresssByStaffMemberKey |
     | **position** | /staff-members/{staffMemberKey}/positions | listPositionsByStaffMemberKey | createPosition | getPositionsByStaffMemberKey | updatePositionsByStaffMemberKey | deletePositionsByStaffMemberKey |
-    | **party-identifier** | /staff-members/{staffMemberKey}/party-identifiers | listPartyIdentifiersByStaffMemberKey | createPartyIdentifier | getPartyIdentifiersByStaffMemberKey | updatePartyIdentifiersByStaffMemberKey | deletePartyIdentifiersByStaffMemberKey |
     | **privacy-event** | /staff-members/{staffMemberKey}/privacy-events | listPrivacyEventsByStaffMemberKey | createPrivacyEvent | getPrivacyEventsByStaffMemberKey | updatePrivacyEventsByStaffMemberKey | deletePrivacyEventsByStaffMemberKey |
     | **time-slot** | /staff-members/{staffMemberKey}/time-slots | listTimeSlotsByStaffMemberKey |  | getTimeSlotsByStaffMemberKey | updateTimeSlotsByStaffMemberKey | deleteTimeSlotsByStaffMemberKey |
     | **control-account** | /staff-members/{staffMemberKey}/control-accounts | listControlAccountsByStaffMemberKey | createControlAccount | getControlAccountsByStaffMemberKey | updateControlAccountsByStaffMemberKey | deleteControlAccountsByStaffMemberKey |

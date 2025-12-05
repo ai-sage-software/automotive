@@ -192,17 +192,6 @@ components:
       type: "array"
       items:
         $ref: "#/components/schemas/CreditReference"
-    DaysOfWeekTypes:
-      type: "string"
-      description: "types of days of weeks."
-      enum:
-      - "SUN"
-      - "MON"
-      - "TUES"
-      - "WED"
-      - "THURS"
-      - "FRI"
-      - "SAT"
     DiscountReference:
       type: "object"
       properties:
@@ -739,6 +728,8 @@ components:
           type: "string"
           description: "Identifier of the actor who initiated or..."
           example: "actor_123"
+        payment_authorizations:
+          $ref: "#/components/schemas/PaymentAuthorizations"
         vat_number:
           type: "string"
           description: "Identifier of the actor who initiated or..."
@@ -783,8 +774,8 @@ components:
           type: "string"
           description: "The currency code for the prices within ..."
           example: "USD"
-        party_identifiers:
-          $ref: "#/components/schemas/PartyIdentifiers"
+        shipment_references:
+          $ref: "#/components/schemas/ShipmentReferences"
         financial_events:
           $ref: "#/components/schemas/FinancialEvents"
         control_account_reference:
@@ -950,10 +941,10 @@ components:
           type: "string"
           description: "Unique key value for the reference recor... Pattern: ^[a-zA-Z0-9_]+$\
             \ (Alphanumeric and underscores allowed)"
-        party_identifiers:
-          $ref: "#/components/schemas/PartyIdentifiers"
         shipment_references:
           $ref: "#/components/schemas/ShipmentReferences"
+        part_condition_grade_type:
+          $ref: "#/components/schemas/PartConditionGradeTypes"
         price_plan_references:
           $ref: "#/components/schemas/PricePlanReferences"
         financial_tracks:
@@ -1034,6 +1025,29 @@ components:
       type: "array"
       items:
         type: "string"
+    Money:
+      type: "object"
+      properties:
+        money_key:
+          type: "string"
+          description: "The unique key for the monetary value."
+        money_id:
+          type: "string"
+          description: "The unique ID for the monetary value."
+        currency_code:
+          type: "string"
+          description: "ISO currency code, e.g., 'USD'."
+        display_value:
+          type: "string"
+          description: "The locale-specific display format for t..."
+        locale:
+          type: "string"
+          description: "The locale code (e.g., en-US, fr-FR)."
+        value:
+          type: "string"
+          description: "The monetary value."
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     OrderCategoryTypes:
       type: "string"
       description: "types of order categorys."
@@ -1092,6 +1106,20 @@ components:
       - "CONSIGNMENT"
       - "TRIAL"
       - "RETURN"
+    PartConditionGradeTypes:
+      type: "string"
+      description: "types of part condition grades."
+      enum:
+      - "EXCELLENT"
+      - "LIKE_NEW"
+      - "VERY_GOOD"
+      - "GOOD"
+      - "ACCEPTABLE"
+      - "FAIR"
+      - "POOR"
+      - "DAMAGED"
+      - "UNGRADED"
+      - "OTHER"
     PartInvoiceStatusTypes:
       type: "string"
       description: "types of part invoice status."
@@ -1179,164 +1207,52 @@ components:
       type: "array"
       items:
         $ref: "#/components/schemas/PartReference"
-    PartyIdentifier:
+    PaymentAuthorization:
       type: "object"
       properties:
-        party_identifier_id:
+        payment_authorization_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: "string"
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+$ (Alphanumeric\
-            \ and underscores allowed)"
-        party_identifier_key:
+          description: "Unique identifier value for the referenc... Pattern: ^[a-zA-Z0-9_]+$\
+            \ (Alphanumeric and underscores allowed)"
+        payment_authorization_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: "string"
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+$ (Alphanumeric\
-            \ and underscores allowed)"
-        party_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
+          description: "Unique identifier value for the referenc... Pattern: ^[a-zA-Z0-9_]+$\
+            \ (Alphanumeric and underscores allowed)"
+        auth_reasons:
+          $ref: "#/components/schemas/Codes"
+        auth_amount:
+          $ref: "#/components/schemas/Money"
+        address_verification:
           type: "string"
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+$ (Alphanumeric\
-            \ and underscores allowed)"
-        party_identifier_type:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+$ (Alphanumeric\
-            \ and underscores allowed)"
+          description: "Context or domain of the reference."
         context:
           type: "string"
-          description: "Context or domain of the identifier"
-        party_relationship_types:
-          pattern: "^[a-zA-Z0-9_]+$"
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: "array"
-          items:
-            $ref: "#/components/schemas/PartyRelationshipTypes"
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        party:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
+          description: "Context or domain of the reference."
+        transaction_number:
           type: "string"
-          description: "The date and time the event occurred."
+          description: "Context or domain of the reference."
+        auth_number:
+          type: "string"
+          description: "Context or domain of the reference."
+        auth_code:
+          type: "string"
+          description: "Context or domain of the reference."
+        auth_date_time:
+          type: "string"
+          description: "The date and time the payment was associ..."
           format: "date-time"
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-      description: "External system identifier"
-    PartyIdentifiers:
+      description: "Reference to a PaymentMethod (Party) Aggregate Root for financing\
+        \ details."
+    PaymentAuthorizations:
       type: "array"
       items:
-        $ref: "#/components/schemas/PartyIdentifier"
-    PartyRelationshipTypes:
-      type: "string"
-      description: "types of party relationships."
-      enum:
-      - "CORPORATION"
-      - "GROUP"
-      - "STORE"
-      - "BRANCH"
-      - "DEPARTMENT"
-      - "SECTION"
-      - "TEAM"
-      - "DEALERSHIP"
-      - "THIRD_PARTY"
-      - "VENDOR"
-      - "SUPPLIER"
-      - "PARTNER_ORGANIZATION"
-      - "AFFILIATE"
-      - "DISTRIBUTOR"
-      - "MANUFACTURER"
-      - "SERVICE_PROVIDER"
-      - "EMPLOYER"
-      - "INTERNAL_ORGANIZATION"
-      - "COST_CENTER"
-      - "FREIGHT_FORWARDER"
-      - "BUYER"
-      - "REGULATOR"
-      - "GOVERNMENT_AGENCY"
-      - "NON_PROFIT"
-      - "FRANCHISE"
-      - "SUBSIDIARY"
-      - "DIVISION"
-      - "JOINT_VENTURE"
-      - "AUDITOR"
-      - "ACTOR"
-      - "ACCOUNTABLE"
-      - "RESPONSIBLE"
-      - "CONSULT"
-      - "NOTIFY"
-      - "EXECUTE"
-      - "PART_OF"
-      - "MEMBERSHIP"
-      - "COMPOSED_IN"
-      - "CUSTOMER"
-      - "CO_SIGNER"
-      - "SPOUSE"
-      - "PARENT"
-      - "CHILD"
-      - "SIBLING"
-      - "LEGAL_GUARDIAN"
-      - "DEPENDENT"
-      - "EMERGENCY_CONTACT"
-      - "FAMILY_MEMBER"
-      - "FRIEND"
-      - "ACQUAINTANCE"
-      - "ASSOCIATE"
-      - "EX_SPOUSE"
-      - "PROFESSIONAL_CONTACT"
-      - "MANAGER"
-      - "CO_WORKER"
-      - "FINANCIAL_ADVISOR"
-      - "SELF"
-      - "ROMANTIC_PARTNER"
-      - "OTHER_FAMILY"
-      - "CAREGIVER"
-      - "MENTOR"
-      - "MENTEE"
-      - "HEIR"
-      - "TRUSTEE_PERSON"
-      - "REFERENCE_PERSONAL"
-      - "REFERENCE_PROFESSIONAL"
-      - "AGENT"
-      - "BENEFICIARY"
-      - "GUARANTOR"
-      - "EMPLOYEE"
-      - "CONTRACTOR"
-      - "OWNER"
-      - "BUSINESS_PARTNER"
-      - "SERVICE_CONSUMER"
-      - "POLITICAL_AFFILIATE"
-      - "ADVISOR_CONSULTANT"
-      - "PROXY"
-      - "SHAREHOLDER"
-      - "INVESTOR"
-      - "CUSTODIAN"
-      - "SOLD_TO"
-      - "SHIP_TO"
-      - "PAYER"
-      - "PAYEE"
-      - "GIFT_TO"
-      - "LOAN_PROVIDER"
-      - "CREDIT_CARD_PROVIDER"
-      - "LESSEE"
-      - "LESSOR"
-      - "INSURED"
-      - "INSURER"
-      - "UNDERWRITER"
-      - "RECIPIENT"
-      - "TRANSACTION_FROM"
-      - "TRANSACTION_TO"
-      - "REMOVE"
-      - "OTHER"
+        $ref: "#/components/schemas/PaymentAuthorization"
     PaymentMethodReference:
       type: "object"
       properties:
@@ -2102,16 +2018,6 @@ components:
             type: "string"
       description: "Range of time for the appointment including start/end times, recurring\
         \ patterns, and directives."
-    TimeslotDirectiveTypes:
-      type: "string"
-      description: "types of timeslot directives."
-      enum:
-      - "AFTER"
-      - "ANYTIME"
-      - "BEFORE"
-      - "BETWEEN"
-      - "BLOCK"
-      - "UNKNOWN"
     UOMQuantityCategoryTypes:
       type: "string"
       description: "types of u o m quantity categorys."
@@ -2151,6 +2057,8 @@ components:
       - "SHIPPING_DIM_NET_WEIGHT"
       - "SHELF_LIFE_HOURS"
       - "EXPIRATION_DATE"
+      - "MIN_PAYMENT_PERCENT"
+      - "MIN_PAYMENT_AMOUNT"
     UnitOfMeasure:
       type: "object"
       properties:
@@ -2161,19 +2069,19 @@ components:
           type: "string"
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+$ (Alphanumeric,\
             \ dash, dot, and underscore allowed)"
+        unit_name:
+          maxLength: 50
+          minLength: 1
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: "string"
+          description: "Unit of Measure Pattern: ^[a-zA-Z0-9_]+$ (Alphanumeric and\
+            \ underscores allowed)"
         uom_value:
           maxLength: 100
           minLength: 1
           pattern: "^[a-zA-Z0-9_.-]+$"
           type: "string"
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+$ (Alphanumeric,\
-            \ dash, dot, and underscore allowed)"
-        quantity:
-          maxLength: 100
-          minLength: 1
-          pattern: "^[a-zA-Z0-9_.-]+$"
-          type: "string"
-          description: "quantity of items Pattern: ^[a-zA-Z0-9_.-]+$ (Alphanumeric,\
             \ dash, dot, and underscore allowed)"
         uom_quantity_category_type:
           $ref: "#/components/schemas/UOMQuantityCategoryTypes"
@@ -2182,3 +2090,24 @@ components:
       type: "array"
       items:
         $ref: "#/components/schemas/UnitOfMeasure"
+    DaysOfWeekTypes:
+      type: "string"
+      description: "Status of the account"
+      enum:
+      - "SUN"
+      - "MON"
+      - "TUES"
+      - "WED"
+      - "THURS"
+      - "FRI"
+      - "SAT"
+    TimeslotDirectiveTypes:
+      type: "string"
+      description: "Represents the directive for a timeslot."
+      enum:
+      - "AFTER"
+      - "ANYTIME"
+      - "BEFORE"
+      - "BETWEEN"
+      - "BLOCK"
+      - "UNKNOWN"

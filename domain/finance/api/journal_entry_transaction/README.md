@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**, **JournalEntry**, **JournalEntryTransaction**, **PartyIdentifier**, **SubsidiaryLedgerReference**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**, **JournalEntry**, **JournalEntryTransaction**, **SubsidiaryLedgerReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -19,9 +19,7 @@ The API is structured around the domain **finance** and **JournalEntryTransactio
     | **Money** | /journal-entry-transactions/{journalEntryTransactionKey}/moneys | Manages Moneys belonging to JournalEntryTransactions |
     | **GeneralLedgerReference** | /journal-entry-transactions/{journalEntryTransactionKey}/general-ledger-references | Manages GeneralLedgerReferences belonging to JournalEntryTransactions |
     | **Identifier** | /journal-entry-transactions/{journalEntryTransactionKey}/identifiers | Manages Identifiers belonging to JournalEntryTransactions |
-    | **EffectivePeriod** | /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods | Manages EffectivePeriods belonging to JournalEntryTransactions |
     | **ControlAccountReference** | /journal-entry-transactions/{journalEntryTransactionKey}/control-account-references | Manages ControlAccountReferences belonging to JournalEntryTransactions |
-    | **PartyIdentifier** | /journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers | Manages PartyIdentifiers belonging to JournalEntryTransactions |
     | **JournalEntrie** | /journal-entry-transactions/{journalEntryTransactionKey}/journal-entries | Manages JournalEntries belonging to JournalEntryTransactions |
     | **SubsidiaryLedgerReference** | /journal-entry-transactions/{journalEntryTransactionKey}/subsidiary-ledger-references | Manages SubsidiaryLedgerReferences belonging to JournalEntryTransactions |
 
@@ -92,22 +90,16 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **EntryResourceTypes** : types of entry resources.<br/>
 💠 **FinancialFlowStatusTypes** : types of financial flow status.<br/>
 💠 **JournalTypes** : types of journals.<br/>
 💠 **OrganizationTypes** : types of organizations.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
 ✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
 
@@ -365,32 +357,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by journalEntryTransactionKey. getEffectivePeriodsByJournalEntryTransactionKey</span>
-    </span>
-</div>
-
-### /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods/{effectivePeriodKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
-    </span>
-</div>
-
 ### /journal-entry-transactions/{journalEntryTransactionKey}/control-account-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -438,56 +404,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
-    </span>
-</div>
-
-### /journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by journalEntryTransactionKey. getPartyIdentifiersByJournalEntryTransactionKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
     </span>
 </div>
 
@@ -601,9 +517,7 @@ The following resources follow a consistent pattern under JournalEntryTransactio
     | **money** | /journal-entry-transactions/{journalEntryTransactionKey}/moneys | listMoneysByJournalEntryTransactionKey |  | getMoneysByJournalEntryTransactionKey | updateMoneysByJournalEntryTransactionKey | deleteMoneysByJournalEntryTransactionKey |
     | **general-ledger-reference** | /journal-entry-transactions/{journalEntryTransactionKey}/general-ledger-references | listGeneralLedgerReferencesByJournalEntryTransactionKey | createGeneralLedgerReference | getGeneralLedgerReferencesByJournalEntryTransactionKey | updateGeneralLedgerReferencesByJournalEntryTransactionKey | deleteGeneralLedgerReferencesByJournalEntryTransactionKey |
     | **identifier** | /journal-entry-transactions/{journalEntryTransactionKey}/identifiers | listIdentifiersByJournalEntryTransactionKey | createIdentifier | getIdentifiersByJournalEntryTransactionKey | updateIdentifiersByJournalEntryTransactionKey | deleteIdentifiersByJournalEntryTransactionKey |
-    | **effective-period** | /journal-entry-transactions/{journalEntryTransactionKey}/effective-periods | listEffectivePeriodsByJournalEntryTransactionKey |  | getEffectivePeriodsByJournalEntryTransactionKey | updateEffectivePeriodsByJournalEntryTransactionKey | deleteEffectivePeriodsByJournalEntryTransactionKey |
     | **control-account-reference** | /journal-entry-transactions/{journalEntryTransactionKey}/control-account-references | listControlAccountReferencesByJournalEntryTransactionKey | createControlAccountReference | getControlAccountReferencesByJournalEntryTransactionKey | updateControlAccountReferencesByJournalEntryTransactionKey | deleteControlAccountReferencesByJournalEntryTransactionKey |
-    | **party-identifier** | /journal-entry-transactions/{journalEntryTransactionKey}/party-identifiers | listPartyIdentifiersByJournalEntryTransactionKey | createPartyIdentifier | getPartyIdentifiersByJournalEntryTransactionKey | updatePartyIdentifiersByJournalEntryTransactionKey | deletePartyIdentifiersByJournalEntryTransactionKey |
     | **journal-entrie** | /journal-entry-transactions/{journalEntryTransactionKey}/journal-entries | listJournalEntrysByJournalEntryTransactionKey | createJournalEntry | getJournalEntrysByJournalEntryTransactionKey | updateJournalEntrysByJournalEntryTransactionKey | deleteJournalEntrysByJournalEntryTransactionKey |
     | **subsidiary-ledger-reference** | /journal-entry-transactions/{journalEntryTransactionKey}/subsidiary-ledger-references | listSubsidiaryLedgerReferencesByJournalEntryTransactionKey | createSubsidiaryLedgerReference | getSubsidiaryLedgerReferencesByJournalEntryTransactionKey | updateSubsidiaryLedgerReferencesByJournalEntryTransactionKey | deleteSubsidiaryLedgerReferencesByJournalEntryTransactionKey |
 

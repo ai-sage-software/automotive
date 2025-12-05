@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Garage**, **GarageItem**, **Identifier**, **MetricNameValue**, **MetricValue**, **OrgName**, **OrgProfile**, **Party**, **PartyIdentifier**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**, **Vehicle**, **VehicleIdentifier**, **VehicleLicense**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Garage**, **GarageItem**, **Identifier**, **MetricNameValue**, **MetricValue**, **OrgName**, **OrgProfile**, **Party**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**, **Vehicle**, **VehicleIdentifier**, **VehicleLicense**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -37,7 +37,6 @@ The API is structured around the domain **party_identity** and **Party** resourc
     | **PayrollRate** | /parties/{partyKey}/payroll-rates | Manages PayrollRates belonging to Parties |
     | **Position** | /parties/{partyKey}/positions | Manages Positions belonging to Parties |
     | **ControlAccountReference** | /parties/{partyKey}/control-account-references | Manages ControlAccountReferences belonging to Parties |
-    | **PartyIdentifier** | /parties/{partyKey}/party-identifiers | Manages PartyIdentifiers belonging to Parties |
     | **CommunicationChannel** | /parties/{partyKey}/communication-channels | Manages CommunicationChannels belonging to Parties |
     | **Garage** | /parties/{partyKey}/garages | Manages Garages belonging to Parties |
     | **People** | /parties/{partyKey}/people | Manages People belonging to Parties |
@@ -126,7 +125,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **OperatingStatusTypes** : types of operating status.<br/>
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **PartIdentifierTypes** : types of part identifiers.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyServiceTypes** : types of party services.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
@@ -1292,56 +1290,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /parties/{partyKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partyKey. getPartyIdentifiersByPartyKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /parties/{partyKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /parties/{partyKey}/communication-channels
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1620,7 +1568,6 @@ The following resources follow a consistent pattern under Partyroot with key {Pa
     | **payroll-rate** | /parties/{partyKey}/payroll-rates | listPayrollRatesByPartyKey | createPayrollRate | getPayrollRatesByPartyKey | updatePayrollRatesByPartyKey | deletePayrollRatesByPartyKey |
     | **position** | /parties/{partyKey}/positions | listPositionsByPartyKey | createPosition | getPositionsByPartyKey | updatePositionsByPartyKey | deletePositionsByPartyKey |
     | **control-account-reference** | /parties/{partyKey}/control-account-references | listControlAccountReferencesByPartyKey | createControlAccountReference | getControlAccountReferencesByPartyKey | updateControlAccountReferencesByPartyKey | deleteControlAccountReferencesByPartyKey |
-    | **party-identifier** | /parties/{partyKey}/party-identifiers | listPartyIdentifiersByPartyKey | createPartyIdentifier | getPartyIdentifiersByPartyKey | updatePartyIdentifiersByPartyKey | deletePartyIdentifiersByPartyKey |
     | **communication-channel** | /parties/{partyKey}/communication-channels | listCommunicationChannelsByPartyKey | createCommunicationChannel | getCommunicationChannelsByPartyKey | updateCommunicationChannelsByPartyKey | deleteCommunicationChannelsByPartyKey |
     | **garage** | /parties/{partyKey}/garages | listGaragesByPartyKey | createGarage | getGaragesByPartyKey | updateGaragesByPartyKey | deleteGaragesByPartyKey |
     | **people** | /parties/{partyKey}/people | listPersonsByPartyKey | createPerson | getPersonsByPartyKey | updatePersonsByPartyKey | deletePersonsByPartyKey |

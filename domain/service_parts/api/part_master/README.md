@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **Identifier**, **LeadTime**, **PartCategory**, **PartIdentifier**, **PartInventoryReference**, **PartLifecycle**, **PartMaster**, **PartMasterProfile**, **PartMasterRegulatory**, **PartName**, **PartSpecification**, **PartyIdentifier**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SuperSession**, **TaxSplit**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **Identifier**, **LeadTime**, **PartCategory**, **PartIdentifier**, **PartInventoryReference**, **PartLifecycle**, **PartMaster**, **PartMasterProfile**, **PartMasterRegulatory**, **PartName**, **PartSpecification**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SuperSession**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,14 +18,12 @@ The API is structured around the domain **service_parts** and **PartMaster** res
     | **PartMaster** | /part-masters | Manages PartMasters |
     | **DiscountReference** | /part-masters/{partMasterKey}/discount-references | Manages DiscountReferences belonging to PartMasters |
     | **PartMasterProfile** | /part-masters/{partMasterKey}/part-master-profiles | Manages PartMasterProfiles belonging to PartMasters |
-    | **TimeSlot** | /part-masters/{partMasterKey}/time-slots | Manages TimeSlots belonging to PartMasters |
     | **PartCategorie** | /part-masters/{partMasterKey}/part-categories | Manages PartCategories belonging to PartMasters |
     | **FinancialCategoryReference** | /part-masters/{partMasterKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartMasters |
     | **FeeReference** | /part-masters/{partMasterKey}/fee-references | Manages FeeReferences belonging to PartMasters |
     | **Identifier** | /part-masters/{partMasterKey}/identifiers | Manages Identifiers belonging to PartMasters |
     | **PartName** | /part-masters/{partMasterKey}/part-names | Manages PartNames belonging to PartMasters |
     | **PartIdentifier** | /part-masters/{partMasterKey}/part-identifiers | Manages PartIdentifiers belonging to PartMasters |
-    | **EffectivePeriod** | /part-masters/{partMasterKey}/effective-periods | Manages EffectivePeriods belonging to PartMasters |
     | **PartLifecycle** | /part-masters/{partMasterKey}/part-lifecycles | Manages PartLifecycles belonging to PartMasters |
     | **CreditReference** | /part-masters/{partMasterKey}/credit-references | Manages CreditReferences belonging to PartMasters |
     | **RebateReference** | /part-masters/{partMasterKey}/rebate-references | Manages RebateReferences belonging to PartMasters |
@@ -35,7 +33,6 @@ The API is structured around the domain **service_parts** and **PartMaster** res
     | **PartSpecification** | /part-masters/{partMasterKey}/part-specifications | Manages PartSpecifications belonging to PartMasters |
     | **ControlAccountReference** | /part-masters/{partMasterKey}/control-account-references | Manages ControlAccountReferences belonging to PartMasters |
     | **RewardReference** | /part-masters/{partMasterKey}/reward-references | Manages RewardReferences belonging to PartMasters |
-    | **PartyIdentifier** | /part-masters/{partMasterKey}/party-identifiers | Manages PartyIdentifiers belonging to PartMasters |
     | **PartInventoryReference** | /part-masters/{partMasterKey}/part-inventory-references | Manages PartInventoryReferences belonging to PartMasters |
     | **LeadTime** | /part-masters/{partMasterKey}/lead-times | Manages LeadTimes belonging to PartMasters |
     | **SuperSession** | /part-masters/{partMasterKey}/super-sessions | Manages SuperSessions belonging to PartMasters |
@@ -111,8 +108,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
-💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **HazardClassTypes** : types of hazard class.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
@@ -124,7 +119,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
@@ -132,10 +126,10 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ProductStageTypes** : types of product stages.<br/>
 💠 **SalesStatusTypes** : types of sales status.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
-💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMLeadTimeTypes** : types of u o m lead times.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 💠 **UOMTimeTypes** : types of u o m times.<br/>
+💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
 💠 **PartMasterSuperSessionTypes** : entity<br/>
 
 ## ✅ Entities
@@ -144,7 +138,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ✅ **EffectivePeriod** : Effective Period<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
 
 ---
@@ -374,32 +367,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-master-profiles/{partMasterProfileKey}</span> <br/>
         <span class="api-summary">Delete a PartMasterProfile Record deletePartMasterProfileRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partMasterKey. getTimeSlotsByPartMasterKey</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -700,32 +667,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-identifiers/{partIdentifierKey}</span> <br/>
         <span class="api-summary">Delete a PartIdentifier Record deletePartIdentifierRecord</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/effective-periods
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by partMasterKey. getEffectivePeriodsByPartMasterKey</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/effective-periods/{effectivePeriodKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -1155,56 +1096,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /part-masters/{partMasterKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partMasterKey. getPartyIdentifiersByPartMasterKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-masters/{partMasterKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /part-masters/{partMasterKey}/part-inventory-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1564,14 +1455,12 @@ The following resources follow a consistent pattern under PartMasterroot with ke
     | **part-master** | /part-masters | listPartMasters | createPartMaster | getPartMasters | updatePartMasters | deletePartMasters |
     | **discount-reference** | /part-masters/{partMasterKey}/discount-references | listDiscountReferencesByPartMasterKey | createDiscountReference | getDiscountReferencesByPartMasterKey | updateDiscountReferencesByPartMasterKey | deleteDiscountReferencesByPartMasterKey |
     | **part-master-profile** | /part-masters/{partMasterKey}/part-master-profiles | listPartMasterProfilesByPartMasterKey | createPartMasterProfile | getPartMasterProfilesByPartMasterKey | updatePartMasterProfilesByPartMasterKey | deletePartMasterProfilesByPartMasterKey |
-    | **time-slot** | /part-masters/{partMasterKey}/time-slots | listTimeSlotsByPartMasterKey |  | getTimeSlotsByPartMasterKey | updateTimeSlotsByPartMasterKey | deleteTimeSlotsByPartMasterKey |
     | **part-categorie** | /part-masters/{partMasterKey}/part-categories | listPartCategorysByPartMasterKey | createPartCategory | getPartCategorysByPartMasterKey | updatePartCategorysByPartMasterKey | deletePartCategorysByPartMasterKey |
     | **financial-category-reference** | /part-masters/{partMasterKey}/financial-category-references | listFinancialCategoryReferencesByPartMasterKey | createFinancialCategoryReference | getFinancialCategoryReferencesByPartMasterKey | updateFinancialCategoryReferencesByPartMasterKey | deleteFinancialCategoryReferencesByPartMasterKey |
     | **fee-reference** | /part-masters/{partMasterKey}/fee-references | listFeeReferencesByPartMasterKey | createFeeReference | getFeeReferencesByPartMasterKey | updateFeeReferencesByPartMasterKey | deleteFeeReferencesByPartMasterKey |
     | **identifier** | /part-masters/{partMasterKey}/identifiers | listIdentifiersByPartMasterKey | createIdentifier | getIdentifiersByPartMasterKey | updateIdentifiersByPartMasterKey | deleteIdentifiersByPartMasterKey |
     | **part-name** | /part-masters/{partMasterKey}/part-names | listPartNamesByPartMasterKey | createPartName | getPartNamesByPartMasterKey | updatePartNamesByPartMasterKey | deletePartNamesByPartMasterKey |
     | **part-identifier** | /part-masters/{partMasterKey}/part-identifiers | listPartIdentifiersByPartMasterKey | createPartIdentifier | getPartIdentifiersByPartMasterKey | updatePartIdentifiersByPartMasterKey | deletePartIdentifiersByPartMasterKey |
-    | **effective-period** | /part-masters/{partMasterKey}/effective-periods | listEffectivePeriodsByPartMasterKey |  | getEffectivePeriodsByPartMasterKey | updateEffectivePeriodsByPartMasterKey | deleteEffectivePeriodsByPartMasterKey |
     | **part-lifecycle** | /part-masters/{partMasterKey}/part-lifecycles | listPartLifecyclesByPartMasterKey | createPartLifecycle | getPartLifecyclesByPartMasterKey | updatePartLifecyclesByPartMasterKey | deletePartLifecyclesByPartMasterKey |
     | **credit-reference** | /part-masters/{partMasterKey}/credit-references | listCreditReferencesByPartMasterKey | createCreditReference | getCreditReferencesByPartMasterKey | updateCreditReferencesByPartMasterKey | deleteCreditReferencesByPartMasterKey |
     | **rebate-reference** | /part-masters/{partMasterKey}/rebate-references | listRebateReferencesByPartMasterKey | createRebateReference | getRebateReferencesByPartMasterKey | updateRebateReferencesByPartMasterKey | deleteRebateReferencesByPartMasterKey |
@@ -1581,7 +1470,6 @@ The following resources follow a consistent pattern under PartMasterroot with ke
     | **part-specification** | /part-masters/{partMasterKey}/part-specifications | listPartSpecificationsByPartMasterKey | createPartSpecification | getPartSpecificationsByPartMasterKey | updatePartSpecificationsByPartMasterKey | deletePartSpecificationsByPartMasterKey |
     | **control-account-reference** | /part-masters/{partMasterKey}/control-account-references | listControlAccountReferencesByPartMasterKey | createControlAccountReference | getControlAccountReferencesByPartMasterKey | updateControlAccountReferencesByPartMasterKey | deleteControlAccountReferencesByPartMasterKey |
     | **reward-reference** | /part-masters/{partMasterKey}/reward-references | listRewardReferencesByPartMasterKey | createRewardReference | getRewardReferencesByPartMasterKey | updateRewardReferencesByPartMasterKey | deleteRewardReferencesByPartMasterKey |
-    | **party-identifier** | /part-masters/{partMasterKey}/party-identifiers | listPartyIdentifiersByPartMasterKey | createPartyIdentifier | getPartyIdentifiersByPartMasterKey | updatePartyIdentifiersByPartMasterKey | deletePartyIdentifiersByPartMasterKey |
     | **part-inventory-reference** | /part-masters/{partMasterKey}/part-inventory-references | listPartInventoryReferencesByPartMasterKey | createPartInventoryReference | getPartInventoryReferencesByPartMasterKey | updatePartInventoryReferencesByPartMasterKey | deletePartInventoryReferencesByPartMasterKey |
     | **lead-time** | /part-masters/{partMasterKey}/lead-times | listLeadTimesByPartMasterKey | createLeadTime | getLeadTimesByPartMasterKey | updateLeadTimesByPartMasterKey | deleteLeadTimesByPartMasterKey |
     | **super-session** | /part-masters/{partMasterKey}/super-sessions | listSuperSessionsByPartMasterKey | createSuperSession | getSuperSessionsByPartMasterKey | updateSuperSessionsByPartMasterKey | deleteSuperSessionsByPartMasterKey |

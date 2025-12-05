@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **Part**, **PartEvent**, **PartIdentifier**, **PartLifecycle**, **PartLocation**, **PartName**, **PartyIdentifier**, **Price**, **SuperSession**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **Part**, **PartEvent**, **PartIdentifier**, **PartLifecycle**, **PartLocation**, **PartName**, **Price**, **SuperSession**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -16,18 +16,17 @@ The API is structured around the domain **service_parts** and **Part** resource 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **Part** | /parts | Manages Parts |
-    | **PartLocation** | /parts/{partKey}/part-locations | Manages PartLocations belonging to Parts |
-    | **ControlAccountReference** | /parts/{partKey}/control-account-references | Manages ControlAccountReferences belonging to Parts |
-    | **PartyIdentifier** | /parts/{partKey}/party-identifiers | Manages PartyIdentifiers belonging to Parts |
-    | **TimeSlot** | /parts/{partKey}/time-slots | Manages TimeSlots belonging to Parts |
     | **Identifier** | /parts/{partKey}/identifiers | Manages Identifiers belonging to Parts |
+    | **PartLocation** | /parts/{partKey}/part-locations | Manages PartLocations belonging to Parts |
     | **PartName** | /parts/{partKey}/part-names | Manages PartNames belonging to Parts |
     | **Price** | /parts/{partKey}/prices | Manages Prices belonging to Parts |
     | **SuperSession** | /parts/{partKey}/super-sessions | Manages SuperSessions belonging to Parts |
     | **PartEvent** | /parts/{partKey}/part-events | Manages PartEvents belonging to Parts |
     | **PartIdentifier** | /parts/{partKey}/part-identifiers | Manages PartIdentifiers belonging to Parts |
     | **EffectivePeriod** | /parts/{partKey}/effective-periods | Manages EffectivePeriods belonging to Parts |
+    | **ControlAccountReference** | /parts/{partKey}/control-account-references | Manages ControlAccountReferences belonging to Parts |
     | **PartLifecycle** | /parts/{partKey}/part-lifecycles | Manages PartLifecycles belonging to Parts |
+    | **TimeSlot** | /parts/{partKey}/time-slots | Manages TimeSlots belonging to Parts |
 
 
 ---
@@ -106,7 +105,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
 💠 **PartStorageTypes** : types of part storages.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
@@ -250,182 +248,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /parts/{partKey}/part-locations
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations</span> <br/>
-        <span class="api-summary">Retrieve a list of PartLocation records scoped by partKey. getPartLocationsByPartKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations</span> <br/>
-        <span class="api-summary">Create a new PartLocation record. createPartLocation</span>
-    </span>
-</div>
-
-### /parts/{partKey}/part-locations/{partLocationKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartLocation record. getartLocationById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
-        <span class="api-summary">Replace a PartLocation record. replacePartLocation</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLocation record. updatePartLocation</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
-        <span class="api-summary">Delete a PartLocation Record deletePartLocationRecord</span>
-    </span>
-</div>
-
-### /parts/{partKey}/control-account-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by partKey. getControlAccountReferencesByPartKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
-    </span>
-</div>
-
-### /parts/{partKey}/control-account-references/{controlAccountReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
-    </span>
-</div>
-
-### /parts/{partKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by partKey. getPartyIdentifiersByPartKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /parts/{partKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
-### /parts/{partKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partKey. getTimeSlotsByPartKey</span>
-    </span>
-</div>
-
-### /parts/{partKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parts/{partKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
-    </span>
-</div>
-
 ### /parts/{partKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -473,6 +295,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/parts/{partKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+    </span>
+</div>
+
+### /parts/{partKey}/part-locations
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations</span> <br/>
+        <span class="api-summary">Retrieve a list of PartLocation records scoped by partKey. getPartLocationsByPartKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations</span> <br/>
+        <span class="api-summary">Create a new PartLocation record. createPartLocation</span>
+    </span>
+</div>
+
+### /parts/{partKey}/part-locations/{partLocationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartLocation record. getartLocationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
+        <span class="api-summary">Replace a PartLocation record. replacePartLocation</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
+        <span class="api-summary">Partially update a PartLocation record. updatePartLocation</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/part-locations/{partLocationKey}</span> <br/>
+        <span class="api-summary">Delete a PartLocation Record deletePartLocationRecord</span>
     </span>
 </div>
 
@@ -752,6 +624,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /parts/{partKey}/control-account-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references</span> <br/>
+        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by partKey. getControlAccountReferencesByPartKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references</span> <br/>
+        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+    </span>
+</div>
+
+### /parts/{partKey}/control-account-references/{controlAccountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+    </span>
+</div>
+
 ### /parts/{partKey}/part-lifecycles
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -802,6 +724,32 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /parts/{partKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partKey. getTimeSlotsByPartKey</span>
+    </span>
+</div>
+
+### /parts/{partKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/parts/{partKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under Partroot with key {PartKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -809,18 +757,17 @@ The following resources follow a consistent pattern under Partroot with key {Par
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **part** | /parts | listParts | createPart | getParts | updateParts | deleteParts |
-    | **part-location** | /parts/{partKey}/part-locations | listPartLocationsByPartKey | createPartLocation | getPartLocationsByPartKey | updatePartLocationsByPartKey | deletePartLocationsByPartKey |
-    | **control-account-reference** | /parts/{partKey}/control-account-references | listControlAccountReferencesByPartKey | createControlAccountReference | getControlAccountReferencesByPartKey | updateControlAccountReferencesByPartKey | deleteControlAccountReferencesByPartKey |
-    | **party-identifier** | /parts/{partKey}/party-identifiers | listPartyIdentifiersByPartKey | createPartyIdentifier | getPartyIdentifiersByPartKey | updatePartyIdentifiersByPartKey | deletePartyIdentifiersByPartKey |
-    | **time-slot** | /parts/{partKey}/time-slots | listTimeSlotsByPartKey |  | getTimeSlotsByPartKey | updateTimeSlotsByPartKey | deleteTimeSlotsByPartKey |
     | **identifier** | /parts/{partKey}/identifiers | listIdentifiersByPartKey | createIdentifier | getIdentifiersByPartKey | updateIdentifiersByPartKey | deleteIdentifiersByPartKey |
+    | **part-location** | /parts/{partKey}/part-locations | listPartLocationsByPartKey | createPartLocation | getPartLocationsByPartKey | updatePartLocationsByPartKey | deletePartLocationsByPartKey |
     | **part-name** | /parts/{partKey}/part-names | listPartNamesByPartKey | createPartName | getPartNamesByPartKey | updatePartNamesByPartKey | deletePartNamesByPartKey |
     | **price** | /parts/{partKey}/prices | listPricesByPartKey | createPrice | getPricesByPartKey | updatePricesByPartKey | deletePricesByPartKey |
     | **super-session** | /parts/{partKey}/super-sessions | listSuperSessionsByPartKey | createSuperSession | getSuperSessionsByPartKey | updateSuperSessionsByPartKey | deleteSuperSessionsByPartKey |
     | **part-event** | /parts/{partKey}/part-events | listPartEventsByPartKey | createPartEvent | getPartEventsByPartKey | updatePartEventsByPartKey | deletePartEventsByPartKey |
     | **part-identifier** | /parts/{partKey}/part-identifiers | listPartIdentifiersByPartKey | createPartIdentifier | getPartIdentifiersByPartKey | updatePartIdentifiersByPartKey | deletePartIdentifiersByPartKey |
     | **effective-period** | /parts/{partKey}/effective-periods | listEffectivePeriodsByPartKey |  | getEffectivePeriodsByPartKey | updateEffectivePeriodsByPartKey | deleteEffectivePeriodsByPartKey |
+    | **control-account-reference** | /parts/{partKey}/control-account-references | listControlAccountReferencesByPartKey | createControlAccountReference | getControlAccountReferencesByPartKey | updateControlAccountReferencesByPartKey | deleteControlAccountReferencesByPartKey |
     | **part-lifecycle** | /parts/{partKey}/part-lifecycles | listPartLifecyclesByPartKey | createPartLifecycle | getPartLifecyclesByPartKey | updatePartLifecyclesByPartKey | deletePartLifecyclesByPartKey |
+    | **time-slot** | /parts/{partKey}/time-slots | listTimeSlotsByPartKey |  | getTimeSlotsByPartKey | updateTimeSlotsByPartKey | deleteTimeSlotsByPartKey |
 
 ***Note on List Operations:***
 

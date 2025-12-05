@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **Identifier**, **InvoiceReference**, **PartyIdentifier**, **Position**, **Shipment**, **ShipmentEvent**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **Identifier**, **InvoiceReference**, **PartyReference**, **Position**, **Shipment**, **ShipmentEvent**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -17,12 +17,12 @@ The API is structured around the domain **logistics_fulfillment** and **Shipment
 | :--- | :--- | :--- |
     | **Shipment** | /shipments | Manages Shipments |
     | **InvoiceReference** | /shipments/{shipmentKey}/invoice-references | Manages InvoiceReferences belonging to Shipments |
+    | **PartyReference** | /shipments/{shipmentKey}/party-references | Manages PartyReferences belonging to Shipments |
     | **ShipmentEvent** | /shipments/{shipmentKey}/shipment-events | Manages ShipmentEvents belonging to Shipments |
     | **Identifier** | /shipments/{shipmentKey}/identifiers | Manages Identifiers belonging to Shipments |
     | **UnitOfMeasure** | /shipments/{shipmentKey}/unit-of-measures | Manages UnitOfMeasures belonging to Shipments |
     | **Position** | /shipments/{shipmentKey}/positions | Manages Positions belonging to Shipments |
     | **EffectivePeriod** | /shipments/{shipmentKey}/effective-periods | Manages EffectivePeriods belonging to Shipments |
-    | **PartyIdentifier** | /shipments/{shipmentKey}/party-identifiers | Manages PartyIdentifiers belonging to Shipments |
     | **TimeSlot** | /shipments/{shipmentKey}/time-slots | Manages TimeSlots belonging to Shipments |
     | **AddressReference** | /shipments/{shipmentKey}/address-references | Manages AddressReferences belonging to Shipments |
 
@@ -291,6 +291,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /shipments/{shipmentKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference records scoped by shipmentKey. getPartyReferencesByShipmentKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference record. createPartyReference</span>
+    </span>
+</div>
+
+### /shipments/{shipmentKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference record. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference record. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference record. updatePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference Record deletePartyReferenceRecord</span>
+    </span>
+</div>
+
 ### /shipments/{shipmentKey}/shipment-events
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -493,56 +543,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /shipments/{shipmentKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by shipmentKey. getPartyIdentifiersByShipmentKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /shipments/{shipmentKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/shipments/{shipmentKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /shipments/{shipmentKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -627,12 +627,12 @@ The following resources follow a consistent pattern under Shipmentroot with key 
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **shipment** | /shipments | listShipments | createShipment | getShipments | updateShipments | deleteShipments |
     | **invoice-reference** | /shipments/{shipmentKey}/invoice-references | listInvoiceReferencesByShipmentKey | createInvoiceReference | getInvoiceReferencesByShipmentKey | updateInvoiceReferencesByShipmentKey | deleteInvoiceReferencesByShipmentKey |
+    | **party-reference** | /shipments/{shipmentKey}/party-references | listPartyReferencesByShipmentKey | createPartyReference | getPartyReferencesByShipmentKey | updatePartyReferencesByShipmentKey | deletePartyReferencesByShipmentKey |
     | **shipment-event** | /shipments/{shipmentKey}/shipment-events | listShipmentEventsByShipmentKey | createShipmentEvent | getShipmentEventsByShipmentKey | updateShipmentEventsByShipmentKey | deleteShipmentEventsByShipmentKey |
     | **identifier** | /shipments/{shipmentKey}/identifiers | listIdentifiersByShipmentKey | createIdentifier | getIdentifiersByShipmentKey | updateIdentifiersByShipmentKey | deleteIdentifiersByShipmentKey |
     | **unit-of-measure** | /shipments/{shipmentKey}/unit-of-measures | listUnitOfMeasuresByShipmentKey |  | getUnitOfMeasuresByShipmentKey | updateUnitOfMeasuresByShipmentKey | deleteUnitOfMeasuresByShipmentKey |
     | **position** | /shipments/{shipmentKey}/positions | listPositionsByShipmentKey | createPosition | getPositionsByShipmentKey | updatePositionsByShipmentKey | deletePositionsByShipmentKey |
     | **effective-period** | /shipments/{shipmentKey}/effective-periods | listEffectivePeriodsByShipmentKey |  | getEffectivePeriodsByShipmentKey | updateEffectivePeriodsByShipmentKey | deleteEffectivePeriodsByShipmentKey |
-    | **party-identifier** | /shipments/{shipmentKey}/party-identifiers | listPartyIdentifiersByShipmentKey | createPartyIdentifier | getPartyIdentifiersByShipmentKey | updatePartyIdentifiersByShipmentKey | deletePartyIdentifiersByShipmentKey |
     | **time-slot** | /shipments/{shipmentKey}/time-slots | listTimeSlotsByShipmentKey |  | getTimeSlotsByShipmentKey | updateTimeSlotsByShipmentKey | deleteTimeSlotsByShipmentKey |
     | **address-reference** | /shipments/{shipmentKey}/address-references | listAddressReferencesByShipmentKey | createAddressReference | getAddressReferencesByShipmentKey | updateAddressReferencesByShipmentKey | deleteAddressReferencesByShipmentKey |
 

@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **PartyIdentifier**, **SubsidiaryLedgerTransaction**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **SubsidiaryLedgerTransaction**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,10 +18,7 @@ The API is structured around the domain **finance** and **SubsidiaryLedgerTransa
     | **SubsidiaryLedgerTransaction** | /subsidiary-ledger-transactions | Manages SubsidiaryLedgerTransactions |
     | **Money** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys | Manages Moneys belonging to SubsidiaryLedgerTransactions |
     | **Identifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers | Manages Identifiers belonging to SubsidiaryLedgerTransactions |
-    | **EffectivePeriod** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods | Manages EffectivePeriods belonging to SubsidiaryLedgerTransactions |
     | **ControlAccountReference** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references | Manages ControlAccountReferences belonging to SubsidiaryLedgerTransactions |
-    | **PartyIdentifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers | Manages PartyIdentifiers belonging to SubsidiaryLedgerTransactions |
-    | **TimeSlot** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots | Manages TimeSlots belonging to SubsidiaryLedgerTransactions |
 
 
 ---
@@ -90,21 +87,15 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
-💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **OrganizationTypes** : types of organizations.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **SubsidiaryLedgerTransactionStatusTypes** : types of subsidiary ledger transaction status.<br/>
-💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
 ✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
 
@@ -312,32 +303,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by subsidiaryLedgerTransactionKey. getEffectivePeriodsBySubsidiaryLedgerTransactionKey</span>
-    </span>
-</div>
-
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods/{effectivePeriodKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
-    </span>
-</div>
-
 ### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -388,82 +353,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by subsidiaryLedgerTransactionKey. getPartyIdentifiersBySubsidiaryLedgerTransactionKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by subsidiaryLedgerTransactionKey. getTimeSlotsBySubsidiaryLedgerTransactionKey</span>
-    </span>
-</div>
-
-### /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
-    </span>
-</div>
-
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under SubsidiaryLedgerTransactionroot with key {SubsidiaryLedgerTransactionKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -473,10 +362,7 @@ The following resources follow a consistent pattern under SubsidiaryLedgerTransa
     | **subsidiary-ledger-transaction** | /subsidiary-ledger-transactions | listSubsidiaryLedgerTransactions | createSubsidiaryLedgerTransaction | getSubsidiaryLedgerTransactions | updateSubsidiaryLedgerTransactions | deleteSubsidiaryLedgerTransactions |
     | **money** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys | listMoneysBySubsidiaryLedgerTransactionKey |  | getMoneysBySubsidiaryLedgerTransactionKey | updateMoneysBySubsidiaryLedgerTransactionKey | deleteMoneysBySubsidiaryLedgerTransactionKey |
     | **identifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers | listIdentifiersBySubsidiaryLedgerTransactionKey | createIdentifier | getIdentifiersBySubsidiaryLedgerTransactionKey | updateIdentifiersBySubsidiaryLedgerTransactionKey | deleteIdentifiersBySubsidiaryLedgerTransactionKey |
-    | **effective-period** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/effective-periods | listEffectivePeriodsBySubsidiaryLedgerTransactionKey |  | getEffectivePeriodsBySubsidiaryLedgerTransactionKey | updateEffectivePeriodsBySubsidiaryLedgerTransactionKey | deleteEffectivePeriodsBySubsidiaryLedgerTransactionKey |
     | **control-account-reference** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references | listControlAccountReferencesBySubsidiaryLedgerTransactionKey | createControlAccountReference | getControlAccountReferencesBySubsidiaryLedgerTransactionKey | updateControlAccountReferencesBySubsidiaryLedgerTransactionKey | deleteControlAccountReferencesBySubsidiaryLedgerTransactionKey |
-    | **party-identifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/party-identifiers | listPartyIdentifiersBySubsidiaryLedgerTransactionKey | createPartyIdentifier | getPartyIdentifiersBySubsidiaryLedgerTransactionKey | updatePartyIdentifiersBySubsidiaryLedgerTransactionKey | deletePartyIdentifiersBySubsidiaryLedgerTransactionKey |
-    | **time-slot** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/time-slots | listTimeSlotsBySubsidiaryLedgerTransactionKey |  | getTimeSlotsBySubsidiaryLedgerTransactionKey | updateTimeSlotsBySubsidiaryLedgerTransactionKey | deleteTimeSlotsBySubsidiaryLedgerTransactionKey |
 
 ***Note on List Operations:***
 

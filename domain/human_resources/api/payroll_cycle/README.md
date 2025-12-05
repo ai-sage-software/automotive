@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PartyIdentifier**, **PayrollCycle**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollCycle**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,7 +18,6 @@ The API is structured around the domain **human_resources** and **PayrollCycle**
     | **PayrollCycle** | /payroll-cycles | Manages PayrollCycles |
     | **Identifier** | /payroll-cycles/{payrollCycleKey}/identifiers | Manages Identifiers belonging to PayrollCycles |
     | **EffectivePeriod** | /payroll-cycles/{payrollCycleKey}/effective-periods | Manages EffectivePeriods belonging to PayrollCycles |
-    | **PartyIdentifier** | /payroll-cycles/{payrollCycleKey}/party-identifiers | Manages PartyIdentifiers belonging to PayrollCycles |
     | **TimeSlot** | /payroll-cycles/{payrollCycleKey}/time-slots | Manages TimeSlots belonging to PayrollCycles |
 
 
@@ -90,7 +89,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
@@ -307,56 +305,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payroll-cycles/{payrollCycleKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by payrollCycleKey. getPartyIdentifiersByPayrollCycleKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /payroll-cycles/{payrollCycleKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-cycles/{payrollCycleKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /payroll-cycles/{payrollCycleKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -392,7 +340,6 @@ The following resources follow a consistent pattern under PayrollCycleroot with 
     | **payroll-cycle** | /payroll-cycles | listPayrollCycles | createPayrollCycle | getPayrollCycles | updatePayrollCycles | deletePayrollCycles |
     | **identifier** | /payroll-cycles/{payrollCycleKey}/identifiers | listIdentifiersByPayrollCycleKey | createIdentifier | getIdentifiersByPayrollCycleKey | updateIdentifiersByPayrollCycleKey | deleteIdentifiersByPayrollCycleKey |
     | **effective-period** | /payroll-cycles/{payrollCycleKey}/effective-periods | listEffectivePeriodsByPayrollCycleKey |  | getEffectivePeriodsByPayrollCycleKey | updateEffectivePeriodsByPayrollCycleKey | deleteEffectivePeriodsByPayrollCycleKey |
-    | **party-identifier** | /payroll-cycles/{payrollCycleKey}/party-identifiers | listPartyIdentifiersByPayrollCycleKey | createPartyIdentifier | getPartyIdentifiersByPayrollCycleKey | updatePartyIdentifiersByPayrollCycleKey | deletePartyIdentifiersByPayrollCycleKey |
     | **time-slot** | /payroll-cycles/{payrollCycleKey}/time-slots | listTimeSlotsByPayrollCycleKey |  | getTimeSlotsByPayrollCycleKey | updateTimeSlotsByPayrollCycleKey | deleteTimeSlotsByPayrollCycleKey |
 
 ***Note on List Operations:***

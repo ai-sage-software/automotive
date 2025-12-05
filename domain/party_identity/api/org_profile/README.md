@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **PartyIdentifier**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -35,7 +35,6 @@ The API is structured around the domain **party_identity** and **OrgProfile** re
     | **PersonName** | /org-profiles/{orgProfileKey}/person-names | Manages PersonNames belonging to OrgProfiles |
     | **PayrollRate** | /org-profiles/{orgProfileKey}/payroll-rates | Manages PayrollRates belonging to OrgProfiles |
     | **ControlAccountReference** | /org-profiles/{orgProfileKey}/control-account-references | Manages ControlAccountReferences belonging to OrgProfiles |
-    | **PartyIdentifier** | /org-profiles/{orgProfileKey}/party-identifiers | Manages PartyIdentifiers belonging to OrgProfiles |
     | **CommunicationChannel** | /org-profiles/{orgProfileKey}/communication-channels | Manages CommunicationChannels belonging to OrgProfiles |
     | **DiscountMetricValue** | /org-profiles/{orgProfileKey}/discount-metric-values | Manages DiscountMetricValues belonging to OrgProfiles |
     | **Price** | /org-profiles/{orgProfileKey}/prices | Manages Prices belonging to OrgProfiles |
@@ -127,7 +126,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **OperatingStatusTypes** : types of operating status.<br/>
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **PartIdentifierTypes** : types of part identifiers.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
@@ -1163,56 +1161,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by orgProfileKey. getPartyIdentifiersByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
-    </span>
-</div>
-
 ### /org-profiles/{orgProfileKey}/communication-channels
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1489,7 +1437,6 @@ The following resources follow a consistent pattern under OrgProfileroot with ke
     | **person-name** | /org-profiles/{orgProfileKey}/person-names | listPersonNamesByOrgProfileKey | createPersonName | getPersonNamesByOrgProfileKey | updatePersonNamesByOrgProfileKey | deletePersonNamesByOrgProfileKey |
     | **payroll-rate** | /org-profiles/{orgProfileKey}/payroll-rates | listPayrollRatesByOrgProfileKey | createPayrollRate | getPayrollRatesByOrgProfileKey | updatePayrollRatesByOrgProfileKey | deletePayrollRatesByOrgProfileKey |
     | **control-account-reference** | /org-profiles/{orgProfileKey}/control-account-references | listControlAccountReferencesByOrgProfileKey | createControlAccountReference | getControlAccountReferencesByOrgProfileKey | updateControlAccountReferencesByOrgProfileKey | deleteControlAccountReferencesByOrgProfileKey |
-    | **party-identifier** | /org-profiles/{orgProfileKey}/party-identifiers | listPartyIdentifiersByOrgProfileKey | createPartyIdentifier | getPartyIdentifiersByOrgProfileKey | updatePartyIdentifiersByOrgProfileKey | deletePartyIdentifiersByOrgProfileKey |
     | **communication-channel** | /org-profiles/{orgProfileKey}/communication-channels | listCommunicationChannelsByOrgProfileKey | createCommunicationChannel | getCommunicationChannelsByOrgProfileKey | updateCommunicationChannelsByOrgProfileKey | deleteCommunicationChannelsByOrgProfileKey |
     | **discount-metric-value** | /org-profiles/{orgProfileKey}/discount-metric-values | listDiscountMetricValuesByOrgProfileKey | createDiscountMetricValue | getDiscountMetricValuesByOrgProfileKey | updateDiscountMetricValuesByOrgProfileKey | deleteDiscountMetricValuesByOrgProfileKey |
     | **price** | /org-profiles/{orgProfileKey}/prices | listPricesByOrgProfileKey | createPrice | getPricesByOrgProfileKey | updatePricesByOrgProfileKey | deletePricesByOrgProfileKey |

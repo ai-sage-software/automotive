@@ -1,6 +1,6 @@
 ## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PartyIdentifier**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -19,7 +19,6 @@ The API is structured around the domain **party_identity** and **Dealer** resour
     | **PersonName** | /dealers/{dealerKey}/person-names | Manages PersonNames belonging to Dealers |
     | **PayrollRate** | /dealers/{dealerKey}/payroll-rates | Manages PayrollRates belonging to Dealers |
     | **Addresse** | /dealers/{dealerKey}/addresses | Manages Addresses belonging to Dealers |
-    | **PartyIdentifier** | /dealers/{dealerKey}/party-identifiers | Manages PartyIdentifiers belonging to Dealers |
     | **StaffMember** | /dealers/{dealerKey}/staff-members | Manages StaffMembers belonging to Dealers |
     | **PrivacyEvent** | /dealers/{dealerKey}/privacy-events | Manages PrivacyEvents belonging to Dealers |
     | **TimeSlot** | /dealers/{dealerKey}/time-slots | Manages TimeSlots belonging to Dealers |
@@ -116,7 +115,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **GenderTypes** : types of genders.<br/>
 💠 **MaritalStatusTypes** : types of marital status.<br/>
 💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **PrivacyContextTypes** : types of privacy contexts.<br/>
@@ -415,56 +413,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
         <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
-    </span>
-</div>
-
-### /dealers/{dealerKey}/party-identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyIdentifier records scoped by dealerKey. getPartyIdentifiersByDealerKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartyIdentifier record. createPartyIdentifier</span>
-    </span>
-</div>
-
-### /dealers/{dealerKey}/party-identifiers/{partyIdentifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyIdentifier record. getartyIdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartyIdentifier record. replacePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyIdentifier record. updatePartyIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/party-identifiers/{partyIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartyIdentifier Record deletePartyIdentifierRecord</span>
     </span>
 </div>
 
@@ -1156,7 +1104,6 @@ The following resources follow a consistent pattern under Dealerroot with key {D
     | **person-name** | /dealers/{dealerKey}/person-names | listPersonNamesByDealerKey | createPersonName | getPersonNamesByDealerKey | updatePersonNamesByDealerKey | deletePersonNamesByDealerKey |
     | **payroll-rate** | /dealers/{dealerKey}/payroll-rates | listPayrollRatesByDealerKey | createPayrollRate | getPayrollRatesByDealerKey | updatePayrollRatesByDealerKey | deletePayrollRatesByDealerKey |
     | **addresse** | /dealers/{dealerKey}/addresses | listAddresssByDealerKey | createAddress | getAddresssByDealerKey | updateAddresssByDealerKey | deleteAddresssByDealerKey |
-    | **party-identifier** | /dealers/{dealerKey}/party-identifiers | listPartyIdentifiersByDealerKey | createPartyIdentifier | getPartyIdentifiersByDealerKey | updatePartyIdentifiersByDealerKey | deletePartyIdentifiersByDealerKey |
     | **staff-member** | /dealers/{dealerKey}/staff-members | listStaffMembersByDealerKey | createStaffMember | getStaffMembersByDealerKey | updateStaffMembersByDealerKey | deleteStaffMembersByDealerKey |
     | **privacy-event** | /dealers/{dealerKey}/privacy-events | listPrivacyEventsByDealerKey | createPrivacyEvent | getPrivacyEventsByDealerKey | updatePrivacyEventsByDealerKey | deletePrivacyEventsByDealerKey |
     | **time-slot** | /dealers/{dealerKey}/time-slots | listTimeSlotsByDealerKey |  | getTimeSlotsByDealerKey | updateTimeSlotsByDealerKey | deleteTimeSlotsByDealerKey |
