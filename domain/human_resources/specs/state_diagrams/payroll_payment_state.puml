@@ -1,0 +1,70 @@
+@startuml PayrollProcessingStateDiagram
+
+title Payroll Processing Flow
+
+' Define the starting point
+[*] --> INITIATION
+
+' --- 1. INITIATION & SETUP ---
+state INITIATION {
+    state CREATED
+    state SCHEDULED
+    state SUBMITTED
+    state REQUIRES_ACTION
+
+    CREATED --> SCHEDULED : set payroll date
+    SCHEDULED --> SUBMITTED : execution time reached
+}
+
+' --- 2. PRE-PROCESS & FUNDING CHECKS ---
+state PRE_PROCESS {
+    state PENDING
+    state PENDING_PAYER_FUNDS
+
+    SUBMITTED --> PENDING : ready for system processing
+    PENDING --> PENDING_PAYER_FUNDS : awaiting employer funds (pre-note)
+    PENDING_PAYER_FUNDS --> PAYROLL_CYCLE : funds secured/available
+    PENDING --> PAYROLL_CYCLE : standard payroll start
+}
+
+' --- 3. CORE PAYROLL EXECUTION CYCLE ---
+state PAYROLL_CYCLE {
+    state PROCESSING
+    state PAYROLL_PENDING
+    state PAYROLL_FINALIZED
+
+    PROCESSING --> PAYROLL_PENDING : disbursement batch started
+    PAYROLL_PENDING --> PAYROLL_FINALIZED : bank processing complete
+}
+
+' --- 4. RESOLUTION ---
+state RESOLUTION {
+    state SUCCESS {
+        state SUCCEEDED
+        state PAID
+        state CLEARED
+    }
+    state FAILURE {
+        state FAILED
+        state REVERSED
+        state RETURNED
+    }
+}
+
+' --- CROSS-STATE TRANSITIONS ---
+
+' Cycle to Success
+PAYROLL_FINALIZED --> SUCCEEDED : successfully disbursed
+SUCCEEDED --> PAID : labeled as paid
+PAID --> CLEARED : bank clearance complete
+
+' Cycle to Failure (Reversal/Return is common in Payroll)
+PAYROLL_FINALIZED --> REVERSED : reversal requested/error
+PAYROLL_FINALIZED --> RETURNED : ACH return (e.g., account closed)
+PAYROLL_FINALIZED --> FAILED : general processing failure
+
+' Final States
+SUCCESS --> [*]
+FAILURE --> [*]
+
+@enduml
