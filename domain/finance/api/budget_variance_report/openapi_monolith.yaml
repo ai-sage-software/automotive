@@ -5,12 +5,158 @@ info:
   description: "Automotive Retail Ontology."
   version: "1.0.0"
 paths:
-  /budget-variance-line-items:
+  /budget-variance-reports:
+    get:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Retrieve a list of all BudgetVarianceReport rec..."
+      operationId: "listBudgetVarianceReports"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of BudgetVarianceReport records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/BudgetVarianceReport"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Create a new BudgetVarianceReport record."
+      operationId: "createBudgetVarianceReport"
+      requestBody:
+        description: "BudgetVarianceReport data to create the new res..."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetVarianceReportCreate"
+        required: true
+      responses:
+        "201":
+          description: "BudgetVarianceReport created successfully."
+          headers:
+            Location:
+              description: "The URI of the newly created resource."
+              schema:
+                type: "string"
+                example: "/budget-variance-reports/PR-1234567"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetVarianceReport"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+  /budget-variance-reports/{budgetVarianceReportKey}:
+    get:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Retrieve a specific BudgetVarianceReport record."
+      operationId: "getBudgetVarianceReportById"
+      responses:
+        "200":
+          description: "The requested BudgetVarianceReport record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetVarianceReport"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Replace a BudgetVarianceReport record."
+      operationId: "replaceBudgetVarianceReport"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetVarianceReport"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetVarianceReport"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    delete:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Delete a BudgetVarianceReport Record"
+      description: "Marks the BudgetVarianceReport record as inacti..."
+      operationId: "deleteBudgetVarianceReportRecord"
+      responses:
+        "204":
+          description: "Record successfully deleted (or deactivated)."
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    patch:
+      tags:
+      - "BudgetVarianceReport"
+      summary: "Partially update a BudgetVarianceReport record."
+      operationId: "updateBudgetVarianceReport"
+      requestBody:
+        description: "Included Fields to be updated will be modified."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetVarianceReportUpdate"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetVarianceReport"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "budgetVarianceReportKey"
+      in: "path"
+      description: "The unique identifier for the specific BudgetVarianceReport."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
+  /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-line-items:
     get:
       tags:
       - "BudgetVarianceLineItem"
-      summary: "Retrieve a list of all BudgetVarianceLineItem r..."
-      operationId: "listBudgetVarianceLineItems"
+      summary: "Retrieve a list of BudgetVarianceLineItem recor..."
+      operationId: "listBudgetVarianceLineItemsByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -58,7 +204,7 @@ paths:
               description: "The URI of the newly created resource."
               schema:
                 type: "string"
-                example: "/budget-variance-line-items/PR-1234567"
+                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
           content:
             application/json:
               schema:
@@ -67,7 +213,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "409":
           $ref: "#/components/responses/ConflictError"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}:
+    parameters:
+    - name: "budgetVarianceReportKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-line-items/{budgetVarianceLineItemKey}:
     get:
       tags:
       - "BudgetVarianceLineItem"
@@ -144,6 +297,12 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
+    - name: "budgetVarianceReportKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
     - name: "budgetVarianceLineItemKey"
       in: "path"
       description: "The unique identifier for the specific BudgetVarianceLineItem."
@@ -151,12 +310,12 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/moneys:
+  /budget-variance-reports/{budgetVarianceReportKey}/moneys:
     get:
       tags:
       - "Money"
       summary: "Retrieve a list of Money records scoped by budg..."
-      operationId: "listMoneysByBudgetVarianceLineItemKey"
+      operationId: "listMoneysByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -185,13 +344,13 @@ paths:
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
       schema:
         type: "string"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/moneys/{moneyKey}:
+  /budget-variance-reports/{budgetVarianceReportKey}/moneys/{moneyKey}:
     get:
       tags:
       - "Money"
@@ -232,7 +391,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
@@ -245,12 +404,12 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/general-ledger-references:
+  /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references:
     get:
       tags:
       - "GeneralLedgerReference"
       summary: "Retrieve a list of GeneralLedgerReference recor..."
-      operationId: "listGeneralLedgerReferencesByBudgetVarianceLineItemKey"
+      operationId: "listGeneralLedgerReferencesByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -308,13 +467,13 @@ paths:
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
       schema:
         type: "string"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/general-ledger-references/{generalLedgerReferenceKey}:
+  /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references/{generalLedgerReferenceKey}:
     get:
       tags:
       - "GeneralLedgerReference"
@@ -391,7 +550,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
@@ -404,12 +563,12 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/identifiers:
+  /budget-variance-reports/{budgetVarianceReportKey}/identifiers:
     get:
       tags:
       - "Identifier"
       summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByBudgetVarianceLineItemKey"
+      operationId: "listIdentifiersByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -467,13 +626,13 @@ paths:
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
       schema:
         type: "string"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/identifiers/{identifierKey}:
+  /budget-variance-reports/{budgetVarianceReportKey}/identifiers/{identifierKey}:
     get:
       tags:
       - "Identifier"
@@ -550,7 +709,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
@@ -563,12 +722,171 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/control-account-references:
+  /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods:
+    get:
+      tags:
+      - "AccountingPeriod"
+      summary: "Retrieve a list of AccountingPeriod records sco..."
+      operationId: "listAccountingPeriodsByBudgetVarianceReportKey"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Maximum number of records to return."
+        schema:
+          maximum: 100
+          minimum: 1
+          type: "integer"
+          default: 50
+      - name: "cursor"
+        in: "query"
+        description: "starting point for next set of results"
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "A list of AccountingPeriod records."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/AccountingPeriod"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - "AccountingPeriod"
+      summary: "Create a new AccountingPeriod record."
+      operationId: "createAccountingPeriod"
+      requestBody:
+        description: "AccountingPeriod data to create the new resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountingPeriodCreate"
+        required: true
+      responses:
+        "201":
+          description: "AccountingPeriod created successfully."
+          headers:
+            Location:
+              description: "The URI of the newly created resource."
+              schema:
+                type: "string"
+                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountingPeriod"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+    parameters:
+    - name: "budgetVarianceReportKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+  /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods/{accountingPeriodKey}:
+    get:
+      tags:
+      - "AccountingPeriod"
+      summary: "Retrieve a specific AccountingPeriod record."
+      operationId: "getAccountingPeriodById"
+      responses:
+        "200":
+          description: "The requested AccountingPeriod record."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountingPeriod"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - "AccountingPeriod"
+      summary: "Replace a AccountingPeriod record."
+      operationId: "replaceAccountingPeriod"
+      requestBody:
+        description: "Full record data to replace the existing resource."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountingPeriod"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountingPeriod"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    delete:
+      tags:
+      - "AccountingPeriod"
+      summary: "Delete a AccountingPeriod Record"
+      description: "Marks the AccountingPeriod record as inactive o..."
+      operationId: "deleteAccountingPeriodRecord"
+      responses:
+        "204":
+          description: "Record successfully deleted (or deactivated)."
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    patch:
+      tags:
+      - "AccountingPeriod"
+      summary: "Partially update a AccountingPeriod record."
+      operationId: "updateAccountingPeriod"
+      requestBody:
+        description: "Included Fields to be updated will be modified."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountingPeriodUpdate"
+        required: true
+      responses:
+        "200":
+          description: "Record updated successfully. Returns the update..."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountingPeriod"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: "budgetVarianceReportKey"
+      in: "path"
+      description: "The unique identifier for the parent resource."
+      required: true
+      schema:
+        type: "string"
+    - name: "accountingPeriodKey"
+      in: "path"
+      description: "The unique identifier for the specific AccountingPeriod."
+      required: true
+      schema:
+        type: "string"
+        example: "PR-1234567"
+  /budget-variance-reports/{budgetVarianceReportKey}/control-account-references:
     get:
       tags:
       - "ControlAccountReference"
       summary: "Retrieve a list of ControlAccountReference reco..."
-      operationId: "listControlAccountReferencesByBudgetVarianceLineItemKey"
+      operationId: "listControlAccountReferencesByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -626,13 +944,13 @@ paths:
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
       schema:
         type: "string"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/control-account-references/{controlAccountReferenceKey}:
+  /budget-variance-reports/{budgetVarianceReportKey}/control-account-references/{controlAccountReferenceKey}:
     get:
       tags:
       - "ControlAccountReference"
@@ -709,7 +1027,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
@@ -722,12 +1040,12 @@ paths:
       schema:
         type: "string"
         example: "PR-1234567"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/variance-details:
+  /budget-variance-reports/{budgetVarianceReportKey}/variance-details:
     get:
       tags:
       - "VarianceDetails"
       summary: "Retrieve a list of VarianceDetails records scop..."
-      operationId: "listVarianceDetailssByBudgetVarianceLineItemKey"
+      operationId: "listVarianceDetailssByBudgetVarianceReportKey"
       parameters:
       - name: "limit"
         in: "query"
@@ -785,13 +1103,13 @@ paths:
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
       schema:
         type: "string"
-  /budget-variance-line-items/{budgetVarianceLineItemKey}/variance-details/{varianceDetailsKey}:
+  /budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailsKey}:
     get:
       tags:
       - "VarianceDetails"
@@ -868,7 +1186,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "budgetVarianceLineItemKey"
+    - name: "budgetVarianceReportKey"
       in: "path"
       description: "The unique identifier for the parent resource."
       required: true
@@ -883,6 +1201,88 @@ paths:
         example: "PR-1234567"
 components:
   schemas:
+    AccountingPeriod:
+      type: "object"
+      properties:
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        period_desc:
+          maxLength: 255
+          type: "string"
+          description: "Descriptive name for the accounting peri..."
+        accounting_period_id:
+          pattern: "^[0-9]{6}$"
+          type: "string"
+          description: "Business key for the accounting period (... Pat..."
+        accounting_period_key:
+          pattern: "^[0-9]{6}$"
+          type: "string"
+          description: "Business key for the accounting period (... Pat..."
+        period_name:
+          maxLength: 100
+          type: "string"
+          description: "Display name of the accounting period."
+        start_date:
+          type: "string"
+          description: "The beginning date of the accounting per..."
+          format: "date"
+        end_date:
+          type: "string"
+          description: "The ending date of the accounting period..."
+          format: "date"
+        accounting_period_status_type:
+          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
+        fiscal_year:
+          type: "integer"
+          description: "The fiscal year this period belongs to."
+          format: "int32"
+      description: "Defines a fiscal period, including its unique i..."
+    AccountingPeriodCreate:
+      required:
+      - "accounting_period_key"
+      type: "object"
+      description: "AccountingPeriod Create for Post"
+      allOf:
+      - $ref: "#/components/schemas/AccountingPeriod"
+    AccountingPeriodStatusTypes:
+      type: "string"
+      description: "types of accounting period status."
+      enum:
+      - "OPEN"
+      - "ADJUSTMENT"
+      - "CLOSED"
+      - "FUTURE"
+      - "PENDING_CLOSURE"
+      - "LOCKED"
+      - "OTHER"
+    AccountingPeriodUpdate:
+      type: "object"
+      properties:
+        end_date:
+          type: "string"
+          description: "The ending date of the accounting period..."
+          format: "date"
+        period_desc:
+          maxLength: 255
+          type: "string"
+          description: "Descriptive name for the accounting peri..."
+        fiscal_year:
+          type: "integer"
+          description: "The fiscal year this period belongs to."
+          format: "int32"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        accounting_period_status_type:
+          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
+        period_name:
+          maxLength: 100
+          type: "string"
+          description: "Display name of the accounting period."
+        start_date:
+          type: "string"
+          description: "The beginning date of the accounting per..."
+          format: "date"
+      description: "AccountingPeriod Update for Patch and Put"
     BudgetVarianceLineItem:
       type: "object"
       properties:
@@ -928,6 +1328,50 @@ components:
         financial_category_type:
           $ref: "#/components/schemas/FinancialCategoryTypes"
       description: "BudgetVarianceLineItem Update for Patch and Put"
+    BudgetVarianceReport:
+      type: "object"
+      properties:
+        report_id:
+          type: "string"
+          description: "The unique ID for the generated report."
+        report_date:
+          type: "string"
+          description: "The date and time the report was generat..."
+          format: "date"
+        accounting_period:
+          $ref: "#/components/schemas/AccountingPeriod"
+        line_items:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/BudgetVarianceLineItem"
+      description: "A financial report summarizing the differences ..."
+    BudgetVarianceReportCreate:
+      required:
+      - "budget_variance_report_key"
+      type: "object"
+      description: "BudgetVarianceReport Create for Post"
+      allOf:
+      - $ref: "#/components/schemas/BudgetVarianceReport"
+    BudgetVarianceReportUpdate:
+      type: "object"
+      properties:
+        line_items:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: "array"
+          items:
+            $ref: "#/components/schemas/BudgetVarianceLineItem"
+        accounting_period:
+          $ref: "#/components/schemas/AccountingPeriod"
+        report_date:
+          type: "string"
+          description: "The date and time the report was generat..."
+          format: "date"
+      description: "BudgetVarianceReport Update for Patch and Put"
     Codes:
       type: "array"
       items:
@@ -1150,6 +1594,10 @@ components:
           type: "string"
           description: "The monetary or hours-based value of the..."
       description: "Identifier Update for Patch and Put"
+    Identifiers:
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Identifier"
     Money:
       type: "object"
       properties:
