@@ -19,8 +19,8 @@ We have organized the information into four distinct areas to help you find what
 | :--- | :--- | :--- |
 | **[`/api`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/api)** | **The Data Definitions.** Contains the technical "blueprints" (schemas) for our service objects like Repair Orders, Labor Operations, and Vehicle Service History. | Developers looking for field names and data types. |
 | **[`/specs`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/specs)** | **The Business Rules (WORK IN PROGRESS)** Documentation explaining *how* the system behaves during specific events. | Product Managers and Business Analysts. |
-| **[`/examples`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/examples)** | **Sample Data (WORK IN PROGRESS** JSON or YAML files showing real-world examples of what the data looks like. | Testers and Developers needing mock data. |
-| **[`/model_diagrams (WORK IN PROGRESS)`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/model_diagrams)** | **Visual Maps.** Images and UML charts showing how these Service pieces fit together. | Everyone needing a "Big Picture" view. |
+| **[`/examples`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/examples)** | **Sample Data (WORK IN PROGRESS)** JSON or YAML files showing real-world examples of what the data looks like. | Testers and Developers needing mock data. |
+| **[`/model_diagrams`](https://github.com/starstandard/automotive/tree/main/legacy/domain/service/model_diagrams)** | **Visual Maps (WORK IN PROGRESS)** Images and UML charts showing how these Service pieces fit together. | Everyone needing a "Big Picture" view. |
 
 -----
 
