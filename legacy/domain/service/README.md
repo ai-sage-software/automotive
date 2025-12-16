@@ -4,11 +4,11 @@
 
 Welcome to the **Service** domain.
 
-If you are new here, think of this directory as the "Central Bank" of our automotive service system. Every time a car is serviced, the data eventually flows here to be recorded, tracked, and audited.
+If you are new here, think of this directory as the "Central Bank" of our automotive Service system. Every time a car is serviced, the data eventually can be maanaged using the APIs contained here to be recorded, tracked, and audited.
 
 This document will guide you through the structure of this service repository and explain the core concepts we model.
 
-The Service Domain, originally developed in the STAR5 XML Schema Repository, has been migrated into these OpenAPI specifications. This domain is currently undergoing harmonization with the new STAR Domain Model architecture. As you explore the Service Domain, we eagerly anticipate your feedback on how this domain can be further enhanced. 
+**The Service Domain, originally developed in the STAR5 XML Schema Repository, has been migrated into these OpenAPI specifications. This domain is currently undergoing harmonization with the new STAR Domain Model architecture. As you explore the Service Domain, we eagerly anticipate your feedback on how this domain can be further enhanced. **
 -----
 
 ## 📂 How to Navigate This Directory
