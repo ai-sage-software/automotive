@@ -1,6 +1,6 @@
 -----
 
-Welcome to the **STAR Legacy Domains Repostory**.
+Welcome to the **STAR Legacy Domain Repostory**.
 
 This repository contains Domain models that were developed prior to the NEW STAR Domain Model.
 The new STAR Domail Model is begin developed using the Domain Driven Design development approach.
