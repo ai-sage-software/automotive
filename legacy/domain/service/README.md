@@ -4,7 +4,7 @@
 
 Welcome to the **Service** domain.
 
-If you are new here, think of this directory as the "Central Bank" of our automotive Service system. Every time a car is serviced, the data eventually can be maanaged using the APIs contained here to be recorded, tracked, and audited.
+If you are new here, think of this directory as the "Central Bank" of our automotive Service system. Every time a car is serviced, the data eventually can be managed using the APIs contained here to be recorded, tracked, and audited.
 
 This document will guide you through the structure of this service repository and explain the core concepts we model.
 
