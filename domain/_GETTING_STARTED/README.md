@@ -2,7 +2,6 @@
 
 ![STAR](https://img.shields.io/badge/STAR-standards-blue) ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-success) ![Markdown](https://img.shields.io/badge/Markdown-GitHub%20Flavored%20Markdown-informational)
 
-This package contains a **GitHub-ready** Markdown conversion of the STAR REST Standards v2, including **inline images** (rendered from the PDF) and a **split-docs** layout for maintainability.
 
 ## Quick Links (Split Docs)
 
