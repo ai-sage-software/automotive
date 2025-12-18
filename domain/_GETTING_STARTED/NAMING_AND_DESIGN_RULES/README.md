@@ -17,6 +17,3 @@
 - [Date, Time, and Timezones](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/10_datetime.md)
 - [Versioning (Semantic Versioning + Internal Build)](domain/_GETTING_STARTED/docs/starstandards/11_versioning.md)
 
-## Inline Version
-
-See: [STAR_REST_Standards_v2_INLINE.md](STAR_REST_Standards_v2_INLINE.md)
