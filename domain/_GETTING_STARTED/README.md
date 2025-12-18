@@ -6,7 +6,7 @@ This package contains a **GitHub-ready** Markdown conversion of the STAR REST St
 
 ## Quick Links (Split Docs)
 
-- [Naming Conventions](docs/standards/01_naming.md)
+- [Naming Conventions](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/01_naming.md)
 - [Schemas and Reuse](docs/standards/02_schema_reuse.md)
 - [Properties, Required Fields, and Validation](docs/standards/03_properties_validation.md)
 - [Enumerations (Enums)](docs/standards/04_enums.md)
