@@ -1,4 +1,4 @@
-# STAR REST API Standards – Version 2
+# STAR REST API Naming and Design Rules
 
 ![STAR](https://img.shields.io/badge/STAR-standards-blue) ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-success) ![Markdown](https://img.shields.io/badge/Markdown-GitHub%20Flavored%20Markdown-informational)
 
