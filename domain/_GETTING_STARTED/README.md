@@ -7,7 +7,7 @@
 
 - [Naming Conventions](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/01_naming.md)
 - [Schemas and Reuse](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/02_schema_reuse.md)
-- [Properties, Required Fields, and Validation](docs/standards/03_properties_validation.md)
+- [Properties, Required Fields, and Validation](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/03_properties_validation.md)
 - [Enumerations (Enums)](docs/standards/04_enums.md)
 - [Boolean Best Practices](docs/standards/05_booleans.md)
 - [String Best Practices](docs/standards/06_strings.md)
