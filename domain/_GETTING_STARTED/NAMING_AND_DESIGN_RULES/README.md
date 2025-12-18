@@ -5,7 +5,7 @@
 
 
 - [Naming Conventions](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/01_naming.md)
-- [Schemas and Reuse](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/02_schema_reuse.md)
+- [Schemas and Reuse](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/02_schema_reuse.md)
 - [Properties, Required Fields, and Validation](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/03_properties_validation.md)
 - [Enumerations (Enums)](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/04_enums.md)
 - [Boolean Best Practices](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/05_booleans.md)
@@ -14,5 +14,5 @@
 - [Array Best Practices](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/08_arrays.md)
 - [Nulls, Additional Properties, and Common Types](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/09_null_additionalprops_common_types.md)
 - [Date, Time, and Timezones](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/10_datetime.md)
-- [Versioning (Semantic Versioning + Internal Build)](domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/11_versioning.md)
+- [Versioning (Semantic Versioning + Internal Build)](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/docs/starstandards/11_versioning.md)
 
