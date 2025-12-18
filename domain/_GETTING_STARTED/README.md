@@ -8,14 +8,14 @@
 - [Naming Conventions](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/01_naming.md)
 - [Schemas and Reuse](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/02_schema_reuse.md)
 - [Properties, Required Fields, and Validation](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/03_properties_validation.md)
-- [Enumerations (Enums)](docs/standards/04_enums.md)
-- [Boolean Best Practices](docs/standards/05_booleans.md)
-- [String Best Practices](docs/standards/06_strings.md)
-- [Numbers and Integers](docs/standards/07_numbers.md)
-- [Array Best Practices](docs/standards/08_arrays.md)
-- [Nulls, Additional Properties, and Common Types](docs/standards/09_null_additionalprops_common_types.md)
-- [Date, Time, and Timezones](docs/standards/10_datetime.md)
-- [Versioning (Semantic Versioning + Internal Build)](docs/standards/11_versioning.md)
+- [Enumerations (Enums)](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/04_enums.md)
+- [Boolean Best Practices](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/05_booleans.md)
+- [String Best Practices](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/06_strings.md)
+- [Numbers and Integers](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/07_numbers.md)
+- [Array Best Practices](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/08_arrays.md)
+- [Nulls, Additional Properties, and Common Types](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/09_null_additionalprops_common_types.md)
+- [Date, Time, and Timezones](https://github.com/starstandard/automotive/blob/main/domain/_GETTING_STARTED/docs/starstandards/10_datetime.md)
+- [Versioning (Semantic Versioning + Internal Build)](domain/_GETTING_STARTED/docs/starstandards/11_versioning.md)
 
 ## Inline Version
 
