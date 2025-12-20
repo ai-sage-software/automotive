@@ -34,21 +34,37 @@ rules:
     description: "MUST: components.securitySchemes must exist."
     message: "components.securitySchemes is missing."
     severity: error
-    given: "$.components"
-    then:
-      field: securitySchemes
-
-  patch-must-use-merge-patch:
-    description: "MUST: PATCH should use application/merge-patch+json (or explicitly justified)."
-    message: "PATCH requestBody should include 'application/merge-patch+json'."
-    severity: error
-    given: "$.paths[*][patch].requestBody.content"
+    given: "$"
     then:
       function: schema
       functionOptions:
         schema:
           type: object
-          required: ["application/merge-patch+json"]
+          required: [components]
+          properties:
+            components:
+              type: object
+              required: [securitySchemes]
+
+  patch-must-use-merge-patch:
+    description: "MUST: PATCH should use application/merge-patch+json (or explicitly justified)."
+    message: "PATCH requestBody must include 'application/merge-patch+json'."
+    severity: error
+    given: "$.paths[*][patch]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: [requestBody]
+          properties:
+            requestBody:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: object
+                  required: ["application/merge-patch+json"]
 
   # ----------------------------
   # SHOULD (warnings)
@@ -99,4 +115,3 @@ rules:
     given: "$.info.version"
     then:
       function: truthy
-
