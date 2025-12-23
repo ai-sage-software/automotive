@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **GeographicBoundary**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **GeographicBoundary**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -177,7 +184,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries</span> <br/>
-        <span class="api-summary">Retrieve a list of all GeographicBoundary records. getGeographicBoundarys</span>
+        <span class="api-summary">Retrieve a list of GeographicBoundary entities. getGeographicBoundary</span>
     </span>
 </div>
 
@@ -185,7 +192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries</span> <br/>
-        <span class="api-summary">Create a new GeographicBoundary record. createGeographicBoundary</span>
+        <span class="api-summary">Create a new GeographicBoundary entity. createGeographicBoundary</span>
     </span>
 </div>
 
@@ -194,7 +201,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific GeographicBoundary record. geteographicBoundaryById</span>
+        <span class="api-summary">Retrieve a specific GeographicBoundary entity. geteographicBoundaryById</span>
     </span>
 </div>
 
@@ -202,7 +209,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Replace a GeographicBoundary record. replaceGeographicBoundary</span>
+        <span class="api-summary">Replace a GeographicBoundary entity. replaceGeographicBoundary</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Partially update a GeographicBoundary record. updateGeographicBoundary</span>
+        <span class="api-summary">Partially update a GeographicBoundary entity. updateGeographicBoundary</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Delete a GeographicBoundary Record deleteGeographicBoundaryRecord</span>
+        <span class="api-summary">Delete a GeographicBoundary entity deleteGeographicBoundaryEntity</span>
     </span>
 </div>
 
@@ -228,7 +235,7 @@ The following resources follow a consistent pattern under GeographicBoundaryroot
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **geographic-boundarie** | /geographic-boundaries | listGeographicBoundarys | createGeographicBoundary | getGeographicBoundarys | updateGeographicBoundarys | deleteGeographicBoundarys |
+    | **geographic-boundarie** | /geographic-boundaries | listGeographicBoundary | createGeographicBoundary | getGeographicBoundary | updateGeographicBoundary | deleteGeographicBoundary |
 
 ***Note on List Operations:***
 

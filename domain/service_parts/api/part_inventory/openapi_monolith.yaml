@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /part-inventories:
     get:
       tags:
-      - "PartInventory"
-      summary: "Retrieve a list of all PartInventory records."
-      operationId: "listPartInventorys"
+      - PartInventory
+      summary: Retrieve a list of PartInventory entities.
+      operationId: listPartInventory
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartInventory records."
+          description: A list of PartInventory entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartInventory"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartInventory"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartInventory"
-      summary: "Create a new PartInventory record."
-      operationId: "createPartInventory"
+      - PartInventory
+      summary: Create a new PartInventory entity.
+      operationId: createPartInventory
       requestBody:
-        description: "PartInventory data to create the new resource."
+        description: PartInventory data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartInventory created successfully."
+          description: PartInventory created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-inventories/PR-1234567"
+                type: string
+                example: /part-inventories/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventory"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /part-inventories/{partInventoryKey}:
     get:
       tags:
-      - "PartInventory"
-      summary: "Retrieve a specific PartInventory record."
-      operationId: "getPartInventoryById"
+      - PartInventory
+      summary: Retrieve a specific PartInventory entity.
+      operationId: getPartInventoryById
       responses:
         "200":
-          description: "The requested PartInventory record."
+          description: The requested PartInventory entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartInventory"
-      summary: "Replace a PartInventory record."
-      operationId: "replacePartInventory"
+      - PartInventory
+      summary: Replace a PartInventory entity.
+      operationId: replacePartInventory
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +128,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventory"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartInventory"
-      summary: "Delete a PartInventory Record"
-      description: "Marks the PartInventory record as inactive or r..."
-      operationId: "deletePartInventoryRecord"
+      - PartInventory
+      summary: Delete a PartInventory entity
+      description: Marks the PartInventory entity as inactive or r...
+      operationId: deletePartInventoryEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartInventory"
-      summary: "Partially update a PartInventory record."
-      operationId: "updatePartInventory"
+      - PartInventory
+      summary: Partially update a PartInventory entity.
+      operationId: updatePartInventory
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartInventoryUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartInventory"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the specific PartInventory."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the specific PartInventory.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByPartInventoryKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped b...
+      operationId: listIdentifierByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +249,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -239,11 +292,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +304,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or remo..."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or remo...
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/part-inventory-events:
     get:
       tags:
-      - "PartInventoryEvent"
-      summary: "Retrieve a list of PartInventoryEvent records s..."
-      operationId: "listPartInventoryEventsByPartInventoryKey"
+      - PartInventoryEvent
+      summary: Retrieve a list of PartInventoryEvent entities ...
+      operationId: listPartInventoryEventByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartInventoryEvent records."
+          description: A list of PartInventoryEvent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartInventoryEvent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartInventoryEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartInventoryEvent"
-      summary: "Create a new PartInventoryEvent record."
-      operationId: "createPartInventoryEvent"
+      - PartInventoryEvent
+      summary: Create a new PartInventoryEvent entity.
+      operationId: createPartInventoryEvent
       requestBody:
-        description: "PartInventoryEvent data to create the new resou..."
+        description: PartInventoryEvent data to create the new resou...
         content:
           application/json:
             schema:
@@ -357,37 +431,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartInventoryEvent created successfully."
+          description: PartInventoryEvent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventoryEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/part-inventory-events/{partInventoryEventKey}:
     get:
       tags:
-      - "PartInventoryEvent"
-      summary: "Retrieve a specific PartInventoryEvent record."
-      operationId: "getPartInventoryEventById"
+      - PartInventoryEvent
+      summary: Retrieve a specific PartInventoryEvent entity.
+      operationId: getPartInventoryEventById
       responses:
         "200":
-          description: "The requested PartInventoryEvent record."
+          description: The requested PartInventoryEvent entity.
           content:
             application/json:
               schema:
@@ -398,11 +474,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartInventoryEvent"
-      summary: "Replace a PartInventoryEvent record."
-      operationId: "replacePartInventoryEvent"
+      - PartInventoryEvent
+      summary: Replace a PartInventoryEvent entity.
+      operationId: replacePartInventoryEvent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +486,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventoryEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartInventoryEvent"
-      summary: "Delete a PartInventoryEvent Record"
-      description: "Marks the PartInventoryEvent record as inactive..."
-      operationId: "deletePartInventoryEventRecord"
+      - PartInventoryEvent
+      summary: Delete a PartInventoryEvent entity
+      description: Marks the PartInventoryEvent entity as inactive...
+      operationId: deletePartInventoryEventEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartInventoryEvent"
-      summary: "Partially update a PartInventoryEvent record."
-      operationId: "updatePartInventoryEvent"
+      - PartInventoryEvent
+      summary: Partially update a PartInventoryEvent entity.
+      operationId: updatePartInventoryEvent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartInventoryEventUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartInventoryEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partInventoryEventKey"
-      in: "path"
-      description: "The unique identifier for the specific PartInventoryEvent."
+        type: string
+    - name: partInventoryEventKey
+      in: path
+      description: The unique identifier for the specific PartInventoryEvent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/part-references:
     get:
       tags:
-      - "PartReference"
-      summary: "Retrieve a list of PartReference records scoped..."
-      operationId: "listPartReferencesByPartInventoryKey"
+      - PartReference
+      summary: Retrieve a list of PartReference entities scope...
+      operationId: listPartReferenceByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartReference records."
+          description: A list of PartReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartReference"
-      summary: "Create a new PartReference record."
-      operationId: "createPartReference"
+      - PartReference
+      summary: Create a new PartReference entity.
+      operationId: createPartReference
       requestBody:
-        description: "PartReference data to create the new resource."
+        description: PartReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +613,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartReference created successfully."
+          description: PartReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/part-references/{partReferenceKey}:
     get:
       tags:
-      - "PartReference"
-      summary: "Retrieve a specific PartReference record."
-      operationId: "getPartReferenceById"
+      - PartReference
+      summary: Retrieve a specific PartReference entity.
+      operationId: getPartReferenceById
       responses:
         "200":
-          description: "The requested PartReference record."
+          description: The requested PartReference entity.
           content:
             application/json:
               schema:
@@ -557,11 +656,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartReference"
-      summary: "Replace a PartReference record."
-      operationId: "replacePartReference"
+      - PartReference
+      summary: Replace a PartReference entity.
+      operationId: replacePartReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +668,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartReference"
-      summary: "Delete a PartReference Record"
-      description: "Marks the PartReference record as inactive or r..."
-      operationId: "deletePartReferenceRecord"
+      - PartReference
+      summary: Delete a PartReference entity
+      description: Marks the PartReference entity as inactive or r...
+      operationId: deletePartReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartReference"
-      summary: "Partially update a PartReference record."
-      operationId: "updatePartReference"
+      - PartReference
+      summary: Partially update a PartReference entity.
+      operationId: updatePartReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific PartReference."
+        type: string
+    - name: partReferenceKey
+      in: path
+      description: The unique identifier for the specific PartReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/prices:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a list of Price records scoped by part..."
-      operationId: "listPricesByPartInventoryKey"
+      - Price
+      summary: Retrieve a list of Price entities scoped by par...
+      operationId: listPriceByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Price records."
+          description: A list of Price entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Price"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Price"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Price"
-      summary: "Create a new Price record."
-      operationId: "createPrice"
+      - Price
+      summary: Create a new Price entity.
+      operationId: createPrice
       requestBody:
-        description: "Price data to create the new resource."
+        description: Price data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +795,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Price created successfully."
+          description: Price created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/prices/{priceKey}:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a specific Price record."
-      operationId: "getPriceById"
+      - Price
+      summary: Retrieve a specific Price entity.
+      operationId: getPriceById
       responses:
         "200":
-          description: "The requested Price record."
+          description: The requested Price entity.
           content:
             application/json:
               schema:
@@ -716,11 +838,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Price"
-      summary: "Replace a Price record."
-      operationId: "replacePrice"
+      - Price
+      summary: Replace a Price entity.
+      operationId: replacePrice
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,114 +850,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Price"
-      summary: "Delete a Price Record"
-      description: "Marks the Price record as inactive or removes i..."
-      operationId: "deletePriceRecord"
+      - Price
+      summary: Delete a Price entity
+      description: Marks the Price entity as inactive or removes i...
+      operationId: deletePriceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Price"
-      summary: "Partially update a Price record."
-      operationId: "updatePrice"
+      - Price
+      summary: Partially update a Price entity.
+      operationId: updatePrice
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PriceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "priceKey"
-      in: "path"
-      description: "The unique identifier for the specific Price."
+        type: string
+    - name: priceKey
+      in: path
+      description: The unique identifier for the specific Price.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scop..."
-      operationId: "listEffectivePeriodsByPartInventoryKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities sco...
+      operationId: listEffectivePeriodByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -846,11 +989,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -858,69 +1001,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/control-account-references:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a list of ControlAccountReference reco..."
-      operationId: "listControlAccountReferencesByPartInventoryKey"
+      - ControlAccountReference
+      summary: Retrieve a list of ControlAccountReference enti...
+      operationId: listControlAccountReferenceByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ControlAccountReference records."
+          description: A list of ControlAccountReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ControlAccountReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ControlAccountReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ControlAccountReference"
-      summary: "Create a new ControlAccountReference record."
-      operationId: "createControlAccountReference"
+      - ControlAccountReference
+      summary: Create a new ControlAccountReference entity.
+      operationId: createControlAccountReference
       requestBody:
-        description: "ControlAccountReference data to create the new ..."
+        description: ControlAccountReference data to create the new ...
         content:
           application/json:
             schema:
@@ -928,37 +1090,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ControlAccountReference created successfully."
+          description: ControlAccountReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/control-account-references/{controlAccountReferenceKey}:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a specific ControlAccountReference rec..."
-      operationId: "getControlAccountReferenceById"
+      - ControlAccountReference
+      summary: Retrieve a specific ControlAccountReference ent...
+      operationId: getControlAccountReferenceById
       responses:
         "200":
-          description: "The requested ControlAccountReference record."
+          description: The requested ControlAccountReference entity.
           content:
             application/json:
               schema:
@@ -969,11 +1133,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ControlAccountReference"
-      summary: "Replace a ControlAccountReference record."
-      operationId: "replaceControlAccountReference"
+      - ControlAccountReference
+      summary: Replace a ControlAccountReference entity.
+      operationId: replaceControlAccountReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -981,114 +1145,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ControlAccountReference"
-      summary: "Delete a ControlAccountReference Record"
-      description: "Marks the ControlAccountReference record as ina..."
-      operationId: "deleteControlAccountReferenceRecord"
+      - ControlAccountReference
+      summary: Delete a ControlAccountReference entity
+      description: Marks the ControlAccountReference entity as ina...
+      operationId: deleteControlAccountReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ControlAccountReference"
-      summary: "Partially update a ControlAccountReference record."
-      operationId: "updateControlAccountReference"
+      - ControlAccountReference
+      summary: Partially update a ControlAccountReference entity.
+      operationId: updateControlAccountReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ControlAccountReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "controlAccountReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific ControlAccountReference."
+        type: string
+    - name: controlAccountReferenceKey
+      in: path
+      description: The unique identifier for the specific ControlAccountReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by p..."
-      operationId: "listTimeSlotsByPartInventoryKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by ...
+      operationId: listTimeSlotByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -1099,11 +1284,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1111,69 +1296,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /part-inventories/{partInventoryKey}/part-inventory-metrics:
     get:
       tags:
-      - "PartInventoryMetric"
-      summary: "Retrieve a list of PartInventoryMetric records ..."
-      operationId: "listPartInventoryMetricsByPartInventoryKey"
+      - PartInventoryMetric
+      summary: Retrieve a list of PartInventoryMetric entities...
+      operationId: listPartInventoryMetricByPartInventoryKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartInventoryMetric records."
+          description: A list of PartInventoryMetric entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartInventoryMetric"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartInventoryMetric"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartInventoryMetric"
-      summary: "Create a new PartInventoryMetric record."
-      operationId: "createPartInventoryMetric"
+      - PartInventoryMetric
+      summary: Create a new PartInventoryMetric entity.
+      operationId: createPartInventoryMetric
       requestBody:
-        description: "PartInventoryMetric data to create the new reso..."
+        description: PartInventoryMetric data to create the new reso...
         content:
           application/json:
             schema:
@@ -1181,37 +1385,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartInventoryMetric created successfully."
+          description: PartInventoryMetric created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventoryMetric"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /part-inventories/{partInventoryKey}/part-inventory-metrics/{partInventoryMetricKey}:
     get:
       tags:
-      - "PartInventoryMetric"
-      summary: "Retrieve a specific PartInventoryMetric record."
-      operationId: "getPartInventoryMetricById"
+      - PartInventoryMetric
+      summary: Retrieve a specific PartInventoryMetric entity.
+      operationId: getPartInventoryMetricById
       responses:
         "200":
-          description: "The requested PartInventoryMetric record."
+          description: The requested PartInventoryMetric entity.
           content:
             application/json:
               schema:
@@ -1222,11 +1428,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartInventoryMetric"
-      summary: "Replace a PartInventoryMetric record."
-      operationId: "replacePartInventoryMetric"
+      - PartInventoryMetric
+      summary: Replace a PartInventoryMetric entity.
+      operationId: replacePartInventoryMetric
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1234,342 +1440,416 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartInventoryMetric"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartInventoryMetric"
-      summary: "Delete a PartInventoryMetric Record"
-      description: "Marks the PartInventoryMetric record as inactiv..."
-      operationId: "deletePartInventoryMetricRecord"
+      - PartInventoryMetric
+      summary: Delete a PartInventoryMetric entity
+      description: Marks the PartInventoryMetric entity as inactiv...
+      operationId: deletePartInventoryMetricEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartInventoryMetric"
-      summary: "Partially update a PartInventoryMetric record."
-      operationId: "updatePartInventoryMetric"
+      - PartInventoryMetric
+      summary: Partially update a PartInventoryMetric entity.
+      operationId: updatePartInventoryMetric
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartInventoryMetricUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartInventoryMetric"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partInventoryKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partInventoryKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partInventoryMetricKey"
-      in: "path"
-      description: "The unique identifier for the specific PartInventoryMetric."
+        type: string
+    - name: partInventoryMetricKey
+      in: path
+      description: The unique identifier for the specific PartInventoryMetric.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /part-inventories/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /part-inventories/batch:
+    post:
+      summary: Bulk create part-inventories
+      operationId: createPartInventoryBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PartInventoryCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartInventory"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     Codes:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     ControlAccountReference:
-      type: "object"
+      type: object
       properties:
         control_account_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         control_account_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         control_account_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         system_codes:
           $ref: "#/components/schemas/Codes"
         control_account:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
-      description: "External system identifier"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+      description: External system identifier
     ControlAccountReferenceCreate:
       required:
-      - "control_account_reference_key"
-      type: "object"
-      description: "ControlAccountReference Create for Post"
+      - control_account_reference_key
+      type: object
+      description: ControlAccountReference Create for Post
       allOf:
       - $ref: "#/components/schemas/ControlAccountReference"
     ControlAccountReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         control_account:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
-      description: "ControlAccountReference Update for Patch and Put"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+      description: ControlAccountReference Update for Patch and Put
     ControlAccountReferences:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/ControlAccountReference"
     DaysOfWeekTypes:
-      type: "string"
-      description: "types of days of weeks."
+      type: string
+      description: types of days of weeks.
       enum:
-      - "SUN"
-      - "MON"
-      - "TUES"
-      - "WED"
-      - "THURS"
-      - "FRI"
-      - "SAT"
+      - SUN
+      - MON
+      - TUES
+      - WED
+      - THURS
+      - FRI
+      - SAT
     DurationUOMTypes:
-      type: "string"
-      description: "types of duration u o ms."
+      type: string
+      description: types of duration u o ms.
       enum:
-      - "MINUTES"
-      - "HOURS"
-      - "DAYS"
-      - "DAY_OF_MONTH"
-      - "WEEKS"
-      - "BI_WEEKS"
-      - "SEMI_MONTHS"
-      - "MONTHS"
-      - "QUARTERS"
-      - "SEMI_YEARS"
-      - "YEARS"
-      - "MULTI_YEARS"
-      - "CUSTOM"
-      - "OCCURRENCE"
-      - "UNLIMITED"
-      - "NONE"
-      - "OTHER"
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
     EffectivePeriod:
-      type: "object"
+      type: object
       properties:
         effective_period_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key identifying the effective per... Pat..."
+          type: string
+          description: Unique key identifying the effective per... Pat...
         active_indicator:
-          type: "boolean"
-          description: "Indicator if the period is currently act..."
+          type: boolean
+          description: Indicator if the period is currently act...
         exclusive_indicator:
-          type: "boolean"
-          description: "Indicator if the period is exclusive"
+          type: boolean
+          description: Indicator if the period is exclusive
         start_date_time:
-          type: "string"
-          description: "Start date and time of the effective per..."
-          format: "date-time"
+          type: string
+          description: Start date and time of the effective per...
+          format: date-time
         complete_date_time:
-          type: "string"
-          description: "Completion date and time of the effectiv..."
-          format: "date-time"
+          type: string
+          description: Completion date and time of the effectiv...
+          format: date-time
         duration_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         duration_value:
-          type: "string"
-          description: "Value of the duration"
+          type: string
+          description: Value of the duration
         recur_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         recur_count:
-          type: "string"
-          description: "Count of recurrence"
+          type: string
+          description: Count of recurrence
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
-          type: "string"
-          description: "Criteria defining recurrence"
+          type: string
+          description: Criteria defining recurrence
         recur_indicator:
-          type: "boolean"
-          description: "Indicator if recurrence is enabled"
+          type: boolean
+          description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: "Effective Period"
+      description: Effective Period
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     Identifier:
-      type: "object"
+      type: object
       properties:
         identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: "External system identifier"
+      description: External system identifier
     IdentifierCreate:
       required:
-      - "identifier_key"
-      type: "object"
-      description: "Identifier Create for Post"
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
-      description: "Identifier Update for Patch and Put"
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
     Identifiers:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/Identifier"
     InventoryStatusTypes:
-      type: "string"
-      description: "types of inventory status."
+      type: string
+      description: types of inventory status.
       enum:
-      - "AVAILABLE"
-      - "RESERVED"
-      - "ON_HOLD"
-      - "SALES_HOLD"
-      - "SERVICE_HOLD"
-      - "RECALL_HOLD"
-      - "IN_TRANSIT"
-      - "RECEIVED"
-      - "STOCKED_IN"
-      - "ON_ORDER"
-      - "PREPARATION"
-      - "SOLD"
-      - "WHOLESALE"
-      - "ON_DEALER_LOT"
-      - "ON_CENTRAL_LOT"
-      - "ASSIGNED_BY_MANUFACTURER"
-      - "DAMAGED"
-      - "UNAVAILABLE"
-      - "RETURNED"
-      - "DISPOSAL"
-      - "UNKNOWN"
+      - AVAILABLE
+      - RESERVED
+      - ON_HOLD
+      - SALES_HOLD
+      - SERVICE_HOLD
+      - RECALL_HOLD
+      - IN_TRANSIT
+      - RECEIVED
+      - STOCKED_IN
+      - ON_ORDER
+      - PREPARATION
+      - SOLD
+      - WHOLESALE
+      - ON_DEALER_LOT
+      - ON_CENTRAL_LOT
+      - ASSIGNED_BY_MANUFACTURER
+      - DAMAGED
+      - UNAVAILABLE
+      - RETURNED
+      - DISPOSAL
+      - UNKNOWN
     PartInventory:
-      type: "object"
+      type: object
       properties:
         part_master_id:
-          type: "string"
-          description: "Unique identifier for the Part Master re..."
+          type: string
+          description: Unique identifier for the Part Master re...
         part_inventory_id:
-          type: "string"
-          description: "Unique identifier for the PartInventory ..."
+          type: string
+          description: Unique identifier for the PartInventory ...
         part_inventory_key:
-          type: "string"
-          description: "Natural key or business-friendly key for..."
+          type: string
+          description: Natural key or business-friendly key for...
         last_inventory_date:
-          type: "string"
-          description: "The date of the most recent physical inv..."
-          format: "date"
+          type: string
+          description: The date of the most recent physical inv...
+          format: date
         inventory_status_type:
           $ref: "#/components/schemas/InventoryStatusTypes"
         prices:
@@ -1586,219 +1866,230 @@ components:
           $ref: "#/components/schemas/ControlAccountReferences"
         warehouse_identifier:
           $ref: "#/components/schemas/Identifier"
-      description: "The aggregated quantity of a specific Part Mast..."
+      description: The aggregated quantity of a specific Part Mast...
     PartInventoryCreate:
       required:
-      - "part_inventory_key"
-      type: "object"
-      description: "PartInventory Create for Post"
+      - part_inventory_key
+      type: object
+      description: PartInventory Create for Post
       allOf:
       - $ref: "#/components/schemas/PartInventory"
     PartInventoryEvent:
-      type: "object"
+      type: object
       properties:
-        warehouse_event_key:
-          type: "string"
-          description: "The unique key for the part inventory ev..."
+        part_inventory_event_id:
+          type: string
+          description: The unique id for the part inventory eve...
+        part_inventory_event_key:
+          type: string
+          description: The unique key for the part inventory ev...
         occurrence_date_time:
-          type: "string"
-          description: "The date and time of the event's occurre..."
-          format: "date-time"
+          type: string
+          description: The date and time of the event's occurre...
+          format: date-time
         actor_id:
-          type: "string"
-          description: "The unique ID of the actor involved in t..."
+          type: string
+          description: The unique ID of the actor involved in t...
         actor_name:
-          type: "string"
-          description: "The name of the actor involved in the ev..."
+          type: string
+          description: The name of the actor involved in the ev...
         actor_href:
-          type: "string"
-          description: "The URI to the actor resource."
-          format: "href"
+          type: string
+          description: The URI to the actor resource.
+          format: href
         event_category:
-          type: "string"
-          description: "The category of the event."
+          type: string
+          description: The category of the event.
         event_action:
-          type: "string"
-          description: "The action performed in the event."
+          type: string
+          description: The action performed in the event.
         event_label:
-          type: "string"
-          description: "A label for the event."
+          type: string
+          description: A label for the event.
         event_values:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
-            type: "string"
+            type: string
         part_inventory_action_type:
           $ref: "#/components/schemas/PartInventoryOrderTypes"
         warehouse_keys:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
-            type: "string"
+            type: string
       description: "Represents a part event, typically related to i..."
     PartInventoryEventCreate:
       required:
-      - "part_inventory_event_key"
-      type: "object"
-      description: "PartInventoryEvent Create for Post"
+      - part_inventory_event_key
+      type: object
+      description: PartInventoryEvent Create for Post
       allOf:
       - $ref: "#/components/schemas/PartInventoryEvent"
     PartInventoryEventUpdate:
-      type: "object"
+      type: object
       properties:
         event_action:
-          type: "string"
-          description: "The action performed in the event."
+          type: string
+          description: The action performed in the event.
         warehouse_keys:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
-            type: "string"
+            type: string
         actor_name:
-          type: "string"
-          description: "The name of the actor involved in the ev..."
+          type: string
+          description: The name of the actor involved in the ev...
         event_values:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
-            type: "string"
+            type: string
         event_label:
-          type: "string"
-          description: "A label for the event."
+          type: string
+          description: A label for the event.
         event_category:
-          type: "string"
-          description: "The category of the event."
+          type: string
+          description: The category of the event.
         part_inventory_action_type:
           $ref: "#/components/schemas/PartInventoryOrderTypes"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time of the event's occurre..."
-          format: "date-time"
+          type: string
+          description: The date and time of the event's occurre...
+          format: date-time
         actor_href:
-          type: "string"
-          description: "The URI to the actor resource."
-          format: "href"
-      description: "PartInventoryEvent Update for Patch and Put"
+          type: string
+          description: The URI to the actor resource.
+          format: href
+      description: PartInventoryEvent Update for Patch and Put
     PartInventoryEvents:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PartInventoryEvent"
     PartInventoryMetric:
-      type: "object"
+      type: object
       properties:
+        part_inventory_metric_key:
+          maxLength: 20
+          type: string
+          description: Part Inventory Metric Key
+        part_inventory_metric_id:
+          maxLength: 20
+          type: string
+          description: Part Inventory Metric Id
         uom_value:
           maxLength: 20
-          type: "string"
-          description: "Unit of Measure (UOM) code representing ..."
+          type: string
+          description: Unit of Measure (UOM) code representing ...
         part_inventory_metric_type:
           $ref: "#/components/schemas/PartInventoryMetricTypes"
         metric_value:
           maxLength: 50
           pattern: "^[0-9]+(\\.[0-9]{1,3})?$"
-          type: "string"
-          description: "The numerical value for the specified in... Pat..."
-      description: "Value price with unit of measure for inventory ..."
+          type: string
+          description: The numerical value for the specified in... Pat...
+      description: Value price with unit of measure for inventory ...
     PartInventoryMetricCreate:
       required:
-      - "part_inventory_metric_key"
-      type: "object"
-      description: "PartInventoryMetric Create for Post"
+      - part_inventory_metric_key
+      type: object
+      description: PartInventoryMetric Create for Post
       allOf:
       - $ref: "#/components/schemas/PartInventoryMetric"
     PartInventoryMetricTypes:
-      type: "string"
-      description: "types of part inventory metrics."
+      type: string
+      description: types of part inventory metrics.
       enum:
-      - "QUANTITY_ON_HAND"
-      - "QUANTITY_ON_ORDER"
-      - "QUANTITY_REORDER_POINT"
-      - "QUANTITY_DEALER_PART_STOCKING"
-      - "QUANTITY_USER_MIN"
-      - "QUANTITY_USER_MAX"
-      - "QUANTITY_BEST_STOCKING_LEVEL"
-      - "AVERAGE_WEEKLY_USAGE_QUANTITY"
-      - "QUANTITY_FORECAST"
-      - "QUANTITY_TWELVE_MONTH_SALES"
-      - "QUANTITY_TWELVE_MONTH_LOST_SALES"
-      - "SUPERSEDING_QUANTITY"
-      - "SUPERSEDED_QUANTITY"
-      - "DAYS_OF_SUPPLY"
-      - "INVENTORY_TURNOVER_RATE"
-      - "INVENTORY_VALUE"
-      - "CARRYING_COST"
-      - "FILL_RATE"
-      - "LOST_SALES_REVENUE"
-      - "QUANTITY_AGED"
-      - "LAST_SALE_DATE"
-      - "LEAD_TIME"
-      - "QUANTITY_SIX_MONTH_SALES"
-      - "QUANTITY_DAILY_USAGE"
-      - "OTHER"
+      - QUANTITY_ON_HAND
+      - QUANTITY_ON_ORDER
+      - QUANTITY_REORDER_POINT
+      - QUANTITY_DEALER_PART_STOCKING
+      - QUANTITY_USER_MIN
+      - QUANTITY_USER_MAX
+      - QUANTITY_BEST_STOCKING_LEVEL
+      - AVERAGE_WEEKLY_USAGE_QUANTITY
+      - QUANTITY_FORECAST
+      - QUANTITY_TWELVE_MONTH_SALES
+      - QUANTITY_TWELVE_MONTH_LOST_SALES
+      - SUPERSEDING_QUANTITY
+      - SUPERSEDED_QUANTITY
+      - DAYS_OF_SUPPLY
+      - INVENTORY_TURNOVER_RATE
+      - INVENTORY_VALUE
+      - CARRYING_COST
+      - FILL_RATE
+      - LOST_SALES_REVENUE
+      - QUANTITY_AGED
+      - LAST_SALE_DATE
+      - LEAD_TIME
+      - QUANTITY_SIX_MONTH_SALES
+      - QUANTITY_DAILY_USAGE
+      - OTHER
     PartInventoryMetricUpdate:
-      type: "object"
+      type: object
       properties:
         part_inventory_metric_type:
           $ref: "#/components/schemas/PartInventoryMetricTypes"
         metric_value:
           maxLength: 50
           pattern: "^[0-9]+(\\.[0-9]{1,3})?$"
-          type: "string"
-          description: "The numerical value for the specified in... Pat..."
+          type: string
+          description: The numerical value for the specified in... Pat...
         uom_value:
           maxLength: 20
-          type: "string"
-          description: "Unit of Measure (UOM) code representing ..."
-      description: "PartInventoryMetric Update for Patch and Put"
+          type: string
+          description: Unit of Measure (UOM) code representing ...
+      description: PartInventoryMetric Update for Patch and Put
     PartInventoryMetrics:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PartInventoryMetric"
     PartInventoryOrderTypes:
-      type: "string"
-      description: "types of part inventory orders."
+      type: string
+      description: types of part inventory orders.
       enum:
-      - "LOCATE"
-      - "RELOCATE"
-      - "CYCLE_COUNT"
-      - "STOCK_ROTATION"
-      - "ALLOCATE_RESERVE"
-      - "REPLENISH"
-      - "CONSOLIDATE_INVENTORY"
-      - "INBOUND"
-      - "RECEIVING"
-      - "STORAGE"
-      - "WAREHOUSE_MANAGEMENT"
-      - "ORDER_FULFILLMENT"
-      - "OUTBOUND"
-      - "REVERSE_LOGISTICS"
-      - "RETURNS_ACTIONS"
-      - "MAINTENANCE"
-      - "DISPOSITION"
-      - "INVENTORY_SNAPSHOT"
-      - "PRE_ORDER"
-      - "BACK_ORDERED"
-      - "PENDING"
-      - "PROCESSING"
-      - "SHIPPED"
-      - "DELIVERED"
-      - "CANCELLED"
-      - "RETURNED_ORDER"
-      - "NO_LONGER_AVAILABLE"
+      - LOCATE
+      - RELOCATE
+      - CYCLE_COUNT
+      - STOCK_ROTATION
+      - ALLOCATE_RESERVE
+      - REPLENISH
+      - CONSOLIDATE_INVENTORY
+      - INBOUND
+      - RECEIVING
+      - STORAGE
+      - WAREHOUSE_MANAGEMENT
+      - ORDER_FULFILLMENT
+      - OUTBOUND
+      - REVERSE_LOGISTICS
+      - RETURNS_ACTIONS
+      - MAINTENANCE
+      - DISPOSITION
+      - INVENTORY_SNAPSHOT
+      - PRE_ORDER
+      - BACK_ORDERED
+      - PENDING
+      - PROCESSING
+      - SHIPPED
+      - DELIVERED
+      - CANCELLED
+      - RETURNED_ORDER
+      - NO_LONGER_AVAILABLE
     PartInventoryUpdate:
-      type: "object"
+      type: object
       properties:
         last_inventory_date:
-          type: "string"
-          description: "The date of the most recent physical inv..."
-          format: "date"
+          type: string
+          description: The date of the most recent physical inv...
+          format: date
         inventory_status_type:
           $ref: "#/components/schemas/InventoryStatusTypes"
         part_inventory_metrics:
@@ -1815,65 +2106,65 @@ components:
           $ref: "#/components/schemas/PartReferences"
         part_inventory_events:
           $ref: "#/components/schemas/PartInventoryEvents"
-      description: "PartInventory Update for Patch and Put"
+      description: PartInventory Update for Patch and Put
     PartReference:
-      type: "object"
+      type: object
       properties:
         part_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         part_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         name:
-          type: "string"
-          description: "Product Name."
+          type: string
+          description: Product Name.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         part_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         part_master_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         product_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/ProductTypes"
         system_codes:
           $ref: "#/components/schemas/Codes"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
-      description: "External system identifier"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+      description: External system identifier
     PartReferenceCreate:
       required:
-      - "part_reference_key"
-      type: "object"
-      description: "PartReference Create for Post"
+      - part_reference_key
+      type: object
+      description: PartReference Create for Post
       allOf:
       - $ref: "#/components/schemas/PartReference"
     PartReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
@@ -1881,218 +2172,218 @@ components:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/ProductTypes"
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         name:
-          type: "string"
-          description: "Product Name."
+          type: string
+          description: Product Name.
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
-      description: "PartReference Update for Patch and Put"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+      description: PartReference Update for Patch and Put
     PartReferences:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PartReference"
     Price:
-      type: "object"
+      type: object
       properties:
         display_value:
-          type: "string"
-          description: "Human-readable display value for the pri..."
+          type: string
+          description: Human-readable display value for the pri...
         locale:
-          type: "string"
-          description: "Locale used for formatting display value..."
+          type: string
+          description: Locale used for formatting display value...
         value:
-          type: "string"
-          description: "The numeric value of the price (before t..."
+          type: string
+          description: The numeric value of the price (before t...
         tax_value:
-          type: "string"
-          description: "The calculated amount of tax applied to ..."
+          type: string
+          description: The calculated amount of tax applied to ...
         taxable_amount:
-          type: "string"
-          description: "The portion of the price subject to tax."
+          type: string
+          description: The portion of the price subject to tax.
         non_taxable_amount:
-          type: "string"
-          description: "The portion of the price not subject to ..."
+          type: string
+          description: The portion of the price not subject to ...
         total_amount:
-          type: "string"
-          description: "The total final price including all comp..."
+          type: string
+          description: The total final price including all comp...
         total_cost_amount:
-          type: "string"
-          description: "The total cost to the provider/seller."
+          type: string
+          description: The total cost to the provider/seller.
         unit_cost_amount:
-          type: "string"
-          description: "The unit cost to the provider/seller."
+          type: string
+          description: The unit cost to the provider/seller.
         price_description:
-          type: "string"
+          type: string
           description: "A descriptive title for the price (e.g.,..."
         price_key:
-          type: "string"
-          description: "Natural key or business identifier for t..."
+          type: string
+          description: Natural key or business identifier for t...
         tax_included_indicator:
-          type: "boolean"
-          description: "Indicates whether tax is included in the..."
+          type: boolean
+          description: Indicates whether tax is included in the...
         currency_code:
-          type: "string"
+          type: string
           description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
         price_id:
-          type: "string"
-          description: "Unique system identifier for the price r..."
+          type: string
+          description: Unique system identifier for the price r...
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
       description: "Price that includes display value, currency, lo..."
     PriceCreate:
       required:
-      - "price_key"
-      type: "object"
-      description: "Price Create for Post"
+      - price_key
+      type: object
+      description: Price Create for Post
       allOf:
       - $ref: "#/components/schemas/Price"
     PriceTypes:
-      type: "string"
-      description: "types of prices."
+      type: string
+      description: types of prices.
       enum:
-      - "METERED"
-      - "SEAT"
-      - "FLAT"
-      - "ITEMIZED"
-      - "BUNDLE"
-      - "QUANTITY"
-      - "PER_UNIT"
-      - "PERCENT"
-      - "VOLUME"
-      - "USAGE"
-      - "STAIR_STEP"
-      - "SUBSCRIPTION"
-      - "CUSTOM"
-      - "STANDARD"
-      - "LICENSED"
-      - "TIER_VOLUME"
-      - "TIER_GRADUATED"
-      - "ACTUAL"
-      - "LIST"
-      - "RETAIL"
-      - "MSRP"
-      - "WHOLESALE"
-      - "DEALER"
-      - "TRADE"
-      - "CORE"
-      - "LANDED"
-      - "PROMOTIONAL"
-      - "DISCOUNT"
-      - "CONTRACT"
-      - "SALE"
-      - "CUSTOMER"
-      - "AFFILIATE"
-      - "ONLINE"
-      - "STORE"
-      - "REGION"
-      - "LOCATION"
-      - "ESTIMATED"
-      - "NET"
-      - "PURCHASE"
-      - "MONEY"
-      - "TAXABLE"
-      - "NONTAXABLE"
-      - "TOTAL"
-      - "UNIT"
-      - "TOTAL_COST"
-      - "UNIT_COST"
-      - "TAX"
-      - "OTHER"
+      - METERED
+      - SEAT
+      - FLAT
+      - ITEMIZED
+      - BUNDLE
+      - QUANTITY
+      - PER_UNIT
+      - PERCENT
+      - VOLUME
+      - USAGE
+      - STAIR_STEP
+      - SUBSCRIPTION
+      - CUSTOM
+      - STANDARD
+      - LICENSED
+      - TIER_VOLUME
+      - TIER_GRADUATED
+      - ACTUAL
+      - LIST
+      - RETAIL
+      - MSRP
+      - WHOLESALE
+      - DEALER
+      - TRADE
+      - CORE
+      - LANDED
+      - PROMOTIONAL
+      - DISCOUNT
+      - CONTRACT
+      - SALE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - MONEY
+      - TAXABLE
+      - NONTAXABLE
+      - TOTAL
+      - UNIT
+      - TOTAL_COST
+      - UNIT_COST
+      - TAX
+      - OTHER
     PriceUpdate:
-      type: "object"
+      type: object
       properties:
         display_value:
-          type: "string"
-          description: "Human-readable display value for the pri..."
+          type: string
+          description: Human-readable display value for the pri...
         unit_cost_amount:
-          type: "string"
-          description: "The unit cost to the provider/seller."
+          type: string
+          description: The unit cost to the provider/seller.
         locale:
-          type: "string"
-          description: "Locale used for formatting display value..."
+          type: string
+          description: Locale used for formatting display value...
         currency_code:
-          type: "string"
+          type: string
           description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         tax_value:
-          type: "string"
-          description: "The calculated amount of tax applied to ..."
+          type: string
+          description: The calculated amount of tax applied to ...
         total_amount:
-          type: "string"
-          description: "The total final price including all comp..."
+          type: string
+          description: The total final price including all comp...
         total_cost_amount:
-          type: "string"
-          description: "The total cost to the provider/seller."
+          type: string
+          description: The total cost to the provider/seller.
         price_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
         tax_included_indicator:
-          type: "boolean"
-          description: "Indicates whether tax is included in the..."
+          type: boolean
+          description: Indicates whether tax is included in the...
         price_description:
-          type: "string"
+          type: string
           description: "A descriptive title for the price (e.g.,..."
         non_taxable_amount:
-          type: "string"
-          description: "The portion of the price not subject to ..."
+          type: string
+          description: The portion of the price not subject to ...
         value:
-          type: "string"
-          description: "The numeric value of the price (before t..."
+          type: string
+          description: The numeric value of the price (before t...
         taxable_amount:
-          type: "string"
-          description: "The portion of the price subject to tax."
-      description: "Price Update for Patch and Put"
+          type: string
+          description: The portion of the price subject to tax.
+      description: Price Update for Patch and Put
     Prices:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/Price"
     ProductTypes:
-      type: "string"
-      description: "types of products."
+      type: string
+      description: types of products.
       enum:
-      - "VEHICLE"
-      - "INFORMATION"
-      - "DURABLE_GOODS"
-      - "SOFTWARE"
-      - "APP"
-      - "INSURANCE"
-      - "FINANCE"
-      - "SERVICE"
-      - "PART"
-      - "ACCESSORY"
-      - "F_N_I_PRODUCT"
-      - "SERVICE_PACKAGE"
-      - "DEALER_PRODUCT"
-      - "EQUIPMENT"
-      - "PACKAGE_GOODS"
-      - "SERVICE_PLAN"
-      - "WARRANTY_PLAN"
-      - "SUBSCRIPTION"
-      - "OTHER"
+      - VEHICLE
+      - INFORMATION
+      - DURABLE_GOODS
+      - SOFTWARE
+      - APP
+      - INSURANCE
+      - FINANCE
+      - SERVICE
+      - PART
+      - ACCESSORY
+      - F_N_I_PRODUCT
+      - SERVICE_PACKAGE
+      - DEALER_PRODUCT
+      - EQUIPMENT
+      - PACKAGE_GOODS
+      - SERVICE_PLAN
+      - WARRANTY_PLAN
+      - SUBSCRIPTION
+      - OTHER
     TimeSlot:
-      type: "object"
+      type: object
       properties:
         time_slot_key:
           maximum: 100
@@ -2100,32 +2391,32 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique business key for the time slot. Pattern:..."
+          type: string
+          description: Unique business key for the time slot. Pattern:...
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
-          format: "date-time"
+          format: date-time
         recurring_indicator:
-          type: "boolean"
-          description: "Indicates if the time slot is recurring."
+          type: boolean
+          description: Indicates if the time slot is recurring.
         recurring_period:
           $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
-          format: "date-time"
+          format: date-time
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         time_slot_id:
@@ -2134,30 +2425,30 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier for the time slot reco... Pat..."
+          type: string
+          description: Unique identifier for the time slot reco... Pat...
         week_of_date:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
-          format: "date"
+          type: array
+          format: date
           items:
-            type: "string"
-      description: "Range of time for the appointment including sta..."
+            type: string
+      description: Range of time for the appointment including sta...
     TimeslotDirectiveTypes:
-      type: "string"
-      description: "types of timeslot directives."
+      type: string
+      description: types of timeslot directives.
       enum:
-      - "AFTER"
-      - "ANYTIME"
-      - "BEFORE"
-      - "BETWEEN"
-      - "BLOCK"
-      - "UNKNOWN"
+      - AFTER
+      - ANYTIME
+      - BEFORE
+      - BETWEEN
+      - BLOCK
+      - UNKNOWN
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -2169,26 +2460,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

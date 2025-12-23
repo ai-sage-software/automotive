@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /payroll-stubs:
     get:
       tags:
-      - "PayrollStub"
-      summary: "Retrieve a list of all PayrollStub records."
-      operationId: "listPayrollStubs"
+      - PayrollStub
+      summary: Retrieve a list of PayrollStub entities.
+      operationId: listPayrollStub
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PayrollStub records."
+          description: A list of PayrollStub entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PayrollStub"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PayrollStub"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PayrollStub"
-      summary: "Create a new PayrollStub record."
-      operationId: "createPayrollStub"
+      - PayrollStub
+      summary: Create a new PayrollStub entity.
+      operationId: createPayrollStub
       requestBody:
-        description: "PayrollStub data to create the new resource."
+        description: PayrollStub data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "PayrollStub created successfully."
+          description: PayrollStub created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/payroll-stubs/PR-1234567"
+                type: string
+                example: /payroll-stubs/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollStub"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /payroll-stubs/{payrollStubKey}:
     get:
       tags:
-      - "PayrollStub"
-      summary: "Retrieve a specific PayrollStub record."
-      operationId: "getPayrollStubById"
+      - PayrollStub
+      summary: Retrieve a specific PayrollStub entity.
+      operationId: getPayrollStubById
       responses:
         "200":
-          description: "The requested PayrollStub record."
+          description: The requested PayrollStub entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PayrollStub"
-      summary: "Replace a PayrollStub record."
-      operationId: "replacePayrollStub"
+      - PayrollStub
+      summary: Replace a PayrollStub entity.
+      operationId: replacePayrollStub
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +128,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollStub"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PayrollStub"
-      summary: "Delete a PayrollStub Record"
-      description: "Marks the PayrollStub record as inactive or rem..."
-      operationId: "deletePayrollStubRecord"
+      - PayrollStub
+      summary: Delete a PayrollStub entity
+      description: Marks the PayrollStub entity as inactive or rem...
+      operationId: deletePayrollStubEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PayrollStub"
-      summary: "Partially update a PayrollStub record."
-      operationId: "updatePayrollStub"
+      - PayrollStub
+      summary: Partially update a PayrollStub entity.
+      operationId: updatePayrollStub
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PayrollStubUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PayrollStub"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the specific PayrollStub."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the specific PayrollStub.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/tax-reporting-contexts:
     get:
       tags:
-      - "TaxReportingContext"
-      summary: "Retrieve a list of TaxReportingContext records ..."
-      operationId: "listTaxReportingContextsByPayrollStubKey"
+      - TaxReportingContext
+      summary: Retrieve a list of TaxReportingContext entities...
+      operationId: listTaxReportingContextByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TaxReportingContext records."
+          description: A list of TaxReportingContext entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TaxReportingContext"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TaxReportingContext"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "TaxReportingContext"
-      summary: "Create a new TaxReportingContext record."
-      operationId: "createTaxReportingContext"
+      - TaxReportingContext
+      summary: Create a new TaxReportingContext entity.
+      operationId: createTaxReportingContext
       requestBody:
-        description: "TaxReportingContext data to create the new reso..."
+        description: TaxReportingContext data to create the new reso...
         content:
           application/json:
             schema:
@@ -198,37 +249,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "TaxReportingContext created successfully."
+          description: TaxReportingContext created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaxReportingContext"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}:
     get:
       tags:
-      - "TaxReportingContext"
-      summary: "Retrieve a specific TaxReportingContext record."
-      operationId: "getTaxReportingContextById"
+      - TaxReportingContext
+      summary: Retrieve a specific TaxReportingContext entity.
+      operationId: getTaxReportingContextById
       responses:
         "200":
-          description: "The requested TaxReportingContext record."
+          description: The requested TaxReportingContext entity.
           content:
             application/json:
               schema:
@@ -239,11 +292,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TaxReportingContext"
-      summary: "Replace a TaxReportingContext record."
-      operationId: "replaceTaxReportingContext"
+      - TaxReportingContext
+      summary: Replace a TaxReportingContext entity.
+      operationId: replaceTaxReportingContext
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,114 +304,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaxReportingContext"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "TaxReportingContext"
-      summary: "Delete a TaxReportingContext Record"
-      description: "Marks the TaxReportingContext record as inactiv..."
-      operationId: "deleteTaxReportingContextRecord"
+      - TaxReportingContext
+      summary: Delete a TaxReportingContext entity
+      description: Marks the TaxReportingContext entity as inactiv...
+      operationId: deleteTaxReportingContextEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "TaxReportingContext"
-      summary: "Partially update a TaxReportingContext record."
-      operationId: "updateTaxReportingContext"
+      - TaxReportingContext
+      summary: Partially update a TaxReportingContext entity.
+      operationId: updateTaxReportingContext
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/TaxReportingContextUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/TaxReportingContext"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "taxReportingContextKey"
-      in: "path"
-      description: "The unique identifier for the specific TaxReportingContext."
+        type: string
+    - name: taxReportingContextKey
+      in: path
+      description: The unique identifier for the specific TaxReportingContext.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/moneys:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a list of Money records scoped by payr..."
-      operationId: "listMoneysByPayrollStubKey"
+      - Money
+      summary: Retrieve a list of Money entities scoped by pay...
+      operationId: listMoneyByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Money records."
+          description: A list of Money entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Money"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Money"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/moneys/{moneyKey}:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a specific Money record."
-      operationId: "getMoneyById"
+      - Money
+      summary: Retrieve a specific Money entity.
+      operationId: getMoneyById
       responses:
         "200":
-          description: "The requested Money record."
+          description: The requested Money entity.
           content:
             application/json:
               schema:
@@ -369,11 +443,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Money"
-      summary: "Replace a Money record."
-      operationId: "replaceMoney"
+      - Money
+      summary: Replace a Money entity.
+      operationId: replaceMoney
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -381,69 +455,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Money"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "moneyKey"
-      in: "path"
-      description: "The unique identifier for the specific Money."
+        type: string
+    - name: moneyKey
+      in: path
+      description: The unique identifier for the specific Money.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByPayrollStubKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped b...
+      operationId: listIdentifierByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -451,37 +544,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -492,11 +587,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -504,114 +599,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or remo..."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or remo...
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scop..."
-      operationId: "listEffectivePeriodsByPayrollStubKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities sco...
+      operationId: listEffectivePeriodByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -622,11 +738,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -634,69 +750,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/payroll-components:
     get:
       tags:
-      - "PayrollComponent"
-      summary: "Retrieve a list of PayrollComponent records sco..."
-      operationId: "listPayrollComponentsByPayrollStubKey"
+      - PayrollComponent
+      summary: Retrieve a list of PayrollComponent entities sc...
+      operationId: listPayrollComponentByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PayrollComponent records."
+          description: A list of PayrollComponent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PayrollComponent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PayrollComponent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PayrollComponent"
-      summary: "Create a new PayrollComponent record."
-      operationId: "createPayrollComponent"
+      - PayrollComponent
+      summary: Create a new PayrollComponent entity.
+      operationId: createPayrollComponent
       requestBody:
-        description: "PayrollComponent data to create the new resource."
+        description: PayrollComponent data to create the new resource.
         content:
           application/json:
             schema:
@@ -704,37 +839,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PayrollComponent created successfully."
+          description: PayrollComponent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}:
     get:
       tags:
-      - "PayrollComponent"
-      summary: "Retrieve a specific PayrollComponent record."
-      operationId: "getPayrollComponentById"
+      - PayrollComponent
+      summary: Retrieve a specific PayrollComponent entity.
+      operationId: getPayrollComponentById
       responses:
         "200":
-          description: "The requested PayrollComponent record."
+          description: The requested PayrollComponent entity.
           content:
             application/json:
               schema:
@@ -745,11 +882,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PayrollComponent"
-      summary: "Replace a PayrollComponent record."
-      operationId: "replacePayrollComponent"
+      - PayrollComponent
+      summary: Replace a PayrollComponent entity.
+      operationId: replacePayrollComponent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -757,114 +894,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PayrollComponent"
-      summary: "Delete a PayrollComponent Record"
-      description: "Marks the PayrollComponent record as inactive o..."
-      operationId: "deletePayrollComponentRecord"
+      - PayrollComponent
+      summary: Delete a PayrollComponent entity
+      description: Marks the PayrollComponent entity as inactive o...
+      operationId: deletePayrollComponentEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PayrollComponent"
-      summary: "Partially update a PayrollComponent record."
-      operationId: "updatePayrollComponent"
+      - PayrollComponent
+      summary: Partially update a PayrollComponent entity.
+      operationId: updatePayrollComponent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PayrollComponentUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PayrollComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "payrollComponentKey"
-      in: "path"
-      description: "The unique identifier for the specific PayrollComponent."
+        type: string
+    - name: payrollComponentKey
+      in: path
+      description: The unique identifier for the specific PayrollComponent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-stubs/{payrollStubKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by p..."
-      operationId: "listTimeSlotsByPayrollStubKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by ...
+      operationId: listTimeSlotByPayrollStubKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-stubs/{payrollStubKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -875,11 +1033,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -887,260 +1045,332 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollStubKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollStubKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /payroll-stubs/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /payroll-stubs/batch:
+    post:
+      summary: Bulk create payroll-stubs
+      operationId: createPayrollStubBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PayrollStubCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PayrollStub"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     Codes:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     DaysOfWeekTypes:
-      type: "string"
-      description: "types of days of weeks."
+      type: string
+      description: types of days of weeks.
       enum:
-      - "SUN"
-      - "MON"
-      - "TUES"
-      - "WED"
-      - "THURS"
-      - "FRI"
-      - "SAT"
+      - SUN
+      - MON
+      - TUES
+      - WED
+      - THURS
+      - FRI
+      - SAT
     DurationUOMTypes:
-      type: "string"
-      description: "types of duration u o ms."
+      type: string
+      description: types of duration u o ms.
       enum:
-      - "MINUTES"
-      - "HOURS"
-      - "DAYS"
-      - "DAY_OF_MONTH"
-      - "WEEKS"
-      - "BI_WEEKS"
-      - "SEMI_MONTHS"
-      - "MONTHS"
-      - "QUARTERS"
-      - "SEMI_YEARS"
-      - "YEARS"
-      - "MULTI_YEARS"
-      - "CUSTOM"
-      - "OCCURRENCE"
-      - "UNLIMITED"
-      - "NONE"
-      - "OTHER"
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
     EffectivePeriod:
-      type: "object"
+      type: object
       properties:
         effective_period_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key identifying the effective per... Pat..."
+          type: string
+          description: Unique key identifying the effective per... Pat...
         active_indicator:
-          type: "boolean"
-          description: "Indicator if the period is currently act..."
+          type: boolean
+          description: Indicator if the period is currently act...
         exclusive_indicator:
-          type: "boolean"
-          description: "Indicator if the period is exclusive"
+          type: boolean
+          description: Indicator if the period is exclusive
         start_date_time:
-          type: "string"
-          description: "Start date and time of the effective per..."
-          format: "date-time"
+          type: string
+          description: Start date and time of the effective per...
+          format: date-time
         complete_date_time:
-          type: "string"
-          description: "Completion date and time of the effectiv..."
-          format: "date-time"
+          type: string
+          description: Completion date and time of the effectiv...
+          format: date-time
         duration_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         duration_value:
-          type: "string"
-          description: "Value of the duration"
+          type: string
+          description: Value of the duration
         recur_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         recur_count:
-          type: "string"
-          description: "Count of recurrence"
+          type: string
+          description: Count of recurrence
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
-          type: "string"
-          description: "Criteria defining recurrence"
+          type: string
+          description: Criteria defining recurrence
         recur_indicator:
-          type: "boolean"
-          description: "Indicator if recurrence is enabled"
+          type: boolean
+          description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: "Effective Period"
+      description: Effective Period
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     Identifier:
-      type: "object"
+      type: object
       properties:
         identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: "External system identifier"
+      description: External system identifier
     IdentifierCreate:
       required:
-      - "identifier_key"
-      type: "object"
-      description: "Identifier Create for Post"
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
-      description: "Identifier Update for Patch and Put"
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
     Money:
-      type: "object"
+      type: object
       properties:
         money_key:
-          type: "string"
-          description: "The unique key for the monetary value."
+          type: string
+          description: The unique key for the monetary value.
         money_id:
-          type: "string"
-          description: "The unique ID for the monetary value."
+          type: string
+          description: The unique ID for the monetary value.
         currency_code:
-          type: "string"
+          type: string
           description: "ISO currency code, e.g., 'USD'."
         display_value:
-          type: "string"
-          description: "The locale-specific display format for t..."
+          type: string
+          description: The locale-specific display format for t...
         locale:
-          type: "string"
+          type: string
           description: "The locale code (e.g., en-US, fr-FR)."
         value:
-          type: "string"
-          description: "The monetary value."
+          type: string
+          description: The monetary value.
       description: "Represents a monetary value, including its curr..."
     PayerTypes:
-      type: "string"
-      description: "types of payers."
+      type: string
+      description: types of payers.
       enum:
-      - "AGGREGATE"
-      - "EMPLOYER"
-      - "EMPLOYEE"
-      - "AGGREGATE_EMPLOYER"
-      - "AGGREGATE_EMPLOYEE"
+      - AGGREGATE
+      - EMPLOYER
+      - EMPLOYEE
+      - AGGREGATE_EMPLOYER
+      - AGGREGATE_EMPLOYEE
     PayrollAggregateTypes:
-      type: "string"
-      description: "types of payroll aggregates."
+      type: string
+      description: types of payroll aggregates.
       enum:
-      - "ITEM"
-      - "GROSS_PAY"
-      - "NET_PAY"
-      - "TOTAL_DEDUCTIONS"
-      - "TOTAL_TAXES"
+      - ITEM
+      - GROSS_PAY
+      - NET_PAY
+      - TOTAL_DEDUCTIONS
+      - TOTAL_TAXES
     PayrollComponent:
-      type: "object"
+      type: object
       properties:
         payroll_component_id:
-          type: "string"
-          description: "A unique identifier for the payroll even..."
+          type: string
+          description: A unique identifier for the payroll even...
         payroll_componen_key:
-          type: "string"
-          description: "A unique identifier for the payroll even..."
+          type: string
+          description: A unique identifier for the payroll even...
         staff_member_id:
-          type: "string"
-          description: "The unique ID of the staff member associ..."
+          type: string
+          description: The unique ID of the staff member associ...
         payroll_cycle_key:
-          type: "string"
-          description: "The unique ID of the staff member associ..."
+          type: string
+          description: The unique ID of the staff member associ...
         employing_entity_id:
-          type: "string"
-          description: "The unique ID of the staff member associ..."
+          type: string
+          description: The unique ID of the staff member associ...
         payroll_event_type:
           $ref: "#/components/schemas/PayrollEventTypes"
         payroll_event_uomtype:
@@ -1148,146 +1378,146 @@ components:
         payer_type:
           $ref: "#/components/schemas/PayerTypes"
         event_code:
-          type: "string"
-          description: "The code for the payroll event."
+          type: string
+          description: The code for the payroll event.
         event_description:
-          type: "string"
-          description: "A description of the payroll event."
+          type: string
+          description: A description of the payroll event.
         amount:
           $ref: "#/components/schemas/Money"
         rate:
-          type: "string"
-          description: "The rate of pay for the payroll event."
+          type: string
+          description: The rate of pay for the payroll event.
         hours_worked:
-          type: "string"
-          description: "The number of hours worked for the payro..."
+          type: string
+          description: The number of hours worked for the payro...
         ytd_amount:
           $ref: "#/components/schemas/Money"
         event_reference:
-          type: "string"
-          description: "Event Reference for this event"
+          type: string
+          description: Event Reference for this event
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
         payroll_aggregate_type:
           $ref: "#/components/schemas/PayrollAggregateTypes"
         payroll_event_category_type:
           $ref: "#/components/schemas/PayrollEventCategoryTypes"
-      description: "Represents a single event that affects a staff ..."
+      description: Represents a single event that affects a staff ...
     PayrollComponentCreate:
       required:
-      - "payroll_component_key"
-      type: "object"
-      description: "PayrollComponent Create for Post"
+      - payroll_component_key
+      type: object
+      description: PayrollComponent Create for Post
       allOf:
       - $ref: "#/components/schemas/PayrollComponent"
     PayrollComponentUpdate:
-      type: "object"
+      type: object
       properties:
         amount:
           $ref: "#/components/schemas/Money"
         payer_type:
           $ref: "#/components/schemas/PayerTypes"
         event_description:
-          type: "string"
-          description: "A description of the payroll event."
+          type: string
+          description: A description of the payroll event.
         event_reference:
-          type: "string"
-          description: "Event Reference for this event"
+          type: string
+          description: Event Reference for this event
         payroll_aggregate_type:
           $ref: "#/components/schemas/PayrollAggregateTypes"
         payroll_event_category_type:
           $ref: "#/components/schemas/PayrollEventCategoryTypes"
         rate:
-          type: "string"
-          description: "The rate of pay for the payroll event."
+          type: string
+          description: The rate of pay for the payroll event.
         event_code:
-          type: "string"
-          description: "The code for the payroll event."
+          type: string
+          description: The code for the payroll event.
         ytd_amount:
           $ref: "#/components/schemas/Money"
         hours_worked:
-          type: "string"
-          description: "The number of hours worked for the payro..."
+          type: string
+          description: The number of hours worked for the payro...
         payroll_event_uomtype:
           $ref: "#/components/schemas/UOMPayrollTypes"
         payroll_event_type:
           $ref: "#/components/schemas/PayrollEventTypes"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the event occurred."
-          format: "date-time"
-      description: "PayrollComponent Update for Patch and Put"
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+      description: PayrollComponent Update for Patch and Put
     PayrollComponents:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PayrollComponent"
     PayrollCycleFrequencyTypes:
-      type: "string"
-      description: "types of payroll cycle frequencys."
+      type: string
+      description: types of payroll cycle frequencys.
       enum:
-      - "ANNUAL"
-      - "SEMI_ANNUAL"
-      - "QUARTERLY"
-      - "BI_MONTHLY"
-      - "MONTHLY"
-      - "SEMI_MONTHLY"
-      - "BI_WEEKLY"
-      - "WEEKLY"
-      - "DAILY"
-      - "OFF_CYCLE"
-      - "ON_DEMAND"
+      - ANNUAL
+      - SEMI_ANNUAL
+      - QUARTERLY
+      - BI_MONTHLY
+      - MONTHLY
+      - SEMI_MONTHLY
+      - BI_WEEKLY
+      - WEEKLY
+      - DAILY
+      - OFF_CYCLE
+      - ON_DEMAND
     PayrollEventCategoryTypes:
-      type: "string"
-      description: "types of payroll event categorys."
+      type: string
+      description: types of payroll event categorys.
       enum:
-      - "PAY_CYCLE"
-      - "PAY_STUB"
-      - "PAY_RESULTS"
+      - PAY_CYCLE
+      - PAY_STUB
+      - PAY_RESULTS
     PayrollEventTypes:
-      type: "string"
-      description: "types of payroll events."
+      type: string
+      description: types of payroll events.
       enum:
-      - "PAYMENT_EVENT"
-      - "HOURS_EVENT"
-      - "OVERTIME_EVENT"
-      - "COMMISSION_EVENT"
-      - "BONUS_EVENT"
-      - "EXPENSE_PAYMENT_EVENT"
-      - "REIMBURSEMENT_EVENT"
-      - "PRETAX_BENEFIT_EVENT"
-      - "RETIREMENT_PLAN_EVENT"
-      - "POSTTAX_DEDUCTION_EVENT"
-      - "GARNISHMENT_EVENT"
-      - "FEE_EVENT"
-      - "TAX_EVENT"
-      - "PRETAX_DEDUCTION_EVENT"
-      - "DEDUCTION_EVENT"
-      - "CYCLE_PROCESSED"
-      - "UNKNOWN"
+      - PAYMENT_EVENT
+      - HOURS_EVENT
+      - OVERTIME_EVENT
+      - COMMISSION_EVENT
+      - BONUS_EVENT
+      - EXPENSE_PAYMENT_EVENT
+      - REIMBURSEMENT_EVENT
+      - PRETAX_BENEFIT_EVENT
+      - RETIREMENT_PLAN_EVENT
+      - POSTTAX_DEDUCTION_EVENT
+      - GARNISHMENT_EVENT
+      - FEE_EVENT
+      - TAX_EVENT
+      - PRETAX_DEDUCTION_EVENT
+      - DEDUCTION_EVENT
+      - CYCLE_PROCESSED
+      - UNKNOWN
     PayrollStub:
-      type: "object"
+      type: object
       properties:
         pay_stub_id:
-          type: "string"
-          description: "A unique identifier for the pay stub doc..."
+          type: string
+          description: A unique identifier for the pay stub doc...
         pay_stub_key:
-          type: "string"
-          description: "A unique identifier for the pay stub doc..."
+          type: string
+          description: A unique identifier for the pay stub doc...
         tax_reporting_context:
           $ref: "#/components/schemas/TaxReportingContext"
         pay_period:
           $ref: "#/components/schemas/EffectivePeriod"
         pay_date_time:
-          type: "string"
-          description: "The date and time the payment was issued..."
-          format: "date-time"
+          type: string
+          description: The date and time the payment was issued...
+          format: date-time
         identifiers:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/Identifier"
         payroll_items:
@@ -1295,29 +1525,29 @@ components:
         payroll_cycle_frequency_type:
           $ref: "#/components/schemas/PayrollCycleFrequencyTypes"
         pay_summary_id:
-          type: "string"
-          description: "A unique identifier for the pay summary ..."
+          type: string
+          description: A unique identifier for the pay summary ...
         pay_summary_key:
-          type: "string"
-          description: "A unique identifier for the pay summary ..."
+          type: string
+          description: A unique identifier for the pay summary ...
         payroll_run_id:
-          type: "string"
-          description: "A unique identifier for the specific bat..."
-      description: "Represents a single document issued to an emplo..."
+          type: string
+          description: A unique identifier for the specific bat...
+      description: Represents a single document issued to an emplo...
     PayrollStubCreate:
       required:
-      - "payroll_stub_key"
-      type: "object"
-      description: "PayrollStub Create for Post"
+      - payroll_stub_key
+      type: object
+      description: PayrollStub Create for Post
       allOf:
       - $ref: "#/components/schemas/PayrollStub"
     PayrollStubUpdate:
-      type: "object"
+      type: object
       properties:
         pay_date_time:
-          type: "string"
-          description: "The date and time the payment was issued..."
-          format: "date-time"
+          type: string
+          description: The date and time the payment was issued...
+          format: date-time
         payroll_items:
           $ref: "#/components/schemas/PayrollComponents"
         tax_reporting_context:
@@ -1326,56 +1556,56 @@ components:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/Identifier"
         pay_period:
           $ref: "#/components/schemas/EffectivePeriod"
         payroll_cycle_frequency_type:
           $ref: "#/components/schemas/PayrollCycleFrequencyTypes"
-      description: "PayrollStub Update for Patch and Put"
+      description: PayrollStub Update for Patch and Put
     TaxReportingContext:
-      type: "object"
+      type: object
       properties:
         tax_reporting_context_id:
-          type: "string"
-          description: "The Employer Identification Number (EIN)..."
+          type: string
+          description: The Employer Identification Number (EIN)...
         tax_reporting_context_key:
-          type: "string"
-          description: "The Employer Identification Number (EIN)..."
+          type: string
+          description: The Employer Identification Number (EIN)...
         employer_ein:
-          type: "string"
-          description: "The Employer Identification Number (EIN)..."
+          type: string
+          description: The Employer Identification Number (EIN)...
         employee_ssn_last_four:
-          type: "string"
-          description: "The last four digits of the employee's S..."
+          type: string
+          description: The last four digits of the employee's S...
         employing_legal_entity_id:
-          type: "string"
-          description: "The internal ID of the legal entity resp..."
+          type: string
+          description: The internal ID of the legal entity resp...
         state_employer_id:
-          type: "string"
-          description: "The state-specific employer ID for tax r..."
-          example: "987-654"
+          type: string
+          description: The state-specific employer ID for tax r...
+          example: 987-654
       description: "Provides the necessary legal identifiers (EIN, ..."
     TaxReportingContextCreate:
       required:
-      - "tax_reporting_context_key"
-      type: "object"
-      description: "TaxReportingContext Create for Post"
+      - tax_reporting_context_key
+      type: object
+      description: TaxReportingContext Create for Post
       allOf:
       - $ref: "#/components/schemas/TaxReportingContext"
     TaxReportingContextUpdate:
-      type: "object"
+      type: object
       properties:
         employer_ein:
-          type: "string"
-          description: "The Employer Identification Number (EIN)..."
+          type: string
+          description: The Employer Identification Number (EIN)...
         employee_ssn_last_four:
-          type: "string"
-          description: "The last four digits of the employee's S..."
-      description: "TaxReportingContext Update for Patch and Put"
+          type: string
+          description: The last four digits of the employee's S...
+      description: TaxReportingContext Update for Patch and Put
     TimeSlot:
-      type: "object"
+      type: object
       properties:
         time_slot_key:
           maximum: 100
@@ -1383,32 +1613,32 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique business key for the time slot. Pattern:..."
+          type: string
+          description: Unique business key for the time slot. Pattern:...
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
-          format: "date-time"
+          format: date-time
         recurring_indicator:
-          type: "boolean"
-          description: "Indicates if the time slot is recurring."
+          type: boolean
+          description: Indicates if the time slot is recurring.
         recurring_period:
           $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
-          format: "date-time"
+          format: date-time
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         time_slot_id:
@@ -1417,70 +1647,70 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier for the time slot reco... Pat..."
+          type: string
+          description: Unique identifier for the time slot reco... Pat...
         week_of_date:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
-          format: "date"
+          type: array
+          format: date
           items:
-            type: "string"
-      description: "Range of time for the appointment including sta..."
+            type: string
+      description: Range of time for the appointment including sta...
     TimeslotDirectiveTypes:
-      type: "string"
-      description: "types of timeslot directives."
+      type: string
+      description: types of timeslot directives.
       enum:
-      - "AFTER"
-      - "ANYTIME"
-      - "BEFORE"
-      - "BETWEEN"
-      - "BLOCK"
-      - "UNKNOWN"
+      - AFTER
+      - ANYTIME
+      - BEFORE
+      - BETWEEN
+      - BLOCK
+      - UNKNOWN
     UOMPayrollTypes:
-      type: "string"
-      description: "Undocumented Enum"
+      type: string
+      description: Undocumented Enum
       enum:
-      - "HOURS"
-      - "MINUTES"
-      - "DAYS"
-      - "WEEKS"
-      - "MONTHS"
-      - "NANOSECOND"
-      - "MICROSECOND"
-      - "MILLISECOND"
-      - "SECOND"
-      - "MINUTE"
-      - "HOUR"
-      - "DAY"
-      - "WEEK"
-      - "MONTH"
-      - "YEAR"
-      - "DECADE"
-      - "CENTURY"
-      - "MILLENNIUM"
-      - "PERCENTAGE_OF_HOUR"
-      - "DURATION"
-      - "DAY_OF_MONTH"
-      - "BI_WEEKS"
-      - "SEMI_MONTHS"
-      - "QUARTERS"
-      - "SEMI_YEARS"
-      - "YEARS"
-      - "MULTI_YEARS"
-      - "OCCURRENCE"
-      - "UNLIMITED"
-      - "NONE"
-      - "CUSTOM"
-      - "OTHER"
-      - "MONETARY"
-      - "UNIT"
-      - "PERCENTAGE"
-      - "UNKNOWN"
+      - HOURS
+      - MINUTES
+      - DAYS
+      - WEEKS
+      - MONTHS
+      - NANOSECOND
+      - MICROSECOND
+      - MILLISECOND
+      - SECOND
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+      - DECADE
+      - CENTURY
+      - MILLENNIUM
+      - PERCENTAGE_OF_HOUR
+      - DURATION
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - CUSTOM
+      - OTHER
+      - MONETARY
+      - UNIT
+      - PERCENTAGE
+      - UNKNOWN
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -1492,26 +1722,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

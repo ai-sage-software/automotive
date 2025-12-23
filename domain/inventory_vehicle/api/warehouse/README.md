@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **Identifier**, **Position**, **Warehouse**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **Identifier**, **Position**, **Warehouse**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -183,7 +190,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses</span> <br/>
-        <span class="api-summary">Retrieve a list of all Warehouse records. getWarehouses</span>
+        <span class="api-summary">Retrieve a list of Warehouse entities. getWarehouse</span>
     </span>
 </div>
 
@@ -191,7 +198,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses</span> <br/>
-        <span class="api-summary">Create a new Warehouse record. createWarehouse</span>
+        <span class="api-summary">Create a new Warehouse entity. createWarehouse</span>
     </span>
 </div>
 
@@ -200,7 +207,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Warehouse record. getarehouseById</span>
+        <span class="api-summary">Retrieve a specific Warehouse entity. getarehouseById</span>
     </span>
 </div>
 
@@ -208,7 +215,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}</span> <br/>
-        <span class="api-summary">Replace a Warehouse record. replaceWarehouse</span>
+        <span class="api-summary">Replace a Warehouse entity. replaceWarehouse</span>
     </span>
 </div>
 
@@ -216,7 +223,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}</span> <br/>
-        <span class="api-summary">Partially update a Warehouse record. updateWarehouse</span>
+        <span class="api-summary">Partially update a Warehouse entity. updateWarehouse</span>
     </span>
 </div>
 
@@ -224,7 +231,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}</span> <br/>
-        <span class="api-summary">Delete a Warehouse Record deleteWarehouseRecord</span>
+        <span class="api-summary">Delete a Warehouse entity deleteWarehouseEntity</span>
     </span>
 </div>
 
@@ -233,7 +240,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations</span> <br/>
-        <span class="api-summary">Retrieve a list of Authorization records scoped by warehouseKey. getAuthorizationsByWarehouseKey</span>
+        <span class="api-summary">Retrieve a list of Authorization entities scoped by warehouseKey. getAuthorizationByWarehouseKey</span>
     </span>
 </div>
 
@@ -241,7 +248,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations</span> <br/>
-        <span class="api-summary">Create a new Authorization record. createAuthorization</span>
+        <span class="api-summary">Create a new Authorization entity. createAuthorization</span>
     </span>
 </div>
 
@@ -250,7 +257,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Authorization record. getuthorizationById</span>
+        <span class="api-summary">Retrieve a specific Authorization entity. getuthorizationById</span>
     </span>
 </div>
 
@@ -258,7 +265,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Replace a Authorization record. replaceAuthorization</span>
+        <span class="api-summary">Replace a Authorization entity. replaceAuthorization</span>
     </span>
 </div>
 
@@ -266,7 +273,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization record. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
     </span>
 </div>
 
@@ -274,7 +281,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Delete a Authorization Record deleteAuthorizationRecord</span>
+        <span class="api-summary">Delete a Authorization entity deleteAuthorizationEntity</span>
     </span>
 </div>
 
@@ -283,7 +290,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by warehouseKey. getIdentifiersByWarehouseKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by warehouseKey. getIdentifierByWarehouseKey</span>
     </span>
 </div>
 
@@ -291,7 +298,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -300,7 +307,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -308,7 +315,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -316,7 +323,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -324,7 +331,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -333,7 +340,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address records scoped by warehouseKey. getAddresssByWarehouseKey</span>
+        <span class="api-summary">Retrieve a list of Address entities scoped by warehouseKey. getAddressByWarehouseKey</span>
     </span>
 </div>
 
@@ -341,7 +348,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address record. createAddress</span>
+        <span class="api-summary">Create a new Address entity. createAddress</span>
     </span>
 </div>
 
@@ -350,7 +357,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
+        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
     </span>
 </div>
 
@@ -358,7 +365,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address record. replaceAddress</span>
+        <span class="api-summary">Replace a Address entity. replaceAddress</span>
     </span>
 </div>
 
@@ -366,7 +373,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address record. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updateAddress</span>
     </span>
 </div>
 
@@ -374,7 +381,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
+        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
     </span>
 </div>
 
@@ -383,7 +390,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions</span> <br/>
-        <span class="api-summary">Retrieve a list of Position records scoped by warehouseKey. getPositionsByWarehouseKey</span>
+        <span class="api-summary">Retrieve a list of Position entities scoped by warehouseKey. getPositionByWarehouseKey</span>
     </span>
 </div>
 
@@ -391,7 +398,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions</span> <br/>
-        <span class="api-summary">Create a new Position record. createPosition</span>
+        <span class="api-summary">Create a new Position entity. createPosition</span>
     </span>
 </div>
 
@@ -400,7 +407,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Position record. getositionById</span>
+        <span class="api-summary">Retrieve a specific Position entity. getositionById</span>
     </span>
 </div>
 
@@ -408,7 +415,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Replace a Position record. replacePosition</span>
+        <span class="api-summary">Replace a Position entity. replacePosition</span>
     </span>
 </div>
 
@@ -416,7 +423,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position record. updatePosition</span>
+        <span class="api-summary">Partially update a Position entity. updatePosition</span>
     </span>
 </div>
 
@@ -424,7 +431,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Delete a Position Record deletePositionRecord</span>
+        <span class="api-summary">Delete a Position entity deletePositionEntity</span>
     </span>
 </div>
 
@@ -433,7 +440,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales</span> <br/>
-        <span class="api-summary">Retrieve a list of AddressLocale records scoped by warehouseKey. getAddressLocalesByWarehouseKey</span>
+        <span class="api-summary">Retrieve a list of AddressLocale entities scoped by warehouseKey. getAddressLocaleByWarehouseKey</span>
     </span>
 </div>
 
@@ -441,7 +448,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales</span> <br/>
-        <span class="api-summary">Create a new AddressLocale record. createAddressLocale</span>
+        <span class="api-summary">Create a new AddressLocale entity. createAddressLocale</span>
     </span>
 </div>
 
@@ -450,7 +457,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AddressLocale record. getddressLocaleById</span>
+        <span class="api-summary">Retrieve a specific AddressLocale entity. getddressLocaleById</span>
     </span>
 </div>
 
@@ -458,7 +465,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Replace a AddressLocale record. replaceAddressLocale</span>
+        <span class="api-summary">Replace a AddressLocale entity. replaceAddressLocale</span>
     </span>
 </div>
 
@@ -466,7 +473,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressLocale record. updateAddressLocale</span>
+        <span class="api-summary">Partially update a AddressLocale entity. updateAddressLocale</span>
     </span>
 </div>
 
@@ -474,7 +481,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Delete a AddressLocale Record deleteAddressLocaleRecord</span>
+        <span class="api-summary">Delete a AddressLocale entity deleteAddressLocaleEntity</span>
     </span>
 </div>
 
@@ -484,12 +491,12 @@ The following resources follow a consistent pattern under Warehouseroot with key
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **warehouse** | /warehouses | listWarehouses | createWarehouse | getWarehouses | updateWarehouses | deleteWarehouses |
-    | **authorization** | /warehouses/{warehouseKey}/authorizations | listAuthorizationsByWarehouseKey | createAuthorization | getAuthorizationsByWarehouseKey | updateAuthorizationsByWarehouseKey | deleteAuthorizationsByWarehouseKey |
-    | **identifier** | /warehouses/{warehouseKey}/identifiers | listIdentifiersByWarehouseKey | createIdentifier | getIdentifiersByWarehouseKey | updateIdentifiersByWarehouseKey | deleteIdentifiersByWarehouseKey |
-    | **addresse** | /warehouses/{warehouseKey}/addresses | listAddresssByWarehouseKey | createAddress | getAddresssByWarehouseKey | updateAddresssByWarehouseKey | deleteAddresssByWarehouseKey |
-    | **position** | /warehouses/{warehouseKey}/positions | listPositionsByWarehouseKey | createPosition | getPositionsByWarehouseKey | updatePositionsByWarehouseKey | deletePositionsByWarehouseKey |
-    | **address-locale** | /warehouses/{warehouseKey}/address-locales | listAddressLocalesByWarehouseKey | createAddressLocale | getAddressLocalesByWarehouseKey | updateAddressLocalesByWarehouseKey | deleteAddressLocalesByWarehouseKey |
+    | **warehouse** | /warehouses | listWarehouse | createWarehouse | getWarehouse | updateWarehouse | deleteWarehouse |
+    | **authorization** | /warehouses/{warehouseKey}/authorizations | listAuthorizationByWarehouseKey | createAuthorization | getAuthorizationByWarehouseKey | updateAuthorizationByWarehouseKey | deleteAuthorizationByWarehouseKey |
+    | **identifier** | /warehouses/{warehouseKey}/identifiers | listIdentifierByWarehouseKey | createIdentifier | getIdentifierByWarehouseKey | updateIdentifierByWarehouseKey | deleteIdentifierByWarehouseKey |
+    | **addresse** | /warehouses/{warehouseKey}/addresses | listAddressByWarehouseKey | createAddress | getAddressByWarehouseKey | updateAddressByWarehouseKey | deleteAddressByWarehouseKey |
+    | **position** | /warehouses/{warehouseKey}/positions | listPositionByWarehouseKey | createPosition | getPositionByWarehouseKey | updatePositionByWarehouseKey | deletePositionByWarehouseKey |
+    | **address-locale** | /warehouses/{warehouseKey}/address-locales | listAddressLocaleByWarehouseKey | createAddressLocale | getAddressLocaleByWarehouseKey | updateAddressLocaleByWarehouseKey | deleteAddressLocaleByWarehouseKey |
 
 ***Note on List Operations:***
 

@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialEventReference**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -34,11 +41,12 @@ The API is structured around the domain **finance** and **Invoice** resource as 
     | **PaymentScheduleReference** | /invoices/{invoiceKey}/payment-schedule-references | Manages PaymentScheduleReferences belonging to Invoices |
     | **PricePlanReference** | /invoices/{invoiceKey}/price-plan-references | Manages PricePlanReferences belonging to Invoices |
     | **ControlAccountReference** | /invoices/{invoiceKey}/control-account-references | Manages ControlAccountReferences belonging to Invoices |
+    | **FinancialEventReference** | /invoices/{invoiceKey}/financial-event-references | Manages FinancialEventReferences belonging to Invoices |
     | **RewardReference** | /invoices/{invoiceKey}/reward-references | Manages RewardReferences belonging to Invoices |
     | **PaymentAuthorization** | /invoices/{invoiceKey}/payment-authorizations | Manages PaymentAuthorizations belonging to Invoices |
     | **Price** | /invoices/{invoiceKey}/prices | Manages Prices belonging to Invoices |
-    | **FinancialEvent** | /invoices/{invoiceKey}/financial-events | Manages FinancialEvents belonging to Invoices |
     | **PaymentMethodReference** | /invoices/{invoiceKey}/payment-method-references | Manages PaymentMethodReferences belonging to Invoices |
+    | **FinancialEvent** | /invoices/{invoiceKey}/financial-events | Manages FinancialEvents belonging to Invoices |
     | **TextualDetail** | /invoices/{invoiceKey}/textual-details | Manages TextualDetails belonging to Invoices |
     | **FinancialSplit** | /invoices/{invoiceKey}/financial-splits | Manages FinancialSplits belonging to Invoices |
     | **FinancialTrack** | /invoices/{invoiceKey}/financial-tracks | Manages FinancialTracks belonging to Invoices |
@@ -114,6 +122,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
+💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **InvoiceStatusTypes** : types of invoice status.<br/>
 💠 **InvoiceTypes** : types of invoices.<br/>
@@ -128,7 +137,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PriceTypes** : types of prices.<br/>
-💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
@@ -231,7 +239,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices</span> <br/>
-        <span class="api-summary">Retrieve a list of all Invoice records. getInvoices</span>
+        <span class="api-summary">Retrieve a list of Invoice entities. getInvoice</span>
     </span>
 </div>
 
@@ -239,7 +247,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices</span> <br/>
-        <span class="api-summary">Create a new Invoice record. createInvoice</span>
+        <span class="api-summary">Create a new Invoice entity. createInvoice</span>
     </span>
 </div>
 
@@ -248,7 +256,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Invoice record. getnvoiceById</span>
+        <span class="api-summary">Retrieve a specific Invoice entity. getnvoiceById</span>
     </span>
 </div>
 
@@ -256,7 +264,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}</span> <br/>
-        <span class="api-summary">Replace a Invoice record. replaceInvoice</span>
+        <span class="api-summary">Replace a Invoice entity. replaceInvoice</span>
     </span>
 </div>
 
@@ -264,7 +272,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}</span> <br/>
-        <span class="api-summary">Partially update a Invoice record. updateInvoice</span>
+        <span class="api-summary">Partially update a Invoice entity. updateInvoice</span>
     </span>
 </div>
 
@@ -272,7 +280,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}</span> <br/>
-        <span class="api-summary">Delete a Invoice Record deleteInvoiceRecord</span>
+        <span class="api-summary">Delete a Invoice entity deleteInvoiceEntity</span>
     </span>
 </div>
 
@@ -281,7 +289,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentTermReference records scoped by invoiceKey. getPaymentTermReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PaymentTermReference entities scoped by invoiceKey. getPaymentTermReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -289,7 +297,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Create a new PaymentTermReference record. createPaymentTermReference</span>
+        <span class="api-summary">Create a new PaymentTermReference entity. createPaymentTermReference</span>
     </span>
 </div>
 
@@ -298,7 +306,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentTermReference record. getaymentTermReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentTermReference entity. getaymentTermReferenceById</span>
     </span>
 </div>
 
@@ -306,7 +314,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentTermReference record. replacePaymentTermReference</span>
+        <span class="api-summary">Replace a PaymentTermReference entity. replacePaymentTermReference</span>
     </span>
 </div>
 
@@ -314,7 +322,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTermReference record. updatePaymentTermReference</span>
+        <span class="api-summary">Partially update a PaymentTermReference entity. updatePaymentTermReference</span>
     </span>
 </div>
 
@@ -322,7 +330,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentTermReference Record deletePaymentTermReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentTermReference entity deletePaymentTermReferenceEntity</span>
     </span>
 </div>
 
@@ -331,7 +339,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items</span> <br/>
-        <span class="api-summary">Retrieve a list of InvoiceItem records scoped by invoiceKey. getInvoiceItemsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of InvoiceItem entities scoped by invoiceKey. getInvoiceItemByInvoiceKey</span>
     </span>
 </div>
 
@@ -339,7 +347,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items</span> <br/>
-        <span class="api-summary">Create a new InvoiceItem record. createInvoiceItem</span>
+        <span class="api-summary">Create a new InvoiceItem entity. createInvoiceItem</span>
     </span>
 </div>
 
@@ -348,7 +356,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items/{invoiceItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific InvoiceItem record. getnvoiceItemById</span>
+        <span class="api-summary">Retrieve a specific InvoiceItem entity. getnvoiceItemById</span>
     </span>
 </div>
 
@@ -356,7 +364,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items/{invoiceItemKey}</span> <br/>
-        <span class="api-summary">Replace a InvoiceItem record. replaceInvoiceItem</span>
+        <span class="api-summary">Replace a InvoiceItem entity. replaceInvoiceItem</span>
     </span>
 </div>
 
@@ -364,7 +372,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items/{invoiceItemKey}</span> <br/>
-        <span class="api-summary">Partially update a InvoiceItem record. updateInvoiceItem</span>
+        <span class="api-summary">Partially update a InvoiceItem entity. updateInvoiceItem</span>
     </span>
 </div>
 
@@ -372,7 +380,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/invoice-items/{invoiceItemKey}</span> <br/>
-        <span class="api-summary">Delete a InvoiceItem Record deleteInvoiceItemRecord</span>
+        <span class="api-summary">Delete a InvoiceItem entity deleteInvoiceItemEntity</span>
     </span>
 </div>
 
@@ -381,7 +389,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references</span> <br/>
-        <span class="api-summary">Retrieve a list of DiscountReference records scoped by invoiceKey. getDiscountReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of DiscountReference entities scoped by invoiceKey. getDiscountReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -389,7 +397,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references</span> <br/>
-        <span class="api-summary">Create a new DiscountReference record. createDiscountReference</span>
+        <span class="api-summary">Create a new DiscountReference entity. createDiscountReference</span>
     </span>
 </div>
 
@@ -398,7 +406,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DiscountReference record. getiscountReferenceById</span>
+        <span class="api-summary">Retrieve a specific DiscountReference entity. getiscountReferenceById</span>
     </span>
 </div>
 
@@ -406,7 +414,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a DiscountReference record. replaceDiscountReference</span>
+        <span class="api-summary">Replace a DiscountReference entity. replaceDiscountReference</span>
     </span>
 </div>
 
@@ -414,7 +422,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountReference record. updateDiscountReference</span>
+        <span class="api-summary">Partially update a DiscountReference entity. updateDiscountReference</span>
     </span>
 </div>
 
@@ -422,7 +430,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
+        <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
     </span>
 </div>
 
@@ -431,7 +439,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references</span> <br/>
-        <span class="api-summary">Retrieve a list of AddressReference records scoped by invoiceKey. getAddressReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of AddressReference entities scoped by invoiceKey. getAddressReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -439,7 +447,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references</span> <br/>
-        <span class="api-summary">Create a new AddressReference record. createAddressReference</span>
+        <span class="api-summary">Create a new AddressReference entity. createAddressReference</span>
     </span>
 </div>
 
@@ -448,7 +456,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AddressReference record. getddressReferenceById</span>
+        <span class="api-summary">Retrieve a specific AddressReference entity. getddressReferenceById</span>
     </span>
 </div>
 
@@ -456,7 +464,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a AddressReference record. replaceAddressReference</span>
+        <span class="api-summary">Replace a AddressReference entity. replaceAddressReference</span>
     </span>
 </div>
 
@@ -464,7 +472,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressReference record. updateAddressReference</span>
+        <span class="api-summary">Partially update a AddressReference entity. updateAddressReference</span>
     </span>
 </div>
 
@@ -472,7 +480,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a AddressReference Record deleteAddressReferenceRecord</span>
+        <span class="api-summary">Delete a AddressReference entity deleteAddressReferenceEntity</span>
     </span>
 </div>
 
@@ -481,7 +489,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialCategoryReference records scoped by invoiceKey. getFinancialCategoryReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference entities scoped by invoiceKey. getFinancialCategoryReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -489,7 +497,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Create a new FinancialCategoryReference record. createFinancialCategoryReference</span>
+        <span class="api-summary">Create a new FinancialCategoryReference entity. createFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -498,7 +506,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialCategoryReference record. getinancialCategoryReferenceById</span>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference entity. getinancialCategoryReferenceById</span>
     </span>
 </div>
 
@@ -506,7 +514,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialCategoryReference record. replaceFinancialCategoryReference</span>
+        <span class="api-summary">Replace a FinancialCategoryReference entity. replaceFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -514,7 +522,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialCategoryReference record. updateFinancialCategoryReference</span>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updateFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -522,7 +530,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialCategoryReference Record deleteFinancialCategoryReferenceRecord</span>
+        <span class="api-summary">Delete a FinancialCategoryReference entity deleteFinancialCategoryReferenceEntity</span>
     </span>
 </div>
 
@@ -531,7 +539,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FeeReference records scoped by invoiceKey. getFeeReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by invoiceKey. getFeeReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -539,7 +547,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references</span> <br/>
-        <span class="api-summary">Create a new FeeReference record. createFeeReference</span>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
     </span>
 </div>
 
@@ -548,7 +556,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FeeReference record. geteeReferenceById</span>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
     </span>
 </div>
 
@@ -556,7 +564,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FeeReference record. replaceFeeReference</span>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
     </span>
 </div>
 
@@ -564,7 +572,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference record. updateFeeReference</span>
+        <span class="api-summary">Partially update a FeeReference entity. updateFeeReference</span>
     </span>
 </div>
 
@@ -572,7 +580,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FeeReference Record deleteFeeReferenceRecord</span>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
     </span>
 </div>
 
@@ -581,7 +589,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by invoiceKey. getMoneysByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by invoiceKey. getMoneyByInvoiceKey</span>
     </span>
 </div>
 
@@ -590,7 +598,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -598,7 +606,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -607,7 +615,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by invoiceKey. getIdentifiersByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by invoiceKey. getIdentifierByInvoiceKey</span>
     </span>
 </div>
 
@@ -615,7 +623,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -624,7 +632,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -632,7 +640,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -640,7 +648,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -648,7 +656,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -657,7 +665,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartReference records scoped by invoiceKey. getPartReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PartReference entities scoped by invoiceKey. getPartReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -665,7 +673,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references</span> <br/>
-        <span class="api-summary">Create a new PartReference record. createPartReference</span>
+        <span class="api-summary">Create a new PartReference entity. createPartReference</span>
     </span>
 </div>
 
@@ -674,7 +682,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartReference record. getartReferenceById</span>
+        <span class="api-summary">Retrieve a specific PartReference entity. getartReferenceById</span>
     </span>
 </div>
 
@@ -682,7 +690,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartReference record. replacePartReference</span>
+        <span class="api-summary">Replace a PartReference entity. replacePartReference</span>
     </span>
 </div>
 
@@ -690,7 +698,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartReference record. updatePartReference</span>
+        <span class="api-summary">Partially update a PartReference entity. updatePartReference</span>
     </span>
 </div>
 
@@ -698,7 +706,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartReference Record deletePartReferenceRecord</span>
+        <span class="api-summary">Delete a PartReference entity deletePartReferenceEntity</span>
     </span>
 </div>
 
@@ -707,7 +715,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by invoiceKey. getEffectivePeriodsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by invoiceKey. getEffectivePeriodByInvoiceKey</span>
     </span>
 </div>
 
@@ -716,7 +724,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -724,7 +732,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -733,7 +741,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references</span> <br/>
-        <span class="api-summary">Retrieve a list of CreditReference records scoped by invoiceKey. getCreditReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of CreditReference entities scoped by invoiceKey. getCreditReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -741,7 +749,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references</span> <br/>
-        <span class="api-summary">Create a new CreditReference record. createCreditReference</span>
+        <span class="api-summary">Create a new CreditReference entity. createCreditReference</span>
     </span>
 </div>
 
@@ -750,7 +758,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CreditReference record. getreditReferenceById</span>
+        <span class="api-summary">Retrieve a specific CreditReference entity. getreditReferenceById</span>
     </span>
 </div>
 
@@ -758,7 +766,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a CreditReference record. replaceCreditReference</span>
+        <span class="api-summary">Replace a CreditReference entity. replaceCreditReference</span>
     </span>
 </div>
 
@@ -766,7 +774,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditReference record. updateCreditReference</span>
+        <span class="api-summary">Partially update a CreditReference entity. updateCreditReference</span>
     </span>
 </div>
 
@@ -774,7 +782,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a CreditReference Record deleteCreditReferenceRecord</span>
+        <span class="api-summary">Delete a CreditReference entity deleteCreditReferenceEntity</span>
     </span>
 </div>
 
@@ -783,7 +791,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RebateReference records scoped by invoiceKey. getRebateReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of RebateReference entities scoped by invoiceKey. getRebateReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -791,7 +799,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references</span> <br/>
-        <span class="api-summary">Create a new RebateReference record. createRebateReference</span>
+        <span class="api-summary">Create a new RebateReference entity. createRebateReference</span>
     </span>
 </div>
 
@@ -800,7 +808,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RebateReference record. getebateReferenceById</span>
+        <span class="api-summary">Retrieve a specific RebateReference entity. getebateReferenceById</span>
     </span>
 </div>
 
@@ -808,7 +816,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RebateReference record. replaceRebateReference</span>
+        <span class="api-summary">Replace a RebateReference entity. replaceRebateReference</span>
     </span>
 </div>
 
@@ -816,7 +824,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RebateReference record. updateRebateReference</span>
+        <span class="api-summary">Partially update a RebateReference entity. updateRebateReference</span>
     </span>
 </div>
 
@@ -824,7 +832,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RebateReference Record deleteRebateReferenceRecord</span>
+        <span class="api-summary">Delete a RebateReference entity deleteRebateReferenceEntity</span>
     </span>
 </div>
 
@@ -833,7 +841,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ShipmentReference records scoped by invoiceKey. getShipmentReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of ShipmentReference entities scoped by invoiceKey. getShipmentReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -841,7 +849,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references</span> <br/>
-        <span class="api-summary">Create a new ShipmentReference record. createShipmentReference</span>
+        <span class="api-summary">Create a new ShipmentReference entity. createShipmentReference</span>
     </span>
 </div>
 
@@ -850,7 +858,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ShipmentReference record. gethipmentReferenceById</span>
+        <span class="api-summary">Retrieve a specific ShipmentReference entity. gethipmentReferenceById</span>
     </span>
 </div>
 
@@ -858,7 +866,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ShipmentReference record. replaceShipmentReference</span>
+        <span class="api-summary">Replace a ShipmentReference entity. replaceShipmentReference</span>
     </span>
 </div>
 
@@ -866,7 +874,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ShipmentReference record. updateShipmentReference</span>
+        <span class="api-summary">Partially update a ShipmentReference entity. updateShipmentReference</span>
     </span>
 </div>
 
@@ -874,7 +882,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ShipmentReference Record deleteShipmentReferenceRecord</span>
+        <span class="api-summary">Delete a ShipmentReference entity deleteShipmentReferenceEntity</span>
     </span>
 </div>
 
@@ -883,7 +891,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by invoiceKey. getUnitOfMeasuresByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure entities scoped by invoiceKey. getUnitOfMeasureByInvoiceKey</span>
     </span>
 </div>
 
@@ -892,7 +900,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure entity. getnitOfMeasureById</span>
     </span>
 </div>
 
@@ -900,7 +908,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+        <span class="api-summary">Replace a UnitOfMeasure entity. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -909,7 +917,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of TaxSplit records scoped by invoiceKey. getTaxSplitsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of TaxSplit entities scoped by invoiceKey. getTaxSplitByInvoiceKey</span>
     </span>
 </div>
 
@@ -917,7 +925,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits</span> <br/>
-        <span class="api-summary">Create a new TaxSplit record. createTaxSplit</span>
+        <span class="api-summary">Create a new TaxSplit entity. createTaxSplit</span>
     </span>
 </div>
 
@@ -926,7 +934,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TaxSplit record. getaxSplitById</span>
+        <span class="api-summary">Retrieve a specific TaxSplit entity. getaxSplitById</span>
     </span>
 </div>
 
@@ -934,7 +942,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Replace a TaxSplit record. replaceTaxSplit</span>
+        <span class="api-summary">Replace a TaxSplit entity. replaceTaxSplit</span>
     </span>
 </div>
 
@@ -942,7 +950,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxSplit record. updateTaxSplit</span>
+        <span class="api-summary">Partially update a TaxSplit entity. updateTaxSplit</span>
     </span>
 </div>
 
@@ -950,7 +958,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Delete a TaxSplit Record deleteTaxSplitRecord</span>
+        <span class="api-summary">Delete a TaxSplit entity deleteTaxSplitEntity</span>
     </span>
 </div>
 
@@ -959,7 +967,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentScheduleReference records scoped by invoiceKey. getPaymentScheduleReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PaymentScheduleReference entities scoped by invoiceKey. getPaymentScheduleReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -967,7 +975,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references</span> <br/>
-        <span class="api-summary">Create a new PaymentScheduleReference record. createPaymentScheduleReference</span>
+        <span class="api-summary">Create a new PaymentScheduleReference entity. createPaymentScheduleReference</span>
     </span>
 </div>
 
@@ -976,7 +984,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentScheduleReference record. getaymentScheduleReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentScheduleReference entity. getaymentScheduleReferenceById</span>
     </span>
 </div>
 
@@ -984,7 +992,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentScheduleReference record. replacePaymentScheduleReference</span>
+        <span class="api-summary">Replace a PaymentScheduleReference entity. replacePaymentScheduleReference</span>
     </span>
 </div>
 
@@ -992,7 +1000,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentScheduleReference record. updatePaymentScheduleReference</span>
+        <span class="api-summary">Partially update a PaymentScheduleReference entity. updatePaymentScheduleReference</span>
     </span>
 </div>
 
@@ -1000,7 +1008,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentScheduleReference Record deletePaymentScheduleReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentScheduleReference entity deletePaymentScheduleReferenceEntity</span>
     </span>
 </div>
 
@@ -1009,7 +1017,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PricePlanReference records scoped by invoiceKey. getPricePlanReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PricePlanReference entities scoped by invoiceKey. getPricePlanReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -1017,7 +1025,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Create a new PricePlanReference record. createPricePlanReference</span>
+        <span class="api-summary">Create a new PricePlanReference entity. createPricePlanReference</span>
     </span>
 </div>
 
@@ -1026,7 +1034,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PricePlanReference record. getricePlanReferenceById</span>
+        <span class="api-summary">Retrieve a specific PricePlanReference entity. getricePlanReferenceById</span>
     </span>
 </div>
 
@@ -1034,7 +1042,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PricePlanReference record. replacePricePlanReference</span>
+        <span class="api-summary">Replace a PricePlanReference entity. replacePricePlanReference</span>
     </span>
 </div>
 
@@ -1042,7 +1050,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlanReference record. updatePricePlanReference</span>
+        <span class="api-summary">Partially update a PricePlanReference entity. updatePricePlanReference</span>
     </span>
 </div>
 
@@ -1050,7 +1058,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PricePlanReference Record deletePricePlanReferenceRecord</span>
+        <span class="api-summary">Delete a PricePlanReference entity deletePricePlanReferenceEntity</span>
     </span>
 </div>
 
@@ -1059,7 +1067,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by invoiceKey. getControlAccountReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by invoiceKey. getControlAccountReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -1067,7 +1075,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -1076,7 +1084,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -1084,7 +1092,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -1092,7 +1100,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -1100,7 +1108,57 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/financial-event-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialEventReference entities scoped by invoiceKey. getFinancialEventReferenceByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references</span> <br/>
+        <span class="api-summary">Create a new FinancialEventReference entity. createFinancialEventReference</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialEventReference entity. getinancialEventReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialEventReference entity. replaceFinancialEventReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialEventReference entity. updateFinancialEventReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialEventReference entity deleteFinancialEventReferenceEntity</span>
     </span>
 </div>
 
@@ -1109,7 +1167,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RewardReference records scoped by invoiceKey. getRewardReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of RewardReference entities scoped by invoiceKey. getRewardReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -1117,7 +1175,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references</span> <br/>
-        <span class="api-summary">Create a new RewardReference record. createRewardReference</span>
+        <span class="api-summary">Create a new RewardReference entity. createRewardReference</span>
     </span>
 </div>
 
@@ -1126,7 +1184,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RewardReference record. getewardReferenceById</span>
+        <span class="api-summary">Retrieve a specific RewardReference entity. getewardReferenceById</span>
     </span>
 </div>
 
@@ -1134,7 +1192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RewardReference record. replaceRewardReference</span>
+        <span class="api-summary">Replace a RewardReference entity. replaceRewardReference</span>
     </span>
 </div>
 
@@ -1142,7 +1200,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardReference record. updateRewardReference</span>
+        <span class="api-summary">Partially update a RewardReference entity. updateRewardReference</span>
     </span>
 </div>
 
@@ -1150,7 +1208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RewardReference Record deleteRewardReferenceRecord</span>
+        <span class="api-summary">Delete a RewardReference entity deleteRewardReferenceEntity</span>
     </span>
 </div>
 
@@ -1159,7 +1217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentAuthorization records scoped by invoiceKey. getPaymentAuthorizationsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PaymentAuthorization entities scoped by invoiceKey. getPaymentAuthorizationByInvoiceKey</span>
     </span>
 </div>
 
@@ -1167,7 +1225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations</span> <br/>
-        <span class="api-summary">Create a new PaymentAuthorization record. createPaymentAuthorization</span>
+        <span class="api-summary">Create a new PaymentAuthorization entity. createPaymentAuthorization</span>
     </span>
 </div>
 
@@ -1176,7 +1234,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations/{paymentAuthorizationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentAuthorization record. getaymentAuthorizationById</span>
+        <span class="api-summary">Retrieve a specific PaymentAuthorization entity. getaymentAuthorizationById</span>
     </span>
 </div>
 
@@ -1184,7 +1242,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations/{paymentAuthorizationKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentAuthorization record. replacePaymentAuthorization</span>
+        <span class="api-summary">Replace a PaymentAuthorization entity. replacePaymentAuthorization</span>
     </span>
 </div>
 
@@ -1192,7 +1250,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations/{paymentAuthorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentAuthorization record. updatePaymentAuthorization</span>
+        <span class="api-summary">Partially update a PaymentAuthorization entity. updatePaymentAuthorization</span>
     </span>
 </div>
 
@@ -1200,7 +1258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-authorizations/{paymentAuthorizationKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentAuthorization Record deletePaymentAuthorizationRecord</span>
+        <span class="api-summary">Delete a PaymentAuthorization entity deletePaymentAuthorizationEntity</span>
     </span>
 </div>
 
@@ -1209,7 +1267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by invoiceKey. getPricesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by invoiceKey. getPriceByInvoiceKey</span>
     </span>
 </div>
 
@@ -1217,7 +1275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -1226,7 +1284,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -1234,7 +1292,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -1242,7 +1300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -1250,57 +1308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
-    </span>
-</div>
-
-### /invoices/{invoiceKey}/financial-events
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialEvent records scoped by invoiceKey. getFinancialEventsByInvoiceKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events</span> <br/>
-        <span class="api-summary">Create a new FinancialEvent record. createFinancialEvent</span>
-    </span>
-</div>
-
-### /invoices/{invoiceKey}/financial-events/{financialEventKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialEvent record. getinancialEventById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialEvent record. replaceFinancialEvent</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialEvent record. updateFinancialEvent</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialEvent Record deleteFinancialEventRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -1309,7 +1317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentMethodReference records scoped by invoiceKey. getPaymentMethodReferencesByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of PaymentMethodReference entities scoped by invoiceKey. getPaymentMethodReferenceByInvoiceKey</span>
     </span>
 </div>
 
@@ -1317,7 +1325,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Create a new PaymentMethodReference record. createPaymentMethodReference</span>
+        <span class="api-summary">Create a new PaymentMethodReference entity. createPaymentMethodReference</span>
     </span>
 </div>
 
@@ -1326,7 +1334,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentMethodReference record. getaymentMethodReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentMethodReference entity. getaymentMethodReferenceById</span>
     </span>
 </div>
 
@@ -1334,7 +1342,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentMethodReference record. replacePaymentMethodReference</span>
+        <span class="api-summary">Replace a PaymentMethodReference entity. replacePaymentMethodReference</span>
     </span>
 </div>
 
@@ -1342,7 +1350,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentMethodReference record. updatePaymentMethodReference</span>
+        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePaymentMethodReference</span>
     </span>
 </div>
 
@@ -1350,7 +1358,57 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentMethodReference Record deletePaymentMethodReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentMethodReference entity deletePaymentMethodReferenceEntity</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/financial-events
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialEvent entities scoped by invoiceKey. getFinancialEventByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events</span> <br/>
+        <span class="api-summary">Create a new FinancialEvent entity. createFinancialEvent</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/financial-events/{financialEventKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialEvent entity. getinancialEventById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialEvent entity. replaceFinancialEvent</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialEvent entity. updateFinancialEvent</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialEvent entity deleteFinancialEventEntity</span>
     </span>
 </div>
 
@@ -1359,7 +1417,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by invoiceKey. getTextualDetailsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by invoiceKey. getTextualDetailByInvoiceKey</span>
     </span>
 </div>
 
@@ -1367,7 +1425,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -1376,7 +1434,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -1384,7 +1442,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -1392,7 +1450,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -1400,7 +1458,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -1409,7 +1467,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSplit records scoped by invoiceKey. getFinancialSplitsByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of FinancialSplit entities scoped by invoiceKey. getFinancialSplitByInvoiceKey</span>
     </span>
 </div>
 
@@ -1417,7 +1475,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits</span> <br/>
-        <span class="api-summary">Create a new FinancialSplit record. createFinancialSplit</span>
+        <span class="api-summary">Create a new FinancialSplit entity. createFinancialSplit</span>
     </span>
 </div>
 
@@ -1426,7 +1484,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSplit record. getinancialSplitById</span>
+        <span class="api-summary">Retrieve a specific FinancialSplit entity. getinancialSplitById</span>
     </span>
 </div>
 
@@ -1434,7 +1492,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSplit record. replaceFinancialSplit</span>
+        <span class="api-summary">Replace a FinancialSplit entity. replaceFinancialSplit</span>
     </span>
 </div>
 
@@ -1442,7 +1500,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplit record. updateFinancialSplit</span>
+        <span class="api-summary">Partially update a FinancialSplit entity. updateFinancialSplit</span>
     </span>
 </div>
 
@@ -1450,7 +1508,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSplit Record deleteFinancialSplitRecord</span>
+        <span class="api-summary">Delete a FinancialSplit entity deleteFinancialSplitEntity</span>
     </span>
 </div>
 
@@ -1459,7 +1517,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialTrack records scoped by invoiceKey. getFinancialTracksByInvoiceKey</span>
+        <span class="api-summary">Retrieve a list of FinancialTrack entities scoped by invoiceKey. getFinancialTrackByInvoiceKey</span>
     </span>
 </div>
 
@@ -1467,7 +1525,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks</span> <br/>
-        <span class="api-summary">Create a new FinancialTrack record. createFinancialTrack</span>
+        <span class="api-summary">Create a new FinancialTrack entity. createFinancialTrack</span>
     </span>
 </div>
 
@@ -1476,7 +1534,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialTrack record. getinancialTrackById</span>
+        <span class="api-summary">Retrieve a specific FinancialTrack entity. getinancialTrackById</span>
     </span>
 </div>
 
@@ -1484,7 +1542,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialTrack record. replaceFinancialTrack</span>
+        <span class="api-summary">Replace a FinancialTrack entity. replaceFinancialTrack</span>
     </span>
 </div>
 
@@ -1492,7 +1550,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialTrack record. updateFinancialTrack</span>
+        <span class="api-summary">Partially update a FinancialTrack entity. updateFinancialTrack</span>
     </span>
 </div>
 
@@ -1500,7 +1558,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialTrack Record deleteFinancialTrackRecord</span>
+        <span class="api-summary">Delete a FinancialTrack entity deleteFinancialTrackEntity</span>
     </span>
 </div>
 
@@ -1510,33 +1568,34 @@ The following resources follow a consistent pattern under Invoiceroot with key {
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **invoice** | /invoices | listInvoices | createInvoice | getInvoices | updateInvoices | deleteInvoices |
-    | **payment-term-reference** | /invoices/{invoiceKey}/payment-term-references | listPaymentTermReferencesByInvoiceKey | createPaymentTermReference | getPaymentTermReferencesByInvoiceKey | updatePaymentTermReferencesByInvoiceKey | deletePaymentTermReferencesByInvoiceKey |
-    | **invoice-item** | /invoices/{invoiceKey}/invoice-items | listInvoiceItemsByInvoiceKey | createInvoiceItem | getInvoiceItemsByInvoiceKey | updateInvoiceItemsByInvoiceKey | deleteInvoiceItemsByInvoiceKey |
-    | **discount-reference** | /invoices/{invoiceKey}/discount-references | listDiscountReferencesByInvoiceKey | createDiscountReference | getDiscountReferencesByInvoiceKey | updateDiscountReferencesByInvoiceKey | deleteDiscountReferencesByInvoiceKey |
-    | **address-reference** | /invoices/{invoiceKey}/address-references | listAddressReferencesByInvoiceKey | createAddressReference | getAddressReferencesByInvoiceKey | updateAddressReferencesByInvoiceKey | deleteAddressReferencesByInvoiceKey |
-    | **financial-category-reference** | /invoices/{invoiceKey}/financial-category-references | listFinancialCategoryReferencesByInvoiceKey | createFinancialCategoryReference | getFinancialCategoryReferencesByInvoiceKey | updateFinancialCategoryReferencesByInvoiceKey | deleteFinancialCategoryReferencesByInvoiceKey |
-    | **fee-reference** | /invoices/{invoiceKey}/fee-references | listFeeReferencesByInvoiceKey | createFeeReference | getFeeReferencesByInvoiceKey | updateFeeReferencesByInvoiceKey | deleteFeeReferencesByInvoiceKey |
-    | **money** | /invoices/{invoiceKey}/moneys | listMoneysByInvoiceKey |  | getMoneysByInvoiceKey | updateMoneysByInvoiceKey | deleteMoneysByInvoiceKey |
-    | **identifier** | /invoices/{invoiceKey}/identifiers | listIdentifiersByInvoiceKey | createIdentifier | getIdentifiersByInvoiceKey | updateIdentifiersByInvoiceKey | deleteIdentifiersByInvoiceKey |
-    | **part-reference** | /invoices/{invoiceKey}/part-references | listPartReferencesByInvoiceKey | createPartReference | getPartReferencesByInvoiceKey | updatePartReferencesByInvoiceKey | deletePartReferencesByInvoiceKey |
-    | **effective-period** | /invoices/{invoiceKey}/effective-periods | listEffectivePeriodsByInvoiceKey |  | getEffectivePeriodsByInvoiceKey | updateEffectivePeriodsByInvoiceKey | deleteEffectivePeriodsByInvoiceKey |
-    | **credit-reference** | /invoices/{invoiceKey}/credit-references | listCreditReferencesByInvoiceKey | createCreditReference | getCreditReferencesByInvoiceKey | updateCreditReferencesByInvoiceKey | deleteCreditReferencesByInvoiceKey |
-    | **rebate-reference** | /invoices/{invoiceKey}/rebate-references | listRebateReferencesByInvoiceKey | createRebateReference | getRebateReferencesByInvoiceKey | updateRebateReferencesByInvoiceKey | deleteRebateReferencesByInvoiceKey |
-    | **shipment-reference** | /invoices/{invoiceKey}/shipment-references | listShipmentReferencesByInvoiceKey | createShipmentReference | getShipmentReferencesByInvoiceKey | updateShipmentReferencesByInvoiceKey | deleteShipmentReferencesByInvoiceKey |
-    | **unit-of-measure** | /invoices/{invoiceKey}/unit-of-measures | listUnitOfMeasuresByInvoiceKey |  | getUnitOfMeasuresByInvoiceKey | updateUnitOfMeasuresByInvoiceKey | deleteUnitOfMeasuresByInvoiceKey |
-    | **tax-split** | /invoices/{invoiceKey}/tax-splits | listTaxSplitsByInvoiceKey | createTaxSplit | getTaxSplitsByInvoiceKey | updateTaxSplitsByInvoiceKey | deleteTaxSplitsByInvoiceKey |
-    | **payment-schedule-reference** | /invoices/{invoiceKey}/payment-schedule-references | listPaymentScheduleReferencesByInvoiceKey | createPaymentScheduleReference | getPaymentScheduleReferencesByInvoiceKey | updatePaymentScheduleReferencesByInvoiceKey | deletePaymentScheduleReferencesByInvoiceKey |
-    | **price-plan-reference** | /invoices/{invoiceKey}/price-plan-references | listPricePlanReferencesByInvoiceKey | createPricePlanReference | getPricePlanReferencesByInvoiceKey | updatePricePlanReferencesByInvoiceKey | deletePricePlanReferencesByInvoiceKey |
-    | **control-account-reference** | /invoices/{invoiceKey}/control-account-references | listControlAccountReferencesByInvoiceKey | createControlAccountReference | getControlAccountReferencesByInvoiceKey | updateControlAccountReferencesByInvoiceKey | deleteControlAccountReferencesByInvoiceKey |
-    | **reward-reference** | /invoices/{invoiceKey}/reward-references | listRewardReferencesByInvoiceKey | createRewardReference | getRewardReferencesByInvoiceKey | updateRewardReferencesByInvoiceKey | deleteRewardReferencesByInvoiceKey |
-    | **payment-authorization** | /invoices/{invoiceKey}/payment-authorizations | listPaymentAuthorizationsByInvoiceKey | createPaymentAuthorization | getPaymentAuthorizationsByInvoiceKey | updatePaymentAuthorizationsByInvoiceKey | deletePaymentAuthorizationsByInvoiceKey |
-    | **price** | /invoices/{invoiceKey}/prices | listPricesByInvoiceKey | createPrice | getPricesByInvoiceKey | updatePricesByInvoiceKey | deletePricesByInvoiceKey |
-    | **financial-event** | /invoices/{invoiceKey}/financial-events | listFinancialEventsByInvoiceKey | createFinancialEvent | getFinancialEventsByInvoiceKey | updateFinancialEventsByInvoiceKey | deleteFinancialEventsByInvoiceKey |
-    | **payment-method-reference** | /invoices/{invoiceKey}/payment-method-references | listPaymentMethodReferencesByInvoiceKey | createPaymentMethodReference | getPaymentMethodReferencesByInvoiceKey | updatePaymentMethodReferencesByInvoiceKey | deletePaymentMethodReferencesByInvoiceKey |
-    | **textual-detail** | /invoices/{invoiceKey}/textual-details | listTextualDetailsByInvoiceKey | createTextualDetail | getTextualDetailsByInvoiceKey | updateTextualDetailsByInvoiceKey | deleteTextualDetailsByInvoiceKey |
-    | **financial-split** | /invoices/{invoiceKey}/financial-splits | listFinancialSplitsByInvoiceKey | createFinancialSplit | getFinancialSplitsByInvoiceKey | updateFinancialSplitsByInvoiceKey | deleteFinancialSplitsByInvoiceKey |
-    | **financial-track** | /invoices/{invoiceKey}/financial-tracks | listFinancialTracksByInvoiceKey | createFinancialTrack | getFinancialTracksByInvoiceKey | updateFinancialTracksByInvoiceKey | deleteFinancialTracksByInvoiceKey |
+    | **invoice** | /invoices | listInvoice | createInvoice | getInvoice | updateInvoice | deleteInvoice |
+    | **payment-term-reference** | /invoices/{invoiceKey}/payment-term-references | listPaymentTermReferenceByInvoiceKey | createPaymentTermReference | getPaymentTermReferenceByInvoiceKey | updatePaymentTermReferenceByInvoiceKey | deletePaymentTermReferenceByInvoiceKey |
+    | **invoice-item** | /invoices/{invoiceKey}/invoice-items | listInvoiceItemByInvoiceKey | createInvoiceItem | getInvoiceItemByInvoiceKey | updateInvoiceItemByInvoiceKey | deleteInvoiceItemByInvoiceKey |
+    | **discount-reference** | /invoices/{invoiceKey}/discount-references | listDiscountReferenceByInvoiceKey | createDiscountReference | getDiscountReferenceByInvoiceKey | updateDiscountReferenceByInvoiceKey | deleteDiscountReferenceByInvoiceKey |
+    | **address-reference** | /invoices/{invoiceKey}/address-references | listAddressReferenceByInvoiceKey | createAddressReference | getAddressReferenceByInvoiceKey | updateAddressReferenceByInvoiceKey | deleteAddressReferenceByInvoiceKey |
+    | **financial-category-reference** | /invoices/{invoiceKey}/financial-category-references | listFinancialCategoryReferenceByInvoiceKey | createFinancialCategoryReference | getFinancialCategoryReferenceByInvoiceKey | updateFinancialCategoryReferenceByInvoiceKey | deleteFinancialCategoryReferenceByInvoiceKey |
+    | **fee-reference** | /invoices/{invoiceKey}/fee-references | listFeeReferenceByInvoiceKey | createFeeReference | getFeeReferenceByInvoiceKey | updateFeeReferenceByInvoiceKey | deleteFeeReferenceByInvoiceKey |
+    | **money** | /invoices/{invoiceKey}/moneys | listMoneyByInvoiceKey |  | getMoneyByInvoiceKey | updateMoneyByInvoiceKey | deleteMoneyByInvoiceKey |
+    | **identifier** | /invoices/{invoiceKey}/identifiers | listIdentifierByInvoiceKey | createIdentifier | getIdentifierByInvoiceKey | updateIdentifierByInvoiceKey | deleteIdentifierByInvoiceKey |
+    | **part-reference** | /invoices/{invoiceKey}/part-references | listPartReferenceByInvoiceKey | createPartReference | getPartReferenceByInvoiceKey | updatePartReferenceByInvoiceKey | deletePartReferenceByInvoiceKey |
+    | **effective-period** | /invoices/{invoiceKey}/effective-periods | listEffectivePeriodByInvoiceKey |  | getEffectivePeriodByInvoiceKey | updateEffectivePeriodByInvoiceKey | deleteEffectivePeriodByInvoiceKey |
+    | **credit-reference** | /invoices/{invoiceKey}/credit-references | listCreditReferenceByInvoiceKey | createCreditReference | getCreditReferenceByInvoiceKey | updateCreditReferenceByInvoiceKey | deleteCreditReferenceByInvoiceKey |
+    | **rebate-reference** | /invoices/{invoiceKey}/rebate-references | listRebateReferenceByInvoiceKey | createRebateReference | getRebateReferenceByInvoiceKey | updateRebateReferenceByInvoiceKey | deleteRebateReferenceByInvoiceKey |
+    | **shipment-reference** | /invoices/{invoiceKey}/shipment-references | listShipmentReferenceByInvoiceKey | createShipmentReference | getShipmentReferenceByInvoiceKey | updateShipmentReferenceByInvoiceKey | deleteShipmentReferenceByInvoiceKey |
+    | **unit-of-measure** | /invoices/{invoiceKey}/unit-of-measures | listUnitOfMeasureByInvoiceKey |  | getUnitOfMeasureByInvoiceKey | updateUnitOfMeasureByInvoiceKey | deleteUnitOfMeasureByInvoiceKey |
+    | **tax-split** | /invoices/{invoiceKey}/tax-splits | listTaxSplitByInvoiceKey | createTaxSplit | getTaxSplitByInvoiceKey | updateTaxSplitByInvoiceKey | deleteTaxSplitByInvoiceKey |
+    | **payment-schedule-reference** | /invoices/{invoiceKey}/payment-schedule-references | listPaymentScheduleReferenceByInvoiceKey | createPaymentScheduleReference | getPaymentScheduleReferenceByInvoiceKey | updatePaymentScheduleReferenceByInvoiceKey | deletePaymentScheduleReferenceByInvoiceKey |
+    | **price-plan-reference** | /invoices/{invoiceKey}/price-plan-references | listPricePlanReferenceByInvoiceKey | createPricePlanReference | getPricePlanReferenceByInvoiceKey | updatePricePlanReferenceByInvoiceKey | deletePricePlanReferenceByInvoiceKey |
+    | **control-account-reference** | /invoices/{invoiceKey}/control-account-references | listControlAccountReferenceByInvoiceKey | createControlAccountReference | getControlAccountReferenceByInvoiceKey | updateControlAccountReferenceByInvoiceKey | deleteControlAccountReferenceByInvoiceKey |
+    | **financial-event-reference** | /invoices/{invoiceKey}/financial-event-references | listFinancialEventReferenceByInvoiceKey | createFinancialEventReference | getFinancialEventReferenceByInvoiceKey | updateFinancialEventReferenceByInvoiceKey | deleteFinancialEventReferenceByInvoiceKey |
+    | **reward-reference** | /invoices/{invoiceKey}/reward-references | listRewardReferenceByInvoiceKey | createRewardReference | getRewardReferenceByInvoiceKey | updateRewardReferenceByInvoiceKey | deleteRewardReferenceByInvoiceKey |
+    | **payment-authorization** | /invoices/{invoiceKey}/payment-authorizations | listPaymentAuthorizationByInvoiceKey | createPaymentAuthorization | getPaymentAuthorizationByInvoiceKey | updatePaymentAuthorizationByInvoiceKey | deletePaymentAuthorizationByInvoiceKey |
+    | **price** | /invoices/{invoiceKey}/prices | listPriceByInvoiceKey | createPrice | getPriceByInvoiceKey | updatePriceByInvoiceKey | deletePriceByInvoiceKey |
+    | **payment-method-reference** | /invoices/{invoiceKey}/payment-method-references | listPaymentMethodReferenceByInvoiceKey | createPaymentMethodReference | getPaymentMethodReferenceByInvoiceKey | updatePaymentMethodReferenceByInvoiceKey | deletePaymentMethodReferenceByInvoiceKey |
+    | **financial-event** | /invoices/{invoiceKey}/financial-events | listFinancialEventByInvoiceKey | createFinancialEvent | getFinancialEventByInvoiceKey | updateFinancialEventByInvoiceKey | deleteFinancialEventByInvoiceKey |
+    | **textual-detail** | /invoices/{invoiceKey}/textual-details | listTextualDetailByInvoiceKey | createTextualDetail | getTextualDetailByInvoiceKey | updateTextualDetailByInvoiceKey | deleteTextualDetailByInvoiceKey |
+    | **financial-split** | /invoices/{invoiceKey}/financial-splits | listFinancialSplitByInvoiceKey | createFinancialSplit | getFinancialSplitByInvoiceKey | updateFinancialSplitByInvoiceKey | deleteFinancialSplitByInvoiceKey |
+    | **financial-track** | /invoices/{invoiceKey}/financial-tracks | listFinancialTrackByInvoiceKey | createFinancialTrack | getFinancialTrackByInvoiceKey | updateFinancialTrackByInvoiceKey | deleteFinancialTrackByInvoiceKey |
 
 ***Note on List Operations:***
 

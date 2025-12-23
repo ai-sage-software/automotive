@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **FinancialSplitReference**, **GeographicBoundaryReference**, **Identifier**, **PricePlan**, **PriceSensitivity**, **ProductScheduleReference**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **FinancialSplitReference**, **GeographicBoundaryReference**, **Identifier**, **PricePlan**, **PriceSensitivity**, **ProductScheduleReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -184,7 +191,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans</span> <br/>
-        <span class="api-summary">Retrieve a list of all PricePlan records. getPricePlans</span>
+        <span class="api-summary">Retrieve a list of PricePlan entities. getPricePlan</span>
     </span>
 </div>
 
@@ -192,7 +199,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans</span> <br/>
-        <span class="api-summary">Create a new PricePlan record. createPricePlan</span>
+        <span class="api-summary">Create a new PricePlan entity. createPricePlan</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PricePlan record. getricePlanById</span>
+        <span class="api-summary">Retrieve a specific PricePlan entity. getricePlanById</span>
     </span>
 </div>
 
@@ -209,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}</span> <br/>
-        <span class="api-summary">Replace a PricePlan record. replacePricePlan</span>
+        <span class="api-summary">Replace a PricePlan entity. replacePricePlan</span>
     </span>
 </div>
 
@@ -217,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlan record. updatePricePlan</span>
+        <span class="api-summary">Partially update a PricePlan entity. updatePricePlan</span>
     </span>
 </div>
 
@@ -225,7 +232,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}</span> <br/>
-        <span class="api-summary">Delete a PricePlan Record deletePricePlanRecord</span>
+        <span class="api-summary">Delete a PricePlan entity deletePricePlanEntity</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ProductScheduleReference records scoped by pricePlanKey. getProductScheduleReferencesByPricePlanKey</span>
+        <span class="api-summary">Retrieve a list of ProductScheduleReference entities scoped by pricePlanKey. getProductScheduleReferenceByPricePlanKey</span>
     </span>
 </div>
 
@@ -242,7 +249,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references</span> <br/>
-        <span class="api-summary">Create a new ProductScheduleReference record. createProductScheduleReference</span>
+        <span class="api-summary">Create a new ProductScheduleReference entity. createProductScheduleReference</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ProductScheduleReference record. getroductScheduleReferenceById</span>
+        <span class="api-summary">Retrieve a specific ProductScheduleReference entity. getroductScheduleReferenceById</span>
     </span>
 </div>
 
@@ -259,7 +266,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ProductScheduleReference record. replaceProductScheduleReference</span>
+        <span class="api-summary">Replace a ProductScheduleReference entity. replaceProductScheduleReference</span>
     </span>
 </div>
 
@@ -267,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ProductScheduleReference record. updateProductScheduleReference</span>
+        <span class="api-summary">Partially update a ProductScheduleReference entity. updateProductScheduleReference</span>
     </span>
 </div>
 
@@ -275,7 +282,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ProductScheduleReference Record deleteProductScheduleReferenceRecord</span>
+        <span class="api-summary">Delete a ProductScheduleReference entity deleteProductScheduleReferenceEntity</span>
     </span>
 </div>
 
@@ -284,7 +291,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by pricePlanKey. getIdentifiersByPricePlanKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by pricePlanKey. getIdentifierByPricePlanKey</span>
     </span>
 </div>
 
@@ -292,7 +299,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -301,7 +308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -309,7 +316,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -317,7 +324,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -325,7 +332,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -334,7 +341,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references</span> <br/>
-        <span class="api-summary">Retrieve a list of GeographicBoundaryReference records scoped by pricePlanKey. getGeographicBoundaryReferencesByPricePlanKey</span>
+        <span class="api-summary">Retrieve a list of GeographicBoundaryReference entities scoped by pricePlanKey. getGeographicBoundaryReferenceByPricePlanKey</span>
     </span>
 </div>
 
@@ -342,7 +349,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references</span> <br/>
-        <span class="api-summary">Create a new GeographicBoundaryReference record. createGeographicBoundaryReference</span>
+        <span class="api-summary">Create a new GeographicBoundaryReference entity. createGeographicBoundaryReference</span>
     </span>
 </div>
 
@@ -351,7 +358,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific GeographicBoundaryReference record. geteographicBoundaryReferenceById</span>
+        <span class="api-summary">Retrieve a specific GeographicBoundaryReference entity. geteographicBoundaryReferenceById</span>
     </span>
 </div>
 
@@ -359,7 +366,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a GeographicBoundaryReference record. replaceGeographicBoundaryReference</span>
+        <span class="api-summary">Replace a GeographicBoundaryReference entity. replaceGeographicBoundaryReference</span>
     </span>
 </div>
 
@@ -367,7 +374,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeographicBoundaryReference record. updateGeographicBoundaryReference</span>
+        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updateGeographicBoundaryReference</span>
     </span>
 </div>
 
@@ -375,7 +382,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a GeographicBoundaryReference Record deleteGeographicBoundaryReferenceRecord</span>
+        <span class="api-summary">Delete a GeographicBoundaryReference entity deleteGeographicBoundaryReferenceEntity</span>
     </span>
 </div>
 
@@ -384,7 +391,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities</span> <br/>
-        <span class="api-summary">Retrieve a list of PriceSensitivity records scoped by pricePlanKey. getPriceSensitivitysByPricePlanKey</span>
+        <span class="api-summary">Retrieve a list of PriceSensitivity entities scoped by pricePlanKey. getPriceSensitivityByPricePlanKey</span>
     </span>
 </div>
 
@@ -392,7 +399,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities</span> <br/>
-        <span class="api-summary">Create a new PriceSensitivity record. createPriceSensitivity</span>
+        <span class="api-summary">Create a new PriceSensitivity entity. createPriceSensitivity</span>
     </span>
 </div>
 
@@ -401,7 +408,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PriceSensitivity record. getriceSensitivityById</span>
+        <span class="api-summary">Retrieve a specific PriceSensitivity entity. getriceSensitivityById</span>
     </span>
 </div>
 
@@ -409,7 +416,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Replace a PriceSensitivity record. replacePriceSensitivity</span>
+        <span class="api-summary">Replace a PriceSensitivity entity. replacePriceSensitivity</span>
     </span>
 </div>
 
@@ -417,7 +424,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceSensitivity record. updatePriceSensitivity</span>
+        <span class="api-summary">Partially update a PriceSensitivity entity. updatePriceSensitivity</span>
     </span>
 </div>
 
@@ -425,7 +432,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Delete a PriceSensitivity Record deletePriceSensitivityRecord</span>
+        <span class="api-summary">Delete a PriceSensitivity entity deletePriceSensitivityEntity</span>
     </span>
 </div>
 
@@ -434,7 +441,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSplitReference records scoped by pricePlanKey. getFinancialSplitReferencesByPricePlanKey</span>
+        <span class="api-summary">Retrieve a list of FinancialSplitReference entities scoped by pricePlanKey. getFinancialSplitReferenceByPricePlanKey</span>
     </span>
 </div>
 
@@ -442,7 +449,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references</span> <br/>
-        <span class="api-summary">Create a new FinancialSplitReference record. createFinancialSplitReference</span>
+        <span class="api-summary">Create a new FinancialSplitReference entity. createFinancialSplitReference</span>
     </span>
 </div>
 
@@ -451,7 +458,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSplitReference record. getinancialSplitReferenceById</span>
+        <span class="api-summary">Retrieve a specific FinancialSplitReference entity. getinancialSplitReferenceById</span>
     </span>
 </div>
 
@@ -459,7 +466,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSplitReference record. replaceFinancialSplitReference</span>
+        <span class="api-summary">Replace a FinancialSplitReference entity. replaceFinancialSplitReference</span>
     </span>
 </div>
 
@@ -467,7 +474,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplitReference record. updateFinancialSplitReference</span>
+        <span class="api-summary">Partially update a FinancialSplitReference entity. updateFinancialSplitReference</span>
     </span>
 </div>
 
@@ -475,7 +482,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSplitReference Record deleteFinancialSplitReferenceRecord</span>
+        <span class="api-summary">Delete a FinancialSplitReference entity deleteFinancialSplitReferenceEntity</span>
     </span>
 </div>
 
@@ -485,12 +492,12 @@ The following resources follow a consistent pattern under PricePlanroot with key
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **price-plan** | /price-plans | listPricePlans | createPricePlan | getPricePlans | updatePricePlans | deletePricePlans |
-    | **product-schedule-reference** | /price-plans/{pricePlanKey}/product-schedule-references | listProductScheduleReferencesByPricePlanKey | createProductScheduleReference | getProductScheduleReferencesByPricePlanKey | updateProductScheduleReferencesByPricePlanKey | deleteProductScheduleReferencesByPricePlanKey |
-    | **identifier** | /price-plans/{pricePlanKey}/identifiers | listIdentifiersByPricePlanKey | createIdentifier | getIdentifiersByPricePlanKey | updateIdentifiersByPricePlanKey | deleteIdentifiersByPricePlanKey |
-    | **geographic-boundary-reference** | /price-plans/{pricePlanKey}/geographic-boundary-references | listGeographicBoundaryReferencesByPricePlanKey | createGeographicBoundaryReference | getGeographicBoundaryReferencesByPricePlanKey | updateGeographicBoundaryReferencesByPricePlanKey | deleteGeographicBoundaryReferencesByPricePlanKey |
-    | **price-sensitivitie** | /price-plans/{pricePlanKey}/price-sensitivities | listPriceSensitivitysByPricePlanKey | createPriceSensitivity | getPriceSensitivitysByPricePlanKey | updatePriceSensitivitysByPricePlanKey | deletePriceSensitivitysByPricePlanKey |
-    | **financial-split-reference** | /price-plans/{pricePlanKey}/financial-split-references | listFinancialSplitReferencesByPricePlanKey | createFinancialSplitReference | getFinancialSplitReferencesByPricePlanKey | updateFinancialSplitReferencesByPricePlanKey | deleteFinancialSplitReferencesByPricePlanKey |
+    | **price-plan** | /price-plans | listPricePlan | createPricePlan | getPricePlan | updatePricePlan | deletePricePlan |
+    | **product-schedule-reference** | /price-plans/{pricePlanKey}/product-schedule-references | listProductScheduleReferenceByPricePlanKey | createProductScheduleReference | getProductScheduleReferenceByPricePlanKey | updateProductScheduleReferenceByPricePlanKey | deleteProductScheduleReferenceByPricePlanKey |
+    | **identifier** | /price-plans/{pricePlanKey}/identifiers | listIdentifierByPricePlanKey | createIdentifier | getIdentifierByPricePlanKey | updateIdentifierByPricePlanKey | deleteIdentifierByPricePlanKey |
+    | **geographic-boundary-reference** | /price-plans/{pricePlanKey}/geographic-boundary-references | listGeographicBoundaryReferenceByPricePlanKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByPricePlanKey | updateGeographicBoundaryReferenceByPricePlanKey | deleteGeographicBoundaryReferenceByPricePlanKey |
+    | **price-sensitivitie** | /price-plans/{pricePlanKey}/price-sensitivities | listPriceSensitivityByPricePlanKey | createPriceSensitivity | getPriceSensitivityByPricePlanKey | updatePriceSensitivityByPricePlanKey | deletePriceSensitivityByPricePlanKey |
+    | **financial-split-reference** | /price-plans/{pricePlanKey}/financial-split-references | listFinancialSplitReferenceByPricePlanKey | createFinancialSplitReference | getFinancialSplitReferenceByPricePlanKey | updateFinancialSplitReferenceByPricePlanKey | deleteFinancialSplitReferenceByPricePlanKey |
 
 ***Note on List Operations:***
 

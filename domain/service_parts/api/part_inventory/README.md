@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **PartInventory**, **PartInventoryEvent**, **PartInventoryMetric**, **PartReference**, **Price**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **PartInventory**, **PartInventoryEvent**, **PartInventoryMetric**, **PartReference**, **Price**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -193,7 +200,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories</span> <br/>
-        <span class="api-summary">Retrieve a list of all PartInventory records. getPartInventorys</span>
+        <span class="api-summary">Retrieve a list of PartInventory entities. getPartInventory</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories</span> <br/>
-        <span class="api-summary">Create a new PartInventory record. createPartInventory</span>
+        <span class="api-summary">Create a new PartInventory entity. createPartInventory</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartInventory record. getartInventoryById</span>
+        <span class="api-summary">Retrieve a specific PartInventory entity. getartInventoryById</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}</span> <br/>
-        <span class="api-summary">Replace a PartInventory record. replacePartInventory</span>
+        <span class="api-summary">Replace a PartInventory entity. replacePartInventory</span>
     </span>
 </div>
 
@@ -226,7 +233,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}</span> <br/>
-        <span class="api-summary">Partially update a PartInventory record. updatePartInventory</span>
+        <span class="api-summary">Partially update a PartInventory entity. updatePartInventory</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}</span> <br/>
-        <span class="api-summary">Delete a PartInventory Record deletePartInventoryRecord</span>
+        <span class="api-summary">Delete a PartInventory entity deletePartInventoryEntity</span>
     </span>
 </div>
 
@@ -243,7 +250,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by partInventoryKey. getIdentifiersByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by partInventoryKey. getIdentifierByPartInventoryKey</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -260,7 +267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -268,7 +275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -276,7 +283,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -284,7 +291,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -293,7 +300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events</span> <br/>
-        <span class="api-summary">Retrieve a list of PartInventoryEvent records scoped by partInventoryKey. getPartInventoryEventsByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of PartInventoryEvent entities scoped by partInventoryKey. getPartInventoryEventByPartInventoryKey</span>
     </span>
 </div>
 
@@ -301,7 +308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events</span> <br/>
-        <span class="api-summary">Create a new PartInventoryEvent record. createPartInventoryEvent</span>
+        <span class="api-summary">Create a new PartInventoryEvent entity. createPartInventoryEvent</span>
     </span>
 </div>
 
@@ -310,7 +317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events/{partInventoryEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartInventoryEvent record. getartInventoryEventById</span>
+        <span class="api-summary">Retrieve a specific PartInventoryEvent entity. getartInventoryEventById</span>
     </span>
 </div>
 
@@ -318,7 +325,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events/{partInventoryEventKey}</span> <br/>
-        <span class="api-summary">Replace a PartInventoryEvent record. replacePartInventoryEvent</span>
+        <span class="api-summary">Replace a PartInventoryEvent entity. replacePartInventoryEvent</span>
     </span>
 </div>
 
@@ -326,7 +333,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events/{partInventoryEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PartInventoryEvent record. updatePartInventoryEvent</span>
+        <span class="api-summary">Partially update a PartInventoryEvent entity. updatePartInventoryEvent</span>
     </span>
 </div>
 
@@ -334,7 +341,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-events/{partInventoryEventKey}</span> <br/>
-        <span class="api-summary">Delete a PartInventoryEvent Record deletePartInventoryEventRecord</span>
+        <span class="api-summary">Delete a PartInventoryEvent entity deletePartInventoryEventEntity</span>
     </span>
 </div>
 
@@ -343,7 +350,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartReference records scoped by partInventoryKey. getPartReferencesByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of PartReference entities scoped by partInventoryKey. getPartReferenceByPartInventoryKey</span>
     </span>
 </div>
 
@@ -351,7 +358,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references</span> <br/>
-        <span class="api-summary">Create a new PartReference record. createPartReference</span>
+        <span class="api-summary">Create a new PartReference entity. createPartReference</span>
     </span>
 </div>
 
@@ -360,7 +367,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartReference record. getartReferenceById</span>
+        <span class="api-summary">Retrieve a specific PartReference entity. getartReferenceById</span>
     </span>
 </div>
 
@@ -368,7 +375,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartReference record. replacePartReference</span>
+        <span class="api-summary">Replace a PartReference entity. replacePartReference</span>
     </span>
 </div>
 
@@ -376,7 +383,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartReference record. updatePartReference</span>
+        <span class="api-summary">Partially update a PartReference entity. updatePartReference</span>
     </span>
 </div>
 
@@ -384,7 +391,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartReference Record deletePartReferenceRecord</span>
+        <span class="api-summary">Delete a PartReference entity deletePartReferenceEntity</span>
     </span>
 </div>
 
@@ -393,7 +400,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by partInventoryKey. getPricesByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by partInventoryKey. getPriceByPartInventoryKey</span>
     </span>
 </div>
 
@@ -401,7 +408,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -410,7 +417,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -418,7 +425,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -426,7 +433,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -434,7 +441,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -443,7 +450,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by partInventoryKey. getEffectivePeriodsByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by partInventoryKey. getEffectivePeriodByPartInventoryKey</span>
     </span>
 </div>
 
@@ -452,7 +459,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -460,7 +467,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -469,7 +476,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by partInventoryKey. getControlAccountReferencesByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by partInventoryKey. getControlAccountReferenceByPartInventoryKey</span>
     </span>
 </div>
 
@@ -477,7 +484,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -486,7 +493,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -494,7 +501,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -502,7 +509,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -510,7 +517,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -519,7 +526,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partInventoryKey. getTimeSlotsByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by partInventoryKey. getTimeSlotByPartInventoryKey</span>
     </span>
 </div>
 
@@ -528,7 +535,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -536,7 +543,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -545,7 +552,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics</span> <br/>
-        <span class="api-summary">Retrieve a list of PartInventoryMetric records scoped by partInventoryKey. getPartInventoryMetricsByPartInventoryKey</span>
+        <span class="api-summary">Retrieve a list of PartInventoryMetric entities scoped by partInventoryKey. getPartInventoryMetricByPartInventoryKey</span>
     </span>
 </div>
 
@@ -553,7 +560,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics</span> <br/>
-        <span class="api-summary">Create a new PartInventoryMetric record. createPartInventoryMetric</span>
+        <span class="api-summary">Create a new PartInventoryMetric entity. createPartInventoryMetric</span>
     </span>
 </div>
 
@@ -562,7 +569,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics/{partInventoryMetricKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartInventoryMetric record. getartInventoryMetricById</span>
+        <span class="api-summary">Retrieve a specific PartInventoryMetric entity. getartInventoryMetricById</span>
     </span>
 </div>
 
@@ -570,7 +577,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics/{partInventoryMetricKey}</span> <br/>
-        <span class="api-summary">Replace a PartInventoryMetric record. replacePartInventoryMetric</span>
+        <span class="api-summary">Replace a PartInventoryMetric entity. replacePartInventoryMetric</span>
     </span>
 </div>
 
@@ -578,7 +585,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics/{partInventoryMetricKey}</span> <br/>
-        <span class="api-summary">Partially update a PartInventoryMetric record. updatePartInventoryMetric</span>
+        <span class="api-summary">Partially update a PartInventoryMetric entity. updatePartInventoryMetric</span>
     </span>
 </div>
 
@@ -586,7 +593,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-inventories/{partInventoryKey}/part-inventory-metrics/{partInventoryMetricKey}</span> <br/>
-        <span class="api-summary">Delete a PartInventoryMetric Record deletePartInventoryMetricRecord</span>
+        <span class="api-summary">Delete a PartInventoryMetric entity deletePartInventoryMetricEntity</span>
     </span>
 </div>
 
@@ -596,15 +603,15 @@ The following resources follow a consistent pattern under PartInventoryroot with
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **part-inventorie** | /part-inventories | listPartInventorys | createPartInventory | getPartInventorys | updatePartInventorys | deletePartInventorys |
-    | **identifier** | /part-inventories/{partInventoryKey}/identifiers | listIdentifiersByPartInventoryKey | createIdentifier | getIdentifiersByPartInventoryKey | updateIdentifiersByPartInventoryKey | deleteIdentifiersByPartInventoryKey |
-    | **part-inventory-event** | /part-inventories/{partInventoryKey}/part-inventory-events | listPartInventoryEventsByPartInventoryKey | createPartInventoryEvent | getPartInventoryEventsByPartInventoryKey | updatePartInventoryEventsByPartInventoryKey | deletePartInventoryEventsByPartInventoryKey |
-    | **part-reference** | /part-inventories/{partInventoryKey}/part-references | listPartReferencesByPartInventoryKey | createPartReference | getPartReferencesByPartInventoryKey | updatePartReferencesByPartInventoryKey | deletePartReferencesByPartInventoryKey |
-    | **price** | /part-inventories/{partInventoryKey}/prices | listPricesByPartInventoryKey | createPrice | getPricesByPartInventoryKey | updatePricesByPartInventoryKey | deletePricesByPartInventoryKey |
-    | **effective-period** | /part-inventories/{partInventoryKey}/effective-periods | listEffectivePeriodsByPartInventoryKey |  | getEffectivePeriodsByPartInventoryKey | updateEffectivePeriodsByPartInventoryKey | deleteEffectivePeriodsByPartInventoryKey |
-    | **control-account-reference** | /part-inventories/{partInventoryKey}/control-account-references | listControlAccountReferencesByPartInventoryKey | createControlAccountReference | getControlAccountReferencesByPartInventoryKey | updateControlAccountReferencesByPartInventoryKey | deleteControlAccountReferencesByPartInventoryKey |
-    | **time-slot** | /part-inventories/{partInventoryKey}/time-slots | listTimeSlotsByPartInventoryKey |  | getTimeSlotsByPartInventoryKey | updateTimeSlotsByPartInventoryKey | deleteTimeSlotsByPartInventoryKey |
-    | **part-inventory-metric** | /part-inventories/{partInventoryKey}/part-inventory-metrics | listPartInventoryMetricsByPartInventoryKey | createPartInventoryMetric | getPartInventoryMetricsByPartInventoryKey | updatePartInventoryMetricsByPartInventoryKey | deletePartInventoryMetricsByPartInventoryKey |
+    | **part-inventorie** | /part-inventories | listPartInventory | createPartInventory | getPartInventory | updatePartInventory | deletePartInventory |
+    | **identifier** | /part-inventories/{partInventoryKey}/identifiers | listIdentifierByPartInventoryKey | createIdentifier | getIdentifierByPartInventoryKey | updateIdentifierByPartInventoryKey | deleteIdentifierByPartInventoryKey |
+    | **part-inventory-event** | /part-inventories/{partInventoryKey}/part-inventory-events | listPartInventoryEventByPartInventoryKey | createPartInventoryEvent | getPartInventoryEventByPartInventoryKey | updatePartInventoryEventByPartInventoryKey | deletePartInventoryEventByPartInventoryKey |
+    | **part-reference** | /part-inventories/{partInventoryKey}/part-references | listPartReferenceByPartInventoryKey | createPartReference | getPartReferenceByPartInventoryKey | updatePartReferenceByPartInventoryKey | deletePartReferenceByPartInventoryKey |
+    | **price** | /part-inventories/{partInventoryKey}/prices | listPriceByPartInventoryKey | createPrice | getPriceByPartInventoryKey | updatePriceByPartInventoryKey | deletePriceByPartInventoryKey |
+    | **effective-period** | /part-inventories/{partInventoryKey}/effective-periods | listEffectivePeriodByPartInventoryKey |  | getEffectivePeriodByPartInventoryKey | updateEffectivePeriodByPartInventoryKey | deleteEffectivePeriodByPartInventoryKey |
+    | **control-account-reference** | /part-inventories/{partInventoryKey}/control-account-references | listControlAccountReferenceByPartInventoryKey | createControlAccountReference | getControlAccountReferenceByPartInventoryKey | updateControlAccountReferenceByPartInventoryKey | deleteControlAccountReferenceByPartInventoryKey |
+    | **time-slot** | /part-inventories/{partInventoryKey}/time-slots | listTimeSlotByPartInventoryKey |  | getTimeSlotByPartInventoryKey | updateTimeSlotByPartInventoryKey | deleteTimeSlotByPartInventoryKey |
+    | **part-inventory-metric** | /part-inventories/{partInventoryKey}/part-inventory-metrics | listPartInventoryMetricByPartInventoryKey | createPartInventoryMetric | getPartInventoryMetricByPartInventoryKey | updatePartInventoryMetricByPartInventoryKey | deletePartInventoryMetricByPartInventoryKey |
 
 ***Note on List Operations:***
 

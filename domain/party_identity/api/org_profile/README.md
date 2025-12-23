@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -238,7 +245,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles</span> <br/>
-        <span class="api-summary">Retrieve a list of all OrgProfile records. getOrgProfiles</span>
+        <span class="api-summary">Retrieve a list of OrgProfile entities. getOrgProfile</span>
     </span>
 </div>
 
@@ -246,7 +253,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles</span> <br/>
-        <span class="api-summary">Create a new OrgProfile record. createOrgProfile</span>
+        <span class="api-summary">Create a new OrgProfile entity. createOrgProfile</span>
     </span>
 </div>
 
@@ -255,7 +262,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific OrgProfile record. getrgProfileById</span>
+        <span class="api-summary">Retrieve a specific OrgProfile entity. getrgProfileById</span>
     </span>
 </div>
 
@@ -263,7 +270,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}</span> <br/>
-        <span class="api-summary">Replace a OrgProfile record. replaceOrgProfile</span>
+        <span class="api-summary">Replace a OrgProfile entity. replaceOrgProfile</span>
     </span>
 </div>
 
@@ -271,7 +278,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}</span> <br/>
-        <span class="api-summary">Partially update a OrgProfile record. updateOrgProfile</span>
+        <span class="api-summary">Partially update a OrgProfile entity. updateOrgProfile</span>
     </span>
 </div>
 
@@ -279,7 +286,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}</span> <br/>
-        <span class="api-summary">Delete a OrgProfile Record deleteOrgProfileRecord</span>
+        <span class="api-summary">Delete a OrgProfile entity deleteOrgProfileEntity</span>
     </span>
 </div>
 
@@ -288,7 +295,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentTermReference records scoped by orgProfileKey. getPaymentTermReferencesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of PaymentTermReference entities scoped by orgProfileKey. getPaymentTermReferenceByOrgProfileKey</span>
     </span>
 </div>
 
@@ -296,7 +303,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Create a new PaymentTermReference record. createPaymentTermReference</span>
+        <span class="api-summary">Create a new PaymentTermReference entity. createPaymentTermReference</span>
     </span>
 </div>
 
@@ -305,7 +312,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentTermReference record. getaymentTermReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentTermReference entity. getaymentTermReferenceById</span>
     </span>
 </div>
 
@@ -313,7 +320,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentTermReference record. replacePaymentTermReference</span>
+        <span class="api-summary">Replace a PaymentTermReference entity. replacePaymentTermReference</span>
     </span>
 </div>
 
@@ -321,7 +328,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTermReference record. updatePaymentTermReference</span>
+        <span class="api-summary">Partially update a PaymentTermReference entity. updatePaymentTermReference</span>
     </span>
 </div>
 
@@ -329,7 +336,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentTermReference Record deletePaymentTermReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentTermReference entity deletePaymentTermReferenceEntity</span>
     </span>
 </div>
 
@@ -338,7 +345,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts</span> <br/>
-        <span class="api-summary">Retrieve a list of Discount records scoped by orgProfileKey. getDiscountsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Discount entities scoped by orgProfileKey. getDiscountByOrgProfileKey</span>
     </span>
 </div>
 
@@ -346,7 +353,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts</span> <br/>
-        <span class="api-summary">Create a new Discount record. createDiscount</span>
+        <span class="api-summary">Create a new Discount entity. createDiscount</span>
     </span>
 </div>
 
@@ -355,7 +362,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Discount record. getiscountById</span>
+        <span class="api-summary">Retrieve a specific Discount entity. getiscountById</span>
     </span>
 </div>
 
@@ -363,7 +370,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
-        <span class="api-summary">Replace a Discount record. replaceDiscount</span>
+        <span class="api-summary">Replace a Discount entity. replaceDiscount</span>
     </span>
 </div>
 
@@ -371,7 +378,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
-        <span class="api-summary">Partially update a Discount record. updateDiscount</span>
+        <span class="api-summary">Partially update a Discount entity. updateDiscount</span>
     </span>
 </div>
 
@@ -379,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
-        <span class="api-summary">Delete a Discount Record deleteDiscountRecord</span>
+        <span class="api-summary">Delete a Discount entity deleteDiscountEntity</span>
     </span>
 </div>
 
@@ -388,7 +395,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address records scoped by orgProfileKey. getAddresssByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Address entities scoped by orgProfileKey. getAddressByOrgProfileKey</span>
     </span>
 </div>
 
@@ -396,7 +403,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address record. createAddress</span>
+        <span class="api-summary">Create a new Address entity. createAddress</span>
     </span>
 </div>
 
@@ -405,7 +412,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
+        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
     </span>
 </div>
 
@@ -413,7 +420,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address record. replaceAddress</span>
+        <span class="api-summary">Replace a Address entity. replaceAddress</span>
     </span>
 </div>
 
@@ -421,7 +428,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address record. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updateAddress</span>
     </span>
 </div>
 
@@ -429,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
+        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
     </span>
 </div>
 
@@ -438,7 +445,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names</span> <br/>
-        <span class="api-summary">Retrieve a list of OrgName records scoped by orgProfileKey. getOrgNamesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of OrgName entities scoped by orgProfileKey. getOrgNameByOrgProfileKey</span>
     </span>
 </div>
 
@@ -446,7 +453,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names</span> <br/>
-        <span class="api-summary">Create a new OrgName record. createOrgName</span>
+        <span class="api-summary">Create a new OrgName entity. createOrgName</span>
     </span>
 </div>
 
@@ -455,7 +462,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names/{orgNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific OrgName record. getrgNameById</span>
+        <span class="api-summary">Retrieve a specific OrgName entity. getrgNameById</span>
     </span>
 </div>
 
@@ -463,7 +470,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names/{orgNameKey}</span> <br/>
-        <span class="api-summary">Replace a OrgName record. replaceOrgName</span>
+        <span class="api-summary">Replace a OrgName entity. replaceOrgName</span>
     </span>
 </div>
 
@@ -471,7 +478,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names/{orgNameKey}</span> <br/>
-        <span class="api-summary">Partially update a OrgName record. updateOrgName</span>
+        <span class="api-summary">Partially update a OrgName entity. updateOrgName</span>
     </span>
 </div>
 
@@ -479,7 +486,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names/{orgNameKey}</span> <br/>
-        <span class="api-summary">Delete a OrgName Record deleteOrgNameRecord</span>
+        <span class="api-summary">Delete a OrgName entity deleteOrgNameEntity</span>
     </span>
 </div>
 
@@ -488,7 +495,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members</span> <br/>
-        <span class="api-summary">Retrieve a list of StaffMember records scoped by orgProfileKey. getStaffMembersByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of StaffMember entities scoped by orgProfileKey. getStaffMemberByOrgProfileKey</span>
     </span>
 </div>
 
@@ -496,7 +503,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members</span> <br/>
-        <span class="api-summary">Create a new StaffMember record. createStaffMember</span>
+        <span class="api-summary">Create a new StaffMember entity. createStaffMember</span>
     </span>
 </div>
 
@@ -505,7 +512,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific StaffMember record. gettaffMemberById</span>
+        <span class="api-summary">Retrieve a specific StaffMember entity. gettaffMemberById</span>
     </span>
 </div>
 
@@ -513,7 +520,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Replace a StaffMember record. replaceStaffMember</span>
+        <span class="api-summary">Replace a StaffMember entity. replaceStaffMember</span>
     </span>
 </div>
 
@@ -521,7 +528,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Partially update a StaffMember record. updateStaffMember</span>
+        <span class="api-summary">Partially update a StaffMember entity. updateStaffMember</span>
     </span>
 </div>
 
@@ -529,7 +536,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Delete a StaffMember Record deleteStaffMemberRecord</span>
+        <span class="api-summary">Delete a StaffMember entity deleteStaffMemberEntity</span>
     </span>
 </div>
 
@@ -538,7 +545,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events</span> <br/>
-        <span class="api-summary">Retrieve a list of PrivacyEvent records scoped by orgProfileKey. getPrivacyEventsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of PrivacyEvent entities scoped by orgProfileKey. getPrivacyEventByOrgProfileKey</span>
     </span>
 </div>
 
@@ -546,7 +553,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events</span> <br/>
-        <span class="api-summary">Create a new PrivacyEvent record. createPrivacyEvent</span>
+        <span class="api-summary">Create a new PrivacyEvent entity. createPrivacyEvent</span>
     </span>
 </div>
 
@@ -555,7 +562,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PrivacyEvent record. getrivacyEventById</span>
+        <span class="api-summary">Retrieve a specific PrivacyEvent entity. getrivacyEventById</span>
     </span>
 </div>
 
@@ -563,7 +570,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Replace a PrivacyEvent record. replacePrivacyEvent</span>
+        <span class="api-summary">Replace a PrivacyEvent entity. replacePrivacyEvent</span>
     </span>
 </div>
 
@@ -571,7 +578,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyEvent record. updatePrivacyEvent</span>
+        <span class="api-summary">Partially update a PrivacyEvent entity. updatePrivacyEvent</span>
     </span>
 </div>
 
@@ -579,7 +586,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Delete a PrivacyEvent Record deletePrivacyEventRecord</span>
+        <span class="api-summary">Delete a PrivacyEvent entity deletePrivacyEventEntity</span>
     </span>
 </div>
 
@@ -588,7 +595,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by orgProfileKey. getTimeSlotsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by orgProfileKey. getTimeSlotByOrgProfileKey</span>
     </span>
 </div>
 
@@ -597,7 +604,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -605,7 +612,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -614,7 +621,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccount records scoped by orgProfileKey. getControlAccountsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccount entities scoped by orgProfileKey. getControlAccountByOrgProfileKey</span>
     </span>
 </div>
 
@@ -622,7 +629,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts</span> <br/>
-        <span class="api-summary">Create a new ControlAccount record. createControlAccount</span>
+        <span class="api-summary">Create a new ControlAccount entity. createControlAccount</span>
     </span>
 </div>
 
@@ -631,7 +638,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccount record. getontrolAccountById</span>
+        <span class="api-summary">Retrieve a specific ControlAccount entity. getontrolAccountById</span>
     </span>
 </div>
 
@@ -639,7 +646,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccount record. replaceControlAccount</span>
+        <span class="api-summary">Replace a ControlAccount entity. replaceControlAccount</span>
     </span>
 </div>
 
@@ -647,7 +654,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount record. updateControlAccount</span>
+        <span class="api-summary">Partially update a ControlAccount entity. updateControlAccount</span>
     </span>
 </div>
 
@@ -655,7 +662,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccount Record deleteControlAccountRecord</span>
+        <span class="api-summary">Delete a ControlAccount entity deleteControlAccountEntity</span>
     </span>
 </div>
 
@@ -664,7 +671,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations</span> <br/>
-        <span class="api-summary">Retrieve a list of Authorization records scoped by orgProfileKey. getAuthorizationsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Authorization entities scoped by orgProfileKey. getAuthorizationByOrgProfileKey</span>
     </span>
 </div>
 
@@ -672,7 +679,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations</span> <br/>
-        <span class="api-summary">Create a new Authorization record. createAuthorization</span>
+        <span class="api-summary">Create a new Authorization entity. createAuthorization</span>
     </span>
 </div>
 
@@ -681,7 +688,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Authorization record. getuthorizationById</span>
+        <span class="api-summary">Retrieve a specific Authorization entity. getuthorizationById</span>
     </span>
 </div>
 
@@ -689,7 +696,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Replace a Authorization record. replaceAuthorization</span>
+        <span class="api-summary">Replace a Authorization entity. replaceAuthorization</span>
     </span>
 </div>
 
@@ -697,7 +704,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization record. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
     </span>
 </div>
 
@@ -705,7 +712,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Delete a Authorization Record deleteAuthorizationRecord</span>
+        <span class="api-summary">Delete a Authorization entity deleteAuthorizationEntity</span>
     </span>
 </div>
 
@@ -714,7 +721,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by orgProfileKey. getMoneysByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by orgProfileKey. getMoneyByOrgProfileKey</span>
     </span>
 </div>
 
@@ -723,7 +730,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -731,7 +738,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -740,7 +747,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments</span> <br/>
-        <span class="api-summary">Retrieve a list of Department records scoped by orgProfileKey. getDepartmentsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Department entities scoped by orgProfileKey. getDepartmentByOrgProfileKey</span>
     </span>
 </div>
 
@@ -748,7 +755,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments</span> <br/>
-        <span class="api-summary">Create a new Department record. createDepartment</span>
+        <span class="api-summary">Create a new Department entity. createDepartment</span>
     </span>
 </div>
 
@@ -757,7 +764,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Department record. getepartmentById</span>
+        <span class="api-summary">Retrieve a specific Department entity. getepartmentById</span>
     </span>
 </div>
 
@@ -765,7 +772,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Replace a Department record. replaceDepartment</span>
+        <span class="api-summary">Replace a Department entity. replaceDepartment</span>
     </span>
 </div>
 
@@ -773,7 +780,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department record. updateDepartment</span>
+        <span class="api-summary">Partially update a Department entity. updateDepartment</span>
     </span>
 </div>
 
@@ -781,7 +788,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Delete a Department Record deleteDepartmentRecord</span>
+        <span class="api-summary">Delete a Department entity deleteDepartmentEntity</span>
     </span>
 </div>
 
@@ -790,7 +797,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Retrieve a list of MetricNameValue records scoped by orgProfileKey. getMetricNameValuesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of MetricNameValue entities scoped by orgProfileKey. getMetricNameValueByOrgProfileKey</span>
     </span>
 </div>
 
@@ -798,7 +805,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Create a new MetricNameValue record. createMetricNameValue</span>
+        <span class="api-summary">Create a new MetricNameValue entity. createMetricNameValue</span>
     </span>
 </div>
 
@@ -807,7 +814,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific MetricNameValue record. getetricNameValueById</span>
+        <span class="api-summary">Retrieve a specific MetricNameValue entity. getetricNameValueById</span>
     </span>
 </div>
 
@@ -815,7 +822,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Replace a MetricNameValue record. replaceMetricNameValue</span>
+        <span class="api-summary">Replace a MetricNameValue entity. replaceMetricNameValue</span>
     </span>
 </div>
 
@@ -823,7 +830,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricNameValue record. updateMetricNameValue</span>
+        <span class="api-summary">Partially update a MetricNameValue entity. updateMetricNameValue</span>
     </span>
 </div>
 
@@ -831,7 +838,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Delete a MetricNameValue Record deleteMetricNameValueRecord</span>
+        <span class="api-summary">Delete a MetricNameValue entity deleteMetricNameValueEntity</span>
     </span>
 </div>
 
@@ -840,7 +847,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by orgProfileKey. getIdentifiersByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by orgProfileKey. getIdentifierByOrgProfileKey</span>
     </span>
 </div>
 
@@ -848,7 +855,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -857,7 +864,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -865,7 +872,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -873,7 +880,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -881,7 +888,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -890,7 +897,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by orgProfileKey. getEffectivePeriodsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by orgProfileKey. getEffectivePeriodByOrgProfileKey</span>
     </span>
 </div>
 
@@ -899,7 +906,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -907,7 +914,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -916,7 +923,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies</span> <br/>
-        <span class="api-summary">Retrieve a list of DiscountPolicy records scoped by orgProfileKey. getDiscountPolicysByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of DiscountPolicy entities scoped by orgProfileKey. getDiscountPolicyByOrgProfileKey</span>
     </span>
 </div>
 
@@ -924,7 +931,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies</span> <br/>
-        <span class="api-summary">Create a new DiscountPolicy record. createDiscountPolicy</span>
+        <span class="api-summary">Create a new DiscountPolicy entity. createDiscountPolicy</span>
     </span>
 </div>
 
@@ -933,7 +940,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies/{discountPolicyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DiscountPolicy record. getiscountPolicyById</span>
+        <span class="api-summary">Retrieve a specific DiscountPolicy entity. getiscountPolicyById</span>
     </span>
 </div>
 
@@ -941,7 +948,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies/{discountPolicyKey}</span> <br/>
-        <span class="api-summary">Replace a DiscountPolicy record. replaceDiscountPolicy</span>
+        <span class="api-summary">Replace a DiscountPolicy entity. replaceDiscountPolicy</span>
     </span>
 </div>
 
@@ -949,7 +956,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies/{discountPolicyKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountPolicy record. updateDiscountPolicy</span>
+        <span class="api-summary">Partially update a DiscountPolicy entity. updateDiscountPolicy</span>
     </span>
 </div>
 
@@ -957,7 +964,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies/{discountPolicyKey}</span> <br/>
-        <span class="api-summary">Delete a DiscountPolicy Record deleteDiscountPolicyRecord</span>
+        <span class="api-summary">Delete a DiscountPolicy entity deleteDiscountPolicyEntity</span>
     </span>
 </div>
 
@@ -966,7 +973,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items</span> <br/>
-        <span class="api-summary">Retrieve a list of PrivacyItem records scoped by orgProfileKey. getPrivacyItemsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of PrivacyItem entities scoped by orgProfileKey. getPrivacyItemByOrgProfileKey</span>
     </span>
 </div>
 
@@ -974,7 +981,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items</span> <br/>
-        <span class="api-summary">Create a new PrivacyItem record. createPrivacyItem</span>
+        <span class="api-summary">Create a new PrivacyItem entity. createPrivacyItem</span>
     </span>
 </div>
 
@@ -983,7 +990,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PrivacyItem record. getrivacyItemById</span>
+        <span class="api-summary">Retrieve a specific PrivacyItem entity. getrivacyItemById</span>
     </span>
 </div>
 
@@ -991,7 +998,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Replace a PrivacyItem record. replacePrivacyItem</span>
+        <span class="api-summary">Replace a PrivacyItem entity. replacePrivacyItem</span>
     </span>
 </div>
 
@@ -999,7 +1006,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyItem record. updatePrivacyItem</span>
+        <span class="api-summary">Partially update a PrivacyItem entity. updatePrivacyItem</span>
     </span>
 </div>
 
@@ -1007,7 +1014,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Delete a PrivacyItem Record deletePrivacyItemRecord</span>
+        <span class="api-summary">Delete a PrivacyItem entity deletePrivacyItemEntity</span>
     </span>
 </div>
 
@@ -1016,7 +1023,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PersonName records scoped by orgProfileKey. getPersonNamesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of PersonName entities scoped by orgProfileKey. getPersonNameByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1024,7 +1031,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names</span> <br/>
-        <span class="api-summary">Create a new PersonName record. createPersonName</span>
+        <span class="api-summary">Create a new PersonName entity. createPersonName</span>
     </span>
 </div>
 
@@ -1033,7 +1040,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PersonName record. getersonNameById</span>
+        <span class="api-summary">Retrieve a specific PersonName entity. getersonNameById</span>
     </span>
 </div>
 
@@ -1041,7 +1048,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Replace a PersonName record. replacePersonName</span>
+        <span class="api-summary">Replace a PersonName entity. replacePersonName</span>
     </span>
 </div>
 
@@ -1049,7 +1056,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName record. updatePersonName</span>
+        <span class="api-summary">Partially update a PersonName entity. updatePersonName</span>
     </span>
 </div>
 
@@ -1057,7 +1064,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Delete a PersonName Record deletePersonNameRecord</span>
+        <span class="api-summary">Delete a PersonName entity deletePersonNameEntity</span>
     </span>
 </div>
 
@@ -1066,7 +1073,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates</span> <br/>
-        <span class="api-summary">Retrieve a list of PayrollRate records scoped by orgProfileKey. getPayrollRatesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of PayrollRate entities scoped by orgProfileKey. getPayrollRateByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1074,7 +1081,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates</span> <br/>
-        <span class="api-summary">Create a new PayrollRate record. createPayrollRate</span>
+        <span class="api-summary">Create a new PayrollRate entity. createPayrollRate</span>
     </span>
 </div>
 
@@ -1083,7 +1090,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollRate record. getayrollRateById</span>
+        <span class="api-summary">Retrieve a specific PayrollRate entity. getayrollRateById</span>
     </span>
 </div>
 
@@ -1091,7 +1098,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollRate record. replacePayrollRate</span>
+        <span class="api-summary">Replace a PayrollRate entity. replacePayrollRate</span>
     </span>
 </div>
 
@@ -1099,7 +1106,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollRate record. updatePayrollRate</span>
+        <span class="api-summary">Partially update a PayrollRate entity. updatePayrollRate</span>
     </span>
 </div>
 
@@ -1107,7 +1114,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollRate Record deletePayrollRateRecord</span>
+        <span class="api-summary">Delete a PayrollRate entity deletePayrollRateEntity</span>
     </span>
 </div>
 
@@ -1116,7 +1123,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by orgProfileKey. getControlAccountReferencesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by orgProfileKey. getControlAccountReferenceByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1124,7 +1131,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -1133,7 +1140,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -1141,7 +1148,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -1149,7 +1156,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -1157,7 +1164,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -1166,7 +1173,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels</span> <br/>
-        <span class="api-summary">Retrieve a list of CommunicationChannel records scoped by orgProfileKey. getCommunicationChannelsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of CommunicationChannel entities scoped by orgProfileKey. getCommunicationChannelByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1174,7 +1181,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels</span> <br/>
-        <span class="api-summary">Create a new CommunicationChannel record. createCommunicationChannel</span>
+        <span class="api-summary">Create a new CommunicationChannel entity. createCommunicationChannel</span>
     </span>
 </div>
 
@@ -1183,7 +1190,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CommunicationChannel record. getommunicationChannelById</span>
+        <span class="api-summary">Retrieve a specific CommunicationChannel entity. getommunicationChannelById</span>
     </span>
 </div>
 
@@ -1191,7 +1198,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Replace a CommunicationChannel record. replaceCommunicationChannel</span>
+        <span class="api-summary">Replace a CommunicationChannel entity. replaceCommunicationChannel</span>
     </span>
 </div>
 
@@ -1199,7 +1206,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Partially update a CommunicationChannel record. updateCommunicationChannel</span>
+        <span class="api-summary">Partially update a CommunicationChannel entity. updateCommunicationChannel</span>
     </span>
 </div>
 
@@ -1207,7 +1214,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Delete a CommunicationChannel Record deleteCommunicationChannelRecord</span>
+        <span class="api-summary">Delete a CommunicationChannel entity deleteCommunicationChannelEntity</span>
     </span>
 </div>
 
@@ -1216,7 +1223,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values</span> <br/>
-        <span class="api-summary">Retrieve a list of DiscountMetricValue records scoped by orgProfileKey. getDiscountMetricValuesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of DiscountMetricValue entities scoped by orgProfileKey. getDiscountMetricValueByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1224,7 +1231,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values</span> <br/>
-        <span class="api-summary">Create a new DiscountMetricValue record. createDiscountMetricValue</span>
+        <span class="api-summary">Create a new DiscountMetricValue entity. createDiscountMetricValue</span>
     </span>
 </div>
 
@@ -1233,7 +1240,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DiscountMetricValue record. getiscountMetricValueById</span>
+        <span class="api-summary">Retrieve a specific DiscountMetricValue entity. getiscountMetricValueById</span>
     </span>
 </div>
 
@@ -1241,7 +1248,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
-        <span class="api-summary">Replace a DiscountMetricValue record. replaceDiscountMetricValue</span>
+        <span class="api-summary">Replace a DiscountMetricValue entity. replaceDiscountMetricValue</span>
     </span>
 </div>
 
@@ -1249,7 +1256,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountMetricValue record. updateDiscountMetricValue</span>
+        <span class="api-summary">Partially update a DiscountMetricValue entity. updateDiscountMetricValue</span>
     </span>
 </div>
 
@@ -1257,7 +1264,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
-        <span class="api-summary">Delete a DiscountMetricValue Record deleteDiscountMetricValueRecord</span>
+        <span class="api-summary">Delete a DiscountMetricValue entity deleteDiscountMetricValueEntity</span>
     </span>
 </div>
 
@@ -1266,7 +1273,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by orgProfileKey. getPricesByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by orgProfileKey. getPriceByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1274,7 +1281,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -1283,7 +1290,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -1291,7 +1298,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -1299,7 +1306,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -1307,7 +1314,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -1316,7 +1323,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by orgProfileKey. getTextualDetailsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by orgProfileKey. getTextualDetailByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1324,7 +1331,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -1333,7 +1340,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -1341,7 +1348,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -1349,7 +1356,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -1357,7 +1364,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -1366,7 +1373,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people</span> <br/>
-        <span class="api-summary">Retrieve a list of Person records scoped by orgProfileKey. getPersonsByOrgProfileKey</span>
+        <span class="api-summary">Retrieve a list of Person entities scoped by orgProfileKey. getPersonByOrgProfileKey</span>
     </span>
 </div>
 
@@ -1374,7 +1381,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people</span> <br/>
-        <span class="api-summary">Create a new Person record. createPerson</span>
+        <span class="api-summary">Create a new Person entity. createPerson</span>
     </span>
 </div>
 
@@ -1383,7 +1390,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Person record. getersonById</span>
+        <span class="api-summary">Retrieve a specific Person entity. getersonById</span>
     </span>
 </div>
 
@@ -1391,7 +1398,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Replace a Person record. replacePerson</span>
+        <span class="api-summary">Replace a Person entity. replacePerson</span>
     </span>
 </div>
 
@@ -1399,7 +1406,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person record. updatePerson</span>
+        <span class="api-summary">Partially update a Person entity. updatePerson</span>
     </span>
 </div>
 
@@ -1407,7 +1414,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Delete a Person Record deletePersonRecord</span>
+        <span class="api-summary">Delete a Person entity deletePersonEntity</span>
     </span>
 </div>
 
@@ -1417,31 +1424,31 @@ The following resources follow a consistent pattern under OrgProfileroot with ke
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **org-profile** | /org-profiles | listOrgProfiles | createOrgProfile | getOrgProfiles | updateOrgProfiles | deleteOrgProfiles |
-    | **payment-term-reference** | /org-profiles/{orgProfileKey}/payment-term-references | listPaymentTermReferencesByOrgProfileKey | createPaymentTermReference | getPaymentTermReferencesByOrgProfileKey | updatePaymentTermReferencesByOrgProfileKey | deletePaymentTermReferencesByOrgProfileKey |
-    | **discount** | /org-profiles/{orgProfileKey}/discounts | listDiscountsByOrgProfileKey | createDiscount | getDiscountsByOrgProfileKey | updateDiscountsByOrgProfileKey | deleteDiscountsByOrgProfileKey |
-    | **addresse** | /org-profiles/{orgProfileKey}/addresses | listAddresssByOrgProfileKey | createAddress | getAddresssByOrgProfileKey | updateAddresssByOrgProfileKey | deleteAddresssByOrgProfileKey |
-    | **org-name** | /org-profiles/{orgProfileKey}/org-names | listOrgNamesByOrgProfileKey | createOrgName | getOrgNamesByOrgProfileKey | updateOrgNamesByOrgProfileKey | deleteOrgNamesByOrgProfileKey |
-    | **staff-member** | /org-profiles/{orgProfileKey}/staff-members | listStaffMembersByOrgProfileKey | createStaffMember | getStaffMembersByOrgProfileKey | updateStaffMembersByOrgProfileKey | deleteStaffMembersByOrgProfileKey |
-    | **privacy-event** | /org-profiles/{orgProfileKey}/privacy-events | listPrivacyEventsByOrgProfileKey | createPrivacyEvent | getPrivacyEventsByOrgProfileKey | updatePrivacyEventsByOrgProfileKey | deletePrivacyEventsByOrgProfileKey |
-    | **time-slot** | /org-profiles/{orgProfileKey}/time-slots | listTimeSlotsByOrgProfileKey |  | getTimeSlotsByOrgProfileKey | updateTimeSlotsByOrgProfileKey | deleteTimeSlotsByOrgProfileKey |
-    | **control-account** | /org-profiles/{orgProfileKey}/control-accounts | listControlAccountsByOrgProfileKey | createControlAccount | getControlAccountsByOrgProfileKey | updateControlAccountsByOrgProfileKey | deleteControlAccountsByOrgProfileKey |
-    | **authorization** | /org-profiles/{orgProfileKey}/authorizations | listAuthorizationsByOrgProfileKey | createAuthorization | getAuthorizationsByOrgProfileKey | updateAuthorizationsByOrgProfileKey | deleteAuthorizationsByOrgProfileKey |
-    | **money** | /org-profiles/{orgProfileKey}/moneys | listMoneysByOrgProfileKey |  | getMoneysByOrgProfileKey | updateMoneysByOrgProfileKey | deleteMoneysByOrgProfileKey |
-    | **department** | /org-profiles/{orgProfileKey}/departments | listDepartmentsByOrgProfileKey | createDepartment | getDepartmentsByOrgProfileKey | updateDepartmentsByOrgProfileKey | deleteDepartmentsByOrgProfileKey |
-    | **metric-name-value** | /org-profiles/{orgProfileKey}/metric-name-values | listMetricNameValuesByOrgProfileKey | createMetricNameValue | getMetricNameValuesByOrgProfileKey | updateMetricNameValuesByOrgProfileKey | deleteMetricNameValuesByOrgProfileKey |
-    | **identifier** | /org-profiles/{orgProfileKey}/identifiers | listIdentifiersByOrgProfileKey | createIdentifier | getIdentifiersByOrgProfileKey | updateIdentifiersByOrgProfileKey | deleteIdentifiersByOrgProfileKey |
-    | **effective-period** | /org-profiles/{orgProfileKey}/effective-periods | listEffectivePeriodsByOrgProfileKey |  | getEffectivePeriodsByOrgProfileKey | updateEffectivePeriodsByOrgProfileKey | deleteEffectivePeriodsByOrgProfileKey |
-    | **discount-policie** | /org-profiles/{orgProfileKey}/discount-policies | listDiscountPolicysByOrgProfileKey | createDiscountPolicy | getDiscountPolicysByOrgProfileKey | updateDiscountPolicysByOrgProfileKey | deleteDiscountPolicysByOrgProfileKey |
-    | **privacy-item** | /org-profiles/{orgProfileKey}/privacy-items | listPrivacyItemsByOrgProfileKey | createPrivacyItem | getPrivacyItemsByOrgProfileKey | updatePrivacyItemsByOrgProfileKey | deletePrivacyItemsByOrgProfileKey |
-    | **person-name** | /org-profiles/{orgProfileKey}/person-names | listPersonNamesByOrgProfileKey | createPersonName | getPersonNamesByOrgProfileKey | updatePersonNamesByOrgProfileKey | deletePersonNamesByOrgProfileKey |
-    | **payroll-rate** | /org-profiles/{orgProfileKey}/payroll-rates | listPayrollRatesByOrgProfileKey | createPayrollRate | getPayrollRatesByOrgProfileKey | updatePayrollRatesByOrgProfileKey | deletePayrollRatesByOrgProfileKey |
-    | **control-account-reference** | /org-profiles/{orgProfileKey}/control-account-references | listControlAccountReferencesByOrgProfileKey | createControlAccountReference | getControlAccountReferencesByOrgProfileKey | updateControlAccountReferencesByOrgProfileKey | deleteControlAccountReferencesByOrgProfileKey |
-    | **communication-channel** | /org-profiles/{orgProfileKey}/communication-channels | listCommunicationChannelsByOrgProfileKey | createCommunicationChannel | getCommunicationChannelsByOrgProfileKey | updateCommunicationChannelsByOrgProfileKey | deleteCommunicationChannelsByOrgProfileKey |
-    | **discount-metric-value** | /org-profiles/{orgProfileKey}/discount-metric-values | listDiscountMetricValuesByOrgProfileKey | createDiscountMetricValue | getDiscountMetricValuesByOrgProfileKey | updateDiscountMetricValuesByOrgProfileKey | deleteDiscountMetricValuesByOrgProfileKey |
-    | **price** | /org-profiles/{orgProfileKey}/prices | listPricesByOrgProfileKey | createPrice | getPricesByOrgProfileKey | updatePricesByOrgProfileKey | deletePricesByOrgProfileKey |
-    | **textual-detail** | /org-profiles/{orgProfileKey}/textual-details | listTextualDetailsByOrgProfileKey | createTextualDetail | getTextualDetailsByOrgProfileKey | updateTextualDetailsByOrgProfileKey | deleteTextualDetailsByOrgProfileKey |
-    | **people** | /org-profiles/{orgProfileKey}/people | listPersonsByOrgProfileKey | createPerson | getPersonsByOrgProfileKey | updatePersonsByOrgProfileKey | deletePersonsByOrgProfileKey |
+    | **org-profile** | /org-profiles | listOrgProfile | createOrgProfile | getOrgProfile | updateOrgProfile | deleteOrgProfile |
+    | **payment-term-reference** | /org-profiles/{orgProfileKey}/payment-term-references | listPaymentTermReferenceByOrgProfileKey | createPaymentTermReference | getPaymentTermReferenceByOrgProfileKey | updatePaymentTermReferenceByOrgProfileKey | deletePaymentTermReferenceByOrgProfileKey |
+    | **discount** | /org-profiles/{orgProfileKey}/discounts | listDiscountByOrgProfileKey | createDiscount | getDiscountByOrgProfileKey | updateDiscountByOrgProfileKey | deleteDiscountByOrgProfileKey |
+    | **addresse** | /org-profiles/{orgProfileKey}/addresses | listAddressByOrgProfileKey | createAddress | getAddressByOrgProfileKey | updateAddressByOrgProfileKey | deleteAddressByOrgProfileKey |
+    | **org-name** | /org-profiles/{orgProfileKey}/org-names | listOrgNameByOrgProfileKey | createOrgName | getOrgNameByOrgProfileKey | updateOrgNameByOrgProfileKey | deleteOrgNameByOrgProfileKey |
+    | **staff-member** | /org-profiles/{orgProfileKey}/staff-members | listStaffMemberByOrgProfileKey | createStaffMember | getStaffMemberByOrgProfileKey | updateStaffMemberByOrgProfileKey | deleteStaffMemberByOrgProfileKey |
+    | **privacy-event** | /org-profiles/{orgProfileKey}/privacy-events | listPrivacyEventByOrgProfileKey | createPrivacyEvent | getPrivacyEventByOrgProfileKey | updatePrivacyEventByOrgProfileKey | deletePrivacyEventByOrgProfileKey |
+    | **time-slot** | /org-profiles/{orgProfileKey}/time-slots | listTimeSlotByOrgProfileKey |  | getTimeSlotByOrgProfileKey | updateTimeSlotByOrgProfileKey | deleteTimeSlotByOrgProfileKey |
+    | **control-account** | /org-profiles/{orgProfileKey}/control-accounts | listControlAccountByOrgProfileKey | createControlAccount | getControlAccountByOrgProfileKey | updateControlAccountByOrgProfileKey | deleteControlAccountByOrgProfileKey |
+    | **authorization** | /org-profiles/{orgProfileKey}/authorizations | listAuthorizationByOrgProfileKey | createAuthorization | getAuthorizationByOrgProfileKey | updateAuthorizationByOrgProfileKey | deleteAuthorizationByOrgProfileKey |
+    | **money** | /org-profiles/{orgProfileKey}/moneys | listMoneyByOrgProfileKey |  | getMoneyByOrgProfileKey | updateMoneyByOrgProfileKey | deleteMoneyByOrgProfileKey |
+    | **department** | /org-profiles/{orgProfileKey}/departments | listDepartmentByOrgProfileKey | createDepartment | getDepartmentByOrgProfileKey | updateDepartmentByOrgProfileKey | deleteDepartmentByOrgProfileKey |
+    | **metric-name-value** | /org-profiles/{orgProfileKey}/metric-name-values | listMetricNameValueByOrgProfileKey | createMetricNameValue | getMetricNameValueByOrgProfileKey | updateMetricNameValueByOrgProfileKey | deleteMetricNameValueByOrgProfileKey |
+    | **identifier** | /org-profiles/{orgProfileKey}/identifiers | listIdentifierByOrgProfileKey | createIdentifier | getIdentifierByOrgProfileKey | updateIdentifierByOrgProfileKey | deleteIdentifierByOrgProfileKey |
+    | **effective-period** | /org-profiles/{orgProfileKey}/effective-periods | listEffectivePeriodByOrgProfileKey |  | getEffectivePeriodByOrgProfileKey | updateEffectivePeriodByOrgProfileKey | deleteEffectivePeriodByOrgProfileKey |
+    | **discount-policie** | /org-profiles/{orgProfileKey}/discount-policies | listDiscountPolicyByOrgProfileKey | createDiscountPolicy | getDiscountPolicyByOrgProfileKey | updateDiscountPolicyByOrgProfileKey | deleteDiscountPolicyByOrgProfileKey |
+    | **privacy-item** | /org-profiles/{orgProfileKey}/privacy-items | listPrivacyItemByOrgProfileKey | createPrivacyItem | getPrivacyItemByOrgProfileKey | updatePrivacyItemByOrgProfileKey | deletePrivacyItemByOrgProfileKey |
+    | **person-name** | /org-profiles/{orgProfileKey}/person-names | listPersonNameByOrgProfileKey | createPersonName | getPersonNameByOrgProfileKey | updatePersonNameByOrgProfileKey | deletePersonNameByOrgProfileKey |
+    | **payroll-rate** | /org-profiles/{orgProfileKey}/payroll-rates | listPayrollRateByOrgProfileKey | createPayrollRate | getPayrollRateByOrgProfileKey | updatePayrollRateByOrgProfileKey | deletePayrollRateByOrgProfileKey |
+    | **control-account-reference** | /org-profiles/{orgProfileKey}/control-account-references | listControlAccountReferenceByOrgProfileKey | createControlAccountReference | getControlAccountReferenceByOrgProfileKey | updateControlAccountReferenceByOrgProfileKey | deleteControlAccountReferenceByOrgProfileKey |
+    | **communication-channel** | /org-profiles/{orgProfileKey}/communication-channels | listCommunicationChannelByOrgProfileKey | createCommunicationChannel | getCommunicationChannelByOrgProfileKey | updateCommunicationChannelByOrgProfileKey | deleteCommunicationChannelByOrgProfileKey |
+    | **discount-metric-value** | /org-profiles/{orgProfileKey}/discount-metric-values | listDiscountMetricValueByOrgProfileKey | createDiscountMetricValue | getDiscountMetricValueByOrgProfileKey | updateDiscountMetricValueByOrgProfileKey | deleteDiscountMetricValueByOrgProfileKey |
+    | **price** | /org-profiles/{orgProfileKey}/prices | listPriceByOrgProfileKey | createPrice | getPriceByOrgProfileKey | updatePriceByOrgProfileKey | deletePriceByOrgProfileKey |
+    | **textual-detail** | /org-profiles/{orgProfileKey}/textual-details | listTextualDetailByOrgProfileKey | createTextualDetail | getTextualDetailByOrgProfileKey | updateTextualDetailByOrgProfileKey | deleteTextualDetailByOrgProfileKey |
+    | **people** | /org-profiles/{orgProfileKey}/people | listPersonByOrgProfileKey | createPerson | getPersonByOrgProfileKey | updatePersonByOrgProfileKey | deletePersonByOrgProfileKey |
 
 ***Note on List Operations:***
 

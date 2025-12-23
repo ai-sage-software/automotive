@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PartIdentifier**, **PartName**, **PartPriceCriteria**, **PartSearch**, **PartSearchResult**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **PartIdentifier**, **PartName**, **PartPriceCriteria**, **PartSearch**, **PartSearchResult**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -16,7 +23,7 @@ The API is structured around the domain **service_parts** and **PartSearch** res
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **PartSearche** | /part-searches | Manages PartSearches |
-    | **PartPriceCriteria** | /part-searches/{partSearchKey}/part-price-criterias | Manages PartPriceCriterias belonging to PartSearches |
+    | **PartPriceCriteria** | /part-searches/{partSearchKey}/part-price-criteria | Manages PartPriceCriteria belonging to PartSearches |
     | **PartSearchResult** | /part-searches/{partSearchKey}/part-search-results | Manages PartSearchResults belonging to PartSearches |
     | **Identifier** | /part-searches/{partSearchKey}/identifiers | Manages Identifiers belonging to PartSearches |
     | **PartName** | /part-searches/{partSearchKey}/part-names | Manages PartNames belonging to PartSearches |
@@ -187,7 +194,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches</span> <br/>
-        <span class="api-summary">Retrieve a list of all PartSearch records. getPartSearchs</span>
+        <span class="api-summary">Retrieve a list of PartSearch entities. getPartSearch</span>
     </span>
 </div>
 
@@ -195,7 +202,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches</span> <br/>
-        <span class="api-summary">Create a new PartSearch record. createPartSearch</span>
+        <span class="api-summary">Create a new PartSearch entity. createPartSearch</span>
     </span>
 </div>
 
@@ -204,7 +211,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSearch record. getartSearchById</span>
+        <span class="api-summary">Retrieve a specific PartSearch entity. getartSearchById</span>
     </span>
 </div>
 
@@ -212,7 +219,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}</span> <br/>
-        <span class="api-summary">Replace a PartSearch record. replacePartSearch</span>
+        <span class="api-summary">Replace a PartSearch entity. replacePartSearch</span>
     </span>
 </div>
 
@@ -220,7 +227,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSearch record. updatePartSearch</span>
+        <span class="api-summary">Partially update a PartSearch entity. updatePartSearch</span>
     </span>
 </div>
 
@@ -228,57 +235,57 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}</span> <br/>
-        <span class="api-summary">Delete a PartSearch Record deletePartSearchRecord</span>
+        <span class="api-summary">Delete a PartSearch entity deletePartSearchEntity</span>
     </span>
 </div>
 
-### /part-searches/{partSearchKey}/part-price-criterias
+### /part-searches/{partSearchKey}/part-price-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of PartPriceCriteria records scoped by partSearchKey. getPartPriceCriteriasByPartSearchKey</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of PartPriceCriteria entities scoped by partSearchKey. getPartPriceCriteriaByPartSearchKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias</span> <br/>
-        <span class="api-summary">Create a new PartPriceCriteria record. createPartPriceCriteria</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria</span> <br/>
+        <span class="api-summary">Create a new PartPriceCriteria entity. createPartPriceCriteria</span>
     </span>
 </div>
 
-### /part-searches/{partSearchKey}/part-price-criterias/{partPriceCriteriaKey}
+### /part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartPriceCriteria record. getartPriceCriteriaById</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartPriceCriteria entity. getartPriceCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a PartPriceCriteria record. replacePartPriceCriteria</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a PartPriceCriteria entity. replacePartPriceCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartPriceCriteria record. updatePartPriceCriteria</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a PartPriceCriteria entity. updatePartPriceCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a PartPriceCriteria Record deletePartPriceCriteriaRecord</span>
+        <span class="api-path">/part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a PartPriceCriteria entity deletePartPriceCriteriaEntity</span>
     </span>
 </div>
 
@@ -287,7 +294,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results</span> <br/>
-        <span class="api-summary">Retrieve a list of PartSearchResult records scoped by partSearchKey. getPartSearchResultsByPartSearchKey</span>
+        <span class="api-summary">Retrieve a list of PartSearchResult entities scoped by partSearchKey. getPartSearchResultByPartSearchKey</span>
     </span>
 </div>
 
@@ -295,7 +302,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results</span> <br/>
-        <span class="api-summary">Create a new PartSearchResult record. createPartSearchResult</span>
+        <span class="api-summary">Create a new PartSearchResult entity. createPartSearchResult</span>
     </span>
 </div>
 
@@ -304,7 +311,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results/{partSearchResultKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSearchResult record. getartSearchResultById</span>
+        <span class="api-summary">Retrieve a specific PartSearchResult entity. getartSearchResultById</span>
     </span>
 </div>
 
@@ -312,7 +319,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results/{partSearchResultKey}</span> <br/>
-        <span class="api-summary">Replace a PartSearchResult record. replacePartSearchResult</span>
+        <span class="api-summary">Replace a PartSearchResult entity. replacePartSearchResult</span>
     </span>
 </div>
 
@@ -320,7 +327,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results/{partSearchResultKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSearchResult record. updatePartSearchResult</span>
+        <span class="api-summary">Partially update a PartSearchResult entity. updatePartSearchResult</span>
     </span>
 </div>
 
@@ -328,7 +335,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-search-results/{partSearchResultKey}</span> <br/>
-        <span class="api-summary">Delete a PartSearchResult Record deletePartSearchResultRecord</span>
+        <span class="api-summary">Delete a PartSearchResult entity deletePartSearchResultEntity</span>
     </span>
 </div>
 
@@ -337,7 +344,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by partSearchKey. getIdentifiersByPartSearchKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by partSearchKey. getIdentifierByPartSearchKey</span>
     </span>
 </div>
 
@@ -345,7 +352,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -354,7 +361,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -362,7 +369,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -370,7 +377,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -378,7 +385,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -387,7 +394,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PartName records scoped by partSearchKey. getPartNamesByPartSearchKey</span>
+        <span class="api-summary">Retrieve a list of PartName entities scoped by partSearchKey. getPartNameByPartSearchKey</span>
     </span>
 </div>
 
@@ -395,7 +402,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names</span> <br/>
-        <span class="api-summary">Create a new PartName record. createPartName</span>
+        <span class="api-summary">Create a new PartName entity. createPartName</span>
     </span>
 </div>
 
@@ -404,7 +411,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartName record. getartNameById</span>
+        <span class="api-summary">Retrieve a specific PartName entity. getartNameById</span>
     </span>
 </div>
 
@@ -412,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Replace a PartName record. replacePartName</span>
+        <span class="api-summary">Replace a PartName entity. replacePartName</span>
     </span>
 </div>
 
@@ -420,7 +427,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName record. updatePartName</span>
+        <span class="api-summary">Partially update a PartName entity. updatePartName</span>
     </span>
 </div>
 
@@ -428,7 +435,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Delete a PartName Record deletePartNameRecord</span>
+        <span class="api-summary">Delete a PartName entity deletePartNameEntity</span>
     </span>
 </div>
 
@@ -437,7 +444,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartIdentifier records scoped by partSearchKey. getPartIdentifiersByPartSearchKey</span>
+        <span class="api-summary">Retrieve a list of PartIdentifier entities scoped by partSearchKey. getPartIdentifierByPartSearchKey</span>
     </span>
 </div>
 
@@ -445,7 +452,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartIdentifier record. createPartIdentifier</span>
+        <span class="api-summary">Create a new PartIdentifier entity. createPartIdentifier</span>
     </span>
 </div>
 
@@ -454,7 +461,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartIdentifier record. getartIdentifierById</span>
+        <span class="api-summary">Retrieve a specific PartIdentifier entity. getartIdentifierById</span>
     </span>
 </div>
 
@@ -462,7 +469,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartIdentifier record. replacePartIdentifier</span>
+        <span class="api-summary">Replace a PartIdentifier entity. replacePartIdentifier</span>
     </span>
 </div>
 
@@ -470,7 +477,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartIdentifier record. updatePartIdentifier</span>
+        <span class="api-summary">Partially update a PartIdentifier entity. updatePartIdentifier</span>
     </span>
 </div>
 
@@ -478,7 +485,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartIdentifier Record deletePartIdentifierRecord</span>
+        <span class="api-summary">Delete a PartIdentifier entity deletePartIdentifierEntity</span>
     </span>
 </div>
 
@@ -488,12 +495,12 @@ The following resources follow a consistent pattern under PartSearchroot with ke
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **part-searche** | /part-searches | listPartSearchs | createPartSearch | getPartSearchs | updatePartSearchs | deletePartSearchs |
-    | **part-price-criteria** | /part-searches/{partSearchKey}/part-price-criterias | listPartPriceCriteriasByPartSearchKey | createPartPriceCriteria | getPartPriceCriteriasByPartSearchKey | updatePartPriceCriteriasByPartSearchKey | deletePartPriceCriteriasByPartSearchKey |
-    | **part-search-result** | /part-searches/{partSearchKey}/part-search-results | listPartSearchResultsByPartSearchKey | createPartSearchResult | getPartSearchResultsByPartSearchKey | updatePartSearchResultsByPartSearchKey | deletePartSearchResultsByPartSearchKey |
-    | **identifier** | /part-searches/{partSearchKey}/identifiers | listIdentifiersByPartSearchKey | createIdentifier | getIdentifiersByPartSearchKey | updateIdentifiersByPartSearchKey | deleteIdentifiersByPartSearchKey |
-    | **part-name** | /part-searches/{partSearchKey}/part-names | listPartNamesByPartSearchKey | createPartName | getPartNamesByPartSearchKey | updatePartNamesByPartSearchKey | deletePartNamesByPartSearchKey |
-    | **part-identifier** | /part-searches/{partSearchKey}/part-identifiers | listPartIdentifiersByPartSearchKey | createPartIdentifier | getPartIdentifiersByPartSearchKey | updatePartIdentifiersByPartSearchKey | deletePartIdentifiersByPartSearchKey |
+    | **part-searche** | /part-searches | listPartSearch | createPartSearch | getPartSearch | updatePartSearch | deletePartSearch |
+    | **part-price-criteria** | /part-searches/{partSearchKey}/part-price-criteria | listPartPriceCriteriaByPartSearchKey | createPartPriceCriteria | getPartPriceCriteriaByPartSearchKey | updatePartPriceCriteriaByPartSearchKey | deletePartPriceCriteriaByPartSearchKey |
+    | **part-search-result** | /part-searches/{partSearchKey}/part-search-results | listPartSearchResultByPartSearchKey | createPartSearchResult | getPartSearchResultByPartSearchKey | updatePartSearchResultByPartSearchKey | deletePartSearchResultByPartSearchKey |
+    | **identifier** | /part-searches/{partSearchKey}/identifiers | listIdentifierByPartSearchKey | createIdentifier | getIdentifierByPartSearchKey | updateIdentifierByPartSearchKey | deleteIdentifierByPartSearchKey |
+    | **part-name** | /part-searches/{partSearchKey}/part-names | listPartNameByPartSearchKey | createPartName | getPartNameByPartSearchKey | updatePartNameByPartSearchKey | deletePartNameByPartSearchKey |
+    | **part-identifier** | /part-searches/{partSearchKey}/part-identifiers | listPartIdentifierByPartSearchKey | createPartIdentifier | getPartIdentifierByPartSearchKey | updatePartIdentifierByPartSearchKey | deletePartIdentifierByPartSearchKey |
 
 ***Note on List Operations:***
 

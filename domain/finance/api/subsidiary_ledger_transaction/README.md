@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **SubsidiaryLedgerTransaction**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **Identifier**, **SubsidiaryLedgerTransaction**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -182,7 +189,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions</span> <br/>
-        <span class="api-summary">Retrieve a list of all SubsidiaryLedgerTransaction records. getSubsidiaryLedgerTransactions</span>
+        <span class="api-summary">Retrieve a list of SubsidiaryLedgerTransaction entities. getSubsidiaryLedgerTransaction</span>
     </span>
 </div>
 
@@ -190,7 +197,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions</span> <br/>
-        <span class="api-summary">Create a new SubsidiaryLedgerTransaction record. createSubsidiaryLedgerTransaction</span>
+        <span class="api-summary">Create a new SubsidiaryLedgerTransaction entity. createSubsidiaryLedgerTransaction</span>
     </span>
 </div>
 
@@ -199,7 +206,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific SubsidiaryLedgerTransaction record. getubsidiaryLedgerTransactionById</span>
+        <span class="api-summary">Retrieve a specific SubsidiaryLedgerTransaction entity. getubsidiaryLedgerTransactionById</span>
     </span>
 </div>
 
@@ -207,7 +214,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}</span> <br/>
-        <span class="api-summary">Replace a SubsidiaryLedgerTransaction record. replaceSubsidiaryLedgerTransaction</span>
+        <span class="api-summary">Replace a SubsidiaryLedgerTransaction entity. replaceSubsidiaryLedgerTransaction</span>
     </span>
 </div>
 
@@ -215,7 +222,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}</span> <br/>
-        <span class="api-summary">Partially update a SubsidiaryLedgerTransaction record. updateSubsidiaryLedgerTransaction</span>
+        <span class="api-summary">Partially update a SubsidiaryLedgerTransaction entity. updateSubsidiaryLedgerTransaction</span>
     </span>
 </div>
 
@@ -223,7 +230,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}</span> <br/>
-        <span class="api-summary">Delete a SubsidiaryLedgerTransaction Record deleteSubsidiaryLedgerTransactionRecord</span>
+        <span class="api-summary">Delete a SubsidiaryLedgerTransaction entity deleteSubsidiaryLedgerTransactionEntity</span>
     </span>
 </div>
 
@@ -232,7 +239,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by subsidiaryLedgerTransactionKey. getMoneysBySubsidiaryLedgerTransactionKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by subsidiaryLedgerTransactionKey. getMoneyBySubsidiaryLedgerTransactionKey</span>
     </span>
 </div>
 
@@ -241,7 +248,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -249,7 +256,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -258,7 +265,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by subsidiaryLedgerTransactionKey. getIdentifiersBySubsidiaryLedgerTransactionKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by subsidiaryLedgerTransactionKey. getIdentifierBySubsidiaryLedgerTransactionKey</span>
     </span>
 </div>
 
@@ -266,7 +273,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -275,7 +282,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -283,7 +290,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -291,7 +298,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -299,7 +306,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -308,7 +315,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by subsidiaryLedgerTransactionKey. getControlAccountReferencesBySubsidiaryLedgerTransactionKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by subsidiaryLedgerTransactionKey. getControlAccountReferenceBySubsidiaryLedgerTransactionKey</span>
     </span>
 </div>
 
@@ -316,7 +323,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -325,7 +332,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -333,7 +340,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -341,7 +348,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -349,7 +356,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -359,10 +366,10 @@ The following resources follow a consistent pattern under SubsidiaryLedgerTransa
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **subsidiary-ledger-transaction** | /subsidiary-ledger-transactions | listSubsidiaryLedgerTransactions | createSubsidiaryLedgerTransaction | getSubsidiaryLedgerTransactions | updateSubsidiaryLedgerTransactions | deleteSubsidiaryLedgerTransactions |
-    | **money** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys | listMoneysBySubsidiaryLedgerTransactionKey |  | getMoneysBySubsidiaryLedgerTransactionKey | updateMoneysBySubsidiaryLedgerTransactionKey | deleteMoneysBySubsidiaryLedgerTransactionKey |
-    | **identifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers | listIdentifiersBySubsidiaryLedgerTransactionKey | createIdentifier | getIdentifiersBySubsidiaryLedgerTransactionKey | updateIdentifiersBySubsidiaryLedgerTransactionKey | deleteIdentifiersBySubsidiaryLedgerTransactionKey |
-    | **control-account-reference** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references | listControlAccountReferencesBySubsidiaryLedgerTransactionKey | createControlAccountReference | getControlAccountReferencesBySubsidiaryLedgerTransactionKey | updateControlAccountReferencesBySubsidiaryLedgerTransactionKey | deleteControlAccountReferencesBySubsidiaryLedgerTransactionKey |
+    | **subsidiary-ledger-transaction** | /subsidiary-ledger-transactions | listSubsidiaryLedgerTransaction | createSubsidiaryLedgerTransaction | getSubsidiaryLedgerTransaction | updateSubsidiaryLedgerTransaction | deleteSubsidiaryLedgerTransaction |
+    | **money** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/moneys | listMoneyBySubsidiaryLedgerTransactionKey |  | getMoneyBySubsidiaryLedgerTransactionKey | updateMoneyBySubsidiaryLedgerTransactionKey | deleteMoneyBySubsidiaryLedgerTransactionKey |
+    | **identifier** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers | listIdentifierBySubsidiaryLedgerTransactionKey | createIdentifier | getIdentifierBySubsidiaryLedgerTransactionKey | updateIdentifierBySubsidiaryLedgerTransactionKey | deleteIdentifierBySubsidiaryLedgerTransactionKey |
+    | **control-account-reference** | /subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references | listControlAccountReferenceBySubsidiaryLedgerTransactionKey | createControlAccountReference | getControlAccountReferenceBySubsidiaryLedgerTransactionKey | updateControlAccountReferenceBySubsidiaryLedgerTransactionKey | deleteControlAccountReferenceBySubsidiaryLedgerTransactionKey |
 
 ***Note on List Operations:***
 

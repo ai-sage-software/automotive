@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AdvanceSearchValue**, **AdvancedSearchCriteria**, **Identifier**, **PartIdentifier**, **PartLifecycle**, **PartLogisticsCriteria**, **PartName**, **PartPriceCriteria**, **PartSearchCriteria**, **PartSpecification**, **SuperSession**, **WarehouseReference**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AdvanceSearchValue**, **AdvancedSearchCriteria**, **Identifier**, **PartIdentifier**, **PartLifecycle**, **PartLogisticsCriteria**, **PartName**, **PartPriceCriteria**, **PartSearchCriteria**, **PartSpecification**, **SuperSession**, **WarehouseReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -15,21 +22,21 @@ The API is structured around the domain **service_parts** and **PartSearchCriter
 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
-    | **PartSearchCriteria** | /part-search-criterias | Manages PartSearchCriterias |
-    | **UnitOfMeasure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartSearchCriterias |
-    | **PartSpecification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | Manages PartSpecifications belonging to PartSearchCriterias |
-    | **TimeSlot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | Manages TimeSlots belonging to PartSearchCriterias |
-    | **AdvancedSearchCriteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | Manages AdvancedSearchCriterias belonging to PartSearchCriterias |
-    | **PartPriceCriteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | Manages PartPriceCriterias belonging to PartSearchCriterias |
-    | **Identifier** | /part-search-criterias/{partSearchCriteriaKey}/identifiers | Manages Identifiers belonging to PartSearchCriterias |
-    | **PartName** | /part-search-criterias/{partSearchCriteriaKey}/part-names | Manages PartNames belonging to PartSearchCriterias |
-    | **SuperSession** | /part-search-criterias/{partSearchCriteriaKey}/super-sessions | Manages SuperSessions belonging to PartSearchCriterias |
-    | **AdvanceSearchValue** | /part-search-criterias/{partSearchCriteriaKey}/advance-search-values | Manages AdvanceSearchValues belonging to PartSearchCriterias |
-    | **PartIdentifier** | /part-search-criterias/{partSearchCriteriaKey}/part-identifiers | Manages PartIdentifiers belonging to PartSearchCriterias |
-    | **EffectivePeriod** | /part-search-criterias/{partSearchCriteriaKey}/effective-periods | Manages EffectivePeriods belonging to PartSearchCriterias |
-    | **PartLogisticsCriteria** | /part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias | Manages PartLogisticsCriterias belonging to PartSearchCriterias |
-    | **PartLifecycle** | /part-search-criterias/{partSearchCriteriaKey}/part-lifecycles | Manages PartLifecycles belonging to PartSearchCriterias |
-    | **WarehouseReference** | /part-search-criterias/{partSearchCriteriaKey}/warehouse-references | Manages WarehouseReferences belonging to PartSearchCriterias |
+    | **PartSearchCriteria** | /part-search-criteria | Manages PartSearchCriteria |
+    | **UnitOfMeasure** | /part-search-criteria/{partSearchCriteriaKey}/unit-of-measures | Manages UnitOfMeasures belonging to PartSearchCriteria |
+    | **PartSpecification** | /part-search-criteria/{partSearchCriteriaKey}/part-specifications | Manages PartSpecifications belonging to PartSearchCriteria |
+    | **TimeSlot** | /part-search-criteria/{partSearchCriteriaKey}/time-slots | Manages TimeSlots belonging to PartSearchCriteria |
+    | **AdvancedSearchCriteria** | /part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria | Manages AdvancedSearchCriteria belonging to PartSearchCriteria |
+    | **PartPriceCriteria** | /part-search-criteria/{partSearchCriteriaKey}/part-price-criteria | Manages PartPriceCriteria belonging to PartSearchCriteria |
+    | **Identifier** | /part-search-criteria/{partSearchCriteriaKey}/identifiers | Manages Identifiers belonging to PartSearchCriteria |
+    | **PartName** | /part-search-criteria/{partSearchCriteriaKey}/part-names | Manages PartNames belonging to PartSearchCriteria |
+    | **SuperSession** | /part-search-criteria/{partSearchCriteriaKey}/super-sessions | Manages SuperSessions belonging to PartSearchCriteria |
+    | **AdvanceSearchValue** | /part-search-criteria/{partSearchCriteriaKey}/advance-search-values | Manages AdvanceSearchValues belonging to PartSearchCriteria |
+    | **PartIdentifier** | /part-search-criteria/{partSearchCriteriaKey}/part-identifiers | Manages PartIdentifiers belonging to PartSearchCriteria |
+    | **EffectivePeriod** | /part-search-criteria/{partSearchCriteriaKey}/effective-periods | Manages EffectivePeriods belonging to PartSearchCriteria |
+    | **PartLogisticsCriteria** | /part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria | Manages PartLogisticsCriteria belonging to PartSearchCriteria |
+    | **PartLifecycle** | /part-search-criteria/{partSearchCriteriaKey}/part-lifecycles | Manages PartLifecycles belonging to PartSearchCriteria |
+    | **WarehouseReference** | /part-search-criteria/{partSearchCriteriaKey}/warehouse-references | Manages WarehouseReferences belonging to PartSearchCriteria |
 
 
 ---
@@ -207,681 +214,681 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 ### 🏛️ Dealer Endpoints
 
 
-### /part-search-criterias
+### /part-search-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of all PartSearchCriteria records. getPartSearchCriterias</span>
+        <span class="api-path">/part-search-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of PartSearchCriteria entities. getPartSearchCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias</span> <br/>
-        <span class="api-summary">Create a new PartSearchCriteria record. createPartSearchCriteria</span>
+        <span class="api-path">/part-search-criteria</span> <br/>
+        <span class="api-summary">Create a new PartSearchCriteria entity. createPartSearchCriteria</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}
+### /part-search-criteria/{partSearchCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSearchCriteria record. getartSearchCriteriaById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartSearchCriteria entity. getartSearchCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a PartSearchCriteria record. replacePartSearchCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a PartSearchCriteria entity. replacePartSearchCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSearchCriteria record. updatePartSearchCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a PartSearchCriteria entity. updatePartSearchCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a PartSearchCriteria Record deletePartSearchCriteriaRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a PartSearchCriteria entity deletePartSearchCriteriaEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures
+### /part-search-criteria/{partSearchCriteriaKey}/unit-of-measures
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by partSearchCriteriaKey. getUnitOfMeasuresByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/unit-of-measures</span> <br/>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure entities scoped by partSearchCriteriaKey. getUnitOfMeasureByPartSearchCriteriaKey</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}
+### /part-search-criteria/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure entity. getnitOfMeasureById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
+        <span class="api-summary">Replace a UnitOfMeasure entity. replaceUnitOfMeasure</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-specifications
+### /part-search-criteria/{partSearchCriteriaKey}/part-specifications
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications</span> <br/>
-        <span class="api-summary">Retrieve a list of PartSpecification records scoped by partSearchCriteriaKey. getPartSpecificationsByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications</span> <br/>
+        <span class="api-summary">Retrieve a list of PartSpecification entities scoped by partSearchCriteriaKey. getPartSpecificationByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications</span> <br/>
-        <span class="api-summary">Create a new PartSpecification record. createPartSpecification</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications</span> <br/>
+        <span class="api-summary">Create a new PartSpecification entity. createPartSpecification</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSpecification record. getartSpecificationById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartSpecification entity. getartSpecificationById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Replace a PartSpecification record. replacePartSpecification</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Replace a PartSpecification entity. replacePartSpecification</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSpecification record. updatePartSpecification</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Partially update a PartSpecification entity. updatePartSpecification</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
+        <span class="api-summary">Delete a PartSpecification entity deletePartSpecificationEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/time-slots
+### /part-search-criteria/{partSearchCriteriaKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by partSearchCriteriaKey. getTimeSlotsByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by partSearchCriteriaKey. getTimeSlotByPartSearchCriteriaKey</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}
+### /part-search-criteria/{partSearchCriteriaKey}/time-slots/{timeSlotKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias
+### /part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of AdvancedSearchCriteria records scoped by partSearchCriteriaKey. getAdvancedSearchCriteriasByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of AdvancedSearchCriteria entities scoped by partSearchCriteriaKey. getAdvancedSearchCriteriaByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias</span> <br/>
-        <span class="api-summary">Create a new AdvancedSearchCriteria record. createAdvancedSearchCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria</span> <br/>
+        <span class="api-summary">Create a new AdvancedSearchCriteria entity. createAdvancedSearchCriteria</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias/{advancedSearchCriteriaKey}
+### /part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias/{advancedSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AdvancedSearchCriteria record. getdvancedSearchCriteriaById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AdvancedSearchCriteria entity. getdvancedSearchCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias/{advancedSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a AdvancedSearchCriteria record. replaceAdvancedSearchCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a AdvancedSearchCriteria entity. replaceAdvancedSearchCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias/{advancedSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a AdvancedSearchCriteria record. updateAdvancedSearchCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a AdvancedSearchCriteria entity. updateAdvancedSearchCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias/{advancedSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a AdvancedSearchCriteria Record deleteAdvancedSearchCriteriaRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a AdvancedSearchCriteria entity deleteAdvancedSearchCriteriaEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias
+### /part-search-criteria/{partSearchCriteriaKey}/part-price-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of PartPriceCriteria records scoped by partSearchCriteriaKey. getPartPriceCriteriasByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of PartPriceCriteria entities scoped by partSearchCriteriaKey. getPartPriceCriteriaByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias</span> <br/>
-        <span class="api-summary">Create a new PartPriceCriteria record. createPartPriceCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria</span> <br/>
+        <span class="api-summary">Create a new PartPriceCriteria entity. createPartPriceCriteria</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias/{partPriceCriteriaKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartPriceCriteria record. getartPriceCriteriaById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartPriceCriteria entity. getartPriceCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a PartPriceCriteria record. replacePartPriceCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a PartPriceCriteria entity. replacePartPriceCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartPriceCriteria record. updatePartPriceCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a PartPriceCriteria entity. updatePartPriceCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-price-criterias/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a PartPriceCriteria Record deletePartPriceCriteriaRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a PartPriceCriteria entity deletePartPriceCriteriaEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/identifiers
+### /part-search-criteria/{partSearchCriteriaKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by partSearchCriteriaKey. getIdentifiersByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by partSearchCriteriaKey. getIdentifierByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers</span> <br/>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/identifiers/{identifierKey}
+### /part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-names
+### /part-search-criteria/{partSearchCriteriaKey}/part-names
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PartName records scoped by partSearchCriteriaKey. getPartNamesByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names</span> <br/>
+        <span class="api-summary">Retrieve a list of PartName entities scoped by partSearchCriteriaKey. getPartNameByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names</span> <br/>
-        <span class="api-summary">Create a new PartName record. createPartName</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names</span> <br/>
+        <span class="api-summary">Create a new PartName entity. createPartName</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-names/{partNameKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartName record. getartNameById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartName entity. getartNameById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Replace a PartName record. replacePartName</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
+        <span class="api-summary">Replace a PartName entity. replacePartName</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName record. updatePartName</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
+        <span class="api-summary">Partially update a PartName entity. updatePartName</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Delete a PartName Record deletePartNameRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
+        <span class="api-summary">Delete a PartName entity deletePartNameEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/super-sessions
+### /part-search-criteria/{partSearchCriteriaKey}/super-sessions
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions</span> <br/>
-        <span class="api-summary">Retrieve a list of SuperSession records scoped by partSearchCriteriaKey. getSuperSessionsByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions</span> <br/>
+        <span class="api-summary">Retrieve a list of SuperSession entities scoped by partSearchCriteriaKey. getSuperSessionByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions</span> <br/>
-        <span class="api-summary">Create a new SuperSession record. createSuperSession</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions</span> <br/>
+        <span class="api-summary">Create a new SuperSession entity. createSuperSession</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/super-sessions/{superSessionKey}
+### /part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific SuperSession record. getuperSessionById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific SuperSession entity. getuperSessionById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Replace a SuperSession record. replaceSuperSession</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Replace a SuperSession entity. replaceSuperSession</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Partially update a SuperSession record. updateSuperSession</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Partially update a SuperSession entity. updateSuperSession</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Delete a SuperSession Record deleteSuperSessionRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
+        <span class="api-summary">Delete a SuperSession entity deleteSuperSessionEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/advance-search-values
+### /part-search-criteria/{partSearchCriteriaKey}/advance-search-values
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values</span> <br/>
-        <span class="api-summary">Retrieve a list of AdvanceSearchValue records scoped by partSearchCriteriaKey. getAdvanceSearchValuesByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values</span> <br/>
+        <span class="api-summary">Retrieve a list of AdvanceSearchValue entities scoped by partSearchCriteriaKey. getAdvanceSearchValueByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values</span> <br/>
-        <span class="api-summary">Create a new AdvanceSearchValue record. createAdvanceSearchValue</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values</span> <br/>
+        <span class="api-summary">Create a new AdvanceSearchValue entity. createAdvanceSearchValue</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}
+### /part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AdvanceSearchValue record. getdvanceSearchValueById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AdvanceSearchValue entity. getdvanceSearchValueById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
-        <span class="api-summary">Replace a AdvanceSearchValue record. replaceAdvanceSearchValue</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
+        <span class="api-summary">Replace a AdvanceSearchValue entity. replaceAdvanceSearchValue</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
-        <span class="api-summary">Partially update a AdvanceSearchValue record. updateAdvanceSearchValue</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
+        <span class="api-summary">Partially update a AdvanceSearchValue entity. updateAdvanceSearchValue</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
-        <span class="api-summary">Delete a AdvanceSearchValue Record deleteAdvanceSearchValueRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
+        <span class="api-summary">Delete a AdvanceSearchValue entity deleteAdvanceSearchValueEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-identifiers
+### /part-search-criteria/{partSearchCriteriaKey}/part-identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartIdentifier records scoped by partSearchCriteriaKey. getPartIdentifiersByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of PartIdentifier entities scoped by partSearchCriteriaKey. getPartIdentifierByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartIdentifier record. createPartIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers</span> <br/>
+        <span class="api-summary">Create a new PartIdentifier entity. createPartIdentifier</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartIdentifier record. getartIdentifierById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartIdentifier entity. getartIdentifierById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartIdentifier record. replacePartIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
+        <span class="api-summary">Replace a PartIdentifier entity. replacePartIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartIdentifier record. updatePartIdentifier</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
+        <span class="api-summary">Partially update a PartIdentifier entity. updatePartIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartIdentifier Record deletePartIdentifierRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
+        <span class="api-summary">Delete a PartIdentifier entity deletePartIdentifierEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/effective-periods
+### /part-search-criteria/{partSearchCriteriaKey}/effective-periods
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by partSearchCriteriaKey. getEffectivePeriodsByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/effective-periods</span> <br/>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by partSearchCriteriaKey. getEffectivePeriodByPartSearchCriteriaKey</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}
+### /part-search-criteria/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias
+### /part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of PartLogisticsCriteria records scoped by partSearchCriteriaKey. getPartLogisticsCriteriasByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of PartLogisticsCriteria entities scoped by partSearchCriteriaKey. getPartLogisticsCriteriaByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias</span> <br/>
-        <span class="api-summary">Create a new PartLogisticsCriteria record. createPartLogisticsCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria</span> <br/>
+        <span class="api-summary">Create a new PartLogisticsCriteria entity. createPartLogisticsCriteria</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias/{partLogisticsCriteriaKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias/{partLogisticsCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartLogisticsCriteria record. getartLogisticsCriteriaById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartLogisticsCriteria entity. getartLogisticsCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias/{partLogisticsCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a PartLogisticsCriteria record. replacePartLogisticsCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a PartLogisticsCriteria entity. replacePartLogisticsCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias/{partLogisticsCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLogisticsCriteria record. updatePartLogisticsCriteria</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a PartLogisticsCriteria entity. updatePartLogisticsCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias/{partLogisticsCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a PartLogisticsCriteria Record deletePartLogisticsCriteriaRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a PartLogisticsCriteria entity deletePartLogisticsCriteriaEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-lifecycles
+### /part-search-criteria/{partSearchCriteriaKey}/part-lifecycles
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles</span> <br/>
-        <span class="api-summary">Retrieve a list of PartLifecycle records scoped by partSearchCriteriaKey. getPartLifecyclesByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles</span> <br/>
+        <span class="api-summary">Retrieve a list of PartLifecycle entities scoped by partSearchCriteriaKey. getPartLifecycleByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles</span> <br/>
-        <span class="api-summary">Create a new PartLifecycle record. createPartLifecycle</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles</span> <br/>
+        <span class="api-summary">Create a new PartLifecycle entity. createPartLifecycle</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}
+### /part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartLifecycle record. getartLifecycleById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartLifecycle entity. getartLifecycleById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Replace a PartLifecycle record. replacePartLifecycle</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
+        <span class="api-summary">Replace a PartLifecycle entity. replacePartLifecycle</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLifecycle record. updatePartLifecycle</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
+        <span class="api-summary">Partially update a PartLifecycle entity. updatePartLifecycle</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Delete a PartLifecycle Record deletePartLifecycleRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
+        <span class="api-summary">Delete a PartLifecycle entity deletePartLifecycleEntity</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/warehouse-references
+### /part-search-criteria/{partSearchCriteriaKey}/warehouse-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references</span> <br/>
-        <span class="api-summary">Retrieve a list of WarehouseReference records scoped by partSearchCriteriaKey. getWarehouseReferencesByPartSearchCriteriaKey</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references</span> <br/>
+        <span class="api-summary">Retrieve a list of WarehouseReference entities scoped by partSearchCriteriaKey. getWarehouseReferenceByPartSearchCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references</span> <br/>
-        <span class="api-summary">Create a new WarehouseReference record. createWarehouseReference</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references</span> <br/>
+        <span class="api-summary">Create a new WarehouseReference entity. createWarehouseReference</span>
     </span>
 </div>
 
-### /part-search-criterias/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}
+### /part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific WarehouseReference record. getarehouseReferenceById</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific WarehouseReference entity. getarehouseReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a WarehouseReference record. replaceWarehouseReference</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a WarehouseReference entity. replaceWarehouseReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a WarehouseReference record. updateWarehouseReference</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a WarehouseReference entity. updateWarehouseReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/part-search-criterias/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a WarehouseReference Record deleteWarehouseReferenceRecord</span>
+        <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a WarehouseReference entity deleteWarehouseReferenceEntity</span>
     </span>
 </div>
 
@@ -891,21 +898,21 @@ The following resources follow a consistent pattern under PartSearchCriteriaroot
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **part-search-criteria** | /part-search-criterias | listPartSearchCriterias | createPartSearchCriteria | getPartSearchCriterias | updatePartSearchCriterias | deletePartSearchCriterias |
-    | **unit-of-measure** | /part-search-criterias/{partSearchCriteriaKey}/unit-of-measures | listUnitOfMeasuresByPartSearchCriteriaKey |  | getUnitOfMeasuresByPartSearchCriteriaKey | updateUnitOfMeasuresByPartSearchCriteriaKey | deleteUnitOfMeasuresByPartSearchCriteriaKey |
-    | **part-specification** | /part-search-criterias/{partSearchCriteriaKey}/part-specifications | listPartSpecificationsByPartSearchCriteriaKey | createPartSpecification | getPartSpecificationsByPartSearchCriteriaKey | updatePartSpecificationsByPartSearchCriteriaKey | deletePartSpecificationsByPartSearchCriteriaKey |
-    | **time-slot** | /part-search-criterias/{partSearchCriteriaKey}/time-slots | listTimeSlotsByPartSearchCriteriaKey |  | getTimeSlotsByPartSearchCriteriaKey | updateTimeSlotsByPartSearchCriteriaKey | deleteTimeSlotsByPartSearchCriteriaKey |
-    | **advanced-search-criteria** | /part-search-criterias/{partSearchCriteriaKey}/advanced-search-criterias | listAdvancedSearchCriteriasByPartSearchCriteriaKey | createAdvancedSearchCriteria | getAdvancedSearchCriteriasByPartSearchCriteriaKey | updateAdvancedSearchCriteriasByPartSearchCriteriaKey | deleteAdvancedSearchCriteriasByPartSearchCriteriaKey |
-    | **part-price-criteria** | /part-search-criterias/{partSearchCriteriaKey}/part-price-criterias | listPartPriceCriteriasByPartSearchCriteriaKey | createPartPriceCriteria | getPartPriceCriteriasByPartSearchCriteriaKey | updatePartPriceCriteriasByPartSearchCriteriaKey | deletePartPriceCriteriasByPartSearchCriteriaKey |
-    | **identifier** | /part-search-criterias/{partSearchCriteriaKey}/identifiers | listIdentifiersByPartSearchCriteriaKey | createIdentifier | getIdentifiersByPartSearchCriteriaKey | updateIdentifiersByPartSearchCriteriaKey | deleteIdentifiersByPartSearchCriteriaKey |
-    | **part-name** | /part-search-criterias/{partSearchCriteriaKey}/part-names | listPartNamesByPartSearchCriteriaKey | createPartName | getPartNamesByPartSearchCriteriaKey | updatePartNamesByPartSearchCriteriaKey | deletePartNamesByPartSearchCriteriaKey |
-    | **super-session** | /part-search-criterias/{partSearchCriteriaKey}/super-sessions | listSuperSessionsByPartSearchCriteriaKey | createSuperSession | getSuperSessionsByPartSearchCriteriaKey | updateSuperSessionsByPartSearchCriteriaKey | deleteSuperSessionsByPartSearchCriteriaKey |
-    | **advance-search-value** | /part-search-criterias/{partSearchCriteriaKey}/advance-search-values | listAdvanceSearchValuesByPartSearchCriteriaKey | createAdvanceSearchValue | getAdvanceSearchValuesByPartSearchCriteriaKey | updateAdvanceSearchValuesByPartSearchCriteriaKey | deleteAdvanceSearchValuesByPartSearchCriteriaKey |
-    | **part-identifier** | /part-search-criterias/{partSearchCriteriaKey}/part-identifiers | listPartIdentifiersByPartSearchCriteriaKey | createPartIdentifier | getPartIdentifiersByPartSearchCriteriaKey | updatePartIdentifiersByPartSearchCriteriaKey | deletePartIdentifiersByPartSearchCriteriaKey |
-    | **effective-period** | /part-search-criterias/{partSearchCriteriaKey}/effective-periods | listEffectivePeriodsByPartSearchCriteriaKey |  | getEffectivePeriodsByPartSearchCriteriaKey | updateEffectivePeriodsByPartSearchCriteriaKey | deleteEffectivePeriodsByPartSearchCriteriaKey |
-    | **part-logistics-criteria** | /part-search-criterias/{partSearchCriteriaKey}/part-logistics-criterias | listPartLogisticsCriteriasByPartSearchCriteriaKey | createPartLogisticsCriteria | getPartLogisticsCriteriasByPartSearchCriteriaKey | updatePartLogisticsCriteriasByPartSearchCriteriaKey | deletePartLogisticsCriteriasByPartSearchCriteriaKey |
-    | **part-lifecycle** | /part-search-criterias/{partSearchCriteriaKey}/part-lifecycles | listPartLifecyclesByPartSearchCriteriaKey | createPartLifecycle | getPartLifecyclesByPartSearchCriteriaKey | updatePartLifecyclesByPartSearchCriteriaKey | deletePartLifecyclesByPartSearchCriteriaKey |
-    | **warehouse-reference** | /part-search-criterias/{partSearchCriteriaKey}/warehouse-references | listWarehouseReferencesByPartSearchCriteriaKey | createWarehouseReference | getWarehouseReferencesByPartSearchCriteriaKey | updateWarehouseReferencesByPartSearchCriteriaKey | deleteWarehouseReferencesByPartSearchCriteriaKey |
+    | **part-search-criteria** | /part-search-criteria | listPartSearchCriteria | createPartSearchCriteria | getPartSearchCriteria | updatePartSearchCriteria | deletePartSearchCriteria |
+    | **unit-of-measure** | /part-search-criteria/{partSearchCriteriaKey}/unit-of-measures | listUnitOfMeasureByPartSearchCriteriaKey |  | getUnitOfMeasureByPartSearchCriteriaKey | updateUnitOfMeasureByPartSearchCriteriaKey | deleteUnitOfMeasureByPartSearchCriteriaKey |
+    | **part-specification** | /part-search-criteria/{partSearchCriteriaKey}/part-specifications | listPartSpecificationByPartSearchCriteriaKey | createPartSpecification | getPartSpecificationByPartSearchCriteriaKey | updatePartSpecificationByPartSearchCriteriaKey | deletePartSpecificationByPartSearchCriteriaKey |
+    | **time-slot** | /part-search-criteria/{partSearchCriteriaKey}/time-slots | listTimeSlotByPartSearchCriteriaKey |  | getTimeSlotByPartSearchCriteriaKey | updateTimeSlotByPartSearchCriteriaKey | deleteTimeSlotByPartSearchCriteriaKey |
+    | **advanced-search-criteria** | /part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria | listAdvancedSearchCriteriaByPartSearchCriteriaKey | createAdvancedSearchCriteria | getAdvancedSearchCriteriaByPartSearchCriteriaKey | updateAdvancedSearchCriteriaByPartSearchCriteriaKey | deleteAdvancedSearchCriteriaByPartSearchCriteriaKey |
+    | **part-price-criteria** | /part-search-criteria/{partSearchCriteriaKey}/part-price-criteria | listPartPriceCriteriaByPartSearchCriteriaKey | createPartPriceCriteria | getPartPriceCriteriaByPartSearchCriteriaKey | updatePartPriceCriteriaByPartSearchCriteriaKey | deletePartPriceCriteriaByPartSearchCriteriaKey |
+    | **identifier** | /part-search-criteria/{partSearchCriteriaKey}/identifiers | listIdentifierByPartSearchCriteriaKey | createIdentifier | getIdentifierByPartSearchCriteriaKey | updateIdentifierByPartSearchCriteriaKey | deleteIdentifierByPartSearchCriteriaKey |
+    | **part-name** | /part-search-criteria/{partSearchCriteriaKey}/part-names | listPartNameByPartSearchCriteriaKey | createPartName | getPartNameByPartSearchCriteriaKey | updatePartNameByPartSearchCriteriaKey | deletePartNameByPartSearchCriteriaKey |
+    | **super-session** | /part-search-criteria/{partSearchCriteriaKey}/super-sessions | listSuperSessionByPartSearchCriteriaKey | createSuperSession | getSuperSessionByPartSearchCriteriaKey | updateSuperSessionByPartSearchCriteriaKey | deleteSuperSessionByPartSearchCriteriaKey |
+    | **advance-search-value** | /part-search-criteria/{partSearchCriteriaKey}/advance-search-values | listAdvanceSearchValueByPartSearchCriteriaKey | createAdvanceSearchValue | getAdvanceSearchValueByPartSearchCriteriaKey | updateAdvanceSearchValueByPartSearchCriteriaKey | deleteAdvanceSearchValueByPartSearchCriteriaKey |
+    | **part-identifier** | /part-search-criteria/{partSearchCriteriaKey}/part-identifiers | listPartIdentifierByPartSearchCriteriaKey | createPartIdentifier | getPartIdentifierByPartSearchCriteriaKey | updatePartIdentifierByPartSearchCriteriaKey | deletePartIdentifierByPartSearchCriteriaKey |
+    | **effective-period** | /part-search-criteria/{partSearchCriteriaKey}/effective-periods | listEffectivePeriodByPartSearchCriteriaKey |  | getEffectivePeriodByPartSearchCriteriaKey | updateEffectivePeriodByPartSearchCriteriaKey | deleteEffectivePeriodByPartSearchCriteriaKey |
+    | **part-logistics-criteria** | /part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria | listPartLogisticsCriteriaByPartSearchCriteriaKey | createPartLogisticsCriteria | getPartLogisticsCriteriaByPartSearchCriteriaKey | updatePartLogisticsCriteriaByPartSearchCriteriaKey | deletePartLogisticsCriteriaByPartSearchCriteriaKey |
+    | **part-lifecycle** | /part-search-criteria/{partSearchCriteriaKey}/part-lifecycles | listPartLifecycleByPartSearchCriteriaKey | createPartLifecycle | getPartLifecycleByPartSearchCriteriaKey | updatePartLifecycleByPartSearchCriteriaKey | deletePartLifecycleByPartSearchCriteriaKey |
+    | **warehouse-reference** | /part-search-criteria/{partSearchCriteriaKey}/warehouse-references | listWarehouseReferenceByPartSearchCriteriaKey | createWarehouseReference | getWarehouseReferenceByPartSearchCriteriaKey | updateWarehouseReferenceByPartSearchCriteriaKey | deleteWarehouseReferenceByPartSearchCriteriaKey |
 
 ***Note on List Operations:***
 

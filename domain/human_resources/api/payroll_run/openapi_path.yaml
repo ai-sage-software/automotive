@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /payroll-runs:
     get:
       tags:
-      - "PayrollRun"
-      summary: "Retrieve a list of all PayrollRun records."
-      operationId: "listPayrollRuns"
+      - PayrollRun
+      summary: Retrieve a list of PayrollRun entities.
+      operationId: listPayrollRun
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PayrollRun records."
+          description: A list of PayrollRun entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PayrollRun"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PayrollRun"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PayrollRun"
-      summary: "Create a new PayrollRun record."
-      operationId: "createPayrollRun"
+      - PayrollRun
+      summary: Create a new PayrollRun entity.
+      operationId: createPayrollRun
       requestBody:
-        description: "PayrollRun data to create the new resource."
+        description: PayrollRun data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "PayrollRun created successfully."
+          description: PayrollRun created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/payroll-runs/PR-1234567"
+                type: string
+                example: /payroll-runs/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollRun"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /payroll-runs/{payrollRunKey}:
     get:
       tags:
-      - "PayrollRun"
-      summary: "Retrieve a specific PayrollRun record."
-      operationId: "getPayrollRunById"
+      - PayrollRun
+      summary: Retrieve a specific PayrollRun entity.
+      operationId: getPayrollRunById
       responses:
         "200":
-          description: "The requested PayrollRun record."
+          description: The requested PayrollRun entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PayrollRun"
-      summary: "Replace a PayrollRun record."
-      operationId: "replacePayrollRun"
+      - PayrollRun
+      summary: Replace a PayrollRun entity.
+      operationId: replacePayrollRun
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollRun"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PayrollRun"
-      summary: "Delete a PayrollRun Record"
-      description: "Marks the PayrollRun record as inactive or removes it entirely."
-      operationId: "deletePayrollRunRecord"
+      - PayrollRun
+      summary: Delete a PayrollRun entity
+      description: Marks the PayrollRun entity as inactive or removes it entirely.
+      operationId: deletePayrollRunEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PayrollRun"
-      summary: "Partially update a PayrollRun record."
-      operationId: "updatePayrollRun"
+      - PayrollRun
+      summary: Partially update a PayrollRun entity.
+      operationId: updatePayrollRun
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PayrollRunUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PayrollRun"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the specific PayrollRun."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the specific PayrollRun.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by payrollRunKey."
-      operationId: "listIdentifiersByPayrollRunKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by payrollRunKey.
+      operationId: listIdentifierByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +306,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or removes it entirely."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/addresses:
     get:
       tags:
-      - "Address"
-      summary: "Retrieve a list of Address records scoped by payrollRunKey."
-      operationId: "listAddresssByPayrollRunKey"
+      - Address
+      summary: Retrieve a list of Address entities scoped by payrollRunKey.
+      operationId: listAddressByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Address records."
+          description: A list of Address entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Address"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Address"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Address"
-      summary: "Create a new Address record."
-      operationId: "createAddress"
+      - Address
+      summary: Create a new Address entity.
+      operationId: createAddress
       requestBody:
-        description: "Address data to create the new resource."
+        description: Address data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +433,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Address created successfully."
+          description: Address created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/addresses/{addressKey}:
     get:
       tags:
-      - "Address"
-      summary: "Retrieve a specific Address record."
-      operationId: "getAddressById"
+      - Address
+      summary: Retrieve a specific Address entity.
+      operationId: getAddressById
       responses:
         "200":
-          description: "The requested Address record."
+          description: The requested Address entity.
           content:
             application/json:
               schema:
@@ -398,11 +476,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Address"
-      summary: "Replace a Address record."
-      operationId: "replaceAddress"
+      - Address
+      summary: Replace a Address entity.
+      operationId: replaceAddress
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,114 +488,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Address"
-      summary: "Delete a Address Record"
-      description: "Marks the Address record as inactive or removes it entirely."
-      operationId: "deleteAddressRecord"
+      - Address
+      summary: Delete a Address entity
+      description: Marks the Address entity as inactive or removes it entirely.
+      operationId: deleteAddressEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Address"
-      summary: "Partially update a Address record."
-      operationId: "updateAddress"
+      - Address
+      summary: Partially update a Address entity.
+      operationId: updateAddress
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/AddressUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "addressKey"
-      in: "path"
-      description: "The unique identifier for the specific Address."
+        type: string
+    - name: addressKey
+      in: path
+      description: The unique identifier for the specific Address.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scoped by payrollRunKey."
-      operationId: "listEffectivePeriodsByPayrollRunKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities scoped by payrollRunKey.
+      operationId: listEffectivePeriodByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -528,11 +627,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -540,69 +639,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/product-subjects:
     get:
       tags:
-      - "ProductSubject"
-      summary: "Retrieve a list of ProductSubject records scoped by payrollRunKey."
-      operationId: "listProductSubjectsByPayrollRunKey"
+      - ProductSubject
+      summary: Retrieve a list of ProductSubject entities scoped by payrollRunKey.
+      operationId: listProductSubjectByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ProductSubject records."
+          description: A list of ProductSubject entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ProductSubject"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductSubject"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ProductSubject"
-      summary: "Create a new ProductSubject record."
-      operationId: "createProductSubject"
+      - ProductSubject
+      summary: Create a new ProductSubject entity.
+      operationId: createProductSubject
       requestBody:
-        description: "ProductSubject data to create the new resource."
+        description: ProductSubject data to create the new resource.
         content:
           application/json:
             schema:
@@ -610,37 +728,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ProductSubject created successfully."
+          description: ProductSubject created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProductSubject"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/product-subjects/{productSubjectKey}:
     get:
       tags:
-      - "ProductSubject"
-      summary: "Retrieve a specific ProductSubject record."
-      operationId: "getProductSubjectById"
+      - ProductSubject
+      summary: Retrieve a specific ProductSubject entity.
+      operationId: getProductSubjectById
       responses:
         "200":
-          description: "The requested ProductSubject record."
+          description: The requested ProductSubject entity.
           content:
             application/json:
               schema:
@@ -651,11 +771,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ProductSubject"
-      summary: "Replace a ProductSubject record."
-      operationId: "replaceProductSubject"
+      - ProductSubject
+      summary: Replace a ProductSubject entity.
+      operationId: replaceProductSubject
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -663,105 +783,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProductSubject"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ProductSubject"
-      summary: "Delete a ProductSubject Record"
-      description: "Marks the ProductSubject record as inactive or removes it entirely."
-      operationId: "deleteProductSubjectRecord"
+      - ProductSubject
+      summary: Delete a ProductSubject entity
+      description: Marks the ProductSubject entity as inactive or removes it entirely.
+      operationId: deleteProductSubjectEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ProductSubject"
-      summary: "Partially update a ProductSubject record."
-      operationId: "updateProductSubject"
+      - ProductSubject
+      summary: Partially update a ProductSubject entity.
+      operationId: updateProductSubject
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ProductSubjectUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ProductSubject"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "productSubjectKey"
-      in: "path"
-      description: "The unique identifier for the specific ProductSubject."
+        type: string
+    - name: productSubjectKey
+      in: path
+      description: The unique identifier for the specific ProductSubject.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/payroll-payments:
     get:
       tags:
-      - "PayrollPayment"
-      summary: "Retrieve a list of PayrollPayment records scoped by payrollRunKey."
-      operationId: "listPayrollPaymentsByPayrollRunKey"
+      - PayrollPayment
+      summary: Retrieve a list of PayrollPayment entities scoped by payrollRunKey.
+      operationId: listPayrollPaymentByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PayrollPayment records."
+          description: A list of PayrollPayment entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PayrollPayment"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PayrollPayment"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PayrollPayment"
-      summary: "Create a new PayrollPayment record."
-      operationId: "createPayrollPayment"
+      - PayrollPayment
+      summary: Create a new PayrollPayment entity.
+      operationId: createPayrollPayment
       requestBody:
-        description: "PayrollPayment data to create the new resource."
+        description: PayrollPayment data to create the new resource.
         content:
           application/json:
             schema:
@@ -769,37 +910,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PayrollPayment created successfully."
+          description: PayrollPayment created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollPayment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/payroll-payments/{payrollPaymentKey}:
     get:
       tags:
-      - "PayrollPayment"
-      summary: "Retrieve a specific PayrollPayment record."
-      operationId: "getPayrollPaymentById"
+      - PayrollPayment
+      summary: Retrieve a specific PayrollPayment entity.
+      operationId: getPayrollPaymentById
       responses:
         "200":
-          description: "The requested PayrollPayment record."
+          description: The requested PayrollPayment entity.
           content:
             application/json:
               schema:
@@ -810,11 +953,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PayrollPayment"
-      summary: "Replace a PayrollPayment record."
-      operationId: "replacePayrollPayment"
+      - PayrollPayment
+      summary: Replace a PayrollPayment entity.
+      operationId: replacePayrollPayment
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -822,114 +965,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PayrollPayment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PayrollPayment"
-      summary: "Delete a PayrollPayment Record"
-      description: "Marks the PayrollPayment record as inactive or removes it entirely."
-      operationId: "deletePayrollPaymentRecord"
+      - PayrollPayment
+      summary: Delete a PayrollPayment entity
+      description: Marks the PayrollPayment entity as inactive or removes it entirely.
+      operationId: deletePayrollPaymentEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PayrollPayment"
-      summary: "Partially update a PayrollPayment record."
-      operationId: "updatePayrollPayment"
+      - PayrollPayment
+      summary: Partially update a PayrollPayment entity.
+      operationId: updatePayrollPayment
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PayrollPaymentUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PayrollPayment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "payrollPaymentKey"
-      in: "path"
-      description: "The unique identifier for the specific PayrollPayment."
+        type: string
+    - name: payrollPaymentKey
+      in: path
+      description: The unique identifier for the specific PayrollPayment.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by payrollRunKey."
-      operationId: "listTimeSlotsByPayrollRunKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by payrollRunKey.
+      operationId: listTimeSlotByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -940,11 +1104,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -952,69 +1116,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/contact-methods:
     get:
       tags:
-      - "ContactMethod"
-      summary: "Retrieve a list of ContactMethod records scoped by payrollRunKey."
-      operationId: "listContactMethodsByPayrollRunKey"
+      - ContactMethod
+      summary: Retrieve a list of ContactMethod entities scoped by payrollRunKey.
+      operationId: listContactMethodByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ContactMethod records."
+          description: A list of ContactMethod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ContactMethod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ContactMethod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ContactMethod"
-      summary: "Create a new ContactMethod record."
-      operationId: "createContactMethod"
+      - ContactMethod
+      summary: Create a new ContactMethod entity.
+      operationId: createContactMethod
       requestBody:
-        description: "ContactMethod data to create the new resource."
+        description: ContactMethod data to create the new resource.
         content:
           application/json:
             schema:
@@ -1022,37 +1205,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ContactMethod created successfully."
+          description: ContactMethod created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactMethod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/contact-methods/{contactMethodKey}:
     get:
       tags:
-      - "ContactMethod"
-      summary: "Retrieve a specific ContactMethod record."
-      operationId: "getContactMethodById"
+      - ContactMethod
+      summary: Retrieve a specific ContactMethod entity.
+      operationId: getContactMethodById
       responses:
         "200":
-          description: "The requested ContactMethod record."
+          description: The requested ContactMethod entity.
           content:
             application/json:
               schema:
@@ -1063,11 +1248,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ContactMethod"
-      summary: "Replace a ContactMethod record."
-      operationId: "replaceContactMethod"
+      - ContactMethod
+      summary: Replace a ContactMethod entity.
+      operationId: replaceContactMethod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1075,105 +1260,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactMethod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ContactMethod"
-      summary: "Delete a ContactMethod Record"
-      description: "Marks the ContactMethod record as inactive or removes it entirely."
-      operationId: "deleteContactMethodRecord"
+      - ContactMethod
+      summary: Delete a ContactMethod entity
+      description: Marks the ContactMethod entity as inactive or removes it entirely.
+      operationId: deleteContactMethodEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ContactMethod"
-      summary: "Partially update a ContactMethod record."
-      operationId: "updateContactMethod"
+      - ContactMethod
+      summary: Partially update a ContactMethod entity.
+      operationId: updateContactMethod
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ContactMethodUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ContactMethod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "contactMethodKey"
-      in: "path"
-      description: "The unique identifier for the specific ContactMethod."
+        type: string
+    - name: contactMethodKey
+      in: path
+      description: The unique identifier for the specific ContactMethod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payroll-runs/{payrollRunKey}/communication-channels:
     get:
       tags:
-      - "CommunicationChannel"
-      summary: "Retrieve a list of CommunicationChannel records scoped by payrollRunKey."
-      operationId: "listCommunicationChannelsByPayrollRunKey"
+      - CommunicationChannel
+      summary: Retrieve a list of CommunicationChannel entities scoped by payrollRunKey.
+      operationId: listCommunicationChannelByPayrollRunKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of CommunicationChannel records."
+          description: A list of CommunicationChannel entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/CommunicationChannel"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CommunicationChannel"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "CommunicationChannel"
-      summary: "Create a new CommunicationChannel record."
-      operationId: "createCommunicationChannel"
+      - CommunicationChannel
+      summary: Create a new CommunicationChannel entity.
+      operationId: createCommunicationChannel
       requestBody:
-        description: "CommunicationChannel data to create the new resource."
+        description: CommunicationChannel data to create the new resource.
         content:
           application/json:
             schema:
@@ -1181,37 +1387,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "CommunicationChannel created successfully."
+          description: CommunicationChannel created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CommunicationChannel"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}:
     get:
       tags:
-      - "CommunicationChannel"
-      summary: "Retrieve a specific CommunicationChannel record."
-      operationId: "getCommunicationChannelById"
+      - CommunicationChannel
+      summary: Retrieve a specific CommunicationChannel entity.
+      operationId: getCommunicationChannelById
       responses:
         "200":
-          description: "The requested CommunicationChannel record."
+          description: The requested CommunicationChannel entity.
           content:
             application/json:
               schema:
@@ -1222,11 +1430,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "CommunicationChannel"
-      summary: "Replace a CommunicationChannel record."
-      operationId: "replaceCommunicationChannel"
+      - CommunicationChannel
+      summary: Replace a CommunicationChannel entity.
+      operationId: replaceCommunicationChannel
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1234,65 +1442,69 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CommunicationChannel"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "CommunicationChannel"
-      summary: "Delete a CommunicationChannel Record"
-      description: "Marks the CommunicationChannel record as inactive or removes it\
-        \ entirely."
-      operationId: "deleteCommunicationChannelRecord"
+      - CommunicationChannel
+      summary: Delete a CommunicationChannel entity
+      description: Marks the CommunicationChannel entity as inactive or removes it
+        entirely.
+      operationId: deleteCommunicationChannelEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "CommunicationChannel"
-      summary: "Partially update a CommunicationChannel record."
-      operationId: "updateCommunicationChannel"
+      - CommunicationChannel
+      summary: Partially update a CommunicationChannel entity.
+      operationId: updateCommunicationChannel
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/CommunicationChannelUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/CommunicationChannel"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "payrollRunKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: payrollRunKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "communicationChannelKey"
-      in: "path"
-      description: "The unique identifier for the specific CommunicationChannel."
+        type: string
+    - name: communicationChannelKey
+      in: path
+      description: The unique identifier for the specific CommunicationChannel.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}

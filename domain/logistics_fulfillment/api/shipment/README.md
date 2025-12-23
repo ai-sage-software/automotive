@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **Identifier**, **InvoiceReference**, **PartyReference**, **Position**, **Shipment**, **ShipmentEvent**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **Identifier**, **InvoiceReference**, **PartyReference**, **Position**, **Shipment**, **ShipmentEvent**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -196,7 +203,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments</span> <br/>
-        <span class="api-summary">Retrieve a list of all Shipment records. getShipments</span>
+        <span class="api-summary">Retrieve a list of Shipment entities. getShipment</span>
     </span>
 </div>
 
@@ -204,7 +211,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments</span> <br/>
-        <span class="api-summary">Create a new Shipment record. createShipment</span>
+        <span class="api-summary">Create a new Shipment entity. createShipment</span>
     </span>
 </div>
 
@@ -213,7 +220,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Shipment record. gethipmentById</span>
+        <span class="api-summary">Retrieve a specific Shipment entity. gethipmentById</span>
     </span>
 </div>
 
@@ -221,7 +228,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}</span> <br/>
-        <span class="api-summary">Replace a Shipment record. replaceShipment</span>
+        <span class="api-summary">Replace a Shipment entity. replaceShipment</span>
     </span>
 </div>
 
@@ -229,7 +236,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Shipment record. updateShipment</span>
+        <span class="api-summary">Partially update a Shipment entity. updateShipment</span>
     </span>
 </div>
 
@@ -237,7 +244,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}</span> <br/>
-        <span class="api-summary">Delete a Shipment Record deleteShipmentRecord</span>
+        <span class="api-summary">Delete a Shipment entity deleteShipmentEntity</span>
     </span>
 </div>
 
@@ -246,7 +253,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references</span> <br/>
-        <span class="api-summary">Retrieve a list of InvoiceReference records scoped by shipmentKey. getInvoiceReferencesByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of InvoiceReference entities scoped by shipmentKey. getInvoiceReferenceByShipmentKey</span>
     </span>
 </div>
 
@@ -254,7 +261,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references</span> <br/>
-        <span class="api-summary">Create a new InvoiceReference record. createInvoiceReference</span>
+        <span class="api-summary">Create a new InvoiceReference entity. createInvoiceReference</span>
     </span>
 </div>
 
@@ -263,7 +270,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific InvoiceReference record. getnvoiceReferenceById</span>
+        <span class="api-summary">Retrieve a specific InvoiceReference entity. getnvoiceReferenceById</span>
     </span>
 </div>
 
@@ -271,7 +278,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a InvoiceReference record. replaceInvoiceReference</span>
+        <span class="api-summary">Replace a InvoiceReference entity. replaceInvoiceReference</span>
     </span>
 </div>
 
@@ -279,7 +286,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a InvoiceReference record. updateInvoiceReference</span>
+        <span class="api-summary">Partially update a InvoiceReference entity. updateInvoiceReference</span>
     </span>
 </div>
 
@@ -287,7 +294,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a InvoiceReference Record deleteInvoiceReferenceRecord</span>
+        <span class="api-summary">Delete a InvoiceReference entity deleteInvoiceReferenceEntity</span>
     </span>
 </div>
 
@@ -296,7 +303,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyReference records scoped by shipmentKey. getPartyReferencesByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by shipmentKey. getPartyReferenceByShipmentKey</span>
     </span>
 </div>
 
@@ -304,7 +311,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references</span> <br/>
-        <span class="api-summary">Create a new PartyReference record. createPartyReference</span>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
     </span>
 </div>
 
@@ -313,7 +320,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyReference record. getartyReferenceById</span>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
     </span>
 </div>
 
@@ -321,7 +328,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartyReference record. replacePartyReference</span>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
     </span>
 </div>
 
@@ -329,7 +336,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyReference record. updatePartyReference</span>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartyReference</span>
     </span>
 </div>
 
@@ -337,7 +344,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartyReference Record deletePartyReferenceRecord</span>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
     </span>
 </div>
 
@@ -346,7 +353,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events</span> <br/>
-        <span class="api-summary">Retrieve a list of ShipmentEvent records scoped by shipmentKey. getShipmentEventsByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of ShipmentEvent entities scoped by shipmentKey. getShipmentEventByShipmentKey</span>
     </span>
 </div>
 
@@ -354,7 +361,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events</span> <br/>
-        <span class="api-summary">Create a new ShipmentEvent record. createShipmentEvent</span>
+        <span class="api-summary">Create a new ShipmentEvent entity. createShipmentEvent</span>
     </span>
 </div>
 
@@ -363,7 +370,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events/{shipmentEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ShipmentEvent record. gethipmentEventById</span>
+        <span class="api-summary">Retrieve a specific ShipmentEvent entity. gethipmentEventById</span>
     </span>
 </div>
 
@@ -371,7 +378,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events/{shipmentEventKey}</span> <br/>
-        <span class="api-summary">Replace a ShipmentEvent record. replaceShipmentEvent</span>
+        <span class="api-summary">Replace a ShipmentEvent entity. replaceShipmentEvent</span>
     </span>
 </div>
 
@@ -379,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events/{shipmentEventKey}</span> <br/>
-        <span class="api-summary">Partially update a ShipmentEvent record. updateShipmentEvent</span>
+        <span class="api-summary">Partially update a ShipmentEvent entity. updateShipmentEvent</span>
     </span>
 </div>
 
@@ -387,7 +394,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events/{shipmentEventKey}</span> <br/>
-        <span class="api-summary">Delete a ShipmentEvent Record deleteShipmentEventRecord</span>
+        <span class="api-summary">Delete a ShipmentEvent entity deleteShipmentEventEntity</span>
     </span>
 </div>
 
@@ -396,7 +403,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by shipmentKey. getIdentifiersByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by shipmentKey. getIdentifierByShipmentKey</span>
     </span>
 </div>
 
@@ -404,7 +411,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -413,7 +420,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -421,7 +428,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -429,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -437,7 +444,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -446,7 +453,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by shipmentKey. getUnitOfMeasuresByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure entities scoped by shipmentKey. getUnitOfMeasureByShipmentKey</span>
     </span>
 </div>
 
@@ -455,7 +462,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure entity. getnitOfMeasureById</span>
     </span>
 </div>
 
@@ -463,7 +470,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+        <span class="api-summary">Replace a UnitOfMeasure entity. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -472,7 +479,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions</span> <br/>
-        <span class="api-summary">Retrieve a list of Position records scoped by shipmentKey. getPositionsByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of Position entities scoped by shipmentKey. getPositionByShipmentKey</span>
     </span>
 </div>
 
@@ -480,7 +487,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions</span> <br/>
-        <span class="api-summary">Create a new Position record. createPosition</span>
+        <span class="api-summary">Create a new Position entity. createPosition</span>
     </span>
 </div>
 
@@ -489,7 +496,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Position record. getositionById</span>
+        <span class="api-summary">Retrieve a specific Position entity. getositionById</span>
     </span>
 </div>
 
@@ -497,7 +504,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Replace a Position record. replacePosition</span>
+        <span class="api-summary">Replace a Position entity. replacePosition</span>
     </span>
 </div>
 
@@ -505,7 +512,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position record. updatePosition</span>
+        <span class="api-summary">Partially update a Position entity. updatePosition</span>
     </span>
 </div>
 
@@ -513,7 +520,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Delete a Position Record deletePositionRecord</span>
+        <span class="api-summary">Delete a Position entity deletePositionEntity</span>
     </span>
 </div>
 
@@ -522,7 +529,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by shipmentKey. getEffectivePeriodsByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by shipmentKey. getEffectivePeriodByShipmentKey</span>
     </span>
 </div>
 
@@ -531,7 +538,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -539,7 +546,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -548,7 +555,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by shipmentKey. getTimeSlotsByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by shipmentKey. getTimeSlotByShipmentKey</span>
     </span>
 </div>
 
@@ -557,7 +564,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -565,7 +572,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -574,7 +581,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references</span> <br/>
-        <span class="api-summary">Retrieve a list of AddressReference records scoped by shipmentKey. getAddressReferencesByShipmentKey</span>
+        <span class="api-summary">Retrieve a list of AddressReference entities scoped by shipmentKey. getAddressReferenceByShipmentKey</span>
     </span>
 </div>
 
@@ -582,7 +589,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references</span> <br/>
-        <span class="api-summary">Create a new AddressReference record. createAddressReference</span>
+        <span class="api-summary">Create a new AddressReference entity. createAddressReference</span>
     </span>
 </div>
 
@@ -591,7 +598,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AddressReference record. getddressReferenceById</span>
+        <span class="api-summary">Retrieve a specific AddressReference entity. getddressReferenceById</span>
     </span>
 </div>
 
@@ -599,7 +606,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a AddressReference record. replaceAddressReference</span>
+        <span class="api-summary">Replace a AddressReference entity. replaceAddressReference</span>
     </span>
 </div>
 
@@ -607,7 +614,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressReference record. updateAddressReference</span>
+        <span class="api-summary">Partially update a AddressReference entity. updateAddressReference</span>
     </span>
 </div>
 
@@ -615,7 +622,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a AddressReference Record deleteAddressReferenceRecord</span>
+        <span class="api-summary">Delete a AddressReference entity deleteAddressReferenceEntity</span>
     </span>
 </div>
 
@@ -625,16 +632,16 @@ The following resources follow a consistent pattern under Shipmentroot with key 
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **shipment** | /shipments | listShipments | createShipment | getShipments | updateShipments | deleteShipments |
-    | **invoice-reference** | /shipments/{shipmentKey}/invoice-references | listInvoiceReferencesByShipmentKey | createInvoiceReference | getInvoiceReferencesByShipmentKey | updateInvoiceReferencesByShipmentKey | deleteInvoiceReferencesByShipmentKey |
-    | **party-reference** | /shipments/{shipmentKey}/party-references | listPartyReferencesByShipmentKey | createPartyReference | getPartyReferencesByShipmentKey | updatePartyReferencesByShipmentKey | deletePartyReferencesByShipmentKey |
-    | **shipment-event** | /shipments/{shipmentKey}/shipment-events | listShipmentEventsByShipmentKey | createShipmentEvent | getShipmentEventsByShipmentKey | updateShipmentEventsByShipmentKey | deleteShipmentEventsByShipmentKey |
-    | **identifier** | /shipments/{shipmentKey}/identifiers | listIdentifiersByShipmentKey | createIdentifier | getIdentifiersByShipmentKey | updateIdentifiersByShipmentKey | deleteIdentifiersByShipmentKey |
-    | **unit-of-measure** | /shipments/{shipmentKey}/unit-of-measures | listUnitOfMeasuresByShipmentKey |  | getUnitOfMeasuresByShipmentKey | updateUnitOfMeasuresByShipmentKey | deleteUnitOfMeasuresByShipmentKey |
-    | **position** | /shipments/{shipmentKey}/positions | listPositionsByShipmentKey | createPosition | getPositionsByShipmentKey | updatePositionsByShipmentKey | deletePositionsByShipmentKey |
-    | **effective-period** | /shipments/{shipmentKey}/effective-periods | listEffectivePeriodsByShipmentKey |  | getEffectivePeriodsByShipmentKey | updateEffectivePeriodsByShipmentKey | deleteEffectivePeriodsByShipmentKey |
-    | **time-slot** | /shipments/{shipmentKey}/time-slots | listTimeSlotsByShipmentKey |  | getTimeSlotsByShipmentKey | updateTimeSlotsByShipmentKey | deleteTimeSlotsByShipmentKey |
-    | **address-reference** | /shipments/{shipmentKey}/address-references | listAddressReferencesByShipmentKey | createAddressReference | getAddressReferencesByShipmentKey | updateAddressReferencesByShipmentKey | deleteAddressReferencesByShipmentKey |
+    | **shipment** | /shipments | listShipment | createShipment | getShipment | updateShipment | deleteShipment |
+    | **invoice-reference** | /shipments/{shipmentKey}/invoice-references | listInvoiceReferenceByShipmentKey | createInvoiceReference | getInvoiceReferenceByShipmentKey | updateInvoiceReferenceByShipmentKey | deleteInvoiceReferenceByShipmentKey |
+    | **party-reference** | /shipments/{shipmentKey}/party-references | listPartyReferenceByShipmentKey | createPartyReference | getPartyReferenceByShipmentKey | updatePartyReferenceByShipmentKey | deletePartyReferenceByShipmentKey |
+    | **shipment-event** | /shipments/{shipmentKey}/shipment-events | listShipmentEventByShipmentKey | createShipmentEvent | getShipmentEventByShipmentKey | updateShipmentEventByShipmentKey | deleteShipmentEventByShipmentKey |
+    | **identifier** | /shipments/{shipmentKey}/identifiers | listIdentifierByShipmentKey | createIdentifier | getIdentifierByShipmentKey | updateIdentifierByShipmentKey | deleteIdentifierByShipmentKey |
+    | **unit-of-measure** | /shipments/{shipmentKey}/unit-of-measures | listUnitOfMeasureByShipmentKey |  | getUnitOfMeasureByShipmentKey | updateUnitOfMeasureByShipmentKey | deleteUnitOfMeasureByShipmentKey |
+    | **position** | /shipments/{shipmentKey}/positions | listPositionByShipmentKey | createPosition | getPositionByShipmentKey | updatePositionByShipmentKey | deletePositionByShipmentKey |
+    | **effective-period** | /shipments/{shipmentKey}/effective-periods | listEffectivePeriodByShipmentKey |  | getEffectivePeriodByShipmentKey | updateEffectivePeriodByShipmentKey | deleteEffectivePeriodByShipmentKey |
+    | **time-slot** | /shipments/{shipmentKey}/time-slots | listTimeSlotByShipmentKey |  | getTimeSlotByShipmentKey | updateTimeSlotByShipmentKey | deleteTimeSlotByShipmentKey |
+    | **address-reference** | /shipments/{shipmentKey}/address-references | listAddressReferenceByShipmentKey | createAddressReference | getAddressReferenceByShipmentKey | updateAddressReferenceByShipmentKey | deleteAddressReferenceByShipmentKey |
 
 ***Note on List Operations:***
 

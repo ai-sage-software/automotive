@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **BillOfMaterial**, **BomComponent**, **Identifier**, **PartIdentifier**, **PartName**, **PartSpecification**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **BillOfMaterial**, **BomComponent**, **Identifier**, **PartIdentifier**, **PartName**, **PartSpecification**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -198,7 +205,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials</span> <br/>
-        <span class="api-summary">Retrieve a list of all BillOfMaterial records. getBillOfMaterials</span>
+        <span class="api-summary">Retrieve a list of BillOfMaterial entities. getBillOfMaterial</span>
     </span>
 </div>
 
@@ -206,7 +213,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials</span> <br/>
-        <span class="api-summary">Create a new BillOfMaterial record. createBillOfMaterial</span>
+        <span class="api-summary">Create a new BillOfMaterial entity. createBillOfMaterial</span>
     </span>
 </div>
 
@@ -215,7 +222,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific BillOfMaterial record. getillOfMaterialById</span>
+        <span class="api-summary">Retrieve a specific BillOfMaterial entity. getillOfMaterialById</span>
     </span>
 </div>
 
@@ -223,7 +230,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}</span> <br/>
-        <span class="api-summary">Replace a BillOfMaterial record. replaceBillOfMaterial</span>
+        <span class="api-summary">Replace a BillOfMaterial entity. replaceBillOfMaterial</span>
     </span>
 </div>
 
@@ -231,7 +238,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}</span> <br/>
-        <span class="api-summary">Partially update a BillOfMaterial record. updateBillOfMaterial</span>
+        <span class="api-summary">Partially update a BillOfMaterial entity. updateBillOfMaterial</span>
     </span>
 </div>
 
@@ -239,7 +246,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}</span> <br/>
-        <span class="api-summary">Delete a BillOfMaterial Record deleteBillOfMaterialRecord</span>
+        <span class="api-summary">Delete a BillOfMaterial entity deleteBillOfMaterialEntity</span>
     </span>
 </div>
 
@@ -248,7 +255,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components</span> <br/>
-        <span class="api-summary">Retrieve a list of BomComponent records scoped by billOfMaterialKey. getBomComponentsByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of BomComponent entities scoped by billOfMaterialKey. getBomComponentByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -256,7 +263,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components</span> <br/>
-        <span class="api-summary">Create a new BomComponent record. createBomComponent</span>
+        <span class="api-summary">Create a new BomComponent entity. createBomComponent</span>
     </span>
 </div>
 
@@ -265,7 +272,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components/{bomComponentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific BomComponent record. getomComponentById</span>
+        <span class="api-summary">Retrieve a specific BomComponent entity. getomComponentById</span>
     </span>
 </div>
 
@@ -273,7 +280,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components/{bomComponentKey}</span> <br/>
-        <span class="api-summary">Replace a BomComponent record. replaceBomComponent</span>
+        <span class="api-summary">Replace a BomComponent entity. replaceBomComponent</span>
     </span>
 </div>
 
@@ -281,7 +288,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components/{bomComponentKey}</span> <br/>
-        <span class="api-summary">Partially update a BomComponent record. updateBomComponent</span>
+        <span class="api-summary">Partially update a BomComponent entity. updateBomComponent</span>
     </span>
 </div>
 
@@ -289,7 +296,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/bom-components/{bomComponentKey}</span> <br/>
-        <span class="api-summary">Delete a BomComponent Record deleteBomComponentRecord</span>
+        <span class="api-summary">Delete a BomComponent entity deleteBomComponentEntity</span>
     </span>
 </div>
 
@@ -298,7 +305,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by billOfMaterialKey. getIdentifiersByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by billOfMaterialKey. getIdentifierByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -306,7 +313,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -315,7 +322,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -323,7 +330,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -331,7 +338,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -339,7 +346,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -348,7 +355,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PartName records scoped by billOfMaterialKey. getPartNamesByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of PartName entities scoped by billOfMaterialKey. getPartNameByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -356,7 +363,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names</span> <br/>
-        <span class="api-summary">Create a new PartName record. createPartName</span>
+        <span class="api-summary">Create a new PartName entity. createPartName</span>
     </span>
 </div>
 
@@ -365,7 +372,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartName record. getartNameById</span>
+        <span class="api-summary">Retrieve a specific PartName entity. getartNameById</span>
     </span>
 </div>
 
@@ -373,7 +380,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Replace a PartName record. replacePartName</span>
+        <span class="api-summary">Replace a PartName entity. replacePartName</span>
     </span>
 </div>
 
@@ -381,7 +388,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName record. updatePartName</span>
+        <span class="api-summary">Partially update a PartName entity. updatePartName</span>
     </span>
 </div>
 
@@ -389,7 +396,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Delete a PartName Record deletePartNameRecord</span>
+        <span class="api-summary">Delete a PartName entity deletePartNameEntity</span>
     </span>
 </div>
 
@@ -398,7 +405,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by billOfMaterialKey. getUnitOfMeasuresByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure entities scoped by billOfMaterialKey. getUnitOfMeasureByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -407,7 +414,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure entity. getnitOfMeasureById</span>
     </span>
 </div>
 
@@ -415,7 +422,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+        <span class="api-summary">Replace a UnitOfMeasure entity. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -424,7 +431,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of PartIdentifier records scoped by billOfMaterialKey. getPartIdentifiersByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of PartIdentifier entities scoped by billOfMaterialKey. getPartIdentifierByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -432,7 +439,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers</span> <br/>
-        <span class="api-summary">Create a new PartIdentifier record. createPartIdentifier</span>
+        <span class="api-summary">Create a new PartIdentifier entity. createPartIdentifier</span>
     </span>
 </div>
 
@@ -441,7 +448,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartIdentifier record. getartIdentifierById</span>
+        <span class="api-summary">Retrieve a specific PartIdentifier entity. getartIdentifierById</span>
     </span>
 </div>
 
@@ -449,7 +456,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Replace a PartIdentifier record. replacePartIdentifier</span>
+        <span class="api-summary">Replace a PartIdentifier entity. replacePartIdentifier</span>
     </span>
 </div>
 
@@ -457,7 +464,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartIdentifier record. updatePartIdentifier</span>
+        <span class="api-summary">Partially update a PartIdentifier entity. updatePartIdentifier</span>
     </span>
 </div>
 
@@ -465,7 +472,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Delete a PartIdentifier Record deletePartIdentifierRecord</span>
+        <span class="api-summary">Delete a PartIdentifier entity deletePartIdentifierEntity</span>
     </span>
 </div>
 
@@ -474,7 +481,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by billOfMaterialKey. getEffectivePeriodsByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by billOfMaterialKey. getEffectivePeriodByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -483,7 +490,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -491,7 +498,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -500,7 +507,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications</span> <br/>
-        <span class="api-summary">Retrieve a list of PartSpecification records scoped by billOfMaterialKey. getPartSpecificationsByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of PartSpecification entities scoped by billOfMaterialKey. getPartSpecificationByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -508,7 +515,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications</span> <br/>
-        <span class="api-summary">Create a new PartSpecification record. createPartSpecification</span>
+        <span class="api-summary">Create a new PartSpecification entity. createPartSpecification</span>
     </span>
 </div>
 
@@ -517,7 +524,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartSpecification record. getartSpecificationById</span>
+        <span class="api-summary">Retrieve a specific PartSpecification entity. getartSpecificationById</span>
     </span>
 </div>
 
@@ -525,7 +532,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Replace a PartSpecification record. replacePartSpecification</span>
+        <span class="api-summary">Replace a PartSpecification entity. replacePartSpecification</span>
     </span>
 </div>
 
@@ -533,7 +540,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSpecification record. updatePartSpecification</span>
+        <span class="api-summary">Partially update a PartSpecification entity. updatePartSpecification</span>
     </span>
 </div>
 
@@ -541,7 +548,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Delete a PartSpecification Record deletePartSpecificationRecord</span>
+        <span class="api-summary">Delete a PartSpecification entity deletePartSpecificationEntity</span>
     </span>
 </div>
 
@@ -550,7 +557,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by billOfMaterialKey. getTextualDetailsByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by billOfMaterialKey. getTextualDetailByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -558,7 +565,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -567,7 +574,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -575,7 +582,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -583,7 +590,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -591,7 +598,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -600,7 +607,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by billOfMaterialKey. getTimeSlotsByBillOfMaterialKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by billOfMaterialKey. getTimeSlotByBillOfMaterialKey</span>
     </span>
 </div>
 
@@ -609,7 +616,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -617,7 +624,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -627,16 +634,16 @@ The following resources follow a consistent pattern under BillOfMaterialroot wit
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **bill-of-material** | /bill-of-materials | listBillOfMaterials | createBillOfMaterial | getBillOfMaterials | updateBillOfMaterials | deleteBillOfMaterials |
-    | **bom-component** | /bill-of-materials/{billOfMaterialKey}/bom-components | listBomComponentsByBillOfMaterialKey | createBomComponent | getBomComponentsByBillOfMaterialKey | updateBomComponentsByBillOfMaterialKey | deleteBomComponentsByBillOfMaterialKey |
-    | **identifier** | /bill-of-materials/{billOfMaterialKey}/identifiers | listIdentifiersByBillOfMaterialKey | createIdentifier | getIdentifiersByBillOfMaterialKey | updateIdentifiersByBillOfMaterialKey | deleteIdentifiersByBillOfMaterialKey |
-    | **part-name** | /bill-of-materials/{billOfMaterialKey}/part-names | listPartNamesByBillOfMaterialKey | createPartName | getPartNamesByBillOfMaterialKey | updatePartNamesByBillOfMaterialKey | deletePartNamesByBillOfMaterialKey |
-    | **unit-of-measure** | /bill-of-materials/{billOfMaterialKey}/unit-of-measures | listUnitOfMeasuresByBillOfMaterialKey |  | getUnitOfMeasuresByBillOfMaterialKey | updateUnitOfMeasuresByBillOfMaterialKey | deleteUnitOfMeasuresByBillOfMaterialKey |
-    | **part-identifier** | /bill-of-materials/{billOfMaterialKey}/part-identifiers | listPartIdentifiersByBillOfMaterialKey | createPartIdentifier | getPartIdentifiersByBillOfMaterialKey | updatePartIdentifiersByBillOfMaterialKey | deletePartIdentifiersByBillOfMaterialKey |
-    | **effective-period** | /bill-of-materials/{billOfMaterialKey}/effective-periods | listEffectivePeriodsByBillOfMaterialKey |  | getEffectivePeriodsByBillOfMaterialKey | updateEffectivePeriodsByBillOfMaterialKey | deleteEffectivePeriodsByBillOfMaterialKey |
-    | **part-specification** | /bill-of-materials/{billOfMaterialKey}/part-specifications | listPartSpecificationsByBillOfMaterialKey | createPartSpecification | getPartSpecificationsByBillOfMaterialKey | updatePartSpecificationsByBillOfMaterialKey | deletePartSpecificationsByBillOfMaterialKey |
-    | **textual-detail** | /bill-of-materials/{billOfMaterialKey}/textual-details | listTextualDetailsByBillOfMaterialKey | createTextualDetail | getTextualDetailsByBillOfMaterialKey | updateTextualDetailsByBillOfMaterialKey | deleteTextualDetailsByBillOfMaterialKey |
-    | **time-slot** | /bill-of-materials/{billOfMaterialKey}/time-slots | listTimeSlotsByBillOfMaterialKey |  | getTimeSlotsByBillOfMaterialKey | updateTimeSlotsByBillOfMaterialKey | deleteTimeSlotsByBillOfMaterialKey |
+    | **bill-of-material** | /bill-of-materials | listBillOfMaterial | createBillOfMaterial | getBillOfMaterial | updateBillOfMaterial | deleteBillOfMaterial |
+    | **bom-component** | /bill-of-materials/{billOfMaterialKey}/bom-components | listBomComponentByBillOfMaterialKey | createBomComponent | getBomComponentByBillOfMaterialKey | updateBomComponentByBillOfMaterialKey | deleteBomComponentByBillOfMaterialKey |
+    | **identifier** | /bill-of-materials/{billOfMaterialKey}/identifiers | listIdentifierByBillOfMaterialKey | createIdentifier | getIdentifierByBillOfMaterialKey | updateIdentifierByBillOfMaterialKey | deleteIdentifierByBillOfMaterialKey |
+    | **part-name** | /bill-of-materials/{billOfMaterialKey}/part-names | listPartNameByBillOfMaterialKey | createPartName | getPartNameByBillOfMaterialKey | updatePartNameByBillOfMaterialKey | deletePartNameByBillOfMaterialKey |
+    | **unit-of-measure** | /bill-of-materials/{billOfMaterialKey}/unit-of-measures | listUnitOfMeasureByBillOfMaterialKey |  | getUnitOfMeasureByBillOfMaterialKey | updateUnitOfMeasureByBillOfMaterialKey | deleteUnitOfMeasureByBillOfMaterialKey |
+    | **part-identifier** | /bill-of-materials/{billOfMaterialKey}/part-identifiers | listPartIdentifierByBillOfMaterialKey | createPartIdentifier | getPartIdentifierByBillOfMaterialKey | updatePartIdentifierByBillOfMaterialKey | deletePartIdentifierByBillOfMaterialKey |
+    | **effective-period** | /bill-of-materials/{billOfMaterialKey}/effective-periods | listEffectivePeriodByBillOfMaterialKey |  | getEffectivePeriodByBillOfMaterialKey | updateEffectivePeriodByBillOfMaterialKey | deleteEffectivePeriodByBillOfMaterialKey |
+    | **part-specification** | /bill-of-materials/{billOfMaterialKey}/part-specifications | listPartSpecificationByBillOfMaterialKey | createPartSpecification | getPartSpecificationByBillOfMaterialKey | updatePartSpecificationByBillOfMaterialKey | deletePartSpecificationByBillOfMaterialKey |
+    | **textual-detail** | /bill-of-materials/{billOfMaterialKey}/textual-details | listTextualDetailByBillOfMaterialKey | createTextualDetail | getTextualDetailByBillOfMaterialKey | updateTextualDetailByBillOfMaterialKey | deleteTextualDetailByBillOfMaterialKey |
+    | **time-slot** | /bill-of-materials/{billOfMaterialKey}/time-slots | listTimeSlotByBillOfMaterialKey |  | getTimeSlotByBillOfMaterialKey | updateTimeSlotByBillOfMaterialKey | deleteTimeSlotByBillOfMaterialKey |
 
 ***Note on List Operations:***
 
