@@ -1,0 +1,198 @@
+paths:
+  /warranty-claims:
+    get:
+      tags:
+      - WarrantyClaims
+      summary: Search warranty claims
+      description: |
+        Returns a filtered list of warranty claims based on search criteria.
+      parameters:
+      - name: claim_number_string
+        in: query
+        description: Filter by exact claim number.
+        required: false
+        schema:
+          type: string
+      - name: vin
+        in: query
+        description: Filter by full or partial VIN.
+        required: false
+        schema:
+          type: string
+      - name: repair_order_number_string
+        in: query
+        description: Filter by repair order number.
+        required: false
+        schema:
+          type: string
+      - name: status_code
+        in: query
+        description: Filter by warranty claim status code.
+        required: false
+        schema:
+          type: string
+      - name: from_open_date
+        in: query
+        description: Include claims opened on or after this date (YYYY-MM-DD).
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: to_open_date
+        in: query
+        description: Include claims opened on or before this date (YYYY-MM-DD).
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: page
+        in: query
+        description: Page number for paginated results.
+        required: false
+        schema:
+          minimum: 1
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Page size for paginated results.
+        required: false
+        schema:
+          maximum: 200
+          minimum: 1
+          type: integer
+          default: 50
+      responses:
+        "200":
+          description: Matching warranty claims returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarrantyClaimSearchResponse"
+              examples:
+                default:
+                  $ref: "#/components/examples/WarrantyClaimSearchResponseExample"
+        "400":
+          description: Invalid search parameters.
+        "500":
+          description: Server error.
+    post:
+      tags:
+      - WarrantyClaims
+      summary: Submit a new warranty claim
+      description: |
+        Submits a new warranty claim to the OEM or warranty provider.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarrantyClaimCreateRequest"
+            examples:
+              default:
+                $ref: "#/components/examples/WarrantyClaimCreateRequestExample"
+        required: true
+      responses:
+        "201":
+          description: Warranty claim created successfully.
+          headers:
+            Location:
+              description: URI of the newly created claim resource.
+              schema:
+                type: string
+                example: /warranty-claims/CLM-2024-000123
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarrantyClaimResponse"
+              examples:
+                default:
+                  $ref: "#/components/examples/WarrantyClaimResponseExample"
+        "400":
+          description: Validation error on the submitted claim.
+        "409":
+          description: A claim with the same claim_number_string already exists.
+        "500":
+          description: Server error.
+  /warranty-claims/{claim_number_string}:
+    get:
+      tags:
+      - WarrantyClaims
+      summary: Get a warranty claim by claim number
+      description: Returns the full warranty claim for the given claim_number_string.
+      parameters:
+      - name: claim_number_string
+        in: path
+        description: |
+          Warranty claim identifier as assigned by OEM or dealer (e.g., "CLM-2024-000123").
+        required: true
+        schema:
+          type: string
+          example: CLM-2024-000123
+      responses:
+        "200":
+          description: Warranty claim found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarrantyClaimResponse"
+              examples:
+                default:
+                  $ref: "#/components/examples/WarrantyClaimResponseExample"
+        "404":
+          description: Claim not found.
+        "500":
+          description: Server error.
+    delete:
+      tags:
+      - WarrantyClaims
+      summary: Delete (cancel) a warranty claim
+      description: |
+        Cancels or logically deletes a warranty claim identified by claim_number_string. The exact behavior (hard delete vs. soft delete) is implementation-specific.
+      parameters:
+      - name: claim_number_string
+        in: path
+        description: |
+          Warranty claim identifier as assigned by OEM or dealer (e.g., "CLM-2024-000123").
+        required: true
+        schema:
+          type: string
+          example: CLM-2024-000123
+      responses:
+        "204":
+          description: Claim deleted successfully (no content).
+        "404":
+          description: Claim not found.
+        "409":
+          description: Claim cannot be deleted in its current status.
+        "500":
+          description: Server error.
+  /warranty-claims/{claim_number_string}/status:
+    get:
+      tags:
+      - WarrantyClaims
+      summary: Get warranty claim status
+      description: |
+        Returns the current processing status of a warranty claim.
+      parameters:
+      - name: claim_number_string
+        in: path
+        description: |
+          Warranty claim identifier as assigned by OEM or dealer (e.g., "CLM-2024-000123").
+        required: true
+        schema:
+          type: string
+          example: CLM-2024-000123
+      responses:
+        "200":
+          description: Claim status returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarrantyClaimStatusResponse"
+              examples:
+                default:
+                  $ref: "#/components/examples/WarrantyClaimStatusResponseExample"
+        "404":
+          description: Claim not found.
+        "500":
+          description: Server error.
