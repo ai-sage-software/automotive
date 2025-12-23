@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /price-plans:
     get:
       tags:
-      - "PricePlan"
-      summary: "Retrieve a list of all PricePlan records."
-      operationId: "listPricePlans"
+      - PricePlan
+      summary: Retrieve a list of PricePlan entities.
+      operationId: listPricePlan
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PricePlan records."
+          description: A list of PricePlan entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PricePlan"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PricePlan"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PricePlan"
-      summary: "Create a new PricePlan record."
-      operationId: "createPricePlan"
+      - PricePlan
+      summary: Create a new PricePlan entity.
+      operationId: createPricePlan
       requestBody:
-        description: "PricePlan data to create the new resource."
+        description: PricePlan data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "PricePlan created successfully."
+          description: PricePlan created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/price-plans/PR-1234567"
+                type: string
+                example: /price-plans/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PricePlan"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /price-plans/{pricePlanKey}:
     get:
       tags:
-      - "PricePlan"
-      summary: "Retrieve a specific PricePlan record."
-      operationId: "getPricePlanById"
+      - PricePlan
+      summary: Retrieve a specific PricePlan entity.
+      operationId: getPricePlanById
       responses:
         "200":
-          description: "The requested PricePlan record."
+          description: The requested PricePlan entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PricePlan"
-      summary: "Replace a PricePlan record."
-      operationId: "replacePricePlan"
+      - PricePlan
+      summary: Replace a PricePlan entity.
+      operationId: replacePricePlan
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +128,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PricePlan"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PricePlan"
-      summary: "Delete a PricePlan Record"
-      description: "Marks the PricePlan record as inactive or remov..."
-      operationId: "deletePricePlanRecord"
+      - PricePlan
+      summary: Delete a PricePlan entity
+      description: Marks the PricePlan entity as inactive or remov...
+      operationId: deletePricePlanEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PricePlan"
-      summary: "Partially update a PricePlan record."
-      operationId: "updatePricePlan"
+      - PricePlan
+      summary: Partially update a PricePlan entity.
+      operationId: updatePricePlan
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PricePlanUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PricePlan"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the specific PricePlan."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the specific PricePlan.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /price-plans/{pricePlanKey}/product-schedule-references:
     get:
       tags:
-      - "ProductScheduleReference"
-      summary: "Retrieve a list of ProductScheduleReference rec..."
-      operationId: "listProductScheduleReferencesByPricePlanKey"
+      - ProductScheduleReference
+      summary: Retrieve a list of ProductScheduleReference ent...
+      operationId: listProductScheduleReferenceByPricePlanKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ProductScheduleReference records."
+          description: A list of ProductScheduleReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ProductScheduleReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductScheduleReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ProductScheduleReference"
-      summary: "Create a new ProductScheduleReference record."
-      operationId: "createProductScheduleReference"
+      - ProductScheduleReference
+      summary: Create a new ProductScheduleReference entity.
+      operationId: createProductScheduleReference
       requestBody:
-        description: "ProductScheduleReference data to create the new..."
+        description: ProductScheduleReference data to create the new...
         content:
           application/json:
             schema:
@@ -198,37 +249,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ProductScheduleReference created successfully."
+          description: ProductScheduleReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProductScheduleReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}:
     get:
       tags:
-      - "ProductScheduleReference"
-      summary: "Retrieve a specific ProductScheduleReference re..."
-      operationId: "getProductScheduleReferenceById"
+      - ProductScheduleReference
+      summary: Retrieve a specific ProductScheduleReference en...
+      operationId: getProductScheduleReferenceById
       responses:
         "200":
-          description: "The requested ProductScheduleReference record."
+          description: The requested ProductScheduleReference entity.
           content:
             application/json:
               schema:
@@ -239,11 +292,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ProductScheduleReference"
-      summary: "Replace a ProductScheduleReference record."
-      operationId: "replaceProductScheduleReference"
+      - ProductScheduleReference
+      summary: Replace a ProductScheduleReference entity.
+      operationId: replaceProductScheduleReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +304,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProductScheduleReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ProductScheduleReference"
-      summary: "Delete a ProductScheduleReference Record"
-      description: "Marks the ProductScheduleReference record as in..."
-      operationId: "deleteProductScheduleReferenceRecord"
+      - ProductScheduleReference
+      summary: Delete a ProductScheduleReference entity
+      description: Marks the ProductScheduleReference entity as in...
+      operationId: deleteProductScheduleReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ProductScheduleReference"
-      summary: "Partially update a ProductScheduleReference rec..."
-      operationId: "updateProductScheduleReference"
+      - ProductScheduleReference
+      summary: Partially update a ProductScheduleReference ent...
+      operationId: updateProductScheduleReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ProductScheduleReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ProductScheduleReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "productScheduleReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific ProductScheduleReference."
+        type: string
+    - name: productScheduleReferenceKey
+      in: path
+      description: The unique identifier for the specific ProductScheduleReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /price-plans/{pricePlanKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByPricePlanKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped b...
+      operationId: listIdentifierByPricePlanKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +431,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /price-plans/{pricePlanKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -398,11 +474,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +486,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or remo..."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or remo...
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /price-plans/{pricePlanKey}/geographic-boundary-references:
     get:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Retrieve a list of GeographicBoundaryReference ..."
-      operationId: "listGeographicBoundaryReferencesByPricePlanKey"
+      - GeographicBoundaryReference
+      summary: Retrieve a list of GeographicBoundaryReference ...
+      operationId: listGeographicBoundaryReferenceByPricePlanKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of GeographicBoundaryReference records."
+          description: A list of GeographicBoundaryReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/GeographicBoundaryReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/GeographicBoundaryReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Create a new GeographicBoundaryReference record."
-      operationId: "createGeographicBoundaryReference"
+      - GeographicBoundaryReference
+      summary: Create a new GeographicBoundaryReference entity.
+      operationId: createGeographicBoundaryReference
       requestBody:
-        description: "GeographicBoundaryReference data to create the ..."
+        description: GeographicBoundaryReference data to create the ...
         content:
           application/json:
             schema:
@@ -516,37 +613,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "GeographicBoundaryReference created successfully."
+          description: GeographicBoundaryReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeographicBoundaryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}:
     get:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Retrieve a specific GeographicBoundaryReference..."
-      operationId: "getGeographicBoundaryReferenceById"
+      - GeographicBoundaryReference
+      summary: Retrieve a specific GeographicBoundaryReference...
+      operationId: getGeographicBoundaryReferenceById
       responses:
         "200":
-          description: "The requested GeographicBoundaryReference record."
+          description: The requested GeographicBoundaryReference entity.
           content:
             application/json:
               schema:
@@ -557,11 +656,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Replace a GeographicBoundaryReference record."
-      operationId: "replaceGeographicBoundaryReference"
+      - GeographicBoundaryReference
+      summary: Replace a GeographicBoundaryReference entity.
+      operationId: replaceGeographicBoundaryReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +668,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeographicBoundaryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Delete a GeographicBoundaryReference Record"
-      description: "Marks the GeographicBoundaryReference record as..."
-      operationId: "deleteGeographicBoundaryReferenceRecord"
+      - GeographicBoundaryReference
+      summary: Delete a GeographicBoundaryReference entity
+      description: Marks the GeographicBoundaryReference entity as...
+      operationId: deleteGeographicBoundaryReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "GeographicBoundaryReference"
-      summary: "Partially update a GeographicBoundaryReference ..."
-      operationId: "updateGeographicBoundaryReference"
+      - GeographicBoundaryReference
+      summary: Partially update a GeographicBoundaryReference ...
+      operationId: updateGeographicBoundaryReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/GeographicBoundaryReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/GeographicBoundaryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "geographicBoundaryReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific GeographicBoundaryReference."
+        type: string
+    - name: geographicBoundaryReferenceKey
+      in: path
+      description: The unique identifier for the specific GeographicBoundaryReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /price-plans/{pricePlanKey}/price-sensitivities:
     get:
       tags:
-      - "PriceSensitivity"
-      summary: "Retrieve a list of PriceSensitivity records sco..."
-      operationId: "listPriceSensitivitysByPricePlanKey"
+      - PriceSensitivity
+      summary: Retrieve a list of PriceSensitivity entities sc...
+      operationId: listPriceSensitivityByPricePlanKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PriceSensitivity records."
+          description: A list of PriceSensitivity entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PriceSensitivity"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PriceSensitivity"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PriceSensitivity"
-      summary: "Create a new PriceSensitivity record."
-      operationId: "createPriceSensitivity"
+      - PriceSensitivity
+      summary: Create a new PriceSensitivity entity.
+      operationId: createPriceSensitivity
       requestBody:
-        description: "PriceSensitivity data to create the new resource."
+        description: PriceSensitivity data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +795,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PriceSensitivity created successfully."
+          description: PriceSensitivity created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PriceSensitivity"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}:
     get:
       tags:
-      - "PriceSensitivity"
-      summary: "Retrieve a specific PriceSensitivity record."
-      operationId: "getPriceSensitivityById"
+      - PriceSensitivity
+      summary: Retrieve a specific PriceSensitivity entity.
+      operationId: getPriceSensitivityById
       responses:
         "200":
-          description: "The requested PriceSensitivity record."
+          description: The requested PriceSensitivity entity.
           content:
             application/json:
               schema:
@@ -716,11 +838,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PriceSensitivity"
-      summary: "Replace a PriceSensitivity record."
-      operationId: "replacePriceSensitivity"
+      - PriceSensitivity
+      summary: Replace a PriceSensitivity entity.
+      operationId: replacePriceSensitivity
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,105 +850,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PriceSensitivity"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PriceSensitivity"
-      summary: "Delete a PriceSensitivity Record"
-      description: "Marks the PriceSensitivity record as inactive o..."
-      operationId: "deletePriceSensitivityRecord"
+      - PriceSensitivity
+      summary: Delete a PriceSensitivity entity
+      description: Marks the PriceSensitivity entity as inactive o...
+      operationId: deletePriceSensitivityEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PriceSensitivity"
-      summary: "Partially update a PriceSensitivity record."
-      operationId: "updatePriceSensitivity"
+      - PriceSensitivity
+      summary: Partially update a PriceSensitivity entity.
+      operationId: updatePriceSensitivity
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PriceSensitivityUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PriceSensitivity"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "priceSensitivityKey"
-      in: "path"
-      description: "The unique identifier for the specific PriceSensitivity."
+        type: string
+    - name: priceSensitivityKey
+      in: path
+      description: The unique identifier for the specific PriceSensitivity.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /price-plans/{pricePlanKey}/financial-split-references:
     get:
       tags:
-      - "FinancialSplitReference"
-      summary: "Retrieve a list of FinancialSplitReference reco..."
-      operationId: "listFinancialSplitReferencesByPricePlanKey"
+      - FinancialSplitReference
+      summary: Retrieve a list of FinancialSplitReference enti...
+      operationId: listFinancialSplitReferenceByPricePlanKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialSplitReference records."
+          description: A list of FinancialSplitReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialSplitReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialSplitReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialSplitReference"
-      summary: "Create a new FinancialSplitReference record."
-      operationId: "createFinancialSplitReference"
+      - FinancialSplitReference
+      summary: Create a new FinancialSplitReference entity.
+      operationId: createFinancialSplitReference
       requestBody:
-        description: "FinancialSplitReference data to create the new ..."
+        description: FinancialSplitReference data to create the new ...
         content:
           application/json:
             schema:
@@ -834,37 +977,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialSplitReference created successfully."
+          description: FinancialSplitReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSplitReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}:
     get:
       tags:
-      - "FinancialSplitReference"
-      summary: "Retrieve a specific FinancialSplitReference rec..."
-      operationId: "getFinancialSplitReferenceById"
+      - FinancialSplitReference
+      summary: Retrieve a specific FinancialSplitReference ent...
+      operationId: getFinancialSplitReferenceById
       responses:
         "200":
-          description: "The requested FinancialSplitReference record."
+          description: The requested FinancialSplitReference entity.
           content:
             application/json:
               schema:
@@ -875,11 +1020,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialSplitReference"
-      summary: "Replace a FinancialSplitReference record."
-      operationId: "replaceFinancialSplitReference"
+      - FinancialSplitReference
+      summary: Replace a FinancialSplitReference entity.
+      operationId: replaceFinancialSplitReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -887,316 +1032,390 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSplitReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialSplitReference"
-      summary: "Delete a FinancialSplitReference Record"
-      description: "Marks the FinancialSplitReference record as ina..."
-      operationId: "deleteFinancialSplitReferenceRecord"
+      - FinancialSplitReference
+      summary: Delete a FinancialSplitReference entity
+      description: Marks the FinancialSplitReference entity as ina...
+      operationId: deleteFinancialSplitReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialSplitReference"
-      summary: "Partially update a FinancialSplitReference record."
-      operationId: "updateFinancialSplitReference"
+      - FinancialSplitReference
+      summary: Partially update a FinancialSplitReference entity.
+      operationId: updateFinancialSplitReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialSplitReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialSplitReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "pricePlanKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: pricePlanKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialSplitReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialSplitReference."
+        type: string
+    - name: financialSplitReferenceKey
+      in: path
+      description: The unique identifier for the specific FinancialSplitReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /price-plans/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /price-plans/batch:
+    post:
+      summary: Bulk create price-plans
+      operationId: createPricePlanBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PricePlanCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PricePlan"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     Codes:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     FinancialSplitReference:
-      type: "object"
+      type: object
       properties:
         financial_split_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         financial_split_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         financial_split_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the reference... Pat..."
+          type: string
+          description: The unique key identifying the reference... Pat...
         context:
-          type: "string"
-          description: "Context or domain of the payment financi..."
+          type: string
+          description: Context or domain of the payment financi...
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the financialSplit was..."
-          format: "date-time"
-      description: "Reference to a Payment FinancialSplit Aggregate..."
+          type: string
+          description: The date and time the financialSplit was...
+          format: date-time
+      description: Reference to a Payment FinancialSplit Aggregate...
     FinancialSplitReferenceCreate:
       required:
-      - "financial_split_reference_key"
-      type: "object"
-      description: "FinancialSplitReference Create for Post"
+      - financial_split_reference_key
+      type: object
+      description: FinancialSplitReference Create for Post
       allOf:
       - $ref: "#/components/schemas/FinancialSplitReference"
     FinancialSplitReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         identifier:
           $ref: "#/components/schemas/Identifier"
         context:
-          type: "string"
-          description: "Context or domain of the payment financi..."
+          type: string
+          description: Context or domain of the payment financi...
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the financialSplit was..."
-          format: "date-time"
-      description: "FinancialSplitReference Update for Patch and Put"
+          type: string
+          description: The date and time the financialSplit was...
+          format: date-time
+      description: FinancialSplitReference Update for Patch and Put
     FinancialSplitReferences:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/FinancialSplitReference"
     GeographicBoundaryReference:
-      type: "object"
+      type: object
       properties:
         geographic_boundary_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         geographic_boundary_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         geographic_boundary_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the reference... Pat..."
+          type: string
+          description: The unique key identifying the reference... Pat...
         context:
-          type: "string"
-          description: "Context or domain of the payment schedul..."
+          type: string
+          description: Context or domain of the payment schedul...
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the schedule was assoc..."
-          format: "date-time"
-      description: "Reference to a Payment Schedule Aggregate Root."
+          type: string
+          description: The date and time the schedule was assoc...
+          format: date-time
+      description: Reference to a Payment Schedule Aggregate Root.
     GeographicBoundaryReferenceCreate:
       required:
-      - "geographic_boundary_reference_key"
-      type: "object"
-      description: "GeographicBoundaryReference Create for Post"
+      - geographic_boundary_reference_key
+      type: object
+      description: GeographicBoundaryReference Create for Post
       allOf:
       - $ref: "#/components/schemas/GeographicBoundaryReference"
     GeographicBoundaryReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         identifier:
           $ref: "#/components/schemas/Identifier"
         context:
-          type: "string"
-          description: "Context or domain of the payment schedul..."
+          type: string
+          description: Context or domain of the payment schedul...
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the schedule was assoc..."
-          format: "date-time"
-      description: "GeographicBoundaryReference Update for Patch an..."
+          type: string
+          description: The date and time the schedule was assoc...
+          format: date-time
+      description: GeographicBoundaryReference Update for Patch an...
     GeographicBoundaryReferences:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/GeographicBoundaryReference"
     Identifier:
-      type: "object"
+      type: object
       properties:
         identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: "External system identifier"
+      description: External system identifier
     IdentifierCreate:
       required:
-      - "identifier_key"
-      type: "object"
-      description: "Identifier Create for Post"
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
-      description: "Identifier Update for Patch and Put"
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
     PriceClassTypes:
-      type: "string"
-      description: "types of price class."
+      type: string
+      description: types of price class.
       enum:
-      - "NEW_CUSTOMER"
-      - "LOYALTY_MEMBER"
-      - "GOVERNMENT"
-      - "ENTERPRISE"
-      - "EDUCATIONAL"
-      - "SCHEDULE"
-      - "SOLD_PRICE"
-      - "MSRP"
-      - "OFFER"
-      - "RETAIL"
-      - "TRANSFER_COST"
-      - "SUBLET_CHARGE"
-      - "CHARGE_AMOUNT"
-      - "LABOR_COST"
-      - "PARTS_COST"
-      - "SERVICE_COST"
-      - "MATERIAL_COST"
-      - "EXPENSE_COST"
-      - "PRODUCTION_COST"
-      - "COMMERCIAL_COST"
-      - "DIRECT_COST"
-      - "INDIRECT_COST"
-      - "CALCULATED_COST"
-      - "EXPENSE"
-      - "CO_INSURANCE"
-      - "CO_PAYMENT"
-      - "INVOICE"
-      - "DEDUCTIBLE"
-      - "SUB_TOTAL"
-      - "PERCENTAGE"
-      - "HANDLING"
-      - "TOTAL"
-      - "APPROVED"
-      - "PRORATED"
-      - "PAID"
-      - "REFUND"
-      - "REQUESTED"
-      - "OTHER"
+      - NEW_CUSTOMER
+      - LOYALTY_MEMBER
+      - GOVERNMENT
+      - ENTERPRISE
+      - EDUCATIONAL
+      - SCHEDULE
+      - SOLD_PRICE
+      - MSRP
+      - OFFER
+      - RETAIL
+      - TRANSFER_COST
+      - SUBLET_CHARGE
+      - CHARGE_AMOUNT
+      - LABOR_COST
+      - PARTS_COST
+      - SERVICE_COST
+      - MATERIAL_COST
+      - EXPENSE_COST
+      - PRODUCTION_COST
+      - COMMERCIAL_COST
+      - DIRECT_COST
+      - INDIRECT_COST
+      - CALCULATED_COST
+      - EXPENSE
+      - CO_INSURANCE
+      - CO_PAYMENT
+      - INVOICE
+      - DEDUCTIBLE
+      - SUB_TOTAL
+      - PERCENTAGE
+      - HANDLING
+      - TOTAL
+      - APPROVED
+      - PRORATED
+      - PAID
+      - REFUND
+      - REQUESTED
+      - OTHER
     PricePlan:
-      type: "object"
+      type: object
       properties:
         price_plan_id:
           maximum: 100
@@ -1204,7 +1423,7 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier for the price plan. Pattern: ..."
         price_plan_key:
           maximum: 100
@@ -1212,40 +1431,40 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier for the price plan. Pattern: ..."
         price_description:
           maxLength: 255
-          type: "string"
-          description: "Description of the price plan."
+          type: string
+          description: Description of the price plan.
         price_sensitivity:
           $ref: "#/components/schemas/PriceSensitivity"
         price_class_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceClassTypes"
         locale:
           maxLength: 10
-          type: "string"
-          description: "Locale information for regional pricing."
+          type: string
+          description: Locale information for regional pricing.
         currency:
           maxLength: 5
-          type: "string"
-          description: "Currency code for the price (ISO 4217)."
+          type: string
+          description: Currency code for the price (ISO 4217).
         codes:
           $ref: "#/components/schemas/Codes"
         price_group:
           maxLength: 100
-          type: "string"
-          description: "Group categorization for pricing."
+          type: string
+          description: Group categorization for pricing.
         price_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
         geographic_boundaries:
@@ -1259,19 +1478,19 @@ components:
       description: "Price details for this product, including sched..."
     PricePlanCreate:
       required:
-      - "price_plan_key"
-      type: "object"
-      description: "PricePlan Create for Post"
+      - price_plan_key
+      type: object
+      description: PricePlan Create for Post
       allOf:
       - $ref: "#/components/schemas/PricePlan"
     PricePlanUpdate:
-      type: "object"
+      type: object
       properties:
         price_class_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceClassTypes"
         codes:
@@ -1280,15 +1499,15 @@ components:
           $ref: "#/components/schemas/PriceSensitivity"
         price_group:
           maxLength: 100
-          type: "string"
-          description: "Group categorization for pricing."
+          type: string
+          description: Group categorization for pricing.
         financial_splits:
           $ref: "#/components/schemas/FinancialSplitReferences"
         price_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
         schedules:
@@ -1297,222 +1516,222 @@ components:
           $ref: "#/components/schemas/GeographicBoundaryReferences"
         price_description:
           maxLength: 255
-          type: "string"
-          description: "Description of the price plan."
+          type: string
+          description: Description of the price plan.
         currency:
           maxLength: 5
-          type: "string"
-          description: "Currency code for the price (ISO 4217)."
+          type: string
+          description: Currency code for the price (ISO 4217).
         locale:
           maxLength: 10
-          type: "string"
-          description: "Locale information for regional pricing."
+          type: string
+          description: Locale information for regional pricing.
         resource_types:
           $ref: "#/components/schemas/ResourceTypes"
-      description: "PricePlan Update for Patch and Put"
+      description: PricePlan Update for Patch and Put
     PriceSensitivity:
-      type: "object"
+      type: object
       properties:
         price_sensitivity_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier for the price sensitiv... Pat..."
+          type: string
+          description: Unique identifier for the price sensitiv... Pat...
         price_sensitivity_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Business key for the price sensitivity c... Pat..."
+          type: string
+          description: Business key for the price sensitivity c... Pat...
         sensitivity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
         quantity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
         description:
-          type: "string"
-          description: "Description of this price sensitivity cl..."
+          type: string
+          description: Description of this price sensitivity cl...
         alias:
           $ref: "#/components/schemas/Codes"
-      description: "nullable"
+      description: nullable
     PriceSensitivityCreate:
       required:
-      - "price_sensitivity_key"
-      type: "object"
-      description: "PriceSensitivity Create for Post"
+      - price_sensitivity_key
+      type: object
+      description: PriceSensitivity Create for Post
       allOf:
       - $ref: "#/components/schemas/PriceSensitivity"
     PriceSensitivityTypes:
-      type: "string"
-      description: "types of price sensitivitys."
+      type: string
+      description: types of price sensitivitys.
       enum:
-      - "LOW"
-      - "MEDIUM"
-      - "HIGH"
-      - "ELASTIC"
-      - "INELASTIC"
+      - LOW
+      - MEDIUM
+      - HIGH
+      - ELASTIC
+      - INELASTIC
     PriceSensitivityUpdate:
-      type: "object"
+      type: object
       properties:
         quantity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
         description:
-          type: "string"
-          description: "Description of this price sensitivity cl..."
+          type: string
+          description: Description of this price sensitivity cl...
         alias:
           $ref: "#/components/schemas/Codes"
         sensitivity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
-      description: "PriceSensitivity Update for Patch and Put"
+      description: PriceSensitivity Update for Patch and Put
     PriceTypes:
-      type: "string"
-      description: "types of prices."
+      type: string
+      description: types of prices.
       enum:
-      - "METERED"
-      - "SEAT"
-      - "FLAT"
-      - "ITEMIZED"
-      - "BUNDLE"
-      - "QUANTITY"
-      - "PER_UNIT"
-      - "PERCENT"
-      - "VOLUME"
-      - "USAGE"
-      - "STAIR_STEP"
-      - "SUBSCRIPTION"
-      - "CUSTOM"
-      - "STANDARD"
-      - "LICENSED"
-      - "TIER_VOLUME"
-      - "TIER_GRADUATED"
-      - "ACTUAL"
-      - "LIST"
-      - "RETAIL"
-      - "MSRP"
-      - "WHOLESALE"
-      - "DEALER"
-      - "TRADE"
-      - "CORE"
-      - "LANDED"
-      - "PROMOTIONAL"
-      - "DISCOUNT"
-      - "CONTRACT"
-      - "SALE"
-      - "CUSTOMER"
-      - "AFFILIATE"
-      - "ONLINE"
-      - "STORE"
-      - "REGION"
-      - "LOCATION"
-      - "ESTIMATED"
-      - "NET"
-      - "PURCHASE"
-      - "MONEY"
-      - "TAXABLE"
-      - "NONTAXABLE"
-      - "TOTAL"
-      - "UNIT"
-      - "TOTAL_COST"
-      - "UNIT_COST"
-      - "TAX"
-      - "OTHER"
+      - METERED
+      - SEAT
+      - FLAT
+      - ITEMIZED
+      - BUNDLE
+      - QUANTITY
+      - PER_UNIT
+      - PERCENT
+      - VOLUME
+      - USAGE
+      - STAIR_STEP
+      - SUBSCRIPTION
+      - CUSTOM
+      - STANDARD
+      - LICENSED
+      - TIER_VOLUME
+      - TIER_GRADUATED
+      - ACTUAL
+      - LIST
+      - RETAIL
+      - MSRP
+      - WHOLESALE
+      - DEALER
+      - TRADE
+      - CORE
+      - LANDED
+      - PROMOTIONAL
+      - DISCOUNT
+      - CONTRACT
+      - SALE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - MONEY
+      - TAXABLE
+      - NONTAXABLE
+      - TOTAL
+      - UNIT
+      - TOTAL_COST
+      - UNIT_COST
+      - TAX
+      - OTHER
     ProductScheduleReference:
-      type: "object"
+      type: object
       properties:
         schedule_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         schedule_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         schedule_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the reference... Pat..."
+          type: string
+          description: The unique key identifying the reference... Pat...
         context:
-          type: "string"
-          description: "Context or domain of the payment schedul..."
+          type: string
+          description: Context or domain of the payment schedul...
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the schedule was assoc..."
-          format: "date-time"
-      description: "Reference to a Payment Schedule Aggregate Root."
+          type: string
+          description: The date and time the schedule was assoc...
+          format: date-time
+      description: Reference to a Payment Schedule Aggregate Root.
     ProductScheduleReferenceCreate:
       required:
-      - "product_schedule_reference_key"
-      type: "object"
-      description: "ProductScheduleReference Create for Post"
+      - product_schedule_reference_key
+      type: object
+      description: ProductScheduleReference Create for Post
       allOf:
       - $ref: "#/components/schemas/ProductScheduleReference"
     ProductScheduleReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         identifier:
           $ref: "#/components/schemas/Identifier"
         context:
-          type: "string"
-          description: "Context or domain of the payment schedul..."
+          type: string
+          description: Context or domain of the payment schedul...
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the schedule was assoc..."
-          format: "date-time"
-      description: "ProductScheduleReference Update for Patch and Put"
+          type: string
+          description: The date and time the schedule was assoc...
+          format: date-time
+      description: ProductScheduleReference Update for Patch and Put
     ProductScheduleReferences:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/ProductScheduleReference"
     ResourceTypes:
-      type: "string"
-      description: "types of resources."
+      type: string
+      description: types of resources.
       enum:
-      - "SYSTEM"
-      - "WORKFLOW"
-      - "ACTIVITY"
-      - "FUNCTION"
-      - "PROCESS"
-      - "INCIDENT"
-      - "PARTY"
-      - "CUSTOMER"
-      - "APPLICANT"
-      - "VENDOR"
-      - "DEALER_STAFF"
-      - "DRIVER"
-      - "ADDRESS"
-      - "BILL_ADDRESS"
-      - "BILL_CONTACT"
-      - "COMM_CHANNEL"
-      - "ACCOUNT"
-      - "VEHICLE"
-      - "TRADE_IN"
-      - "PRODUCT"
-      - "MANUFACTURER"
-      - "LEAD"
-      - "OPPORTUNITY"
-      - "DEAL"
-      - "FINANCE"
-      - "INVOICE"
-      - "LINEITEM"
-      - "EXPENSE"
-      - "DISCOUNT"
-      - "TAX"
-      - "FEE"
-      - "INCENTIVE"
-      - "DEALERSHIP"
-      - "APPOINTMENT"
-      - "OTHER"
+      - SYSTEM
+      - WORKFLOW
+      - ACTIVITY
+      - FUNCTION
+      - PROCESS
+      - INCIDENT
+      - PARTY
+      - CUSTOMER
+      - APPLICANT
+      - VENDOR
+      - DEALER_STAFF
+      - DRIVER
+      - ADDRESS
+      - BILL_ADDRESS
+      - BILL_CONTACT
+      - COMM_CHANNEL
+      - ACCOUNT
+      - VEHICLE
+      - TRADE_IN
+      - PRODUCT
+      - MANUFACTURER
+      - LEAD
+      - OPPORTUNITY
+      - DEAL
+      - FINANCE
+      - INVOICE
+      - LINEITEM
+      - EXPENSE
+      - DISCOUNT
+      - TAX
+      - FEE
+      - INCENTIVE
+      - DEALERSHIP
+      - APPOINTMENT
+      - OTHER
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -1524,26 +1743,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

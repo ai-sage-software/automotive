@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -193,7 +200,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs</span> <br/>
-        <span class="api-summary">Retrieve a list of all PayrollStub records. getPayrollStubs</span>
+        <span class="api-summary">Retrieve a list of PayrollStub entities. getPayrollStub</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs</span> <br/>
-        <span class="api-summary">Create a new PayrollStub record. createPayrollStub</span>
+        <span class="api-summary">Create a new PayrollStub entity. createPayrollStub</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollStub record. getayrollStubById</span>
+        <span class="api-summary">Retrieve a specific PayrollStub entity. getayrollStubById</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollStub record. replacePayrollStub</span>
+        <span class="api-summary">Replace a PayrollStub entity. replacePayrollStub</span>
     </span>
 </div>
 
@@ -226,7 +233,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollStub record. updatePayrollStub</span>
+        <span class="api-summary">Partially update a PayrollStub entity. updatePayrollStub</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollStub Record deletePayrollStubRecord</span>
+        <span class="api-summary">Delete a PayrollStub entity deletePayrollStubEntity</span>
     </span>
 </div>
 
@@ -243,7 +250,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts</span> <br/>
-        <span class="api-summary">Retrieve a list of TaxReportingContext records scoped by payrollStubKey. getTaxReportingContextsByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of TaxReportingContext entities scoped by payrollStubKey. getTaxReportingContextByPayrollStubKey</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts</span> <br/>
-        <span class="api-summary">Create a new TaxReportingContext record. createTaxReportingContext</span>
+        <span class="api-summary">Create a new TaxReportingContext entity. createTaxReportingContext</span>
     </span>
 </div>
 
@@ -260,7 +267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TaxReportingContext record. getaxReportingContextById</span>
+        <span class="api-summary">Retrieve a specific TaxReportingContext entity. getaxReportingContextById</span>
     </span>
 </div>
 
@@ -268,7 +275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}</span> <br/>
-        <span class="api-summary">Replace a TaxReportingContext record. replaceTaxReportingContext</span>
+        <span class="api-summary">Replace a TaxReportingContext entity. replaceTaxReportingContext</span>
     </span>
 </div>
 
@@ -276,7 +283,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxReportingContext record. updateTaxReportingContext</span>
+        <span class="api-summary">Partially update a TaxReportingContext entity. updateTaxReportingContext</span>
     </span>
 </div>
 
@@ -284,7 +291,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}</span> <br/>
-        <span class="api-summary">Delete a TaxReportingContext Record deleteTaxReportingContextRecord</span>
+        <span class="api-summary">Delete a TaxReportingContext entity deleteTaxReportingContextEntity</span>
     </span>
 </div>
 
@@ -293,7 +300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by payrollStubKey. getMoneysByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by payrollStubKey. getMoneyByPayrollStubKey</span>
     </span>
 </div>
 
@@ -302,7 +309,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -310,7 +317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -319,7 +326,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by payrollStubKey. getIdentifiersByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by payrollStubKey. getIdentifierByPayrollStubKey</span>
     </span>
 </div>
 
@@ -327,7 +334,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -336,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -344,7 +351,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -352,7 +359,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -360,7 +367,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -369,7 +376,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by payrollStubKey. getEffectivePeriodsByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by payrollStubKey. getEffectivePeriodByPayrollStubKey</span>
     </span>
 </div>
 
@@ -378,7 +385,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -386,7 +393,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -395,7 +402,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components</span> <br/>
-        <span class="api-summary">Retrieve a list of PayrollComponent records scoped by payrollStubKey. getPayrollComponentsByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of PayrollComponent entities scoped by payrollStubKey. getPayrollComponentByPayrollStubKey</span>
     </span>
 </div>
 
@@ -403,7 +410,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components</span> <br/>
-        <span class="api-summary">Create a new PayrollComponent record. createPayrollComponent</span>
+        <span class="api-summary">Create a new PayrollComponent entity. createPayrollComponent</span>
     </span>
 </div>
 
@@ -412,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollComponent record. getayrollComponentById</span>
+        <span class="api-summary">Retrieve a specific PayrollComponent entity. getayrollComponentById</span>
     </span>
 </div>
 
@@ -420,7 +427,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollComponent record. replacePayrollComponent</span>
+        <span class="api-summary">Replace a PayrollComponent entity. replacePayrollComponent</span>
     </span>
 </div>
 
@@ -428,7 +435,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollComponent record. updatePayrollComponent</span>
+        <span class="api-summary">Partially update a PayrollComponent entity. updatePayrollComponent</span>
     </span>
 </div>
 
@@ -436,7 +443,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollComponent Record deletePayrollComponentRecord</span>
+        <span class="api-summary">Delete a PayrollComponent entity deletePayrollComponentEntity</span>
     </span>
 </div>
 
@@ -445,7 +452,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by payrollStubKey. getTimeSlotsByPayrollStubKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by payrollStubKey. getTimeSlotByPayrollStubKey</span>
     </span>
 </div>
 
@@ -454,7 +461,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -462,7 +469,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -472,13 +479,13 @@ The following resources follow a consistent pattern under PayrollStubroot with k
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **payroll-stub** | /payroll-stubs | listPayrollStubs | createPayrollStub | getPayrollStubs | updatePayrollStubs | deletePayrollStubs |
-    | **tax-reporting-context** | /payroll-stubs/{payrollStubKey}/tax-reporting-contexts | listTaxReportingContextsByPayrollStubKey | createTaxReportingContext | getTaxReportingContextsByPayrollStubKey | updateTaxReportingContextsByPayrollStubKey | deleteTaxReportingContextsByPayrollStubKey |
-    | **money** | /payroll-stubs/{payrollStubKey}/moneys | listMoneysByPayrollStubKey |  | getMoneysByPayrollStubKey | updateMoneysByPayrollStubKey | deleteMoneysByPayrollStubKey |
-    | **identifier** | /payroll-stubs/{payrollStubKey}/identifiers | listIdentifiersByPayrollStubKey | createIdentifier | getIdentifiersByPayrollStubKey | updateIdentifiersByPayrollStubKey | deleteIdentifiersByPayrollStubKey |
-    | **effective-period** | /payroll-stubs/{payrollStubKey}/effective-periods | listEffectivePeriodsByPayrollStubKey |  | getEffectivePeriodsByPayrollStubKey | updateEffectivePeriodsByPayrollStubKey | deleteEffectivePeriodsByPayrollStubKey |
-    | **payroll-component** | /payroll-stubs/{payrollStubKey}/payroll-components | listPayrollComponentsByPayrollStubKey | createPayrollComponent | getPayrollComponentsByPayrollStubKey | updatePayrollComponentsByPayrollStubKey | deletePayrollComponentsByPayrollStubKey |
-    | **time-slot** | /payroll-stubs/{payrollStubKey}/time-slots | listTimeSlotsByPayrollStubKey |  | getTimeSlotsByPayrollStubKey | updateTimeSlotsByPayrollStubKey | deleteTimeSlotsByPayrollStubKey |
+    | **payroll-stub** | /payroll-stubs | listPayrollStub | createPayrollStub | getPayrollStub | updatePayrollStub | deletePayrollStub |
+    | **tax-reporting-context** | /payroll-stubs/{payrollStubKey}/tax-reporting-contexts | listTaxReportingContextByPayrollStubKey | createTaxReportingContext | getTaxReportingContextByPayrollStubKey | updateTaxReportingContextByPayrollStubKey | deleteTaxReportingContextByPayrollStubKey |
+    | **money** | /payroll-stubs/{payrollStubKey}/moneys | listMoneyByPayrollStubKey |  | getMoneyByPayrollStubKey | updateMoneyByPayrollStubKey | deleteMoneyByPayrollStubKey |
+    | **identifier** | /payroll-stubs/{payrollStubKey}/identifiers | listIdentifierByPayrollStubKey | createIdentifier | getIdentifierByPayrollStubKey | updateIdentifierByPayrollStubKey | deleteIdentifierByPayrollStubKey |
+    | **effective-period** | /payroll-stubs/{payrollStubKey}/effective-periods | listEffectivePeriodByPayrollStubKey |  | getEffectivePeriodByPayrollStubKey | updateEffectivePeriodByPayrollStubKey | deleteEffectivePeriodByPayrollStubKey |
+    | **payroll-component** | /payroll-stubs/{payrollStubKey}/payroll-components | listPayrollComponentByPayrollStubKey | createPayrollComponent | getPayrollComponentByPayrollStubKey | updatePayrollComponentByPayrollStubKey | deletePayrollComponentByPayrollStubKey |
+    | **time-slot** | /payroll-stubs/{payrollStubKey}/time-slots | listTimeSlotByPayrollStubKey |  | getTimeSlotByPayrollStubKey | updateTimeSlotByPayrollStubKey | deleteTimeSlotByPayrollStubKey |
 
 ***Note on List Operations:***
 

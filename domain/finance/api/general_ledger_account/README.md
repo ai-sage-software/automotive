@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **GeneralLedgerAccount**, **Identifier**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **GeneralLedgerAccount**, **Identifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -178,7 +185,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts</span> <br/>
-        <span class="api-summary">Retrieve a list of all GeneralLedgerAccount records. getGeneralLedgerAccounts</span>
+        <span class="api-summary">Retrieve a list of GeneralLedgerAccount entities. getGeneralLedgerAccount</span>
     </span>
 </div>
 
@@ -186,7 +193,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts</span> <br/>
-        <span class="api-summary">Create a new GeneralLedgerAccount record. createGeneralLedgerAccount</span>
+        <span class="api-summary">Create a new GeneralLedgerAccount entity. createGeneralLedgerAccount</span>
     </span>
 </div>
 
@@ -195,7 +202,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific GeneralLedgerAccount record. geteneralLedgerAccountById</span>
+        <span class="api-summary">Retrieve a specific GeneralLedgerAccount entity. geteneralLedgerAccountById</span>
     </span>
 </div>
 
@@ -203,7 +210,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}</span> <br/>
-        <span class="api-summary">Replace a GeneralLedgerAccount record. replaceGeneralLedgerAccount</span>
+        <span class="api-summary">Replace a GeneralLedgerAccount entity. replaceGeneralLedgerAccount</span>
     </span>
 </div>
 
@@ -211,7 +218,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a GeneralLedgerAccount record. updateGeneralLedgerAccount</span>
+        <span class="api-summary">Partially update a GeneralLedgerAccount entity. updateGeneralLedgerAccount</span>
     </span>
 </div>
 
@@ -219,7 +226,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}</span> <br/>
-        <span class="api-summary">Delete a GeneralLedgerAccount Record deleteGeneralLedgerAccountRecord</span>
+        <span class="api-summary">Delete a GeneralLedgerAccount entity deleteGeneralLedgerAccountEntity</span>
     </span>
 </div>
 
@@ -228,7 +235,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by generalLedgerAccountKey. getIdentifiersByGeneralLedgerAccountKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by generalLedgerAccountKey. getIdentifierByGeneralLedgerAccountKey</span>
     </span>
 </div>
 
@@ -236,7 +243,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -245,7 +252,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -253,7 +260,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -261,7 +268,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -269,7 +276,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/general-ledger-accounts/{generalLedgerAccountKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -279,8 +286,8 @@ The following resources follow a consistent pattern under GeneralLedgerAccountro
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **general-ledger-account** | /general-ledger-accounts | listGeneralLedgerAccounts | createGeneralLedgerAccount | getGeneralLedgerAccounts | updateGeneralLedgerAccounts | deleteGeneralLedgerAccounts |
-    | **identifier** | /general-ledger-accounts/{generalLedgerAccountKey}/identifiers | listIdentifiersByGeneralLedgerAccountKey | createIdentifier | getIdentifiersByGeneralLedgerAccountKey | updateIdentifiersByGeneralLedgerAccountKey | deleteIdentifiersByGeneralLedgerAccountKey |
+    | **general-ledger-account** | /general-ledger-accounts | listGeneralLedgerAccount | createGeneralLedgerAccount | getGeneralLedgerAccount | updateGeneralLedgerAccount | deleteGeneralLedgerAccount |
+    | **identifier** | /general-ledger-accounts/{generalLedgerAccountKey}/identifiers | listIdentifierByGeneralLedgerAccountKey | createIdentifier | getIdentifierByGeneralLedgerAccountKey | updateIdentifierByGeneralLedgerAccountKey | deleteIdentifierByGeneralLedgerAccountKey |
 
 ***Note on List Operations:***
 

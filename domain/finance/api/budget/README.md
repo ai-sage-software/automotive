@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **Budget**, **BudgetItem**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **Budget**, **BudgetItem**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -185,7 +192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets</span> <br/>
-        <span class="api-summary">Retrieve a list of all Budget records. getBudgets</span>
+        <span class="api-summary">Retrieve a list of Budget entities. getBudget</span>
     </span>
 </div>
 
@@ -193,7 +200,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets</span> <br/>
-        <span class="api-summary">Create a new Budget record. createBudget</span>
+        <span class="api-summary">Create a new Budget entity. createBudget</span>
     </span>
 </div>
 
@@ -202,7 +209,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Budget record. getudgetById</span>
+        <span class="api-summary">Retrieve a specific Budget entity. getudgetById</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}</span> <br/>
-        <span class="api-summary">Replace a Budget record. replaceBudget</span>
+        <span class="api-summary">Replace a Budget entity. replaceBudget</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}</span> <br/>
-        <span class="api-summary">Partially update a Budget record. updateBudget</span>
+        <span class="api-summary">Partially update a Budget entity. updateBudget</span>
     </span>
 </div>
 
@@ -226,7 +233,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}</span> <br/>
-        <span class="api-summary">Delete a Budget Record deleteBudgetRecord</span>
+        <span class="api-summary">Delete a Budget entity deleteBudgetEntity</span>
     </span>
 </div>
 
@@ -235,7 +242,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by budgetKey. getMoneysByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by budgetKey. getMoneyByBudgetKey</span>
     </span>
 </div>
 
@@ -244,7 +251,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -252,7 +259,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -261,7 +268,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references</span> <br/>
-        <span class="api-summary">Retrieve a list of GeneralLedgerReference records scoped by budgetKey. getGeneralLedgerReferencesByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of GeneralLedgerReference entities scoped by budgetKey. getGeneralLedgerReferenceByBudgetKey</span>
     </span>
 </div>
 
@@ -269,7 +276,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references</span> <br/>
-        <span class="api-summary">Create a new GeneralLedgerReference record. createGeneralLedgerReference</span>
+        <span class="api-summary">Create a new GeneralLedgerReference entity. createGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -278,7 +285,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific GeneralLedgerReference record. geteneralLedgerReferenceById</span>
+        <span class="api-summary">Retrieve a specific GeneralLedgerReference entity. geteneralLedgerReferenceById</span>
     </span>
 </div>
 
@@ -286,7 +293,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a GeneralLedgerReference record. replaceGeneralLedgerReference</span>
+        <span class="api-summary">Replace a GeneralLedgerReference entity. replaceGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -294,7 +301,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeneralLedgerReference record. updateGeneralLedgerReference</span>
+        <span class="api-summary">Partially update a GeneralLedgerReference entity. updateGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -302,7 +309,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a GeneralLedgerReference Record deleteGeneralLedgerReferenceRecord</span>
+        <span class="api-summary">Delete a GeneralLedgerReference entity deleteGeneralLedgerReferenceEntity</span>
     </span>
 </div>
 
@@ -311,7 +318,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by budgetKey. getIdentifiersByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by budgetKey. getIdentifierByBudgetKey</span>
     </span>
 </div>
 
@@ -319,7 +326,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -328,7 +335,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -336,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -344,7 +351,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -352,7 +359,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -361,7 +368,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items</span> <br/>
-        <span class="api-summary">Retrieve a list of BudgetItem records scoped by budgetKey. getBudgetItemsByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of BudgetItem entities scoped by budgetKey. getBudgetItemByBudgetKey</span>
     </span>
 </div>
 
@@ -369,7 +376,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items</span> <br/>
-        <span class="api-summary">Create a new BudgetItem record. createBudgetItem</span>
+        <span class="api-summary">Create a new BudgetItem entity. createBudgetItem</span>
     </span>
 </div>
 
@@ -378,7 +385,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items/{budgetItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific BudgetItem record. getudgetItemById</span>
+        <span class="api-summary">Retrieve a specific BudgetItem entity. getudgetItemById</span>
     </span>
 </div>
 
@@ -386,7 +393,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items/{budgetItemKey}</span> <br/>
-        <span class="api-summary">Replace a BudgetItem record. replaceBudgetItem</span>
+        <span class="api-summary">Replace a BudgetItem entity. replaceBudgetItem</span>
     </span>
 </div>
 
@@ -394,7 +401,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items/{budgetItemKey}</span> <br/>
-        <span class="api-summary">Partially update a BudgetItem record. updateBudgetItem</span>
+        <span class="api-summary">Partially update a BudgetItem entity. updateBudgetItem</span>
     </span>
 </div>
 
@@ -402,7 +409,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items/{budgetItemKey}</span> <br/>
-        <span class="api-summary">Delete a BudgetItem Record deleteBudgetItemRecord</span>
+        <span class="api-summary">Delete a BudgetItem entity deleteBudgetItemEntity</span>
     </span>
 </div>
 
@@ -411,7 +418,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of AccountingPeriod records scoped by budgetKey. getAccountingPeriodsByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of AccountingPeriod entities scoped by budgetKey. getAccountingPeriodByBudgetKey</span>
     </span>
 </div>
 
@@ -419,7 +426,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods</span> <br/>
-        <span class="api-summary">Create a new AccountingPeriod record. createAccountingPeriod</span>
+        <span class="api-summary">Create a new AccountingPeriod entity. createAccountingPeriod</span>
     </span>
 </div>
 
@@ -428,7 +435,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AccountingPeriod record. getccountingPeriodById</span>
+        <span class="api-summary">Retrieve a specific AccountingPeriod entity. getccountingPeriodById</span>
     </span>
 </div>
 
@@ -436,7 +443,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Replace a AccountingPeriod record. replaceAccountingPeriod</span>
+        <span class="api-summary">Replace a AccountingPeriod entity. replaceAccountingPeriod</span>
     </span>
 </div>
 
@@ -444,7 +451,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod record. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
     </span>
 </div>
 
@@ -452,7 +459,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Delete a AccountingPeriod Record deleteAccountingPeriodRecord</span>
+        <span class="api-summary">Delete a AccountingPeriod entity deleteAccountingPeriodEntity</span>
     </span>
 </div>
 
@@ -461,7 +468,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by budgetKey. getControlAccountReferencesByBudgetKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by budgetKey. getControlAccountReferenceByBudgetKey</span>
     </span>
 </div>
 
@@ -469,7 +476,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -478,7 +485,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -486,7 +493,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -494,7 +501,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -502,7 +509,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -512,13 +519,13 @@ The following resources follow a consistent pattern under Budgetroot with key {B
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **budget** | /budgets | listBudgets | createBudget | getBudgets | updateBudgets | deleteBudgets |
-    | **money** | /budgets/{budgetKey}/moneys | listMoneysByBudgetKey |  | getMoneysByBudgetKey | updateMoneysByBudgetKey | deleteMoneysByBudgetKey |
-    | **general-ledger-reference** | /budgets/{budgetKey}/general-ledger-references | listGeneralLedgerReferencesByBudgetKey | createGeneralLedgerReference | getGeneralLedgerReferencesByBudgetKey | updateGeneralLedgerReferencesByBudgetKey | deleteGeneralLedgerReferencesByBudgetKey |
-    | **identifier** | /budgets/{budgetKey}/identifiers | listIdentifiersByBudgetKey | createIdentifier | getIdentifiersByBudgetKey | updateIdentifiersByBudgetKey | deleteIdentifiersByBudgetKey |
-    | **budget-item** | /budgets/{budgetKey}/budget-items | listBudgetItemsByBudgetKey | createBudgetItem | getBudgetItemsByBudgetKey | updateBudgetItemsByBudgetKey | deleteBudgetItemsByBudgetKey |
-    | **accounting-period** | /budgets/{budgetKey}/accounting-periods | listAccountingPeriodsByBudgetKey | createAccountingPeriod | getAccountingPeriodsByBudgetKey | updateAccountingPeriodsByBudgetKey | deleteAccountingPeriodsByBudgetKey |
-    | **control-account-reference** | /budgets/{budgetKey}/control-account-references | listControlAccountReferencesByBudgetKey | createControlAccountReference | getControlAccountReferencesByBudgetKey | updateControlAccountReferencesByBudgetKey | deleteControlAccountReferencesByBudgetKey |
+    | **budget** | /budgets | listBudget | createBudget | getBudget | updateBudget | deleteBudget |
+    | **money** | /budgets/{budgetKey}/moneys | listMoneyByBudgetKey |  | getMoneyByBudgetKey | updateMoneyByBudgetKey | deleteMoneyByBudgetKey |
+    | **general-ledger-reference** | /budgets/{budgetKey}/general-ledger-references | listGeneralLedgerReferenceByBudgetKey | createGeneralLedgerReference | getGeneralLedgerReferenceByBudgetKey | updateGeneralLedgerReferenceByBudgetKey | deleteGeneralLedgerReferenceByBudgetKey |
+    | **identifier** | /budgets/{budgetKey}/identifiers | listIdentifierByBudgetKey | createIdentifier | getIdentifierByBudgetKey | updateIdentifierByBudgetKey | deleteIdentifierByBudgetKey |
+    | **budget-item** | /budgets/{budgetKey}/budget-items | listBudgetItemByBudgetKey | createBudgetItem | getBudgetItemByBudgetKey | updateBudgetItemByBudgetKey | deleteBudgetItemByBudgetKey |
+    | **accounting-period** | /budgets/{budgetKey}/accounting-periods | listAccountingPeriodByBudgetKey | createAccountingPeriod | getAccountingPeriodByBudgetKey | updateAccountingPeriodByBudgetKey | deleteAccountingPeriodByBudgetKey |
+    | **control-account-reference** | /budgets/{budgetKey}/control-account-references | listControlAccountReferenceByBudgetKey | createControlAccountReference | getControlAccountReferenceByBudgetKey | updateControlAccountReferenceByBudgetKey | deleteControlAccountReferenceByBudgetKey |
 
 ***Note on List Operations:***
 

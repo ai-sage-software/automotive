@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /parts:
     get:
       tags:
-      - "Part"
-      summary: "Retrieve a list of all Part records."
-      operationId: "listParts"
+      - Part
+      summary: Retrieve a list of Part entities.
+      operationId: listPart
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Part records."
+          description: A list of Part entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Part"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Part"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Part"
-      summary: "Create a new Part record."
-      operationId: "createPart"
+      - Part
+      summary: Create a new Part entity.
+      operationId: createPart
       requestBody:
-        description: "Part data to create the new resource."
+        description: Part data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "Part created successfully."
+          description: Part created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/parts/PR-1234567"
+                type: string
+                example: /parts/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Part"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /parts/{partKey}:
     get:
       tags:
-      - "Part"
-      summary: "Retrieve a specific Part record."
-      operationId: "getPartById"
+      - Part
+      summary: Retrieve a specific Part entity.
+      operationId: getPartById
       responses:
         "200":
-          description: "The requested Part record."
+          description: The requested Part entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Part"
-      summary: "Replace a Part record."
-      operationId: "replacePart"
+      - Part
+      summary: Replace a Part entity.
+      operationId: replacePart
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Part"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Part"
-      summary: "Delete a Part Record"
-      description: "Marks the Part record as inactive or removes it entirely."
-      operationId: "deletePartRecord"
+      - Part
+      summary: Delete a Part entity
+      description: Marks the Part entity as inactive or removes it entirely.
+      operationId: deletePartEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Part"
-      summary: "Partially update a Part record."
-      operationId: "updatePart"
+      - Part
+      summary: Partially update a Part entity.
+      operationId: updatePart
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Part"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the specific Part."
+    - name: partKey
+      in: path
+      description: The unique identifier for the specific Part.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by partKey."
-      operationId: "listIdentifiersByPartKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by partKey.
+      operationId: listIdentifierByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +306,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or removes it entirely."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/part-locations:
     get:
       tags:
-      - "PartLocation"
-      summary: "Retrieve a list of PartLocation records scoped by partKey."
-      operationId: "listPartLocationsByPartKey"
+      - PartLocation
+      summary: Retrieve a list of PartLocation entities scoped by partKey.
+      operationId: listPartLocationByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartLocation records."
+          description: A list of PartLocation entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartLocation"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartLocation"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartLocation"
-      summary: "Create a new PartLocation record."
-      operationId: "createPartLocation"
+      - PartLocation
+      summary: Create a new PartLocation entity.
+      operationId: createPartLocation
       requestBody:
-        description: "PartLocation data to create the new resource."
+        description: PartLocation data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +433,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartLocation created successfully."
+          description: PartLocation created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartLocation"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/part-locations/{partLocationKey}:
     get:
       tags:
-      - "PartLocation"
-      summary: "Retrieve a specific PartLocation record."
-      operationId: "getPartLocationById"
+      - PartLocation
+      summary: Retrieve a specific PartLocation entity.
+      operationId: getPartLocationById
       responses:
         "200":
-          description: "The requested PartLocation record."
+          description: The requested PartLocation entity.
           content:
             application/json:
               schema:
@@ -398,11 +476,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartLocation"
-      summary: "Replace a PartLocation record."
-      operationId: "replacePartLocation"
+      - PartLocation
+      summary: Replace a PartLocation entity.
+      operationId: replacePartLocation
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +488,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartLocation"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartLocation"
-      summary: "Delete a PartLocation Record"
-      description: "Marks the PartLocation record as inactive or removes it entirely."
-      operationId: "deletePartLocationRecord"
+      - PartLocation
+      summary: Delete a PartLocation entity
+      description: Marks the PartLocation entity as inactive or removes it entirely.
+      operationId: deletePartLocationEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartLocation"
-      summary: "Partially update a PartLocation record."
-      operationId: "updatePartLocation"
+      - PartLocation
+      summary: Partially update a PartLocation entity.
+      operationId: updatePartLocation
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartLocationUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartLocation"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partLocationKey"
-      in: "path"
-      description: "The unique identifier for the specific PartLocation."
+        type: string
+    - name: partLocationKey
+      in: path
+      description: The unique identifier for the specific PartLocation.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/part-names:
     get:
       tags:
-      - "PartName"
-      summary: "Retrieve a list of PartName records scoped by partKey."
-      operationId: "listPartNamesByPartKey"
+      - PartName
+      summary: Retrieve a list of PartName entities scoped by partKey.
+      operationId: listPartNameByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartName records."
+          description: A list of PartName entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartName"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartName"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartName"
-      summary: "Create a new PartName record."
-      operationId: "createPartName"
+      - PartName
+      summary: Create a new PartName entity.
+      operationId: createPartName
       requestBody:
-        description: "PartName data to create the new resource."
+        description: PartName data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +615,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartName created successfully."
+          description: PartName created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/part-names/{partNameKey}:
     get:
       tags:
-      - "PartName"
-      summary: "Retrieve a specific PartName record."
-      operationId: "getPartNameById"
+      - PartName
+      summary: Retrieve a specific PartName entity.
+      operationId: getPartNameById
       responses:
         "200":
-          description: "The requested PartName record."
+          description: The requested PartName entity.
           content:
             application/json:
               schema:
@@ -557,11 +658,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartName"
-      summary: "Replace a PartName record."
-      operationId: "replacePartName"
+      - PartName
+      summary: Replace a PartName entity.
+      operationId: replacePartName
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +670,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartName"
-      summary: "Delete a PartName Record"
-      description: "Marks the PartName record as inactive or removes it entirely."
-      operationId: "deletePartNameRecord"
+      - PartName
+      summary: Delete a PartName entity
+      description: Marks the PartName entity as inactive or removes it entirely.
+      operationId: deletePartNameEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartName"
-      summary: "Partially update a PartName record."
-      operationId: "updatePartName"
+      - PartName
+      summary: Partially update a PartName entity.
+      operationId: updatePartName
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartNameUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partNameKey"
-      in: "path"
-      description: "The unique identifier for the specific PartName."
+        type: string
+    - name: partNameKey
+      in: path
+      description: The unique identifier for the specific PartName.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/prices:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a list of Price records scoped by partKey."
-      operationId: "listPricesByPartKey"
+      - Price
+      summary: Retrieve a list of Price entities scoped by partKey.
+      operationId: listPriceByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Price records."
+          description: A list of Price entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Price"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Price"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Price"
-      summary: "Create a new Price record."
-      operationId: "createPrice"
+      - Price
+      summary: Create a new Price entity.
+      operationId: createPrice
       requestBody:
-        description: "Price data to create the new resource."
+        description: Price data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +797,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Price created successfully."
+          description: Price created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/prices/{priceKey}:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a specific Price record."
-      operationId: "getPriceById"
+      - Price
+      summary: Retrieve a specific Price entity.
+      operationId: getPriceById
       responses:
         "200":
-          description: "The requested Price record."
+          description: The requested Price entity.
           content:
             application/json:
               schema:
@@ -716,11 +840,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Price"
-      summary: "Replace a Price record."
-      operationId: "replacePrice"
+      - Price
+      summary: Replace a Price entity.
+      operationId: replacePrice
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,105 +852,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Price"
-      summary: "Delete a Price Record"
-      description: "Marks the Price record as inactive or removes it entirely."
-      operationId: "deletePriceRecord"
+      - Price
+      summary: Delete a Price entity
+      description: Marks the Price entity as inactive or removes it entirely.
+      operationId: deletePriceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Price"
-      summary: "Partially update a Price record."
-      operationId: "updatePrice"
+      - Price
+      summary: Partially update a Price entity.
+      operationId: updatePrice
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PriceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "priceKey"
-      in: "path"
-      description: "The unique identifier for the specific Price."
+        type: string
+    - name: priceKey
+      in: path
+      description: The unique identifier for the specific Price.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/super-sessions:
     get:
       tags:
-      - "SuperSession"
-      summary: "Retrieve a list of SuperSession records scoped by partKey."
-      operationId: "listSuperSessionsByPartKey"
+      - SuperSession
+      summary: Retrieve a list of SuperSession entities scoped by partKey.
+      operationId: listSuperSessionByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of SuperSession records."
+          description: A list of SuperSession entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/SuperSession"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SuperSession"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "SuperSession"
-      summary: "Create a new SuperSession record."
-      operationId: "createSuperSession"
+      - SuperSession
+      summary: Create a new SuperSession entity.
+      operationId: createSuperSession
       requestBody:
-        description: "SuperSession data to create the new resource."
+        description: SuperSession data to create the new resource.
         content:
           application/json:
             schema:
@@ -834,37 +979,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "SuperSession created successfully."
+          description: SuperSession created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuperSession"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/super-sessions/{superSessionKey}:
     get:
       tags:
-      - "SuperSession"
-      summary: "Retrieve a specific SuperSession record."
-      operationId: "getSuperSessionById"
+      - SuperSession
+      summary: Retrieve a specific SuperSession entity.
+      operationId: getSuperSessionById
       responses:
         "200":
-          description: "The requested SuperSession record."
+          description: The requested SuperSession entity.
           content:
             application/json:
               schema:
@@ -875,11 +1022,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "SuperSession"
-      summary: "Replace a SuperSession record."
-      operationId: "replaceSuperSession"
+      - SuperSession
+      summary: Replace a SuperSession entity.
+      operationId: replaceSuperSession
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -887,105 +1034,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuperSession"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "SuperSession"
-      summary: "Delete a SuperSession Record"
-      description: "Marks the SuperSession record as inactive or removes it entirely."
-      operationId: "deleteSuperSessionRecord"
+      - SuperSession
+      summary: Delete a SuperSession entity
+      description: Marks the SuperSession entity as inactive or removes it entirely.
+      operationId: deleteSuperSessionEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "SuperSession"
-      summary: "Partially update a SuperSession record."
-      operationId: "updateSuperSession"
+      - SuperSession
+      summary: Partially update a SuperSession entity.
+      operationId: updateSuperSession
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/SuperSessionUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/SuperSession"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "superSessionKey"
-      in: "path"
-      description: "The unique identifier for the specific SuperSession."
+        type: string
+    - name: superSessionKey
+      in: path
+      description: The unique identifier for the specific SuperSession.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/part-events:
     get:
       tags:
-      - "PartEvent"
-      summary: "Retrieve a list of PartEvent records scoped by partKey."
-      operationId: "listPartEventsByPartKey"
+      - PartEvent
+      summary: Retrieve a list of PartEvent entities scoped by partKey.
+      operationId: listPartEventByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartEvent records."
+          description: A list of PartEvent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartEvent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartEvent"
-      summary: "Create a new PartEvent record."
-      operationId: "createPartEvent"
+      - PartEvent
+      summary: Create a new PartEvent entity.
+      operationId: createPartEvent
       requestBody:
-        description: "PartEvent data to create the new resource."
+        description: PartEvent data to create the new resource.
         content:
           application/json:
             schema:
@@ -993,37 +1161,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartEvent created successfully."
+          description: PartEvent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/part-events/{partEventKey}:
     get:
       tags:
-      - "PartEvent"
-      summary: "Retrieve a specific PartEvent record."
-      operationId: "getPartEventById"
+      - PartEvent
+      summary: Retrieve a specific PartEvent entity.
+      operationId: getPartEventById
       responses:
         "200":
-          description: "The requested PartEvent record."
+          description: The requested PartEvent entity.
           content:
             application/json:
               schema:
@@ -1034,11 +1204,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartEvent"
-      summary: "Replace a PartEvent record."
-      operationId: "replacePartEvent"
+      - PartEvent
+      summary: Replace a PartEvent entity.
+      operationId: replacePartEvent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1046,105 +1216,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartEvent"
-      summary: "Delete a PartEvent Record"
-      description: "Marks the PartEvent record as inactive or removes it entirely."
-      operationId: "deletePartEventRecord"
+      - PartEvent
+      summary: Delete a PartEvent entity
+      description: Marks the PartEvent entity as inactive or removes it entirely.
+      operationId: deletePartEventEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartEvent"
-      summary: "Partially update a PartEvent record."
-      operationId: "updatePartEvent"
+      - PartEvent
+      summary: Partially update a PartEvent entity.
+      operationId: updatePartEvent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartEventUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partEventKey"
-      in: "path"
-      description: "The unique identifier for the specific PartEvent."
+        type: string
+    - name: partEventKey
+      in: path
+      description: The unique identifier for the specific PartEvent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/part-identifiers:
     get:
       tags:
-      - "PartIdentifier"
-      summary: "Retrieve a list of PartIdentifier records scoped by partKey."
-      operationId: "listPartIdentifiersByPartKey"
+      - PartIdentifier
+      summary: Retrieve a list of PartIdentifier entities scoped by partKey.
+      operationId: listPartIdentifierByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartIdentifier records."
+          description: A list of PartIdentifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartIdentifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartIdentifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartIdentifier"
-      summary: "Create a new PartIdentifier record."
-      operationId: "createPartIdentifier"
+      - PartIdentifier
+      summary: Create a new PartIdentifier entity.
+      operationId: createPartIdentifier
       requestBody:
-        description: "PartIdentifier data to create the new resource."
+        description: PartIdentifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -1152,37 +1343,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartIdentifier created successfully."
+          description: PartIdentifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/part-identifiers/{partIdentifierKey}:
     get:
       tags:
-      - "PartIdentifier"
-      summary: "Retrieve a specific PartIdentifier record."
-      operationId: "getPartIdentifierById"
+      - PartIdentifier
+      summary: Retrieve a specific PartIdentifier entity.
+      operationId: getPartIdentifierById
       responses:
         "200":
-          description: "The requested PartIdentifier record."
+          description: The requested PartIdentifier entity.
           content:
             application/json:
               schema:
@@ -1193,11 +1386,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartIdentifier"
-      summary: "Replace a PartIdentifier record."
-      operationId: "replacePartIdentifier"
+      - PartIdentifier
+      summary: Replace a PartIdentifier entity.
+      operationId: replacePartIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1205,114 +1398,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartIdentifier"
-      summary: "Delete a PartIdentifier Record"
-      description: "Marks the PartIdentifier record as inactive or removes it entirely."
-      operationId: "deletePartIdentifierRecord"
+      - PartIdentifier
+      summary: Delete a PartIdentifier entity
+      description: Marks the PartIdentifier entity as inactive or removes it entirely.
+      operationId: deletePartIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartIdentifier"
-      summary: "Partially update a PartIdentifier record."
-      operationId: "updatePartIdentifier"
+      - PartIdentifier
+      summary: Partially update a PartIdentifier entity.
+      operationId: updatePartIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartIdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partIdentifierKey"
-      in: "path"
-      description: "The unique identifier for the specific PartIdentifier."
+        type: string
+    - name: partIdentifierKey
+      in: path
+      description: The unique identifier for the specific PartIdentifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scoped by partKey."
-      operationId: "listEffectivePeriodsByPartKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities scoped by partKey.
+      operationId: listEffectivePeriodByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -1323,11 +1537,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1335,69 +1549,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/control-account-references:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a list of ControlAccountReference records scoped by partKey."
-      operationId: "listControlAccountReferencesByPartKey"
+      - ControlAccountReference
+      summary: Retrieve a list of ControlAccountReference entities scoped by partKey.
+      operationId: listControlAccountReferenceByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ControlAccountReference records."
+          description: A list of ControlAccountReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ControlAccountReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ControlAccountReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ControlAccountReference"
-      summary: "Create a new ControlAccountReference record."
-      operationId: "createControlAccountReference"
+      - ControlAccountReference
+      summary: Create a new ControlAccountReference entity.
+      operationId: createControlAccountReference
       requestBody:
-        description: "ControlAccountReference data to create the new resource."
+        description: ControlAccountReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -1405,37 +1638,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ControlAccountReference created successfully."
+          description: ControlAccountReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/control-account-references/{controlAccountReferenceKey}:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a specific ControlAccountReference record."
-      operationId: "getControlAccountReferenceById"
+      - ControlAccountReference
+      summary: Retrieve a specific ControlAccountReference entity.
+      operationId: getControlAccountReferenceById
       responses:
         "200":
-          description: "The requested ControlAccountReference record."
+          description: The requested ControlAccountReference entity.
           content:
             application/json:
               schema:
@@ -1446,11 +1681,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ControlAccountReference"
-      summary: "Replace a ControlAccountReference record."
-      operationId: "replaceControlAccountReference"
+      - ControlAccountReference
+      summary: Replace a ControlAccountReference entity.
+      operationId: replaceControlAccountReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1458,106 +1693,127 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ControlAccountReference"
-      summary: "Delete a ControlAccountReference Record"
-      description: "Marks the ControlAccountReference record as inactive or removes\
-        \ it entirely."
-      operationId: "deleteControlAccountReferenceRecord"
+      - ControlAccountReference
+      summary: Delete a ControlAccountReference entity
+      description: Marks the ControlAccountReference entity as inactive or removes
+        it entirely.
+      operationId: deleteControlAccountReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ControlAccountReference"
-      summary: "Partially update a ControlAccountReference record."
-      operationId: "updateControlAccountReference"
+      - ControlAccountReference
+      summary: Partially update a ControlAccountReference entity.
+      operationId: updateControlAccountReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ControlAccountReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "controlAccountReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific ControlAccountReference."
+        type: string
+    - name: controlAccountReferenceKey
+      in: path
+      description: The unique identifier for the specific ControlAccountReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/part-lifecycles:
     get:
       tags:
-      - "PartLifecycle"
-      summary: "Retrieve a list of PartLifecycle records scoped by partKey."
-      operationId: "listPartLifecyclesByPartKey"
+      - PartLifecycle
+      summary: Retrieve a list of PartLifecycle entities scoped by partKey.
+      operationId: listPartLifecycleByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartLifecycle records."
+          description: A list of PartLifecycle entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartLifecycle"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartLifecycle"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartLifecycle"
-      summary: "Create a new PartLifecycle record."
-      operationId: "createPartLifecycle"
+      - PartLifecycle
+      summary: Create a new PartLifecycle entity.
+      operationId: createPartLifecycle
       requestBody:
-        description: "PartLifecycle data to create the new resource."
+        description: PartLifecycle data to create the new resource.
         content:
           application/json:
             schema:
@@ -1565,37 +1821,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartLifecycle created successfully."
+          description: PartLifecycle created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartLifecycle"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/part-lifecycles/{partLifecycleKey}:
     get:
       tags:
-      - "PartLifecycle"
-      summary: "Retrieve a specific PartLifecycle record."
-      operationId: "getPartLifecycleById"
+      - PartLifecycle
+      summary: Retrieve a specific PartLifecycle entity.
+      operationId: getPartLifecycleById
       responses:
         "200":
-          description: "The requested PartLifecycle record."
+          description: The requested PartLifecycle entity.
           content:
             application/json:
               schema:
@@ -1606,11 +1864,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartLifecycle"
-      summary: "Replace a PartLifecycle record."
-      operationId: "replacePartLifecycle"
+      - PartLifecycle
+      summary: Replace a PartLifecycle entity.
+      operationId: replacePartLifecycle
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1618,114 +1876,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartLifecycle"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartLifecycle"
-      summary: "Delete a PartLifecycle Record"
-      description: "Marks the PartLifecycle record as inactive or removes it entirely."
-      operationId: "deletePartLifecycleRecord"
+      - PartLifecycle
+      summary: Delete a PartLifecycle entity
+      description: Marks the PartLifecycle entity as inactive or removes it entirely.
+      operationId: deletePartLifecycleEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartLifecycle"
-      summary: "Partially update a PartLifecycle record."
-      operationId: "updatePartLifecycle"
+      - PartLifecycle
+      summary: Partially update a PartLifecycle entity.
+      operationId: updatePartLifecycle
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartLifecycleUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartLifecycle"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partLifecycleKey"
-      in: "path"
-      description: "The unique identifier for the specific PartLifecycle."
+        type: string
+    - name: partLifecycleKey
+      in: path
+      description: The unique identifier for the specific PartLifecycle.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /parts/{partKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by partKey."
-      operationId: "listTimeSlotsByPartKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by partKey.
+      operationId: listTimeSlotByPartKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /parts/{partKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -1736,11 +2015,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1748,28 +2027,30 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "partKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: partKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}

@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /financial-forecasts:
     get:
       tags:
-      - "FinancialForecast"
-      summary: "Retrieve a list of all FinancialForecast records."
-      operationId: "listFinancialForecasts"
+      - FinancialForecast
+      summary: Retrieve a list of FinancialForecast entities.
+      operationId: listFinancialForecast
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialForecast records."
+          description: A list of FinancialForecast entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialForecast"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialForecast"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialForecast"
-      summary: "Create a new FinancialForecast record."
-      operationId: "createFinancialForecast"
+      - FinancialForecast
+      summary: Create a new FinancialForecast entity.
+      operationId: createFinancialForecast
       requestBody:
-        description: "FinancialForecast data to create the new resource."
+        description: FinancialForecast data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialForecast created successfully."
+          description: FinancialForecast created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/financial-forecasts/PR-1234567"
+                type: string
+                example: /financial-forecasts/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialForecast"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /financial-forecasts/{financialForecastKey}:
     get:
       tags:
-      - "FinancialForecast"
-      summary: "Retrieve a specific FinancialForecast record."
-      operationId: "getFinancialForecastById"
+      - FinancialForecast
+      summary: Retrieve a specific FinancialForecast entity.
+      operationId: getFinancialForecastById
       responses:
         "200":
-          description: "The requested FinancialForecast record."
+          description: The requested FinancialForecast entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialForecast"
-      summary: "Replace a FinancialForecast record."
-      operationId: "replaceFinancialForecast"
+      - FinancialForecast
+      summary: Replace a FinancialForecast entity.
+      operationId: replaceFinancialForecast
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialForecast"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialForecast"
-      summary: "Delete a FinancialForecast Record"
-      description: "Marks the FinancialForecast record as inactive or removes it entirely."
-      operationId: "deleteFinancialForecastRecord"
+      - FinancialForecast
+      summary: Delete a FinancialForecast entity
+      description: Marks the FinancialForecast entity as inactive or removes it entirely.
+      operationId: deleteFinancialForecastEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialForecast"
-      summary: "Partially update a FinancialForecast record."
-      operationId: "updateFinancialForecast"
+      - FinancialForecast
+      summary: Partially update a FinancialForecast entity.
+      operationId: updateFinancialForecast
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialForecastUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialForecast"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialForecast."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the specific FinancialForecast.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/rebate-references:
     get:
       tags:
-      - "RebateReference"
-      summary: "Retrieve a list of RebateReference records scoped by financialForecastKey."
-      operationId: "listRebateReferencesByFinancialForecastKey"
+      - RebateReference
+      summary: Retrieve a list of RebateReference entities scoped by financialForecastKey.
+      operationId: listRebateReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of RebateReference records."
+          description: A list of RebateReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/RebateReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RebateReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "RebateReference"
-      summary: "Create a new RebateReference record."
-      operationId: "createRebateReference"
+      - RebateReference
+      summary: Create a new RebateReference entity.
+      operationId: createRebateReference
       requestBody:
-        description: "RebateReference data to create the new resource."
+        description: RebateReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "RebateReference created successfully."
+          description: RebateReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/RebateReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}:
     get:
       tags:
-      - "RebateReference"
-      summary: "Retrieve a specific RebateReference record."
-      operationId: "getRebateReferenceById"
+      - RebateReference
+      summary: Retrieve a specific RebateReference entity.
+      operationId: getRebateReferenceById
       responses:
         "200":
-          description: "The requested RebateReference record."
+          description: The requested RebateReference entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "RebateReference"
-      summary: "Replace a RebateReference record."
-      operationId: "replaceRebateReference"
+      - RebateReference
+      summary: Replace a RebateReference entity.
+      operationId: replaceRebateReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +306,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/RebateReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "RebateReference"
-      summary: "Delete a RebateReference Record"
-      description: "Marks the RebateReference record as inactive or removes it entirely."
-      operationId: "deleteRebateReferenceRecord"
+      - RebateReference
+      summary: Delete a RebateReference entity
+      description: Marks the RebateReference entity as inactive or removes it entirely.
+      operationId: deleteRebateReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "RebateReference"
-      summary: "Partially update a RebateReference record."
-      operationId: "updateRebateReference"
+      - RebateReference
+      summary: Partially update a RebateReference entity.
+      operationId: updateRebateReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/RebateReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/RebateReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "rebateReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific RebateReference."
+        type: string
+    - name: rebateReferenceKey
+      in: path
+      description: The unique identifier for the specific RebateReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/tax-splits:
     get:
       tags:
-      - "TaxSplit"
-      summary: "Retrieve a list of TaxSplit records scoped by financialForecastKey."
-      operationId: "listTaxSplitsByFinancialForecastKey"
+      - TaxSplit
+      summary: Retrieve a list of TaxSplit entities scoped by financialForecastKey.
+      operationId: listTaxSplitByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TaxSplit records."
+          description: A list of TaxSplit entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TaxSplit"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TaxSplit"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "TaxSplit"
-      summary: "Create a new TaxSplit record."
-      operationId: "createTaxSplit"
+      - TaxSplit
+      summary: Create a new TaxSplit entity.
+      operationId: createTaxSplit
       requestBody:
-        description: "TaxSplit data to create the new resource."
+        description: TaxSplit data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +433,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "TaxSplit created successfully."
+          description: TaxSplit created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaxSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}:
     get:
       tags:
-      - "TaxSplit"
-      summary: "Retrieve a specific TaxSplit record."
-      operationId: "getTaxSplitById"
+      - TaxSplit
+      summary: Retrieve a specific TaxSplit entity.
+      operationId: getTaxSplitById
       responses:
         "200":
-          description: "The requested TaxSplit record."
+          description: The requested TaxSplit entity.
           content:
             application/json:
               schema:
@@ -398,11 +476,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TaxSplit"
-      summary: "Replace a TaxSplit record."
-      operationId: "replaceTaxSplit"
+      - TaxSplit
+      summary: Replace a TaxSplit entity.
+      operationId: replaceTaxSplit
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +488,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaxSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "TaxSplit"
-      summary: "Delete a TaxSplit Record"
-      description: "Marks the TaxSplit record as inactive or removes it entirely."
-      operationId: "deleteTaxSplitRecord"
+      - TaxSplit
+      summary: Delete a TaxSplit entity
+      description: Marks the TaxSplit entity as inactive or removes it entirely.
+      operationId: deleteTaxSplitEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "TaxSplit"
-      summary: "Partially update a TaxSplit record."
-      operationId: "updateTaxSplit"
+      - TaxSplit
+      summary: Partially update a TaxSplit entity.
+      operationId: updateTaxSplit
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/TaxSplitUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/TaxSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "taxSplitKey"
-      in: "path"
-      description: "The unique identifier for the specific TaxSplit."
+        type: string
+    - name: taxSplitKey
+      in: path
+      description: The unique identifier for the specific TaxSplit.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/discount-references:
     get:
       tags:
-      - "DiscountReference"
-      summary: "Retrieve a list of DiscountReference records scoped by financialForecastKey."
-      operationId: "listDiscountReferencesByFinancialForecastKey"
+      - DiscountReference
+      summary: Retrieve a list of DiscountReference entities scoped by financialForecastKey.
+      operationId: listDiscountReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of DiscountReference records."
+          description: A list of DiscountReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/DiscountReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DiscountReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "DiscountReference"
-      summary: "Create a new DiscountReference record."
-      operationId: "createDiscountReference"
+      - DiscountReference
+      summary: Create a new DiscountReference entity.
+      operationId: createDiscountReference
       requestBody:
-        description: "DiscountReference data to create the new resource."
+        description: DiscountReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +615,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "DiscountReference created successfully."
+          description: DiscountReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DiscountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}:
     get:
       tags:
-      - "DiscountReference"
-      summary: "Retrieve a specific DiscountReference record."
-      operationId: "getDiscountReferenceById"
+      - DiscountReference
+      summary: Retrieve a specific DiscountReference entity.
+      operationId: getDiscountReferenceById
       responses:
         "200":
-          description: "The requested DiscountReference record."
+          description: The requested DiscountReference entity.
           content:
             application/json:
               schema:
@@ -557,11 +658,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "DiscountReference"
-      summary: "Replace a DiscountReference record."
-      operationId: "replaceDiscountReference"
+      - DiscountReference
+      summary: Replace a DiscountReference entity.
+      operationId: replaceDiscountReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +670,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DiscountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "DiscountReference"
-      summary: "Delete a DiscountReference Record"
-      description: "Marks the DiscountReference record as inactive or removes it entirely."
-      operationId: "deleteDiscountReferenceRecord"
+      - DiscountReference
+      summary: Delete a DiscountReference entity
+      description: Marks the DiscountReference entity as inactive or removes it entirely.
+      operationId: deleteDiscountReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "DiscountReference"
-      summary: "Partially update a DiscountReference record."
-      operationId: "updateDiscountReference"
+      - DiscountReference
+      summary: Partially update a DiscountReference entity.
+      operationId: updateDiscountReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/DiscountReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/DiscountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "discountReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific DiscountReference."
+        type: string
+    - name: discountReferenceKey
+      in: path
+      description: The unique identifier for the specific DiscountReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/control-account-references:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a list of ControlAccountReference records scoped by financialForecastKey."
-      operationId: "listControlAccountReferencesByFinancialForecastKey"
+      - ControlAccountReference
+      summary: Retrieve a list of ControlAccountReference entities scoped by financialForecastKey.
+      operationId: listControlAccountReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ControlAccountReference records."
+          description: A list of ControlAccountReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ControlAccountReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ControlAccountReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ControlAccountReference"
-      summary: "Create a new ControlAccountReference record."
-      operationId: "createControlAccountReference"
+      - ControlAccountReference
+      summary: Create a new ControlAccountReference entity.
+      operationId: createControlAccountReference
       requestBody:
-        description: "ControlAccountReference data to create the new resource."
+        description: ControlAccountReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +797,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ControlAccountReference created successfully."
+          description: ControlAccountReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}:
     get:
       tags:
-      - "ControlAccountReference"
-      summary: "Retrieve a specific ControlAccountReference record."
-      operationId: "getControlAccountReferenceById"
+      - ControlAccountReference
+      summary: Retrieve a specific ControlAccountReference entity.
+      operationId: getControlAccountReferenceById
       responses:
         "200":
-          description: "The requested ControlAccountReference record."
+          description: The requested ControlAccountReference entity.
           content:
             application/json:
               schema:
@@ -716,11 +840,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ControlAccountReference"
-      summary: "Replace a ControlAccountReference record."
-      operationId: "replaceControlAccountReference"
+      - ControlAccountReference
+      summary: Replace a ControlAccountReference entity.
+      operationId: replaceControlAccountReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,106 +852,127 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ControlAccountReference"
-      summary: "Delete a ControlAccountReference Record"
-      description: "Marks the ControlAccountReference record as inactive or removes\
-        \ it entirely."
-      operationId: "deleteControlAccountReferenceRecord"
+      - ControlAccountReference
+      summary: Delete a ControlAccountReference entity
+      description: Marks the ControlAccountReference entity as inactive or removes
+        it entirely.
+      operationId: deleteControlAccountReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ControlAccountReference"
-      summary: "Partially update a ControlAccountReference record."
-      operationId: "updateControlAccountReference"
+      - ControlAccountReference
+      summary: Partially update a ControlAccountReference entity.
+      operationId: updateControlAccountReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ControlAccountReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ControlAccountReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "controlAccountReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific ControlAccountReference."
+        type: string
+    - name: controlAccountReferenceKey
+      in: path
+      description: The unique identifier for the specific ControlAccountReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/reward-references:
     get:
       tags:
-      - "RewardReference"
-      summary: "Retrieve a list of RewardReference records scoped by financialForecastKey."
-      operationId: "listRewardReferencesByFinancialForecastKey"
+      - RewardReference
+      summary: Retrieve a list of RewardReference entities scoped by financialForecastKey.
+      operationId: listRewardReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of RewardReference records."
+          description: A list of RewardReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/RewardReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RewardReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "RewardReference"
-      summary: "Create a new RewardReference record."
-      operationId: "createRewardReference"
+      - RewardReference
+      summary: Create a new RewardReference entity.
+      operationId: createRewardReference
       requestBody:
-        description: "RewardReference data to create the new resource."
+        description: RewardReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -835,37 +980,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "RewardReference created successfully."
+          description: RewardReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/RewardReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}:
     get:
       tags:
-      - "RewardReference"
-      summary: "Retrieve a specific RewardReference record."
-      operationId: "getRewardReferenceById"
+      - RewardReference
+      summary: Retrieve a specific RewardReference entity.
+      operationId: getRewardReferenceById
       responses:
         "200":
-          description: "The requested RewardReference record."
+          description: The requested RewardReference entity.
           content:
             application/json:
               schema:
@@ -876,11 +1023,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "RewardReference"
-      summary: "Replace a RewardReference record."
-      operationId: "replaceRewardReference"
+      - RewardReference
+      summary: Replace a RewardReference entity.
+      operationId: replaceRewardReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -888,105 +1035,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/RewardReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "RewardReference"
-      summary: "Delete a RewardReference Record"
-      description: "Marks the RewardReference record as inactive or removes it entirely."
-      operationId: "deleteRewardReferenceRecord"
+      - RewardReference
+      summary: Delete a RewardReference entity
+      description: Marks the RewardReference entity as inactive or removes it entirely.
+      operationId: deleteRewardReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "RewardReference"
-      summary: "Partially update a RewardReference record."
-      operationId: "updateRewardReference"
+      - RewardReference
+      summary: Partially update a RewardReference entity.
+      operationId: updateRewardReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/RewardReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/RewardReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "rewardReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific RewardReference."
+        type: string
+    - name: rewardReferenceKey
+      in: path
+      description: The unique identifier for the specific RewardReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/financial-category-references:
     get:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Retrieve a list of FinancialCategoryReference records scoped by financialForecastKey."
-      operationId: "listFinancialCategoryReferencesByFinancialForecastKey"
+      - FinancialCategoryReference
+      summary: Retrieve a list of FinancialCategoryReference entities scoped by financialForecastKey.
+      operationId: listFinancialCategoryReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialCategoryReference records."
+          description: A list of FinancialCategoryReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialCategoryReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialCategoryReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Create a new FinancialCategoryReference record."
-      operationId: "createFinancialCategoryReference"
+      - FinancialCategoryReference
+      summary: Create a new FinancialCategoryReference entity.
+      operationId: createFinancialCategoryReference
       requestBody:
-        description: "FinancialCategoryReference data to create the new resource."
+        description: FinancialCategoryReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -994,37 +1162,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialCategoryReference created successfully."
+          description: FinancialCategoryReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialCategoryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}:
     get:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Retrieve a specific FinancialCategoryReference record."
-      operationId: "getFinancialCategoryReferenceById"
+      - FinancialCategoryReference
+      summary: Retrieve a specific FinancialCategoryReference entity.
+      operationId: getFinancialCategoryReferenceById
       responses:
         "200":
-          description: "The requested FinancialCategoryReference record."
+          description: The requested FinancialCategoryReference entity.
           content:
             application/json:
               schema:
@@ -1035,11 +1205,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Replace a FinancialCategoryReference record."
-      operationId: "replaceFinancialCategoryReference"
+      - FinancialCategoryReference
+      summary: Replace a FinancialCategoryReference entity.
+      operationId: replaceFinancialCategoryReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1047,106 +1217,240 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialCategoryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Delete a FinancialCategoryReference Record"
-      description: "Marks the FinancialCategoryReference record as inactive or removes\
-        \ it entirely."
-      operationId: "deleteFinancialCategoryReferenceRecord"
+      - FinancialCategoryReference
+      summary: Delete a FinancialCategoryReference entity
+      description: Marks the FinancialCategoryReference entity as inactive or removes
+        it entirely.
+      operationId: deleteFinancialCategoryReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialCategoryReference"
-      summary: "Partially update a FinancialCategoryReference record."
-      operationId: "updateFinancialCategoryReference"
+      - FinancialCategoryReference
+      summary: Partially update a FinancialCategoryReference entity.
+      operationId: updateFinancialCategoryReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialCategoryReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialCategoryReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialCategoryReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialCategoryReference."
+        type: string
+    - name: financialCategoryReferenceKey
+      in: path
+      description: The unique identifier for the specific FinancialCategoryReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
-  /financial-forecasts/{financialForecastKey}/fee-references:
+        type: string
+        example: PR-1234567
+  /financial-forecasts/{financialForecastKey}/moneys:
     get:
       tags:
-      - "FeeReference"
-      summary: "Retrieve a list of FeeReference records scoped by financialForecastKey."
-      operationId: "listFeeReferencesByFinancialForecastKey"
+      - Money
+      summary: Retrieve a list of Money entities scoped by financialForecastKey.
+      operationId: listMoneyByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FeeReference records."
+          description: A list of Money entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FeeReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Money"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /financial-forecasts/{financialForecastKey}/moneys/{moneyKey}:
+    get:
+      tags:
+      - Money
+      summary: Retrieve a specific Money entity.
+      operationId: getMoneyById
+      responses:
+        "200":
+          description: The requested Money entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Money"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+      - Money
+      summary: Replace a Money entity.
+      operationId: replaceMoney
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Money"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Money"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    parameters:
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: moneyKey
+      in: path
+      description: The unique identifier for the specific Money.
+      required: true
+      schema:
+        type: string
+        example: PR-1234567
+  /financial-forecasts/{financialForecastKey}/fee-references:
+    get:
+      tags:
+      - FeeReference
+      summary: Retrieve a list of FeeReference entities scoped by financialForecastKey.
+      operationId: listFeeReferenceByFinancialForecastKey
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of FeeReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FeeReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FeeReference"
-      summary: "Create a new FeeReference record."
-      operationId: "createFeeReference"
+      - FeeReference
+      summary: Create a new FeeReference entity.
+      operationId: createFeeReference
       requestBody:
-        description: "FeeReference data to create the new resource."
+        description: FeeReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -1154,37 +1458,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FeeReference created successfully."
+          description: FeeReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FeeReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}:
     get:
       tags:
-      - "FeeReference"
-      summary: "Retrieve a specific FeeReference record."
-      operationId: "getFeeReferenceById"
+      - FeeReference
+      summary: Retrieve a specific FeeReference entity.
+      operationId: getFeeReferenceById
       responses:
         "200":
-          description: "The requested FeeReference record."
+          description: The requested FeeReference entity.
           content:
             application/json:
               schema:
@@ -1195,11 +1501,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FeeReference"
-      summary: "Replace a FeeReference record."
-      operationId: "replaceFeeReference"
+      - FeeReference
+      summary: Replace a FeeReference entity.
+      operationId: replaceFeeReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1207,105 +1513,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FeeReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FeeReference"
-      summary: "Delete a FeeReference Record"
-      description: "Marks the FeeReference record as inactive or removes it entirely."
-      operationId: "deleteFeeReferenceRecord"
+      - FeeReference
+      summary: Delete a FeeReference entity
+      description: Marks the FeeReference entity as inactive or removes it entirely.
+      operationId: deleteFeeReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FeeReference"
-      summary: "Partially update a FeeReference record."
-      operationId: "updateFeeReference"
+      - FeeReference
+      summary: Partially update a FeeReference entity.
+      operationId: updateFeeReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FeeReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FeeReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "feeReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific FeeReference."
+        type: string
+    - name: feeReferenceKey
+      in: path
+      description: The unique identifier for the specific FeeReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by financialForecastKey."
-      operationId: "listIdentifiersByFinancialForecastKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by financialForecastKey.
+      operationId: listIdentifierByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -1313,37 +1640,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -1354,11 +1683,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1366,105 +1695,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or removes it entirely."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/prices:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a list of Price records scoped by financialForecastKey."
-      operationId: "listPricesByFinancialForecastKey"
+      - Price
+      summary: Retrieve a list of Price entities scoped by financialForecastKey.
+      operationId: listPriceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Price records."
+          description: A list of Price entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Price"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Price"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Price"
-      summary: "Create a new Price record."
-      operationId: "createPrice"
+      - Price
+      summary: Create a new Price entity.
+      operationId: createPrice
       requestBody:
-        description: "Price data to create the new resource."
+        description: Price data to create the new resource.
         content:
           application/json:
             schema:
@@ -1472,37 +1822,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Price created successfully."
+          description: Price created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/prices/{priceKey}:
     get:
       tags:
-      - "Price"
-      summary: "Retrieve a specific Price record."
-      operationId: "getPriceById"
+      - Price
+      summary: Retrieve a specific Price entity.
+      operationId: getPriceById
       responses:
         "200":
-          description: "The requested Price record."
+          description: The requested Price entity.
           content:
             application/json:
               schema:
@@ -1513,11 +1865,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Price"
-      summary: "Replace a Price record."
-      operationId: "replacePrice"
+      - Price
+      summary: Replace a Price entity.
+      operationId: replacePrice
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1525,105 +1877,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Price"
-      summary: "Delete a Price Record"
-      description: "Marks the Price record as inactive or removes it entirely."
-      operationId: "deletePriceRecord"
+      - Price
+      summary: Delete a Price entity
+      description: Marks the Price entity as inactive or removes it entirely.
+      operationId: deletePriceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Price"
-      summary: "Partially update a Price record."
-      operationId: "updatePrice"
+      - Price
+      summary: Partially update a Price entity.
+      operationId: updatePrice
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PriceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "priceKey"
-      in: "path"
-      description: "The unique identifier for the specific Price."
+        type: string
+    - name: priceKey
+      in: path
+      description: The unique identifier for the specific Price.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/financial-events:
     get:
       tags:
-      - "FinancialEvent"
-      summary: "Retrieve a list of FinancialEvent records scoped by financialForecastKey."
-      operationId: "listFinancialEventsByFinancialForecastKey"
+      - FinancialEvent
+      summary: Retrieve a list of FinancialEvent entities scoped by financialForecastKey.
+      operationId: listFinancialEventByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialEvent records."
+          description: A list of FinancialEvent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialEvent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialEvent"
-      summary: "Create a new FinancialEvent record."
-      operationId: "createFinancialEvent"
+      - FinancialEvent
+      summary: Create a new FinancialEvent entity.
+      operationId: createFinancialEvent
       requestBody:
-        description: "FinancialEvent data to create the new resource."
+        description: FinancialEvent data to create the new resource.
         content:
           application/json:
             schema:
@@ -1631,37 +2004,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialEvent created successfully."
+          description: FinancialEvent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}:
     get:
       tags:
-      - "FinancialEvent"
-      summary: "Retrieve a specific FinancialEvent record."
-      operationId: "getFinancialEventById"
+      - FinancialEvent
+      summary: Retrieve a specific FinancialEvent entity.
+      operationId: getFinancialEventById
       responses:
         "200":
-          description: "The requested FinancialEvent record."
+          description: The requested FinancialEvent entity.
           content:
             application/json:
               schema:
@@ -1672,11 +2047,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialEvent"
-      summary: "Replace a FinancialEvent record."
-      operationId: "replaceFinancialEvent"
+      - FinancialEvent
+      summary: Replace a FinancialEvent entity.
+      operationId: replaceFinancialEvent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1684,105 +2059,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialEvent"
-      summary: "Delete a FinancialEvent Record"
-      description: "Marks the FinancialEvent record as inactive or removes it entirely."
-      operationId: "deleteFinancialEventRecord"
+      - FinancialEvent
+      summary: Delete a FinancialEvent entity
+      description: Marks the FinancialEvent entity as inactive or removes it entirely.
+      operationId: deleteFinancialEventEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialEvent"
-      summary: "Partially update a FinancialEvent record."
-      operationId: "updateFinancialEvent"
+      - FinancialEvent
+      summary: Partially update a FinancialEvent entity.
+      operationId: updateFinancialEvent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialEventUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialEventKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialEvent."
+        type: string
+    - name: financialEventKey
+      in: path
+      description: The unique identifier for the specific FinancialEvent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/credit-references:
     get:
       tags:
-      - "CreditReference"
-      summary: "Retrieve a list of CreditReference records scoped by financialForecastKey."
-      operationId: "listCreditReferencesByFinancialForecastKey"
+      - CreditReference
+      summary: Retrieve a list of CreditReference entities scoped by financialForecastKey.
+      operationId: listCreditReferenceByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of CreditReference records."
+          description: A list of CreditReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/CreditReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CreditReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "CreditReference"
-      summary: "Create a new CreditReference record."
-      operationId: "createCreditReference"
+      - CreditReference
+      summary: Create a new CreditReference entity.
+      operationId: createCreditReference
       requestBody:
-        description: "CreditReference data to create the new resource."
+        description: CreditReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -1790,37 +2186,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "CreditReference created successfully."
+          description: CreditReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreditReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}:
     get:
       tags:
-      - "CreditReference"
-      summary: "Retrieve a specific CreditReference record."
-      operationId: "getCreditReferenceById"
+      - CreditReference
+      summary: Retrieve a specific CreditReference entity.
+      operationId: getCreditReferenceById
       responses:
         "200":
-          description: "The requested CreditReference record."
+          description: The requested CreditReference entity.
           content:
             application/json:
               schema:
@@ -1831,11 +2229,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "CreditReference"
-      summary: "Replace a CreditReference record."
-      operationId: "replaceCreditReference"
+      - CreditReference
+      summary: Replace a CreditReference entity.
+      operationId: replaceCreditReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1843,105 +2241,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreditReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "CreditReference"
-      summary: "Delete a CreditReference Record"
-      description: "Marks the CreditReference record as inactive or removes it entirely."
-      operationId: "deleteCreditReferenceRecord"
+      - CreditReference
+      summary: Delete a CreditReference entity
+      description: Marks the CreditReference entity as inactive or removes it entirely.
+      operationId: deleteCreditReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "CreditReference"
-      summary: "Partially update a CreditReference record."
-      operationId: "updateCreditReference"
+      - CreditReference
+      summary: Partially update a CreditReference entity.
+      operationId: updateCreditReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/CreditReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/CreditReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "creditReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific CreditReference."
+        type: string
+    - name: creditReferenceKey
+      in: path
+      description: The unique identifier for the specific CreditReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/textual-details:
     get:
       tags:
-      - "TextualDetail"
-      summary: "Retrieve a list of TextualDetail records scoped by financialForecastKey."
-      operationId: "listTextualDetailsByFinancialForecastKey"
+      - TextualDetail
+      summary: Retrieve a list of TextualDetail entities scoped by financialForecastKey.
+      operationId: listTextualDetailByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TextualDetail records."
+          description: A list of TextualDetail entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TextualDetail"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TextualDetail"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "TextualDetail"
-      summary: "Create a new TextualDetail record."
-      operationId: "createTextualDetail"
+      - TextualDetail
+      summary: Create a new TextualDetail entity.
+      operationId: createTextualDetail
       requestBody:
-        description: "TextualDetail data to create the new resource."
+        description: TextualDetail data to create the new resource.
         content:
           application/json:
             schema:
@@ -1949,37 +2368,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "TextualDetail created successfully."
+          description: TextualDetail created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/textual-details/{textualDetailKey}:
     get:
       tags:
-      - "TextualDetail"
-      summary: "Retrieve a specific TextualDetail record."
-      operationId: "getTextualDetailById"
+      - TextualDetail
+      summary: Retrieve a specific TextualDetail entity.
+      operationId: getTextualDetailById
       responses:
         "200":
-          description: "The requested TextualDetail record."
+          description: The requested TextualDetail entity.
           content:
             application/json:
               schema:
@@ -1990,11 +2411,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TextualDetail"
-      summary: "Replace a TextualDetail record."
-      operationId: "replaceTextualDetail"
+      - TextualDetail
+      summary: Replace a TextualDetail entity.
+      operationId: replaceTextualDetail
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -2002,105 +2423,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "TextualDetail"
-      summary: "Delete a TextualDetail Record"
-      description: "Marks the TextualDetail record as inactive or removes it entirely."
-      operationId: "deleteTextualDetailRecord"
+      - TextualDetail
+      summary: Delete a TextualDetail entity
+      description: Marks the TextualDetail entity as inactive or removes it entirely.
+      operationId: deleteTextualDetailEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "TextualDetail"
-      summary: "Partially update a TextualDetail record."
-      operationId: "updateTextualDetail"
+      - TextualDetail
+      summary: Partially update a TextualDetail entity.
+      operationId: updateTextualDetail
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/TextualDetailUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "textualDetailKey"
-      in: "path"
-      description: "The unique identifier for the specific TextualDetail."
+        type: string
+    - name: textualDetailKey
+      in: path
+      description: The unique identifier for the specific TextualDetail.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/financial-tracks:
     get:
       tags:
-      - "FinancialTrack"
-      summary: "Retrieve a list of FinancialTrack records scoped by financialForecastKey."
-      operationId: "listFinancialTracksByFinancialForecastKey"
+      - FinancialTrack
+      summary: Retrieve a list of FinancialTrack entities scoped by financialForecastKey.
+      operationId: listFinancialTrackByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialTrack records."
+          description: A list of FinancialTrack entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialTrack"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialTrack"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialTrack"
-      summary: "Create a new FinancialTrack record."
-      operationId: "createFinancialTrack"
+      - FinancialTrack
+      summary: Create a new FinancialTrack entity.
+      operationId: createFinancialTrack
       requestBody:
-        description: "FinancialTrack data to create the new resource."
+        description: FinancialTrack data to create the new resource.
         content:
           application/json:
             schema:
@@ -2108,37 +2550,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialTrack created successfully."
+          description: FinancialTrack created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialTrack"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}:
     get:
       tags:
-      - "FinancialTrack"
-      summary: "Retrieve a specific FinancialTrack record."
-      operationId: "getFinancialTrackById"
+      - FinancialTrack
+      summary: Retrieve a specific FinancialTrack entity.
+      operationId: getFinancialTrackById
       responses:
         "200":
-          description: "The requested FinancialTrack record."
+          description: The requested FinancialTrack entity.
           content:
             application/json:
               schema:
@@ -2149,11 +2593,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialTrack"
-      summary: "Replace a FinancialTrack record."
-      operationId: "replaceFinancialTrack"
+      - FinancialTrack
+      summary: Replace a FinancialTrack entity.
+      operationId: replaceFinancialTrack
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -2161,105 +2605,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialTrack"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialTrack"
-      summary: "Delete a FinancialTrack Record"
-      description: "Marks the FinancialTrack record as inactive or removes it entirely."
-      operationId: "deleteFinancialTrackRecord"
+      - FinancialTrack
+      summary: Delete a FinancialTrack entity
+      description: Marks the FinancialTrack entity as inactive or removes it entirely.
+      operationId: deleteFinancialTrackEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialTrack"
-      summary: "Partially update a FinancialTrack record."
-      operationId: "updateFinancialTrack"
+      - FinancialTrack
+      summary: Partially update a FinancialTrack entity.
+      operationId: updateFinancialTrack
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialTrackUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialTrack"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialTrackKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialTrack."
+        type: string
+    - name: financialTrackKey
+      in: path
+      description: The unique identifier for the specific FinancialTrack.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-forecasts/{financialForecastKey}/financial-splits:
     get:
       tags:
-      - "FinancialSplit"
-      summary: "Retrieve a list of FinancialSplit records scoped by financialForecastKey."
-      operationId: "listFinancialSplitsByFinancialForecastKey"
+      - FinancialSplit
+      summary: Retrieve a list of FinancialSplit entities scoped by financialForecastKey.
+      operationId: listFinancialSplitByFinancialForecastKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialSplit records."
+          description: A list of FinancialSplit entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialSplit"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialSplit"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialSplit"
-      summary: "Create a new FinancialSplit record."
-      operationId: "createFinancialSplit"
+      - FinancialSplit
+      summary: Create a new FinancialSplit entity.
+      operationId: createFinancialSplit
       requestBody:
-        description: "FinancialSplit data to create the new resource."
+        description: FinancialSplit data to create the new resource.
         content:
           application/json:
             schema:
@@ -2267,37 +2732,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialSplit created successfully."
+          description: FinancialSplit created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}:
     get:
       tags:
-      - "FinancialSplit"
-      summary: "Retrieve a specific FinancialSplit record."
-      operationId: "getFinancialSplitById"
+      - FinancialSplit
+      summary: Retrieve a specific FinancialSplit entity.
+      operationId: getFinancialSplitById
       responses:
         "200":
-          description: "The requested FinancialSplit record."
+          description: The requested FinancialSplit entity.
           content:
             application/json:
               schema:
@@ -2308,11 +2775,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialSplit"
-      summary: "Replace a FinancialSplit record."
-      operationId: "replaceFinancialSplit"
+      - FinancialSplit
+      summary: Replace a FinancialSplit entity.
+      operationId: replaceFinancialSplit
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -2320,64 +2787,68 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialSplit"
-      summary: "Delete a FinancialSplit Record"
-      description: "Marks the FinancialSplit record as inactive or removes it entirely."
-      operationId: "deleteFinancialSplitRecord"
+      - FinancialSplit
+      summary: Delete a FinancialSplit entity
+      description: Marks the FinancialSplit entity as inactive or removes it entirely.
+      operationId: deleteFinancialSplitEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialSplit"
-      summary: "Partially update a FinancialSplit record."
-      operationId: "updateFinancialSplit"
+      - FinancialSplit
+      summary: Partially update a FinancialSplit entity.
+      operationId: updateFinancialSplit
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialSplitUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialSplit"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialForecastKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialForecastKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialSplitKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialSplit."
+        type: string
+    - name: financialSplitKey
+      in: path
+      description: The unique identifier for the specific FinancialSplit.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}

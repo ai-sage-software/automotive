@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **LifecycleEvent**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **LifecycleEvent**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -177,7 +184,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events</span> <br/>
-        <span class="api-summary">Retrieve a list of all LifecycleEvent records. getLifecycleEvents</span>
+        <span class="api-summary">Retrieve a list of LifecycleEvent entities. getLifecycleEvent</span>
     </span>
 </div>
 
@@ -185,7 +192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events</span> <br/>
-        <span class="api-summary">Create a new LifecycleEvent record. createLifecycleEvent</span>
+        <span class="api-summary">Create a new LifecycleEvent entity. createLifecycleEvent</span>
     </span>
 </div>
 
@@ -194,7 +201,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific LifecycleEvent record. getifecycleEventById</span>
+        <span class="api-summary">Retrieve a specific LifecycleEvent entity. getifecycleEventById</span>
     </span>
 </div>
 
@@ -202,7 +209,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Replace a LifecycleEvent record. replaceLifecycleEvent</span>
+        <span class="api-summary">Replace a LifecycleEvent entity. replaceLifecycleEvent</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Partially update a LifecycleEvent record. updateLifecycleEvent</span>
+        <span class="api-summary">Partially update a LifecycleEvent entity. updateLifecycleEvent</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Delete a LifecycleEvent Record deleteLifecycleEventRecord</span>
+        <span class="api-summary">Delete a LifecycleEvent entity deleteLifecycleEventEntity</span>
     </span>
 </div>
 
@@ -228,7 +235,7 @@ The following resources follow a consistent pattern under LifecycleEventroot wit
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **lifecycle-event** | /lifecycle-events | listLifecycleEvents | createLifecycleEvent | getLifecycleEvents | updateLifecycleEvents | deleteLifecycleEvents |
+    | **lifecycle-event** | /lifecycle-events | listLifecycleEvent | createLifecycleEvent | getLifecycleEvent | updateLifecycleEvent | deleteLifecycleEvent |
 
 ***Note on List Operations:***
 

@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **FinancialSnapshot**, **FinancialSnapshotCriteria**, **FinancialSnapshotLineItem**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **FinancialSnapshot**, **FinancialSnapshotCriteria**, **FinancialSnapshotLineItem**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,7 +25,7 @@ The API is structured around the domain **finance** and **FinancialSnapshot** re
     | **FinancialSnapshot** | /financial-snapshots | Manages FinancialSnapshots |
     | **FinancialSnapshotLineItem** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items | Manages FinancialSnapshotLineItems belonging to FinancialSnapshots |
     | **Money** | /financial-snapshots/{financialSnapshotKey}/moneys | Manages Moneys belonging to FinancialSnapshots |
-    | **FinancialSnapshotCriteria** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias | Manages FinancialSnapshotCriterias belonging to FinancialSnapshots |
+    | **FinancialSnapshotCriteria** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria | Manages FinancialSnapshotCriteria belonging to FinancialSnapshots |
 
 
 ---
@@ -181,7 +188,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots</span> <br/>
-        <span class="api-summary">Retrieve a list of all FinancialSnapshot records. getFinancialSnapshots</span>
+        <span class="api-summary">Retrieve a list of FinancialSnapshot entities. getFinancialSnapshot</span>
     </span>
 </div>
 
@@ -189,7 +196,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots</span> <br/>
-        <span class="api-summary">Create a new FinancialSnapshot record. createFinancialSnapshot</span>
+        <span class="api-summary">Create a new FinancialSnapshot entity. createFinancialSnapshot</span>
     </span>
 </div>
 
@@ -198,7 +205,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSnapshot record. getinancialSnapshotById</span>
+        <span class="api-summary">Retrieve a specific FinancialSnapshot entity. getinancialSnapshotById</span>
     </span>
 </div>
 
@@ -206,7 +213,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSnapshot record. replaceFinancialSnapshot</span>
+        <span class="api-summary">Replace a FinancialSnapshot entity. replaceFinancialSnapshot</span>
     </span>
 </div>
 
@@ -214,7 +221,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshot record. updateFinancialSnapshot</span>
+        <span class="api-summary">Partially update a FinancialSnapshot entity. updateFinancialSnapshot</span>
     </span>
 </div>
 
@@ -222,7 +229,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSnapshot Record deleteFinancialSnapshotRecord</span>
+        <span class="api-summary">Delete a FinancialSnapshot entity deleteFinancialSnapshotEntity</span>
     </span>
 </div>
 
@@ -231,7 +238,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSnapshotLineItem records scoped by financialSnapshotKey. getFinancialSnapshotLineItemsByFinancialSnapshotKey</span>
+        <span class="api-summary">Retrieve a list of FinancialSnapshotLineItem entities scoped by financialSnapshotKey. getFinancialSnapshotLineItemByFinancialSnapshotKey</span>
     </span>
 </div>
 
@@ -239,7 +246,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items</span> <br/>
-        <span class="api-summary">Create a new FinancialSnapshotLineItem record. createFinancialSnapshotLineItem</span>
+        <span class="api-summary">Create a new FinancialSnapshotLineItem entity. createFinancialSnapshotLineItem</span>
     </span>
 </div>
 
@@ -248,7 +255,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSnapshotLineItem record. getinancialSnapshotLineItemById</span>
+        <span class="api-summary">Retrieve a specific FinancialSnapshotLineItem entity. getinancialSnapshotLineItemById</span>
     </span>
 </div>
 
@@ -256,7 +263,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSnapshotLineItem record. replaceFinancialSnapshotLineItem</span>
+        <span class="api-summary">Replace a FinancialSnapshotLineItem entity. replaceFinancialSnapshotLineItem</span>
     </span>
 </div>
 
@@ -264,7 +271,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshotLineItem record. updateFinancialSnapshotLineItem</span>
+        <span class="api-summary">Partially update a FinancialSnapshotLineItem entity. updateFinancialSnapshotLineItem</span>
     </span>
 </div>
 
@@ -272,7 +279,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSnapshotLineItem Record deleteFinancialSnapshotLineItemRecord</span>
+        <span class="api-summary">Delete a FinancialSnapshotLineItem entity deleteFinancialSnapshotLineItemEntity</span>
     </span>
 </div>
 
@@ -281,7 +288,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by financialSnapshotKey. getMoneysByFinancialSnapshotKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by financialSnapshotKey. getMoneyByFinancialSnapshotKey</span>
     </span>
 </div>
 
@@ -290,7 +297,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -298,57 +305,57 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
-### /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias
+### /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSnapshotCriteria records scoped by financialSnapshotKey. getFinancialSnapshotCriteriasByFinancialSnapshotKey</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSnapshotCriteria entities scoped by financialSnapshotKey. getFinancialSnapshotCriteriaByFinancialSnapshotKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias</span> <br/>
-        <span class="api-summary">Create a new FinancialSnapshotCriteria record. createFinancialSnapshotCriteria</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria</span> <br/>
+        <span class="api-summary">Create a new FinancialSnapshotCriteria entity. createFinancialSnapshotCriteria</span>
     </span>
 </div>
 
-### /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}
+### /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSnapshotCriteria record. getinancialSnapshotCriteriaById</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSnapshotCriteria entity. getinancialSnapshotCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSnapshotCriteria record. replaceFinancialSnapshotCriteria</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSnapshotCriteria entity. replaceFinancialSnapshotCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshotCriteria record. updateFinancialSnapshotCriteria</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSnapshotCriteria entity. updateFinancialSnapshotCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSnapshotCriteria Record deleteFinancialSnapshotCriteriaRecord</span>
+        <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSnapshotCriteria entity deleteFinancialSnapshotCriteriaEntity</span>
     </span>
 </div>
 
@@ -358,10 +365,10 @@ The following resources follow a consistent pattern under FinancialSnapshotroot 
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **financial-snapshot** | /financial-snapshots | listFinancialSnapshots | createFinancialSnapshot | getFinancialSnapshots | updateFinancialSnapshots | deleteFinancialSnapshots |
-    | **financial-snapshot-line-item** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items | listFinancialSnapshotLineItemsByFinancialSnapshotKey | createFinancialSnapshotLineItem | getFinancialSnapshotLineItemsByFinancialSnapshotKey | updateFinancialSnapshotLineItemsByFinancialSnapshotKey | deleteFinancialSnapshotLineItemsByFinancialSnapshotKey |
-    | **money** | /financial-snapshots/{financialSnapshotKey}/moneys | listMoneysByFinancialSnapshotKey |  | getMoneysByFinancialSnapshotKey | updateMoneysByFinancialSnapshotKey | deleteMoneysByFinancialSnapshotKey |
-    | **financial-snapshot-criteria** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias | listFinancialSnapshotCriteriasByFinancialSnapshotKey | createFinancialSnapshotCriteria | getFinancialSnapshotCriteriasByFinancialSnapshotKey | updateFinancialSnapshotCriteriasByFinancialSnapshotKey | deleteFinancialSnapshotCriteriasByFinancialSnapshotKey |
+    | **financial-snapshot** | /financial-snapshots | listFinancialSnapshot | createFinancialSnapshot | getFinancialSnapshot | updateFinancialSnapshot | deleteFinancialSnapshot |
+    | **financial-snapshot-line-item** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items | listFinancialSnapshotLineItemByFinancialSnapshotKey | createFinancialSnapshotLineItem | getFinancialSnapshotLineItemByFinancialSnapshotKey | updateFinancialSnapshotLineItemByFinancialSnapshotKey | deleteFinancialSnapshotLineItemByFinancialSnapshotKey |
+    | **money** | /financial-snapshots/{financialSnapshotKey}/moneys | listMoneyByFinancialSnapshotKey |  | getMoneyByFinancialSnapshotKey | updateMoneyByFinancialSnapshotKey | deleteMoneyByFinancialSnapshotKey |
+    | **financial-snapshot-criteria** | /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria | listFinancialSnapshotCriteriaByFinancialSnapshotKey | createFinancialSnapshotCriteria | getFinancialSnapshotCriteriaByFinancialSnapshotKey | updateFinancialSnapshotCriteriaByFinancialSnapshotKey | deleteFinancialSnapshotCriteriaByFinancialSnapshotKey |
 
 ***Note on List Operations:***
 

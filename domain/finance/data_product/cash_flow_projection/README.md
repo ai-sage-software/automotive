@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **CashFlowLineItem**, **CashFlowProjection**, **CashFlowProjectionCriteria**, **CashFlowScenario**, **Identifier**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **CashFlowLineItem**, **CashFlowProjection**, **CashFlowProjectionCriteria**, **CashFlowScenario**, **Identifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -21,7 +28,7 @@ The API is structured around the domain **finance** and **CashFlowProjection** r
     | **Identifier** | /cash-flow-projections/{cashFlowProjectionKey}/identifiers | Manages Identifiers belonging to CashFlowProjections |
     | **AccountingPeriod** | /cash-flow-projections/{cashFlowProjectionKey}/accounting-periods | Manages AccountingPeriods belonging to CashFlowProjections |
     | **CashFlowLineItem** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items | Manages CashFlowLineItems belonging to CashFlowProjections |
-    | **CashFlowProjectionCriteria** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias | Manages CashFlowProjectionCriterias belonging to CashFlowProjections |
+    | **CashFlowProjectionCriteria** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria | Manages CashFlowProjectionCriteria belonging to CashFlowProjections |
 
 
 ---
@@ -184,7 +191,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections</span> <br/>
-        <span class="api-summary">Retrieve a list of all CashFlowProjection records. getCashFlowProjections</span>
+        <span class="api-summary">Retrieve a list of CashFlowProjection entities. getCashFlowProjection</span>
     </span>
 </div>
 
@@ -192,7 +199,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections</span> <br/>
-        <span class="api-summary">Create a new CashFlowProjection record. createCashFlowProjection</span>
+        <span class="api-summary">Create a new CashFlowProjection entity. createCashFlowProjection</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CashFlowProjection record. getashFlowProjectionById</span>
+        <span class="api-summary">Retrieve a specific CashFlowProjection entity. getashFlowProjectionById</span>
     </span>
 </div>
 
@@ -209,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}</span> <br/>
-        <span class="api-summary">Replace a CashFlowProjection record. replaceCashFlowProjection</span>
+        <span class="api-summary">Replace a CashFlowProjection entity. replaceCashFlowProjection</span>
     </span>
 </div>
 
@@ -217,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowProjection record. updateCashFlowProjection</span>
+        <span class="api-summary">Partially update a CashFlowProjection entity. updateCashFlowProjection</span>
     </span>
 </div>
 
@@ -225,7 +232,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}</span> <br/>
-        <span class="api-summary">Delete a CashFlowProjection Record deleteCashFlowProjectionRecord</span>
+        <span class="api-summary">Delete a CashFlowProjection entity deleteCashFlowProjectionEntity</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by cashFlowProjectionKey. getMoneysByCashFlowProjectionKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by cashFlowProjectionKey. getMoneyByCashFlowProjectionKey</span>
     </span>
 </div>
 
@@ -243,7 +250,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -260,7 +267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios</span> <br/>
-        <span class="api-summary">Retrieve a list of CashFlowScenario records scoped by cashFlowProjectionKey. getCashFlowScenariosByCashFlowProjectionKey</span>
+        <span class="api-summary">Retrieve a list of CashFlowScenario entities scoped by cashFlowProjectionKey. getCashFlowScenarioByCashFlowProjectionKey</span>
     </span>
 </div>
 
@@ -268,7 +275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios</span> <br/>
-        <span class="api-summary">Create a new CashFlowScenario record. createCashFlowScenario</span>
+        <span class="api-summary">Create a new CashFlowScenario entity. createCashFlowScenario</span>
     </span>
 </div>
 
@@ -277,7 +284,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios/{cashFlowScenarioKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CashFlowScenario record. getashFlowScenarioById</span>
+        <span class="api-summary">Retrieve a specific CashFlowScenario entity. getashFlowScenarioById</span>
     </span>
 </div>
 
@@ -285,7 +292,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios/{cashFlowScenarioKey}</span> <br/>
-        <span class="api-summary">Replace a CashFlowScenario record. replaceCashFlowScenario</span>
+        <span class="api-summary">Replace a CashFlowScenario entity. replaceCashFlowScenario</span>
     </span>
 </div>
 
@@ -293,7 +300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios/{cashFlowScenarioKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowScenario record. updateCashFlowScenario</span>
+        <span class="api-summary">Partially update a CashFlowScenario entity. updateCashFlowScenario</span>
     </span>
 </div>
 
@@ -301,7 +308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios/{cashFlowScenarioKey}</span> <br/>
-        <span class="api-summary">Delete a CashFlowScenario Record deleteCashFlowScenarioRecord</span>
+        <span class="api-summary">Delete a CashFlowScenario entity deleteCashFlowScenarioEntity</span>
     </span>
 </div>
 
@@ -310,7 +317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by cashFlowProjectionKey. getIdentifiersByCashFlowProjectionKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by cashFlowProjectionKey. getIdentifierByCashFlowProjectionKey</span>
     </span>
 </div>
 
@@ -318,7 +325,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -327,7 +334,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -335,7 +342,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -343,7 +350,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -351,7 +358,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -360,7 +367,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of AccountingPeriod records scoped by cashFlowProjectionKey. getAccountingPeriodsByCashFlowProjectionKey</span>
+        <span class="api-summary">Retrieve a list of AccountingPeriod entities scoped by cashFlowProjectionKey. getAccountingPeriodByCashFlowProjectionKey</span>
     </span>
 </div>
 
@@ -368,7 +375,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods</span> <br/>
-        <span class="api-summary">Create a new AccountingPeriod record. createAccountingPeriod</span>
+        <span class="api-summary">Create a new AccountingPeriod entity. createAccountingPeriod</span>
     </span>
 </div>
 
@@ -377,7 +384,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AccountingPeriod record. getccountingPeriodById</span>
+        <span class="api-summary">Retrieve a specific AccountingPeriod entity. getccountingPeriodById</span>
     </span>
 </div>
 
@@ -385,7 +392,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Replace a AccountingPeriod record. replaceAccountingPeriod</span>
+        <span class="api-summary">Replace a AccountingPeriod entity. replaceAccountingPeriod</span>
     </span>
 </div>
 
@@ -393,7 +400,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod record. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
     </span>
 </div>
 
@@ -401,7 +408,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Delete a AccountingPeriod Record deleteAccountingPeriodRecord</span>
+        <span class="api-summary">Delete a AccountingPeriod entity deleteAccountingPeriodEntity</span>
     </span>
 </div>
 
@@ -410,7 +417,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items</span> <br/>
-        <span class="api-summary">Retrieve a list of CashFlowLineItem records scoped by cashFlowProjectionKey. getCashFlowLineItemsByCashFlowProjectionKey</span>
+        <span class="api-summary">Retrieve a list of CashFlowLineItem entities scoped by cashFlowProjectionKey. getCashFlowLineItemByCashFlowProjectionKey</span>
     </span>
 </div>
 
@@ -418,7 +425,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items</span> <br/>
-        <span class="api-summary">Create a new CashFlowLineItem record. createCashFlowLineItem</span>
+        <span class="api-summary">Create a new CashFlowLineItem entity. createCashFlowLineItem</span>
     </span>
 </div>
 
@@ -427,7 +434,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items/{cashFlowLineItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CashFlowLineItem record. getashFlowLineItemById</span>
+        <span class="api-summary">Retrieve a specific CashFlowLineItem entity. getashFlowLineItemById</span>
     </span>
 </div>
 
@@ -435,7 +442,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items/{cashFlowLineItemKey}</span> <br/>
-        <span class="api-summary">Replace a CashFlowLineItem record. replaceCashFlowLineItem</span>
+        <span class="api-summary">Replace a CashFlowLineItem entity. replaceCashFlowLineItem</span>
     </span>
 </div>
 
@@ -443,7 +450,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items/{cashFlowLineItemKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowLineItem record. updateCashFlowLineItem</span>
+        <span class="api-summary">Partially update a CashFlowLineItem entity. updateCashFlowLineItem</span>
     </span>
 </div>
 
@@ -451,57 +458,57 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items/{cashFlowLineItemKey}</span> <br/>
-        <span class="api-summary">Delete a CashFlowLineItem Record deleteCashFlowLineItemRecord</span>
+        <span class="api-summary">Delete a CashFlowLineItem entity deleteCashFlowLineItemEntity</span>
     </span>
 </div>
 
-### /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias
+### /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias</span> <br/>
-        <span class="api-summary">Retrieve a list of CashFlowProjectionCriteria records scoped by cashFlowProjectionKey. getCashFlowProjectionCriteriasByCashFlowProjectionKey</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria</span> <br/>
+        <span class="api-summary">Retrieve a list of CashFlowProjectionCriteria entities scoped by cashFlowProjectionKey. getCashFlowProjectionCriteriaByCashFlowProjectionKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias</span> <br/>
-        <span class="api-summary">Create a new CashFlowProjectionCriteria record. createCashFlowProjectionCriteria</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria</span> <br/>
+        <span class="api-summary">Create a new CashFlowProjectionCriteria entity. createCashFlowProjectionCriteria</span>
     </span>
 </div>
 
-### /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias/{cashFlowProjectionCriteriaKey}
+### /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias/{cashFlowProjectionCriteriaKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CashFlowProjectionCriteria record. getashFlowProjectionCriteriaById</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CashFlowProjectionCriteria entity. getashFlowProjectionCriteriaById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias/{cashFlowProjectionCriteriaKey}</span> <br/>
-        <span class="api-summary">Replace a CashFlowProjectionCriteria record. replaceCashFlowProjectionCriteria</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}</span> <br/>
+        <span class="api-summary">Replace a CashFlowProjectionCriteria entity. replaceCashFlowProjectionCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias/{cashFlowProjectionCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowProjectionCriteria record. updateCashFlowProjectionCriteria</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}</span> <br/>
+        <span class="api-summary">Partially update a CashFlowProjectionCriteria entity. updateCashFlowProjectionCriteria</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias/{cashFlowProjectionCriteriaKey}</span> <br/>
-        <span class="api-summary">Delete a CashFlowProjectionCriteria Record deleteCashFlowProjectionCriteriaRecord</span>
+        <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}</span> <br/>
+        <span class="api-summary">Delete a CashFlowProjectionCriteria entity deleteCashFlowProjectionCriteriaEntity</span>
     </span>
 </div>
 
@@ -511,13 +518,13 @@ The following resources follow a consistent pattern under CashFlowProjectionroot
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **cash-flow-projection** | /cash-flow-projections | listCashFlowProjections | createCashFlowProjection | getCashFlowProjections | updateCashFlowProjections | deleteCashFlowProjections |
-    | **money** | /cash-flow-projections/{cashFlowProjectionKey}/moneys | listMoneysByCashFlowProjectionKey |  | getMoneysByCashFlowProjectionKey | updateMoneysByCashFlowProjectionKey | deleteMoneysByCashFlowProjectionKey |
-    | **cash-flow-scenario** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios | listCashFlowScenariosByCashFlowProjectionKey | createCashFlowScenario | getCashFlowScenariosByCashFlowProjectionKey | updateCashFlowScenariosByCashFlowProjectionKey | deleteCashFlowScenariosByCashFlowProjectionKey |
-    | **identifier** | /cash-flow-projections/{cashFlowProjectionKey}/identifiers | listIdentifiersByCashFlowProjectionKey | createIdentifier | getIdentifiersByCashFlowProjectionKey | updateIdentifiersByCashFlowProjectionKey | deleteIdentifiersByCashFlowProjectionKey |
-    | **accounting-period** | /cash-flow-projections/{cashFlowProjectionKey}/accounting-periods | listAccountingPeriodsByCashFlowProjectionKey | createAccountingPeriod | getAccountingPeriodsByCashFlowProjectionKey | updateAccountingPeriodsByCashFlowProjectionKey | deleteAccountingPeriodsByCashFlowProjectionKey |
-    | **cash-flow-line-item** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items | listCashFlowLineItemsByCashFlowProjectionKey | createCashFlowLineItem | getCashFlowLineItemsByCashFlowProjectionKey | updateCashFlowLineItemsByCashFlowProjectionKey | deleteCashFlowLineItemsByCashFlowProjectionKey |
-    | **cash-flow-projection-criteria** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criterias | listCashFlowProjectionCriteriasByCashFlowProjectionKey | createCashFlowProjectionCriteria | getCashFlowProjectionCriteriasByCashFlowProjectionKey | updateCashFlowProjectionCriteriasByCashFlowProjectionKey | deleteCashFlowProjectionCriteriasByCashFlowProjectionKey |
+    | **cash-flow-projection** | /cash-flow-projections | listCashFlowProjection | createCashFlowProjection | getCashFlowProjection | updateCashFlowProjection | deleteCashFlowProjection |
+    | **money** | /cash-flow-projections/{cashFlowProjectionKey}/moneys | listMoneyByCashFlowProjectionKey |  | getMoneyByCashFlowProjectionKey | updateMoneyByCashFlowProjectionKey | deleteMoneyByCashFlowProjectionKey |
+    | **cash-flow-scenario** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios | listCashFlowScenarioByCashFlowProjectionKey | createCashFlowScenario | getCashFlowScenarioByCashFlowProjectionKey | updateCashFlowScenarioByCashFlowProjectionKey | deleteCashFlowScenarioByCashFlowProjectionKey |
+    | **identifier** | /cash-flow-projections/{cashFlowProjectionKey}/identifiers | listIdentifierByCashFlowProjectionKey | createIdentifier | getIdentifierByCashFlowProjectionKey | updateIdentifierByCashFlowProjectionKey | deleteIdentifierByCashFlowProjectionKey |
+    | **accounting-period** | /cash-flow-projections/{cashFlowProjectionKey}/accounting-periods | listAccountingPeriodByCashFlowProjectionKey | createAccountingPeriod | getAccountingPeriodByCashFlowProjectionKey | updateAccountingPeriodByCashFlowProjectionKey | deleteAccountingPeriodByCashFlowProjectionKey |
+    | **cash-flow-line-item** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items | listCashFlowLineItemByCashFlowProjectionKey | createCashFlowLineItem | getCashFlowLineItemByCashFlowProjectionKey | updateCashFlowLineItemByCashFlowProjectionKey | deleteCashFlowLineItemByCashFlowProjectionKey |
+    | **cash-flow-projection-criteria** | /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria | listCashFlowProjectionCriteriaByCashFlowProjectionKey | createCashFlowProjectionCriteria | getCashFlowProjectionCriteriaByCashFlowProjectionKey | updateCashFlowProjectionCriteriaByCashFlowProjectionKey | deleteCashFlowProjectionCriteriaByCashFlowProjectionKey |
 
 ***Note on List Operations:***
 

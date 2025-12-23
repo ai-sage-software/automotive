@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **PaymentEvent**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **PaymentEvent**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -176,7 +183,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events</span> <br/>
-        <span class="api-summary">Retrieve a list of all PaymentEvent records. getPaymentEvents</span>
+        <span class="api-summary">Retrieve a list of PaymentEvent entities. getPaymentEvent</span>
     </span>
 </div>
 
@@ -184,7 +191,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events</span> <br/>
-        <span class="api-summary">Create a new PaymentEvent record. createPaymentEvent</span>
+        <span class="api-summary">Create a new PaymentEvent entity. createPaymentEvent</span>
     </span>
 </div>
 
@@ -193,7 +200,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events/{paymentEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentEvent record. getaymentEventById</span>
+        <span class="api-summary">Retrieve a specific PaymentEvent entity. getaymentEventById</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events/{paymentEventKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentEvent record. replacePaymentEvent</span>
+        <span class="api-summary">Replace a PaymentEvent entity. replacePaymentEvent</span>
     </span>
 </div>
 
@@ -209,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events/{paymentEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentEvent record. updatePaymentEvent</span>
+        <span class="api-summary">Partially update a PaymentEvent entity. updatePaymentEvent</span>
     </span>
 </div>
 
@@ -217,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events/{paymentEventKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentEvent Record deletePaymentEventRecord</span>
+        <span class="api-summary">Delete a PaymentEvent entity deletePaymentEventEntity</span>
     </span>
 </div>
 
@@ -227,7 +234,7 @@ The following resources follow a consistent pattern under PaymentEventroot with 
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **payment-event** | /payment-events | listPaymentEvents | createPaymentEvent | getPaymentEvents | updatePaymentEvents | deletePaymentEvents |
+    | **payment-event** | /payment-events | listPaymentEvent | createPaymentEvent | getPaymentEvent | updatePaymentEvent | deletePaymentEvent |
 
 ***Note on List Operations:***
 

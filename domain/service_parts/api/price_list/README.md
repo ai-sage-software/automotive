@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **LifecycleEvent**, **Price**, **PriceList**, **PriceSensitivity**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **LifecycleEvent**, **Price**, **PriceList**, **PriceSensitivity**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -191,7 +198,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists</span> <br/>
-        <span class="api-summary">Retrieve a list of all PriceList records. getPriceLists</span>
+        <span class="api-summary">Retrieve a list of PriceList entities. getPriceList</span>
     </span>
 </div>
 
@@ -199,7 +206,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists</span> <br/>
-        <span class="api-summary">Create a new PriceList record. createPriceList</span>
+        <span class="api-summary">Create a new PriceList entity. createPriceList</span>
     </span>
 </div>
 
@@ -208,7 +215,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PriceList record. getriceListById</span>
+        <span class="api-summary">Retrieve a specific PriceList entity. getriceListById</span>
     </span>
 </div>
 
@@ -216,7 +223,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}</span> <br/>
-        <span class="api-summary">Replace a PriceList record. replacePriceList</span>
+        <span class="api-summary">Replace a PriceList entity. replacePriceList</span>
     </span>
 </div>
 
@@ -224,7 +231,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceList record. updatePriceList</span>
+        <span class="api-summary">Partially update a PriceList entity. updatePriceList</span>
     </span>
 </div>
 
@@ -232,7 +239,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}</span> <br/>
-        <span class="api-summary">Delete a PriceList Record deletePriceListRecord</span>
+        <span class="api-summary">Delete a PriceList entity deletePriceListEntity</span>
     </span>
 </div>
 
@@ -241,7 +248,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by priceListKey. getIdentifiersByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by priceListKey. getIdentifierByPriceListKey</span>
     </span>
 </div>
 
@@ -249,7 +256,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -258,7 +265,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -266,7 +273,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -274,7 +281,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -282,7 +289,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -291,7 +298,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by priceListKey. getPricesByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by priceListKey. getPriceByPriceListKey</span>
     </span>
 </div>
 
@@ -299,7 +306,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -308,7 +315,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -316,7 +323,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -324,7 +331,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -332,7 +339,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -341,7 +348,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities</span> <br/>
-        <span class="api-summary">Retrieve a list of PriceSensitivity records scoped by priceListKey. getPriceSensitivitysByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of PriceSensitivity entities scoped by priceListKey. getPriceSensitivityByPriceListKey</span>
     </span>
 </div>
 
@@ -349,7 +356,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities</span> <br/>
-        <span class="api-summary">Create a new PriceSensitivity record. createPriceSensitivity</span>
+        <span class="api-summary">Create a new PriceSensitivity entity. createPriceSensitivity</span>
     </span>
 </div>
 
@@ -358,7 +365,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PriceSensitivity record. getriceSensitivityById</span>
+        <span class="api-summary">Retrieve a specific PriceSensitivity entity. getriceSensitivityById</span>
     </span>
 </div>
 
@@ -366,7 +373,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Replace a PriceSensitivity record. replacePriceSensitivity</span>
+        <span class="api-summary">Replace a PriceSensitivity entity. replacePriceSensitivity</span>
     </span>
 </div>
 
@@ -374,7 +381,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceSensitivity record. updatePriceSensitivity</span>
+        <span class="api-summary">Partially update a PriceSensitivity entity. updatePriceSensitivity</span>
     </span>
 </div>
 
@@ -382,7 +389,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Delete a PriceSensitivity Record deletePriceSensitivityRecord</span>
+        <span class="api-summary">Delete a PriceSensitivity entity deletePriceSensitivityEntity</span>
     </span>
 </div>
 
@@ -391,7 +398,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by priceListKey. getEffectivePeriodsByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by priceListKey. getEffectivePeriodByPriceListKey</span>
     </span>
 </div>
 
@@ -400,7 +407,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -408,7 +415,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -417,7 +424,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events</span> <br/>
-        <span class="api-summary">Retrieve a list of LifecycleEvent records scoped by priceListKey. getLifecycleEventsByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of LifecycleEvent entities scoped by priceListKey. getLifecycleEventByPriceListKey</span>
     </span>
 </div>
 
@@ -425,7 +432,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events</span> <br/>
-        <span class="api-summary">Create a new LifecycleEvent record. createLifecycleEvent</span>
+        <span class="api-summary">Create a new LifecycleEvent entity. createLifecycleEvent</span>
     </span>
 </div>
 
@@ -434,7 +441,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific LifecycleEvent record. getifecycleEventById</span>
+        <span class="api-summary">Retrieve a specific LifecycleEvent entity. getifecycleEventById</span>
     </span>
 </div>
 
@@ -442,7 +449,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Replace a LifecycleEvent record. replaceLifecycleEvent</span>
+        <span class="api-summary">Replace a LifecycleEvent entity. replaceLifecycleEvent</span>
     </span>
 </div>
 
@@ -450,7 +457,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Partially update a LifecycleEvent record. updateLifecycleEvent</span>
+        <span class="api-summary">Partially update a LifecycleEvent entity. updateLifecycleEvent</span>
     </span>
 </div>
 
@@ -458,7 +465,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Delete a LifecycleEvent Record deleteLifecycleEventRecord</span>
+        <span class="api-summary">Delete a LifecycleEvent entity deleteLifecycleEventEntity</span>
     </span>
 </div>
 
@@ -467,7 +474,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by priceListKey. getTimeSlotsByPriceListKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by priceListKey. getTimeSlotByPriceListKey</span>
     </span>
 </div>
 
@@ -476,7 +483,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -484,7 +491,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -494,13 +501,13 @@ The following resources follow a consistent pattern under PriceListroot with key
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **price-list** | /price-lists | listPriceLists | createPriceList | getPriceLists | updatePriceLists | deletePriceLists |
-    | **identifier** | /price-lists/{priceListKey}/identifiers | listIdentifiersByPriceListKey | createIdentifier | getIdentifiersByPriceListKey | updateIdentifiersByPriceListKey | deleteIdentifiersByPriceListKey |
-    | **price** | /price-lists/{priceListKey}/prices | listPricesByPriceListKey | createPrice | getPricesByPriceListKey | updatePricesByPriceListKey | deletePricesByPriceListKey |
-    | **price-sensitivitie** | /price-lists/{priceListKey}/price-sensitivities | listPriceSensitivitysByPriceListKey | createPriceSensitivity | getPriceSensitivitysByPriceListKey | updatePriceSensitivitysByPriceListKey | deletePriceSensitivitysByPriceListKey |
-    | **effective-period** | /price-lists/{priceListKey}/effective-periods | listEffectivePeriodsByPriceListKey |  | getEffectivePeriodsByPriceListKey | updateEffectivePeriodsByPriceListKey | deleteEffectivePeriodsByPriceListKey |
-    | **lifecycle-event** | /price-lists/{priceListKey}/lifecycle-events | listLifecycleEventsByPriceListKey | createLifecycleEvent | getLifecycleEventsByPriceListKey | updateLifecycleEventsByPriceListKey | deleteLifecycleEventsByPriceListKey |
-    | **time-slot** | /price-lists/{priceListKey}/time-slots | listTimeSlotsByPriceListKey |  | getTimeSlotsByPriceListKey | updateTimeSlotsByPriceListKey | deleteTimeSlotsByPriceListKey |
+    | **price-list** | /price-lists | listPriceList | createPriceList | getPriceList | updatePriceList | deletePriceList |
+    | **identifier** | /price-lists/{priceListKey}/identifiers | listIdentifierByPriceListKey | createIdentifier | getIdentifierByPriceListKey | updateIdentifierByPriceListKey | deleteIdentifierByPriceListKey |
+    | **price** | /price-lists/{priceListKey}/prices | listPriceByPriceListKey | createPrice | getPriceByPriceListKey | updatePriceByPriceListKey | deletePriceByPriceListKey |
+    | **price-sensitivitie** | /price-lists/{priceListKey}/price-sensitivities | listPriceSensitivityByPriceListKey | createPriceSensitivity | getPriceSensitivityByPriceListKey | updatePriceSensitivityByPriceListKey | deletePriceSensitivityByPriceListKey |
+    | **effective-period** | /price-lists/{priceListKey}/effective-periods | listEffectivePeriodByPriceListKey |  | getEffectivePeriodByPriceListKey | updateEffectivePeriodByPriceListKey | deleteEffectivePeriodByPriceListKey |
+    | **lifecycle-event** | /price-lists/{priceListKey}/lifecycle-events | listLifecycleEventByPriceListKey | createLifecycleEvent | getLifecycleEventByPriceListKey | updateLifecycleEventByPriceListKey | deleteLifecycleEventByPriceListKey |
+    | **time-slot** | /price-lists/{priceListKey}/time-slots | listTimeSlotByPriceListKey |  | getTimeSlotByPriceListKey | updateTimeSlotByPriceListKey | deleteTimeSlotByPriceListKey |
 
 ***Note on List Operations:***
 

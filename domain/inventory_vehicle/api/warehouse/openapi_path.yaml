@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /warehouses:
     get:
       tags:
-      - "Warehouse"
-      summary: "Retrieve a list of all Warehouse records."
-      operationId: "listWarehouses"
+      - Warehouse
+      summary: Retrieve a list of Warehouse entities.
+      operationId: listWarehouse
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Warehouse records."
+          description: A list of Warehouse entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Warehouse"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Warehouse"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Warehouse"
-      summary: "Create a new Warehouse record."
-      operationId: "createWarehouse"
+      - Warehouse
+      summary: Create a new Warehouse entity.
+      operationId: createWarehouse
       requestBody:
-        description: "Warehouse data to create the new resource."
+        description: Warehouse data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "Warehouse created successfully."
+          description: Warehouse created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/warehouses/PR-1234567"
+                type: string
+                example: /warehouses/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Warehouse"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /warehouses/{warehouseKey}:
     get:
       tags:
-      - "Warehouse"
-      summary: "Retrieve a specific Warehouse record."
-      operationId: "getWarehouseById"
+      - Warehouse
+      summary: Retrieve a specific Warehouse entity.
+      operationId: getWarehouseById
       responses:
         "200":
-          description: "The requested Warehouse record."
+          description: The requested Warehouse entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Warehouse"
-      summary: "Replace a Warehouse record."
-      operationId: "replaceWarehouse"
+      - Warehouse
+      summary: Replace a Warehouse entity.
+      operationId: replaceWarehouse
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Warehouse"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Warehouse"
-      summary: "Delete a Warehouse Record"
-      description: "Marks the Warehouse record as inactive or removes it entirely."
-      operationId: "deleteWarehouseRecord"
+      - Warehouse
+      summary: Delete a Warehouse entity
+      description: Marks the Warehouse entity as inactive or removes it entirely.
+      operationId: deleteWarehouseEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Warehouse"
-      summary: "Partially update a Warehouse record."
-      operationId: "updateWarehouse"
+      - Warehouse
+      summary: Partially update a Warehouse entity.
+      operationId: updateWarehouse
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/WarehouseUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Warehouse"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the specific Warehouse."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the specific Warehouse.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /warehouses/{warehouseKey}/authorizations:
     get:
       tags:
-      - "Authorization"
-      summary: "Retrieve a list of Authorization records scoped by warehouseKey."
-      operationId: "listAuthorizationsByWarehouseKey"
+      - Authorization
+      summary: Retrieve a list of Authorization entities scoped by warehouseKey.
+      operationId: listAuthorizationByWarehouseKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Authorization records."
+          description: A list of Authorization entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Authorization"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Authorization"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Authorization"
-      summary: "Create a new Authorization record."
-      operationId: "createAuthorization"
+      - Authorization
+      summary: Create a new Authorization entity.
+      operationId: createAuthorization
       requestBody:
-        description: "Authorization data to create the new resource."
+        description: Authorization data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Authorization created successfully."
+          description: Authorization created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /warehouses/{warehouseKey}/authorizations/{authorizationKey}:
     get:
       tags:
-      - "Authorization"
-      summary: "Retrieve a specific Authorization record."
-      operationId: "getAuthorizationById"
+      - Authorization
+      summary: Retrieve a specific Authorization entity.
+      operationId: getAuthorizationById
       responses:
         "200":
-          description: "The requested Authorization record."
+          description: The requested Authorization entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Authorization"
-      summary: "Replace a Authorization record."
-      operationId: "replaceAuthorization"
+      - Authorization
+      summary: Replace a Authorization entity.
+      operationId: replaceAuthorization
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +306,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Authorization"
-      summary: "Delete a Authorization Record"
-      description: "Marks the Authorization record as inactive or removes it entirely."
-      operationId: "deleteAuthorizationRecord"
+      - Authorization
+      summary: Delete a Authorization entity
+      description: Marks the Authorization entity as inactive or removes it entirely.
+      operationId: deleteAuthorizationEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Authorization"
-      summary: "Partially update a Authorization record."
-      operationId: "updateAuthorization"
+      - Authorization
+      summary: Partially update a Authorization entity.
+      operationId: updateAuthorization
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/AuthorizationUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Authorization"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "authorizationKey"
-      in: "path"
-      description: "The unique identifier for the specific Authorization."
+        type: string
+    - name: authorizationKey
+      in: path
+      description: The unique identifier for the specific Authorization.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /warehouses/{warehouseKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by warehouseKey."
-      operationId: "listIdentifiersByWarehouseKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by warehouseKey.
+      operationId: listIdentifierByWarehouseKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +433,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /warehouses/{warehouseKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -398,11 +476,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +488,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or removes it entirely."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /warehouses/{warehouseKey}/addresses:
     get:
       tags:
-      - "Address"
-      summary: "Retrieve a list of Address records scoped by warehouseKey."
-      operationId: "listAddresssByWarehouseKey"
+      - Address
+      summary: Retrieve a list of Address entities scoped by warehouseKey.
+      operationId: listAddressByWarehouseKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Address records."
+          description: A list of Address entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Address"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Address"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Address"
-      summary: "Create a new Address record."
-      operationId: "createAddress"
+      - Address
+      summary: Create a new Address entity.
+      operationId: createAddress
       requestBody:
-        description: "Address data to create the new resource."
+        description: Address data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +615,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Address created successfully."
+          description: Address created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /warehouses/{warehouseKey}/addresses/{addressKey}:
     get:
       tags:
-      - "Address"
-      summary: "Retrieve a specific Address record."
-      operationId: "getAddressById"
+      - Address
+      summary: Retrieve a specific Address entity.
+      operationId: getAddressById
       responses:
         "200":
-          description: "The requested Address record."
+          description: The requested Address entity.
           content:
             application/json:
               schema:
@@ -557,11 +658,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Address"
-      summary: "Replace a Address record."
-      operationId: "replaceAddress"
+      - Address
+      summary: Replace a Address entity.
+      operationId: replaceAddress
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +670,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Address"
-      summary: "Delete a Address Record"
-      description: "Marks the Address record as inactive or removes it entirely."
-      operationId: "deleteAddressRecord"
+      - Address
+      summary: Delete a Address entity
+      description: Marks the Address entity as inactive or removes it entirely.
+      operationId: deleteAddressEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Address"
-      summary: "Partially update a Address record."
-      operationId: "updateAddress"
+      - Address
+      summary: Partially update a Address entity.
+      operationId: updateAddress
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/AddressUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Address"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "addressKey"
-      in: "path"
-      description: "The unique identifier for the specific Address."
+        type: string
+    - name: addressKey
+      in: path
+      description: The unique identifier for the specific Address.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /warehouses/{warehouseKey}/positions:
     get:
       tags:
-      - "Position"
-      summary: "Retrieve a list of Position records scoped by warehouseKey."
-      operationId: "listPositionsByWarehouseKey"
+      - Position
+      summary: Retrieve a list of Position entities scoped by warehouseKey.
+      operationId: listPositionByWarehouseKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Position records."
+          description: A list of Position entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Position"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Position"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Position"
-      summary: "Create a new Position record."
-      operationId: "createPosition"
+      - Position
+      summary: Create a new Position entity.
+      operationId: createPosition
       requestBody:
-        description: "Position data to create the new resource."
+        description: Position data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +797,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Position created successfully."
+          description: Position created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /warehouses/{warehouseKey}/positions/{positionKey}:
     get:
       tags:
-      - "Position"
-      summary: "Retrieve a specific Position record."
-      operationId: "getPositionById"
+      - Position
+      summary: Retrieve a specific Position entity.
+      operationId: getPositionById
       responses:
         "200":
-          description: "The requested Position record."
+          description: The requested Position entity.
           content:
             application/json:
               schema:
@@ -716,11 +840,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Position"
-      summary: "Replace a Position record."
-      operationId: "replacePosition"
+      - Position
+      summary: Replace a Position entity.
+      operationId: replacePosition
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,105 +852,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Position"
-      summary: "Delete a Position Record"
-      description: "Marks the Position record as inactive or removes it entirely."
-      operationId: "deletePositionRecord"
+      - Position
+      summary: Delete a Position entity
+      description: Marks the Position entity as inactive or removes it entirely.
+      operationId: deletePositionEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Position"
-      summary: "Partially update a Position record."
-      operationId: "updatePosition"
+      - Position
+      summary: Partially update a Position entity.
+      operationId: updatePosition
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PositionUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "positionKey"
-      in: "path"
-      description: "The unique identifier for the specific Position."
+        type: string
+    - name: positionKey
+      in: path
+      description: The unique identifier for the specific Position.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /warehouses/{warehouseKey}/address-locales:
     get:
       tags:
-      - "AddressLocale"
-      summary: "Retrieve a list of AddressLocale records scoped by warehouseKey."
-      operationId: "listAddressLocalesByWarehouseKey"
+      - AddressLocale
+      summary: Retrieve a list of AddressLocale entities scoped by warehouseKey.
+      operationId: listAddressLocaleByWarehouseKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of AddressLocale records."
+          description: A list of AddressLocale entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/AddressLocale"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AddressLocale"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "AddressLocale"
-      summary: "Create a new AddressLocale record."
-      operationId: "createAddressLocale"
+      - AddressLocale
+      summary: Create a new AddressLocale entity.
+      operationId: createAddressLocale
       requestBody:
-        description: "AddressLocale data to create the new resource."
+        description: AddressLocale data to create the new resource.
         content:
           application/json:
             schema:
@@ -834,37 +979,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "AddressLocale created successfully."
+          description: AddressLocale created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AddressLocale"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /warehouses/{warehouseKey}/address-locales/{addressLocaleKey}:
     get:
       tags:
-      - "AddressLocale"
-      summary: "Retrieve a specific AddressLocale record."
-      operationId: "getAddressLocaleById"
+      - AddressLocale
+      summary: Retrieve a specific AddressLocale entity.
+      operationId: getAddressLocaleById
       responses:
         "200":
-          description: "The requested AddressLocale record."
+          description: The requested AddressLocale entity.
           content:
             application/json:
               schema:
@@ -875,11 +1022,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "AddressLocale"
-      summary: "Replace a AddressLocale record."
-      operationId: "replaceAddressLocale"
+      - AddressLocale
+      summary: Replace a AddressLocale entity.
+      operationId: replaceAddressLocale
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -887,64 +1034,68 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AddressLocale"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "AddressLocale"
-      summary: "Delete a AddressLocale Record"
-      description: "Marks the AddressLocale record as inactive or removes it entirely."
-      operationId: "deleteAddressLocaleRecord"
+      - AddressLocale
+      summary: Delete a AddressLocale entity
+      description: Marks the AddressLocale entity as inactive or removes it entirely.
+      operationId: deleteAddressLocaleEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "AddressLocale"
-      summary: "Partially update a AddressLocale record."
-      operationId: "updateAddressLocale"
+      - AddressLocale
+      summary: Partially update a AddressLocale entity.
+      operationId: updateAddressLocale
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/AddressLocaleUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/AddressLocale"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "warehouseKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: warehouseKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "addressLocaleKey"
-      in: "path"
-      description: "The unique identifier for the specific AddressLocale."
+        type: string
+    - name: addressLocaleKey
+      in: path
+      description: The unique identifier for the specific AddressLocale.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}
