@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -22,6 +29,7 @@ The API is structured around the domain **finance** and **FinancialForecast** re
     | **ControlAccountReference** | /financial-forecasts/{financialForecastKey}/control-account-references | Manages ControlAccountReferences belonging to FinancialForecasts |
     | **RewardReference** | /financial-forecasts/{financialForecastKey}/reward-references | Manages RewardReferences belonging to FinancialForecasts |
     | **FinancialCategoryReference** | /financial-forecasts/{financialForecastKey}/financial-category-references | Manages FinancialCategoryReferences belonging to FinancialForecasts |
+    | **Money** | /financial-forecasts/{financialForecastKey}/moneys | Manages Moneys belonging to FinancialForecasts |
     | **FeeReference** | /financial-forecasts/{financialForecastKey}/fee-references | Manages FeeReferences belonging to FinancialForecasts |
     | **Identifier** | /financial-forecasts/{financialForecastKey}/identifiers | Manages Identifiers belonging to FinancialForecasts |
     | **Price** | /financial-forecasts/{financialForecastKey}/prices | Manages Prices belonging to FinancialForecasts |
@@ -99,12 +107,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **FinancialEventTypes** : types of financial events.<br/>
+💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PriceTypes** : types of prices.<br/>
-💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
 💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
@@ -114,6 +122,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 ✅ **EffectivePeriod** : Effective Period<br/>
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
 ✅ **TextualDetail** : not nullable<br/>
 
 ---
@@ -201,7 +210,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts</span> <br/>
-        <span class="api-summary">Retrieve a list of all FinancialForecast records. getFinancialForecasts</span>
+        <span class="api-summary">Retrieve a list of FinancialForecast entities. getFinancialForecast</span>
     </span>
 </div>
 
@@ -209,7 +218,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts</span> <br/>
-        <span class="api-summary">Create a new FinancialForecast record. createFinancialForecast</span>
+        <span class="api-summary">Create a new FinancialForecast entity. createFinancialForecast</span>
     </span>
 </div>
 
@@ -218,7 +227,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialForecast record. getinancialForecastById</span>
+        <span class="api-summary">Retrieve a specific FinancialForecast entity. getinancialForecastById</span>
     </span>
 </div>
 
@@ -226,7 +235,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialForecast record. replaceFinancialForecast</span>
+        <span class="api-summary">Replace a FinancialForecast entity. replaceFinancialForecast</span>
     </span>
 </div>
 
@@ -234,7 +243,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialForecast record. updateFinancialForecast</span>
+        <span class="api-summary">Partially update a FinancialForecast entity. updateFinancialForecast</span>
     </span>
 </div>
 
@@ -242,7 +251,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialForecast Record deleteFinancialForecastRecord</span>
+        <span class="api-summary">Delete a FinancialForecast entity deleteFinancialForecastEntity</span>
     </span>
 </div>
 
@@ -251,7 +260,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RebateReference records scoped by financialForecastKey. getRebateReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of RebateReference entities scoped by financialForecastKey. getRebateReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -259,7 +268,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references</span> <br/>
-        <span class="api-summary">Create a new RebateReference record. createRebateReference</span>
+        <span class="api-summary">Create a new RebateReference entity. createRebateReference</span>
     </span>
 </div>
 
@@ -268,7 +277,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RebateReference record. getebateReferenceById</span>
+        <span class="api-summary">Retrieve a specific RebateReference entity. getebateReferenceById</span>
     </span>
 </div>
 
@@ -276,7 +285,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RebateReference record. replaceRebateReference</span>
+        <span class="api-summary">Replace a RebateReference entity. replaceRebateReference</span>
     </span>
 </div>
 
@@ -284,7 +293,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RebateReference record. updateRebateReference</span>
+        <span class="api-summary">Partially update a RebateReference entity. updateRebateReference</span>
     </span>
 </div>
 
@@ -292,7 +301,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RebateReference Record deleteRebateReferenceRecord</span>
+        <span class="api-summary">Delete a RebateReference entity deleteRebateReferenceEntity</span>
     </span>
 </div>
 
@@ -301,7 +310,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of TaxSplit records scoped by financialForecastKey. getTaxSplitsByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of TaxSplit entities scoped by financialForecastKey. getTaxSplitByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -309,7 +318,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits</span> <br/>
-        <span class="api-summary">Create a new TaxSplit record. createTaxSplit</span>
+        <span class="api-summary">Create a new TaxSplit entity. createTaxSplit</span>
     </span>
 </div>
 
@@ -318,7 +327,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TaxSplit record. getaxSplitById</span>
+        <span class="api-summary">Retrieve a specific TaxSplit entity. getaxSplitById</span>
     </span>
 </div>
 
@@ -326,7 +335,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Replace a TaxSplit record. replaceTaxSplit</span>
+        <span class="api-summary">Replace a TaxSplit entity. replaceTaxSplit</span>
     </span>
 </div>
 
@@ -334,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxSplit record. updateTaxSplit</span>
+        <span class="api-summary">Partially update a TaxSplit entity. updateTaxSplit</span>
     </span>
 </div>
 
@@ -342,7 +351,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Delete a TaxSplit Record deleteTaxSplitRecord</span>
+        <span class="api-summary">Delete a TaxSplit entity deleteTaxSplitEntity</span>
     </span>
 </div>
 
@@ -351,7 +360,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references</span> <br/>
-        <span class="api-summary">Retrieve a list of DiscountReference records scoped by financialForecastKey. getDiscountReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of DiscountReference entities scoped by financialForecastKey. getDiscountReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -359,7 +368,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references</span> <br/>
-        <span class="api-summary">Create a new DiscountReference record. createDiscountReference</span>
+        <span class="api-summary">Create a new DiscountReference entity. createDiscountReference</span>
     </span>
 </div>
 
@@ -368,7 +377,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DiscountReference record. getiscountReferenceById</span>
+        <span class="api-summary">Retrieve a specific DiscountReference entity. getiscountReferenceById</span>
     </span>
 </div>
 
@@ -376,7 +385,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a DiscountReference record. replaceDiscountReference</span>
+        <span class="api-summary">Replace a DiscountReference entity. replaceDiscountReference</span>
     </span>
 </div>
 
@@ -384,7 +393,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountReference record. updateDiscountReference</span>
+        <span class="api-summary">Partially update a DiscountReference entity. updateDiscountReference</span>
     </span>
 </div>
 
@@ -392,7 +401,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
+        <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
     </span>
 </div>
 
@@ -401,7 +410,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by financialForecastKey. getControlAccountReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by financialForecastKey. getControlAccountReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -409,7 +418,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -418,7 +427,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -426,7 +435,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -434,7 +443,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -442,7 +451,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -451,7 +460,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RewardReference records scoped by financialForecastKey. getRewardReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of RewardReference entities scoped by financialForecastKey. getRewardReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -459,7 +468,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references</span> <br/>
-        <span class="api-summary">Create a new RewardReference record. createRewardReference</span>
+        <span class="api-summary">Create a new RewardReference entity. createRewardReference</span>
     </span>
 </div>
 
@@ -468,7 +477,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RewardReference record. getewardReferenceById</span>
+        <span class="api-summary">Retrieve a specific RewardReference entity. getewardReferenceById</span>
     </span>
 </div>
 
@@ -476,7 +485,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RewardReference record. replaceRewardReference</span>
+        <span class="api-summary">Replace a RewardReference entity. replaceRewardReference</span>
     </span>
 </div>
 
@@ -484,7 +493,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardReference record. updateRewardReference</span>
+        <span class="api-summary">Partially update a RewardReference entity. updateRewardReference</span>
     </span>
 </div>
 
@@ -492,7 +501,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RewardReference Record deleteRewardReferenceRecord</span>
+        <span class="api-summary">Delete a RewardReference entity deleteRewardReferenceEntity</span>
     </span>
 </div>
 
@@ -501,7 +510,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialCategoryReference records scoped by financialForecastKey. getFinancialCategoryReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference entities scoped by financialForecastKey. getFinancialCategoryReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -509,7 +518,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Create a new FinancialCategoryReference record. createFinancialCategoryReference</span>
+        <span class="api-summary">Create a new FinancialCategoryReference entity. createFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -518,7 +527,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialCategoryReference record. getinancialCategoryReferenceById</span>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference entity. getinancialCategoryReferenceById</span>
     </span>
 </div>
 
@@ -526,7 +535,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialCategoryReference record. replaceFinancialCategoryReference</span>
+        <span class="api-summary">Replace a FinancialCategoryReference entity. replaceFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -534,7 +543,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialCategoryReference record. updateFinancialCategoryReference</span>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updateFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -542,7 +551,33 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialCategoryReference Record deleteFinancialCategoryReferenceRecord</span>
+        <span class="api-summary">Delete a FinancialCategoryReference entity deleteFinancialCategoryReferenceEntity</span>
+    </span>
+</div>
+
+### /financial-forecasts/{financialForecastKey}/moneys
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/moneys</span> <br/>
+        <span class="api-summary">Retrieve a list of Money entities scoped by financialForecastKey. getMoneyByFinancialForecastKey</span>
+    </span>
+</div>
+
+### /financial-forecasts/{financialForecastKey}/moneys/{moneyKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -551,7 +586,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FeeReference records scoped by financialForecastKey. getFeeReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by financialForecastKey. getFeeReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -559,7 +594,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references</span> <br/>
-        <span class="api-summary">Create a new FeeReference record. createFeeReference</span>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
     </span>
 </div>
 
@@ -568,7 +603,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FeeReference record. geteeReferenceById</span>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
     </span>
 </div>
 
@@ -576,7 +611,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FeeReference record. replaceFeeReference</span>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
     </span>
 </div>
 
@@ -584,7 +619,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference record. updateFeeReference</span>
+        <span class="api-summary">Partially update a FeeReference entity. updateFeeReference</span>
     </span>
 </div>
 
@@ -592,7 +627,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FeeReference Record deleteFeeReferenceRecord</span>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
     </span>
 </div>
 
@@ -601,7 +636,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by financialForecastKey. getIdentifiersByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by financialForecastKey. getIdentifierByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -609,7 +644,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -618,7 +653,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -626,7 +661,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -634,7 +669,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -642,7 +677,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -651,7 +686,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by financialForecastKey. getPricesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by financialForecastKey. getPriceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -659,7 +694,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -668,7 +703,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -676,7 +711,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -684,7 +719,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -692,7 +727,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -701,7 +736,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialEvent records scoped by financialForecastKey. getFinancialEventsByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of FinancialEvent entities scoped by financialForecastKey. getFinancialEventByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -709,7 +744,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events</span> <br/>
-        <span class="api-summary">Create a new FinancialEvent record. createFinancialEvent</span>
+        <span class="api-summary">Create a new FinancialEvent entity. createFinancialEvent</span>
     </span>
 </div>
 
@@ -718,7 +753,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialEvent record. getinancialEventById</span>
+        <span class="api-summary">Retrieve a specific FinancialEvent entity. getinancialEventById</span>
     </span>
 </div>
 
@@ -726,7 +761,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialEvent record. replaceFinancialEvent</span>
+        <span class="api-summary">Replace a FinancialEvent entity. replaceFinancialEvent</span>
     </span>
 </div>
 
@@ -734,7 +769,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialEvent record. updateFinancialEvent</span>
+        <span class="api-summary">Partially update a FinancialEvent entity. updateFinancialEvent</span>
     </span>
 </div>
 
@@ -742,7 +777,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialEvent Record deleteFinancialEventRecord</span>
+        <span class="api-summary">Delete a FinancialEvent entity deleteFinancialEventEntity</span>
     </span>
 </div>
 
@@ -751,7 +786,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references</span> <br/>
-        <span class="api-summary">Retrieve a list of CreditReference records scoped by financialForecastKey. getCreditReferencesByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of CreditReference entities scoped by financialForecastKey. getCreditReferenceByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -759,7 +794,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references</span> <br/>
-        <span class="api-summary">Create a new CreditReference record. createCreditReference</span>
+        <span class="api-summary">Create a new CreditReference entity. createCreditReference</span>
     </span>
 </div>
 
@@ -768,7 +803,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CreditReference record. getreditReferenceById</span>
+        <span class="api-summary">Retrieve a specific CreditReference entity. getreditReferenceById</span>
     </span>
 </div>
 
@@ -776,7 +811,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a CreditReference record. replaceCreditReference</span>
+        <span class="api-summary">Replace a CreditReference entity. replaceCreditReference</span>
     </span>
 </div>
 
@@ -784,7 +819,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditReference record. updateCreditReference</span>
+        <span class="api-summary">Partially update a CreditReference entity. updateCreditReference</span>
     </span>
 </div>
 
@@ -792,7 +827,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a CreditReference Record deleteCreditReferenceRecord</span>
+        <span class="api-summary">Delete a CreditReference entity deleteCreditReferenceEntity</span>
     </span>
 </div>
 
@@ -801,7 +836,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by financialForecastKey. getTextualDetailsByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by financialForecastKey. getTextualDetailByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -809,7 +844,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -818,7 +853,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -826,7 +861,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -834,7 +869,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -842,7 +877,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -851,7 +886,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialTrack records scoped by financialForecastKey. getFinancialTracksByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of FinancialTrack entities scoped by financialForecastKey. getFinancialTrackByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -859,7 +894,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks</span> <br/>
-        <span class="api-summary">Create a new FinancialTrack record. createFinancialTrack</span>
+        <span class="api-summary">Create a new FinancialTrack entity. createFinancialTrack</span>
     </span>
 </div>
 
@@ -868,7 +903,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialTrack record. getinancialTrackById</span>
+        <span class="api-summary">Retrieve a specific FinancialTrack entity. getinancialTrackById</span>
     </span>
 </div>
 
@@ -876,7 +911,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialTrack record. replaceFinancialTrack</span>
+        <span class="api-summary">Replace a FinancialTrack entity. replaceFinancialTrack</span>
     </span>
 </div>
 
@@ -884,7 +919,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialTrack record. updateFinancialTrack</span>
+        <span class="api-summary">Partially update a FinancialTrack entity. updateFinancialTrack</span>
     </span>
 </div>
 
@@ -892,7 +927,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialTrack Record deleteFinancialTrackRecord</span>
+        <span class="api-summary">Delete a FinancialTrack entity deleteFinancialTrackEntity</span>
     </span>
 </div>
 
@@ -901,7 +936,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSplit records scoped by financialForecastKey. getFinancialSplitsByFinancialForecastKey</span>
+        <span class="api-summary">Retrieve a list of FinancialSplit entities scoped by financialForecastKey. getFinancialSplitByFinancialForecastKey</span>
     </span>
 </div>
 
@@ -909,7 +944,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits</span> <br/>
-        <span class="api-summary">Create a new FinancialSplit record. createFinancialSplit</span>
+        <span class="api-summary">Create a new FinancialSplit entity. createFinancialSplit</span>
     </span>
 </div>
 
@@ -918,7 +953,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSplit record. getinancialSplitById</span>
+        <span class="api-summary">Retrieve a specific FinancialSplit entity. getinancialSplitById</span>
     </span>
 </div>
 
@@ -926,7 +961,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSplit record. replaceFinancialSplit</span>
+        <span class="api-summary">Replace a FinancialSplit entity. replaceFinancialSplit</span>
     </span>
 </div>
 
@@ -934,7 +969,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplit record. updateFinancialSplit</span>
+        <span class="api-summary">Partially update a FinancialSplit entity. updateFinancialSplit</span>
     </span>
 </div>
 
@@ -942,7 +977,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSplit Record deleteFinancialSplitRecord</span>
+        <span class="api-summary">Delete a FinancialSplit entity deleteFinancialSplitEntity</span>
     </span>
 </div>
 
@@ -952,21 +987,22 @@ The following resources follow a consistent pattern under FinancialForecastroot 
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **financial-forecast** | /financial-forecasts | listFinancialForecasts | createFinancialForecast | getFinancialForecasts | updateFinancialForecasts | deleteFinancialForecasts |
-    | **rebate-reference** | /financial-forecasts/{financialForecastKey}/rebate-references | listRebateReferencesByFinancialForecastKey | createRebateReference | getRebateReferencesByFinancialForecastKey | updateRebateReferencesByFinancialForecastKey | deleteRebateReferencesByFinancialForecastKey |
-    | **tax-split** | /financial-forecasts/{financialForecastKey}/tax-splits | listTaxSplitsByFinancialForecastKey | createTaxSplit | getTaxSplitsByFinancialForecastKey | updateTaxSplitsByFinancialForecastKey | deleteTaxSplitsByFinancialForecastKey |
-    | **discount-reference** | /financial-forecasts/{financialForecastKey}/discount-references | listDiscountReferencesByFinancialForecastKey | createDiscountReference | getDiscountReferencesByFinancialForecastKey | updateDiscountReferencesByFinancialForecastKey | deleteDiscountReferencesByFinancialForecastKey |
-    | **control-account-reference** | /financial-forecasts/{financialForecastKey}/control-account-references | listControlAccountReferencesByFinancialForecastKey | createControlAccountReference | getControlAccountReferencesByFinancialForecastKey | updateControlAccountReferencesByFinancialForecastKey | deleteControlAccountReferencesByFinancialForecastKey |
-    | **reward-reference** | /financial-forecasts/{financialForecastKey}/reward-references | listRewardReferencesByFinancialForecastKey | createRewardReference | getRewardReferencesByFinancialForecastKey | updateRewardReferencesByFinancialForecastKey | deleteRewardReferencesByFinancialForecastKey |
-    | **financial-category-reference** | /financial-forecasts/{financialForecastKey}/financial-category-references | listFinancialCategoryReferencesByFinancialForecastKey | createFinancialCategoryReference | getFinancialCategoryReferencesByFinancialForecastKey | updateFinancialCategoryReferencesByFinancialForecastKey | deleteFinancialCategoryReferencesByFinancialForecastKey |
-    | **fee-reference** | /financial-forecasts/{financialForecastKey}/fee-references | listFeeReferencesByFinancialForecastKey | createFeeReference | getFeeReferencesByFinancialForecastKey | updateFeeReferencesByFinancialForecastKey | deleteFeeReferencesByFinancialForecastKey |
-    | **identifier** | /financial-forecasts/{financialForecastKey}/identifiers | listIdentifiersByFinancialForecastKey | createIdentifier | getIdentifiersByFinancialForecastKey | updateIdentifiersByFinancialForecastKey | deleteIdentifiersByFinancialForecastKey |
-    | **price** | /financial-forecasts/{financialForecastKey}/prices | listPricesByFinancialForecastKey | createPrice | getPricesByFinancialForecastKey | updatePricesByFinancialForecastKey | deletePricesByFinancialForecastKey |
-    | **financial-event** | /financial-forecasts/{financialForecastKey}/financial-events | listFinancialEventsByFinancialForecastKey | createFinancialEvent | getFinancialEventsByFinancialForecastKey | updateFinancialEventsByFinancialForecastKey | deleteFinancialEventsByFinancialForecastKey |
-    | **credit-reference** | /financial-forecasts/{financialForecastKey}/credit-references | listCreditReferencesByFinancialForecastKey | createCreditReference | getCreditReferencesByFinancialForecastKey | updateCreditReferencesByFinancialForecastKey | deleteCreditReferencesByFinancialForecastKey |
-    | **textual-detail** | /financial-forecasts/{financialForecastKey}/textual-details | listTextualDetailsByFinancialForecastKey | createTextualDetail | getTextualDetailsByFinancialForecastKey | updateTextualDetailsByFinancialForecastKey | deleteTextualDetailsByFinancialForecastKey |
-    | **financial-track** | /financial-forecasts/{financialForecastKey}/financial-tracks | listFinancialTracksByFinancialForecastKey | createFinancialTrack | getFinancialTracksByFinancialForecastKey | updateFinancialTracksByFinancialForecastKey | deleteFinancialTracksByFinancialForecastKey |
-    | **financial-split** | /financial-forecasts/{financialForecastKey}/financial-splits | listFinancialSplitsByFinancialForecastKey | createFinancialSplit | getFinancialSplitsByFinancialForecastKey | updateFinancialSplitsByFinancialForecastKey | deleteFinancialSplitsByFinancialForecastKey |
+    | **financial-forecast** | /financial-forecasts | listFinancialForecast | createFinancialForecast | getFinancialForecast | updateFinancialForecast | deleteFinancialForecast |
+    | **rebate-reference** | /financial-forecasts/{financialForecastKey}/rebate-references | listRebateReferenceByFinancialForecastKey | createRebateReference | getRebateReferenceByFinancialForecastKey | updateRebateReferenceByFinancialForecastKey | deleteRebateReferenceByFinancialForecastKey |
+    | **tax-split** | /financial-forecasts/{financialForecastKey}/tax-splits | listTaxSplitByFinancialForecastKey | createTaxSplit | getTaxSplitByFinancialForecastKey | updateTaxSplitByFinancialForecastKey | deleteTaxSplitByFinancialForecastKey |
+    | **discount-reference** | /financial-forecasts/{financialForecastKey}/discount-references | listDiscountReferenceByFinancialForecastKey | createDiscountReference | getDiscountReferenceByFinancialForecastKey | updateDiscountReferenceByFinancialForecastKey | deleteDiscountReferenceByFinancialForecastKey |
+    | **control-account-reference** | /financial-forecasts/{financialForecastKey}/control-account-references | listControlAccountReferenceByFinancialForecastKey | createControlAccountReference | getControlAccountReferenceByFinancialForecastKey | updateControlAccountReferenceByFinancialForecastKey | deleteControlAccountReferenceByFinancialForecastKey |
+    | **reward-reference** | /financial-forecasts/{financialForecastKey}/reward-references | listRewardReferenceByFinancialForecastKey | createRewardReference | getRewardReferenceByFinancialForecastKey | updateRewardReferenceByFinancialForecastKey | deleteRewardReferenceByFinancialForecastKey |
+    | **financial-category-reference** | /financial-forecasts/{financialForecastKey}/financial-category-references | listFinancialCategoryReferenceByFinancialForecastKey | createFinancialCategoryReference | getFinancialCategoryReferenceByFinancialForecastKey | updateFinancialCategoryReferenceByFinancialForecastKey | deleteFinancialCategoryReferenceByFinancialForecastKey |
+    | **money** | /financial-forecasts/{financialForecastKey}/moneys | listMoneyByFinancialForecastKey |  | getMoneyByFinancialForecastKey | updateMoneyByFinancialForecastKey | deleteMoneyByFinancialForecastKey |
+    | **fee-reference** | /financial-forecasts/{financialForecastKey}/fee-references | listFeeReferenceByFinancialForecastKey | createFeeReference | getFeeReferenceByFinancialForecastKey | updateFeeReferenceByFinancialForecastKey | deleteFeeReferenceByFinancialForecastKey |
+    | **identifier** | /financial-forecasts/{financialForecastKey}/identifiers | listIdentifierByFinancialForecastKey | createIdentifier | getIdentifierByFinancialForecastKey | updateIdentifierByFinancialForecastKey | deleteIdentifierByFinancialForecastKey |
+    | **price** | /financial-forecasts/{financialForecastKey}/prices | listPriceByFinancialForecastKey | createPrice | getPriceByFinancialForecastKey | updatePriceByFinancialForecastKey | deletePriceByFinancialForecastKey |
+    | **financial-event** | /financial-forecasts/{financialForecastKey}/financial-events | listFinancialEventByFinancialForecastKey | createFinancialEvent | getFinancialEventByFinancialForecastKey | updateFinancialEventByFinancialForecastKey | deleteFinancialEventByFinancialForecastKey |
+    | **credit-reference** | /financial-forecasts/{financialForecastKey}/credit-references | listCreditReferenceByFinancialForecastKey | createCreditReference | getCreditReferenceByFinancialForecastKey | updateCreditReferenceByFinancialForecastKey | deleteCreditReferenceByFinancialForecastKey |
+    | **textual-detail** | /financial-forecasts/{financialForecastKey}/textual-details | listTextualDetailByFinancialForecastKey | createTextualDetail | getTextualDetailByFinancialForecastKey | updateTextualDetailByFinancialForecastKey | deleteTextualDetailByFinancialForecastKey |
+    | **financial-track** | /financial-forecasts/{financialForecastKey}/financial-tracks | listFinancialTrackByFinancialForecastKey | createFinancialTrack | getFinancialTrackByFinancialForecastKey | updateFinancialTrackByFinancialForecastKey | deleteFinancialTrackByFinancialForecastKey |
+    | **financial-split** | /financial-forecasts/{financialForecastKey}/financial-splits | listFinancialSplitByFinancialForecastKey | createFinancialSplit | getFinancialSplitByFinancialForecastKey | updateFinancialSplitByFinancialForecastKey | deleteFinancialSplitByFinancialForecastKey |
 
 ***Note on List Operations:***
 

@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /payment-events:
     get:
       tags:
-      - "PaymentEvent"
-      summary: "Retrieve a list of all PaymentEvent records."
-      operationId: "listPaymentEvents"
+      - PaymentEvent
+      summary: Retrieve a list of PaymentEvent entities.
+      operationId: listPaymentEvent
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PaymentEvent records."
+          description: A list of PaymentEvent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PaymentEvent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PaymentEvent"
-      summary: "Create a new PaymentEvent record."
-      operationId: "createPaymentEvent"
+      - PaymentEvent
+      summary: Create a new PaymentEvent entity.
+      operationId: createPaymentEvent
       requestBody:
-        description: "PaymentEvent data to create the new resource."
+        description: PaymentEvent data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "PaymentEvent created successfully."
+          description: PaymentEvent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/payment-events/PR-1234567"
+                type: string
+                example: /payment-events/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /payment-events/{paymentEventKey}:
     get:
       tags:
-      - "PaymentEvent"
-      summary: "Retrieve a specific PaymentEvent record."
-      operationId: "getPaymentEventById"
+      - PaymentEvent
+      summary: Retrieve a specific PaymentEvent entity.
+      operationId: getPaymentEventById
       responses:
         "200":
-          description: "The requested PaymentEvent record."
+          description: The requested PaymentEvent entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PaymentEvent"
-      summary: "Replace a PaymentEvent record."
-      operationId: "replacePaymentEvent"
+      - PaymentEvent
+      summary: Replace a PaymentEvent entity.
+      operationId: replacePaymentEvent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,197 +128,271 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PaymentEvent"
-      summary: "Delete a PaymentEvent Record"
-      description: "Marks the PaymentEvent record as inactive or re..."
-      operationId: "deletePaymentEventRecord"
+      - PaymentEvent
+      summary: Delete a PaymentEvent entity
+      description: Marks the PaymentEvent entity as inactive or re...
+      operationId: deletePaymentEventEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PaymentEvent"
-      summary: "Partially update a PaymentEvent record."
-      operationId: "updatePaymentEvent"
+      - PaymentEvent
+      summary: Partially update a PaymentEvent entity.
+      operationId: updatePaymentEvent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PaymentEventUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PaymentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentEventKey"
-      in: "path"
-      description: "The unique identifier for the specific PaymentEvent."
+    - name: paymentEventKey
+      in: path
+      description: The unique identifier for the specific PaymentEvent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /payment-events/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /payment-events/batch:
+    post:
+      summary: Bulk create payment-events
+      operationId: createPaymentEventBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PaymentEventCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentEvent"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     PaymentEvent:
-      type: "object"
+      type: object
       properties:
         payment_event_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         payment_event_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         payment_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the reference... Pat..."
+          type: string
+          description: The unique key identifying the reference... Pat...
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         old_payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         new_payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         payment_transaction_id:
-          type: "string"
+          type: string
           description: "Optional: The specific transaction ID ca..."
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the paymentMethod was ..."
-          format: "date-time"
-      description: "Reference to a PaymentMethod (Party) Aggregate ..."
+          type: string
+          description: The date and time the paymentMethod was ...
+          format: date-time
+      description: Reference to a PaymentMethod (Party) Aggregate ...
     PaymentEventCreate:
       required:
-      - "payment_event_key"
-      type: "object"
-      description: "PaymentEvent Create for Post"
+      - payment_event_key
+      type: object
+      description: PaymentEvent Create for Post
       allOf:
       - $ref: "#/components/schemas/PaymentEvent"
     PaymentEventUpdate:
-      type: "object"
+      type: object
       properties:
         new_payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         old_payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the paymentMethod was ..."
-          format: "date-time"
-      description: "PaymentEvent Update for Patch and Put"
+          type: string
+          description: The date and time the paymentMethod was ...
+          format: date-time
+      description: PaymentEvent Update for Patch and Put
     PaymentStatusTypes:
-      type: "string"
-      description: "types of payment status."
+      type: string
+      description: types of payment status.
       enum:
-      - "CREATED"
-      - "PENDING"
-      - "PROCESSING"
-      - "PROCESSED"
-      - "COMPLETED"
-      - "SUCCEEDED"
-      - "PAID"
-      - "REJECTED"
-      - "SCHEDULED"
-      - "SUBMITTED"
-      - "DEFERRED"
-      - "DEFERRED_INTERNAL"
-      - "CLEARED"
-      - "FRAUD_REVIEW"
-      - "APPROVED"
-      - "ACCEPTED"
-      - "REQUIRES_ACTION"
-      - "REQUIRES_PAYMENT_STATUS"
-      - "AUTO_SCHEDULED"
-      - "AUTO_INITIATED"
-      - "MANUAL_INITIATED"
-      - "PENDING_PAYER_FUNDS"
-      - "FAILED"
-      - "DENIED"
-      - "EXPIRED"
-      - "CANCELLED"
-      - "VOIDED"
-      - "REVERSED"
-      - "REFUNDED"
-      - "PAYROLL_PENDING"
-      - "PAYROLL_FINALIZED"
-      - "ACTIVE"
-      - "INACTIVE"
-      - "FUNDED"
-      - "RETURNED"
+      - CREATED
+      - PENDING
+      - PROCESSING
+      - PROCESSED
+      - COMPLETED
+      - SUCCEEDED
+      - PAID
+      - REJECTED
+      - SCHEDULED
+      - SUBMITTED
+      - DEFERRED
+      - DEFERRED_INTERNAL
+      - CLEARED
+      - FRAUD_REVIEW
+      - APPROVED
+      - ACCEPTED
+      - REQUIRES_ACTION
+      - REQUIRES_PAYMENT_STATUS
+      - AUTO_SCHEDULED
+      - AUTO_INITIATED
+      - MANUAL_INITIATED
+      - PENDING_PAYER_FUNDS
+      - FAILED
+      - DENIED
+      - EXPIRED
+      - CANCELLED
+      - VOIDED
+      - REVERSED
+      - REFUNDED
+      - PAYROLL_PENDING
+      - PAYROLL_FINALIZED
+      - ACTIVE
+      - INACTIVE
+      - FUNDED
+      - RETURNED
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -300,26 +404,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

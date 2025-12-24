@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /shipments:
     get:
       tags:
-      - "Shipment"
-      summary: "Retrieve a list of all Shipment records."
-      operationId: "listShipments"
+      - Shipment
+      summary: Retrieve a list of Shipment entities.
+      operationId: listShipment
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Shipment records."
+          description: A list of Shipment entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Shipment"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Shipment"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Shipment"
-      summary: "Create a new Shipment record."
-      operationId: "createShipment"
+      - Shipment
+      summary: Create a new Shipment entity.
+      operationId: createShipment
       requestBody:
-        description: "Shipment data to create the new resource."
+        description: Shipment data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "Shipment created successfully."
+          description: Shipment created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/shipments/PR-1234567"
+                type: string
+                example: /shipments/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Shipment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /shipments/{shipmentKey}:
     get:
       tags:
-      - "Shipment"
-      summary: "Retrieve a specific Shipment record."
-      operationId: "getShipmentById"
+      - Shipment
+      summary: Retrieve a specific Shipment entity.
+      operationId: getShipmentById
       responses:
         "200":
-          description: "The requested Shipment record."
+          description: The requested Shipment entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Shipment"
-      summary: "Replace a Shipment record."
-      operationId: "replaceShipment"
+      - Shipment
+      summary: Replace a Shipment entity.
+      operationId: replaceShipment
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Shipment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Shipment"
-      summary: "Delete a Shipment Record"
-      description: "Marks the Shipment record as inactive or removes it entirely."
-      operationId: "deleteShipmentRecord"
+      - Shipment
+      summary: Delete a Shipment entity
+      description: Marks the Shipment entity as inactive or removes it entirely.
+      operationId: deleteShipmentEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Shipment"
-      summary: "Partially update a Shipment record."
-      operationId: "updateShipment"
+      - Shipment
+      summary: Partially update a Shipment entity.
+      operationId: updateShipment
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ShipmentUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Shipment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the specific Shipment."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the specific Shipment.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/invoice-references:
     get:
       tags:
-      - "InvoiceReference"
-      summary: "Retrieve a list of InvoiceReference records scoped by shipmentKey."
-      operationId: "listInvoiceReferencesByShipmentKey"
+      - InvoiceReference
+      summary: Retrieve a list of InvoiceReference entities scoped by shipmentKey.
+      operationId: listInvoiceReferenceByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of InvoiceReference records."
+          description: A list of InvoiceReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/InvoiceReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/InvoiceReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "InvoiceReference"
-      summary: "Create a new InvoiceReference record."
-      operationId: "createInvoiceReference"
+      - InvoiceReference
+      summary: Create a new InvoiceReference entity.
+      operationId: createInvoiceReference
       requestBody:
-        description: "InvoiceReference data to create the new resource."
+        description: InvoiceReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "InvoiceReference created successfully."
+          description: InvoiceReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvoiceReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}:
     get:
       tags:
-      - "InvoiceReference"
-      summary: "Retrieve a specific InvoiceReference record."
-      operationId: "getInvoiceReferenceById"
+      - InvoiceReference
+      summary: Retrieve a specific InvoiceReference entity.
+      operationId: getInvoiceReferenceById
       responses:
         "200":
-          description: "The requested InvoiceReference record."
+          description: The requested InvoiceReference entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "InvoiceReference"
-      summary: "Replace a InvoiceReference record."
-      operationId: "replaceInvoiceReference"
+      - InvoiceReference
+      summary: Replace a InvoiceReference entity.
+      operationId: replaceInvoiceReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +306,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvoiceReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "InvoiceReference"
-      summary: "Delete a InvoiceReference Record"
-      description: "Marks the InvoiceReference record as inactive or removes it entirely."
-      operationId: "deleteInvoiceReferenceRecord"
+      - InvoiceReference
+      summary: Delete a InvoiceReference entity
+      description: Marks the InvoiceReference entity as inactive or removes it entirely.
+      operationId: deleteInvoiceReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "InvoiceReference"
-      summary: "Partially update a InvoiceReference record."
-      operationId: "updateInvoiceReference"
+      - InvoiceReference
+      summary: Partially update a InvoiceReference entity.
+      operationId: updateInvoiceReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/InvoiceReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/InvoiceReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "invoiceReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific InvoiceReference."
+        type: string
+    - name: invoiceReferenceKey
+      in: path
+      description: The unique identifier for the specific InvoiceReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/party-references:
     get:
       tags:
-      - "PartyReference"
-      summary: "Retrieve a list of PartyReference records scoped by shipmentKey."
-      operationId: "listPartyReferencesByShipmentKey"
+      - PartyReference
+      summary: Retrieve a list of PartyReference entities scoped by shipmentKey.
+      operationId: listPartyReferenceByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartyReference records."
+          description: A list of PartyReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartyReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartyReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartyReference"
-      summary: "Create a new PartyReference record."
-      operationId: "createPartyReference"
+      - PartyReference
+      summary: Create a new PartyReference entity.
+      operationId: createPartyReference
       requestBody:
-        description: "PartyReference data to create the new resource."
+        description: PartyReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +433,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartyReference created successfully."
+          description: PartyReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartyReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/party-references/{partyReferenceKey}:
     get:
       tags:
-      - "PartyReference"
-      summary: "Retrieve a specific PartyReference record."
-      operationId: "getPartyReferenceById"
+      - PartyReference
+      summary: Retrieve a specific PartyReference entity.
+      operationId: getPartyReferenceById
       responses:
         "200":
-          description: "The requested PartyReference record."
+          description: The requested PartyReference entity.
           content:
             application/json:
               schema:
@@ -398,11 +476,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartyReference"
-      summary: "Replace a PartyReference record."
-      operationId: "replacePartyReference"
+      - PartyReference
+      summary: Replace a PartyReference entity.
+      operationId: replacePartyReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +488,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartyReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartyReference"
-      summary: "Delete a PartyReference Record"
-      description: "Marks the PartyReference record as inactive or removes it entirely."
-      operationId: "deletePartyReferenceRecord"
+      - PartyReference
+      summary: Delete a PartyReference entity
+      description: Marks the PartyReference entity as inactive or removes it entirely.
+      operationId: deletePartyReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartyReference"
-      summary: "Partially update a PartyReference record."
-      operationId: "updatePartyReference"
+      - PartyReference
+      summary: Partially update a PartyReference entity.
+      operationId: updatePartyReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartyReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartyReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partyReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific PartyReference."
+        type: string
+    - name: partyReferenceKey
+      in: path
+      description: The unique identifier for the specific PartyReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/shipment-events:
     get:
       tags:
-      - "ShipmentEvent"
-      summary: "Retrieve a list of ShipmentEvent records scoped by shipmentKey."
-      operationId: "listShipmentEventsByShipmentKey"
+      - ShipmentEvent
+      summary: Retrieve a list of ShipmentEvent entities scoped by shipmentKey.
+      operationId: listShipmentEventByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of ShipmentEvent records."
+          description: A list of ShipmentEvent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ShipmentEvent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ShipmentEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "ShipmentEvent"
-      summary: "Create a new ShipmentEvent record."
-      operationId: "createShipmentEvent"
+      - ShipmentEvent
+      summary: Create a new ShipmentEvent entity.
+      operationId: createShipmentEvent
       requestBody:
-        description: "ShipmentEvent data to create the new resource."
+        description: ShipmentEvent data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +615,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "ShipmentEvent created successfully."
+          description: ShipmentEvent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/shipment-events/{shipmentEventKey}:
     get:
       tags:
-      - "ShipmentEvent"
-      summary: "Retrieve a specific ShipmentEvent record."
-      operationId: "getShipmentEventById"
+      - ShipmentEvent
+      summary: Retrieve a specific ShipmentEvent entity.
+      operationId: getShipmentEventById
       responses:
         "200":
-          description: "The requested ShipmentEvent record."
+          description: The requested ShipmentEvent entity.
           content:
             application/json:
               schema:
@@ -557,11 +658,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "ShipmentEvent"
-      summary: "Replace a ShipmentEvent record."
-      operationId: "replaceShipmentEvent"
+      - ShipmentEvent
+      summary: Replace a ShipmentEvent entity.
+      operationId: replaceShipmentEvent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,105 +670,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "ShipmentEvent"
-      summary: "Delete a ShipmentEvent Record"
-      description: "Marks the ShipmentEvent record as inactive or removes it entirely."
-      operationId: "deleteShipmentEventRecord"
+      - ShipmentEvent
+      summary: Delete a ShipmentEvent entity
+      description: Marks the ShipmentEvent entity as inactive or removes it entirely.
+      operationId: deleteShipmentEventEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "ShipmentEvent"
-      summary: "Partially update a ShipmentEvent record."
-      operationId: "updateShipmentEvent"
+      - ShipmentEvent
+      summary: Partially update a ShipmentEvent entity.
+      operationId: updateShipmentEvent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/ShipmentEventUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/ShipmentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "shipmentEventKey"
-      in: "path"
-      description: "The unique identifier for the specific ShipmentEvent."
+        type: string
+    - name: shipmentEventKey
+      in: path
+      description: The unique identifier for the specific ShipmentEvent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by shipmentKey."
-      operationId: "listIdentifiersByShipmentKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by shipmentKey.
+      operationId: listIdentifierByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -675,37 +797,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -716,11 +840,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -728,114 +852,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or removes it entirely."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/unit-of-measures:
     get:
       tags:
-      - "UnitOfMeasure"
-      summary: "Retrieve a list of UnitOfMeasure records scoped by shipmentKey."
-      operationId: "listUnitOfMeasuresByShipmentKey"
+      - UnitOfMeasure
+      summary: Retrieve a list of UnitOfMeasure entities scoped by shipmentKey.
+      operationId: listUnitOfMeasureByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of UnitOfMeasure records."
+          description: A list of UnitOfMeasure entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/UnitOfMeasure"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UnitOfMeasure"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/unit-of-measures/{unitOfMeasureKey}:
     get:
       tags:
-      - "UnitOfMeasure"
-      summary: "Retrieve a specific UnitOfMeasure record."
-      operationId: "getUnitOfMeasureById"
+      - UnitOfMeasure
+      summary: Retrieve a specific UnitOfMeasure entity.
+      operationId: getUnitOfMeasureById
       responses:
         "200":
-          description: "The requested UnitOfMeasure record."
+          description: The requested UnitOfMeasure entity.
           content:
             application/json:
               schema:
@@ -846,11 +991,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "UnitOfMeasure"
-      summary: "Replace a UnitOfMeasure record."
-      operationId: "replaceUnitOfMeasure"
+      - UnitOfMeasure
+      summary: Replace a UnitOfMeasure entity.
+      operationId: replaceUnitOfMeasure
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -858,69 +1003,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnitOfMeasure"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "unitOfMeasureKey"
-      in: "path"
-      description: "The unique identifier for the specific UnitOfMeasure."
+        type: string
+    - name: unitOfMeasureKey
+      in: path
+      description: The unique identifier for the specific UnitOfMeasure.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/positions:
     get:
       tags:
-      - "Position"
-      summary: "Retrieve a list of Position records scoped by shipmentKey."
-      operationId: "listPositionsByShipmentKey"
+      - Position
+      summary: Retrieve a list of Position entities scoped by shipmentKey.
+      operationId: listPositionByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Position records."
+          description: A list of Position entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Position"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Position"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Position"
-      summary: "Create a new Position record."
-      operationId: "createPosition"
+      - Position
+      summary: Create a new Position entity.
+      operationId: createPosition
       requestBody:
-        description: "Position data to create the new resource."
+        description: Position data to create the new resource.
         content:
           application/json:
             schema:
@@ -928,37 +1092,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Position created successfully."
+          description: Position created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/positions/{positionKey}:
     get:
       tags:
-      - "Position"
-      summary: "Retrieve a specific Position record."
-      operationId: "getPositionById"
+      - Position
+      summary: Retrieve a specific Position entity.
+      operationId: getPositionById
       responses:
         "200":
-          description: "The requested Position record."
+          description: The requested Position entity.
           content:
             application/json:
               schema:
@@ -969,11 +1135,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Position"
-      summary: "Replace a Position record."
-      operationId: "replacePosition"
+      - Position
+      summary: Replace a Position entity.
+      operationId: replacePosition
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -981,114 +1147,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Position"
-      summary: "Delete a Position Record"
-      description: "Marks the Position record as inactive or removes it entirely."
-      operationId: "deletePositionRecord"
+      - Position
+      summary: Delete a Position entity
+      description: Marks the Position entity as inactive or removes it entirely.
+      operationId: deletePositionEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Position"
-      summary: "Partially update a Position record."
-      operationId: "updatePosition"
+      - Position
+      summary: Partially update a Position entity.
+      operationId: updatePosition
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PositionUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "positionKey"
-      in: "path"
-      description: "The unique identifier for the specific Position."
+        type: string
+    - name: positionKey
+      in: path
+      description: The unique identifier for the specific Position.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scoped by shipmentKey."
-      operationId: "listEffectivePeriodsByShipmentKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities scoped by shipmentKey.
+      operationId: listEffectivePeriodByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -1099,11 +1286,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1111,78 +1298,97 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by shipmentKey."
-      operationId: "listTimeSlotsByShipmentKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by shipmentKey.
+      operationId: listTimeSlotByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -1193,11 +1399,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1205,69 +1411,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /shipments/{shipmentKey}/address-references:
     get:
       tags:
-      - "AddressReference"
-      summary: "Retrieve a list of AddressReference records scoped by shipmentKey."
-      operationId: "listAddressReferencesByShipmentKey"
+      - AddressReference
+      summary: Retrieve a list of AddressReference entities scoped by shipmentKey.
+      operationId: listAddressReferenceByShipmentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of AddressReference records."
+          description: A list of AddressReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/AddressReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AddressReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "AddressReference"
-      summary: "Create a new AddressReference record."
-      operationId: "createAddressReference"
+      - AddressReference
+      summary: Create a new AddressReference entity.
+      operationId: createAddressReference
       requestBody:
-        description: "AddressReference data to create the new resource."
+        description: AddressReference data to create the new resource.
         content:
           application/json:
             schema:
@@ -1275,37 +1500,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "AddressReference created successfully."
+          description: AddressReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AddressReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /shipments/{shipmentKey}/address-references/{addressReferenceKey}:
     get:
       tags:
-      - "AddressReference"
-      summary: "Retrieve a specific AddressReference record."
-      operationId: "getAddressReferenceById"
+      - AddressReference
+      summary: Retrieve a specific AddressReference entity.
+      operationId: getAddressReferenceById
       responses:
         "200":
-          description: "The requested AddressReference record."
+          description: The requested AddressReference entity.
           content:
             application/json:
               schema:
@@ -1316,11 +1543,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "AddressReference"
-      summary: "Replace a AddressReference record."
-      operationId: "replaceAddressReference"
+      - AddressReference
+      summary: Replace a AddressReference entity.
+      operationId: replaceAddressReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1328,64 +1555,68 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AddressReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "AddressReference"
-      summary: "Delete a AddressReference Record"
-      description: "Marks the AddressReference record as inactive or removes it entirely."
-      operationId: "deleteAddressReferenceRecord"
+      - AddressReference
+      summary: Delete a AddressReference entity
+      description: Marks the AddressReference entity as inactive or removes it entirely.
+      operationId: deleteAddressReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "AddressReference"
-      summary: "Partially update a AddressReference record."
-      operationId: "updateAddressReference"
+      - AddressReference
+      summary: Partially update a AddressReference entity.
+      operationId: updateAddressReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/AddressReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/AddressReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "shipmentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: shipmentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "addressReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific AddressReference."
+        type: string
+    - name: addressReferenceKey
+      in: path
+      description: The unique identifier for the specific AddressReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}

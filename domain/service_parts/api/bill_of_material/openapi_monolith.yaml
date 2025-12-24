@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /bill-of-materials:
     get:
       tags:
-      - "BillOfMaterial"
-      summary: "Retrieve a list of all BillOfMaterial records."
-      operationId: "listBillOfMaterials"
+      - BillOfMaterial
+      summary: Retrieve a list of BillOfMaterial entities.
+      operationId: listBillOfMaterial
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of BillOfMaterial records."
+          description: A list of BillOfMaterial entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/BillOfMaterial"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BillOfMaterial"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "BillOfMaterial"
-      summary: "Create a new BillOfMaterial record."
-      operationId: "createBillOfMaterial"
+      - BillOfMaterial
+      summary: Create a new BillOfMaterial entity.
+      operationId: createBillOfMaterial
       requestBody:
-        description: "BillOfMaterial data to create the new resource."
+        description: BillOfMaterial data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "BillOfMaterial created successfully."
+          description: BillOfMaterial created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/bill-of-materials/PR-1234567"
+                type: string
+                example: /bill-of-materials/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BillOfMaterial"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /bill-of-materials/{billOfMaterialKey}:
     get:
       tags:
-      - "BillOfMaterial"
-      summary: "Retrieve a specific BillOfMaterial record."
-      operationId: "getBillOfMaterialById"
+      - BillOfMaterial
+      summary: Retrieve a specific BillOfMaterial entity.
+      operationId: getBillOfMaterialById
       responses:
         "200":
-          description: "The requested BillOfMaterial record."
+          description: The requested BillOfMaterial entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "BillOfMaterial"
-      summary: "Replace a BillOfMaterial record."
-      operationId: "replaceBillOfMaterial"
+      - BillOfMaterial
+      summary: Replace a BillOfMaterial entity.
+      operationId: replaceBillOfMaterial
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +128,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BillOfMaterial"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "BillOfMaterial"
-      summary: "Delete a BillOfMaterial Record"
-      description: "Marks the BillOfMaterial record as inactive or ..."
-      operationId: "deleteBillOfMaterialRecord"
+      - BillOfMaterial
+      summary: Delete a BillOfMaterial entity
+      description: Marks the BillOfMaterial entity as inactive or ...
+      operationId: deleteBillOfMaterialEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "BillOfMaterial"
-      summary: "Partially update a BillOfMaterial record."
-      operationId: "updateBillOfMaterial"
+      - BillOfMaterial
+      summary: Partially update a BillOfMaterial entity.
+      operationId: updateBillOfMaterial
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/BillOfMaterialUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/BillOfMaterial"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the specific BillOfMaterial."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the specific BillOfMaterial.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/bom-components:
     get:
       tags:
-      - "BomComponent"
-      summary: "Retrieve a list of BomComponent records scoped ..."
-      operationId: "listBomComponentsByBillOfMaterialKey"
+      - BomComponent
+      summary: Retrieve a list of BomComponent entities scoped...
+      operationId: listBomComponentByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of BomComponent records."
+          description: A list of BomComponent entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/BomComponent"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BomComponent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "BomComponent"
-      summary: "Create a new BomComponent record."
-      operationId: "createBomComponent"
+      - BomComponent
+      summary: Create a new BomComponent entity.
+      operationId: createBomComponent
       requestBody:
-        description: "BomComponent data to create the new resource."
+        description: BomComponent data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +249,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "BomComponent created successfully."
+          description: BomComponent created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BomComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/bom-components/{bomComponentKey}:
     get:
       tags:
-      - "BomComponent"
-      summary: "Retrieve a specific BomComponent record."
-      operationId: "getBomComponentById"
+      - BomComponent
+      summary: Retrieve a specific BomComponent entity.
+      operationId: getBomComponentById
       responses:
         "200":
-          description: "The requested BomComponent record."
+          description: The requested BomComponent entity.
           content:
             application/json:
               schema:
@@ -239,11 +292,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "BomComponent"
-      summary: "Replace a BomComponent record."
-      operationId: "replaceBomComponent"
+      - BomComponent
+      summary: Replace a BomComponent entity.
+      operationId: replaceBomComponent
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,105 +304,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BomComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "BomComponent"
-      summary: "Delete a BomComponent Record"
-      description: "Marks the BomComponent record as inactive or re..."
-      operationId: "deleteBomComponentRecord"
+      - BomComponent
+      summary: Delete a BomComponent entity
+      description: Marks the BomComponent entity as inactive or re...
+      operationId: deleteBomComponentEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "BomComponent"
-      summary: "Partially update a BomComponent record."
-      operationId: "updateBomComponent"
+      - BomComponent
+      summary: Partially update a BomComponent entity.
+      operationId: updateBomComponent
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/BomComponentUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/BomComponent"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "bomComponentKey"
-      in: "path"
-      description: "The unique identifier for the specific BomComponent."
+        type: string
+    - name: bomComponentKey
+      in: path
+      description: The unique identifier for the specific BomComponent.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByBillOfMaterialKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped b...
+      operationId: listIdentifierByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -357,37 +431,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -398,11 +474,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -410,105 +486,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or remo..."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or remo...
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/part-names:
     get:
       tags:
-      - "PartName"
-      summary: "Retrieve a list of PartName records scoped by b..."
-      operationId: "listPartNamesByBillOfMaterialKey"
+      - PartName
+      summary: Retrieve a list of PartName entities scoped by ...
+      operationId: listPartNameByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartName records."
+          description: A list of PartName entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartName"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartName"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartName"
-      summary: "Create a new PartName record."
-      operationId: "createPartName"
+      - PartName
+      summary: Create a new PartName entity.
+      operationId: createPartName
       requestBody:
-        description: "PartName data to create the new resource."
+        description: PartName data to create the new resource.
         content:
           application/json:
             schema:
@@ -516,37 +613,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartName created successfully."
+          description: PartName created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/part-names/{partNameKey}:
     get:
       tags:
-      - "PartName"
-      summary: "Retrieve a specific PartName record."
-      operationId: "getPartNameById"
+      - PartName
+      summary: Retrieve a specific PartName entity.
+      operationId: getPartNameById
       responses:
         "200":
-          description: "The requested PartName record."
+          description: The requested PartName entity.
           content:
             application/json:
               schema:
@@ -557,11 +656,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartName"
-      summary: "Replace a PartName record."
-      operationId: "replacePartName"
+      - PartName
+      summary: Replace a PartName entity.
+      operationId: replacePartName
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -569,114 +668,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartName"
-      summary: "Delete a PartName Record"
-      description: "Marks the PartName record as inactive or remove..."
-      operationId: "deletePartNameRecord"
+      - PartName
+      summary: Delete a PartName entity
+      description: Marks the PartName entity as inactive or remove...
+      operationId: deletePartNameEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartName"
-      summary: "Partially update a PartName record."
-      operationId: "updatePartName"
+      - PartName
+      summary: Partially update a PartName entity.
+      operationId: updatePartName
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartNameUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartName"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partNameKey"
-      in: "path"
-      description: "The unique identifier for the specific PartName."
+        type: string
+    - name: partNameKey
+      in: path
+      description: The unique identifier for the specific PartName.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/unit-of-measures:
     get:
       tags:
-      - "UnitOfMeasure"
-      summary: "Retrieve a list of UnitOfMeasure records scoped..."
-      operationId: "listUnitOfMeasuresByBillOfMaterialKey"
+      - UnitOfMeasure
+      summary: Retrieve a list of UnitOfMeasure entities scope...
+      operationId: listUnitOfMeasureByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of UnitOfMeasure records."
+          description: A list of UnitOfMeasure entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/UnitOfMeasure"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UnitOfMeasure"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/unit-of-measures/{unitOfMeasureKey}:
     get:
       tags:
-      - "UnitOfMeasure"
-      summary: "Retrieve a specific UnitOfMeasure record."
-      operationId: "getUnitOfMeasureById"
+      - UnitOfMeasure
+      summary: Retrieve a specific UnitOfMeasure entity.
+      operationId: getUnitOfMeasureById
       responses:
         "200":
-          description: "The requested UnitOfMeasure record."
+          description: The requested UnitOfMeasure entity.
           content:
             application/json:
               schema:
@@ -687,11 +807,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "UnitOfMeasure"
-      summary: "Replace a UnitOfMeasure record."
-      operationId: "replaceUnitOfMeasure"
+      - UnitOfMeasure
+      summary: Replace a UnitOfMeasure entity.
+      operationId: replaceUnitOfMeasure
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -699,69 +819,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnitOfMeasure"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "unitOfMeasureKey"
-      in: "path"
-      description: "The unique identifier for the specific UnitOfMeasure."
+        type: string
+    - name: unitOfMeasureKey
+      in: path
+      description: The unique identifier for the specific UnitOfMeasure.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/part-identifiers:
     get:
       tags:
-      - "PartIdentifier"
-      summary: "Retrieve a list of PartIdentifier records scope..."
-      operationId: "listPartIdentifiersByBillOfMaterialKey"
+      - PartIdentifier
+      summary: Retrieve a list of PartIdentifier entities scop...
+      operationId: listPartIdentifierByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartIdentifier records."
+          description: A list of PartIdentifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartIdentifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartIdentifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartIdentifier"
-      summary: "Create a new PartIdentifier record."
-      operationId: "createPartIdentifier"
+      - PartIdentifier
+      summary: Create a new PartIdentifier entity.
+      operationId: createPartIdentifier
       requestBody:
-        description: "PartIdentifier data to create the new resource."
+        description: PartIdentifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -769,37 +908,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartIdentifier created successfully."
+          description: PartIdentifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/part-identifiers/{partIdentifierKey}:
     get:
       tags:
-      - "PartIdentifier"
-      summary: "Retrieve a specific PartIdentifier record."
-      operationId: "getPartIdentifierById"
+      - PartIdentifier
+      summary: Retrieve a specific PartIdentifier entity.
+      operationId: getPartIdentifierById
       responses:
         "200":
-          description: "The requested PartIdentifier record."
+          description: The requested PartIdentifier entity.
           content:
             application/json:
               schema:
@@ -810,11 +951,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartIdentifier"
-      summary: "Replace a PartIdentifier record."
-      operationId: "replacePartIdentifier"
+      - PartIdentifier
+      summary: Replace a PartIdentifier entity.
+      operationId: replacePartIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -822,114 +963,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartIdentifier"
-      summary: "Delete a PartIdentifier Record"
-      description: "Marks the PartIdentifier record as inactive or ..."
-      operationId: "deletePartIdentifierRecord"
+      - PartIdentifier
+      summary: Delete a PartIdentifier entity
+      description: Marks the PartIdentifier entity as inactive or ...
+      operationId: deletePartIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartIdentifier"
-      summary: "Partially update a PartIdentifier record."
-      operationId: "updatePartIdentifier"
+      - PartIdentifier
+      summary: Partially update a PartIdentifier entity.
+      operationId: updatePartIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartIdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartIdentifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partIdentifierKey"
-      in: "path"
-      description: "The unique identifier for the specific PartIdentifier."
+        type: string
+    - name: partIdentifierKey
+      in: path
+      description: The unique identifier for the specific PartIdentifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/effective-periods:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a list of EffectivePeriod records scop..."
-      operationId: "listEffectivePeriodsByBillOfMaterialKey"
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities sco...
+      operationId: listEffectivePeriodByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of EffectivePeriod records."
+          description: A list of EffectivePeriod entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/EffectivePeriod"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/effective-periods/{effectivePeriodKey}:
     get:
       tags:
-      - "EffectivePeriod"
-      summary: "Retrieve a specific EffectivePeriod record."
-      operationId: "getEffectivePeriodById"
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
       responses:
         "200":
-          description: "The requested EffectivePeriod record."
+          description: The requested EffectivePeriod entity.
           content:
             application/json:
               schema:
@@ -940,11 +1102,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "EffectivePeriod"
-      summary: "Replace a EffectivePeriod record."
-      operationId: "replaceEffectivePeriod"
+      - EffectivePeriod
+      summary: Replace a EffectivePeriod entity.
+      operationId: replaceEffectivePeriod
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -952,69 +1114,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "effectivePeriodKey"
-      in: "path"
-      description: "The unique identifier for the specific EffectivePeriod."
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/part-specifications:
     get:
       tags:
-      - "PartSpecification"
-      summary: "Retrieve a list of PartSpecification records sc..."
-      operationId: "listPartSpecificationsByBillOfMaterialKey"
+      - PartSpecification
+      summary: Retrieve a list of PartSpecification entities s...
+      operationId: listPartSpecificationByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PartSpecification records."
+          description: A list of PartSpecification entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PartSpecification"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartSpecification"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PartSpecification"
-      summary: "Create a new PartSpecification record."
-      operationId: "createPartSpecification"
+      - PartSpecification
+      summary: Create a new PartSpecification entity.
+      operationId: createPartSpecification
       requestBody:
-        description: "PartSpecification data to create the new resource."
+        description: PartSpecification data to create the new resource.
         content:
           application/json:
             schema:
@@ -1022,37 +1203,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PartSpecification created successfully."
+          description: PartSpecification created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartSpecification"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/part-specifications/{partSpecificationKey}:
     get:
       tags:
-      - "PartSpecification"
-      summary: "Retrieve a specific PartSpecification record."
-      operationId: "getPartSpecificationById"
+      - PartSpecification
+      summary: Retrieve a specific PartSpecification entity.
+      operationId: getPartSpecificationById
       responses:
         "200":
-          description: "The requested PartSpecification record."
+          description: The requested PartSpecification entity.
           content:
             application/json:
               schema:
@@ -1063,11 +1246,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PartSpecification"
-      summary: "Replace a PartSpecification record."
-      operationId: "replacePartSpecification"
+      - PartSpecification
+      summary: Replace a PartSpecification entity.
+      operationId: replacePartSpecification
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1075,105 +1258,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartSpecification"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PartSpecification"
-      summary: "Delete a PartSpecification Record"
-      description: "Marks the PartSpecification record as inactive ..."
-      operationId: "deletePartSpecificationRecord"
+      - PartSpecification
+      summary: Delete a PartSpecification entity
+      description: Marks the PartSpecification entity as inactive ...
+      operationId: deletePartSpecificationEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PartSpecification"
-      summary: "Partially update a PartSpecification record."
-      operationId: "updatePartSpecification"
+      - PartSpecification
+      summary: Partially update a PartSpecification entity.
+      operationId: updatePartSpecification
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PartSpecificationUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PartSpecification"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "partSpecificationKey"
-      in: "path"
-      description: "The unique identifier for the specific PartSpecification."
+        type: string
+    - name: partSpecificationKey
+      in: path
+      description: The unique identifier for the specific PartSpecification.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/textual-details:
     get:
       tags:
-      - "TextualDetail"
-      summary: "Retrieve a list of TextualDetail records scoped..."
-      operationId: "listTextualDetailsByBillOfMaterialKey"
+      - TextualDetail
+      summary: Retrieve a list of TextualDetail entities scope...
+      operationId: listTextualDetailByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TextualDetail records."
+          description: A list of TextualDetail entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TextualDetail"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TextualDetail"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "TextualDetail"
-      summary: "Create a new TextualDetail record."
-      operationId: "createTextualDetail"
+      - TextualDetail
+      summary: Create a new TextualDetail entity.
+      operationId: createTextualDetail
       requestBody:
-        description: "TextualDetail data to create the new resource."
+        description: TextualDetail data to create the new resource.
         content:
           application/json:
             schema:
@@ -1181,37 +1385,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "TextualDetail created successfully."
+          description: TextualDetail created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/textual-details/{textualDetailKey}:
     get:
       tags:
-      - "TextualDetail"
-      summary: "Retrieve a specific TextualDetail record."
-      operationId: "getTextualDetailById"
+      - TextualDetail
+      summary: Retrieve a specific TextualDetail entity.
+      operationId: getTextualDetailById
       responses:
         "200":
-          description: "The requested TextualDetail record."
+          description: The requested TextualDetail entity.
           content:
             application/json:
               schema:
@@ -1222,11 +1428,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TextualDetail"
-      summary: "Replace a TextualDetail record."
-      operationId: "replaceTextualDetail"
+      - TextualDetail
+      summary: Replace a TextualDetail entity.
+      operationId: replaceTextualDetail
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1234,114 +1440,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "TextualDetail"
-      summary: "Delete a TextualDetail Record"
-      description: "Marks the TextualDetail record as inactive or r..."
-      operationId: "deleteTextualDetailRecord"
+      - TextualDetail
+      summary: Delete a TextualDetail entity
+      description: Marks the TextualDetail entity as inactive or r...
+      operationId: deleteTextualDetailEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "TextualDetail"
-      summary: "Partially update a TextualDetail record."
-      operationId: "updateTextualDetail"
+      - TextualDetail
+      summary: Partially update a TextualDetail entity.
+      operationId: updateTextualDetail
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/TextualDetailUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/TextualDetail"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "textualDetailKey"
-      in: "path"
-      description: "The unique identifier for the specific TextualDetail."
+        type: string
+    - name: textualDetailKey
+      in: path
+      description: The unique identifier for the specific TextualDetail.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /bill-of-materials/{billOfMaterialKey}/time-slots:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a list of TimeSlot records scoped by b..."
-      operationId: "listTimeSlotsByBillOfMaterialKey"
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by ...
+      operationId: listTimeSlotByBillOfMaterialKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of TimeSlot records."
+          description: A list of TimeSlot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TimeSlot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /bill-of-materials/{billOfMaterialKey}/time-slots/{timeSlotKey}:
     get:
       tags:
-      - "TimeSlot"
-      summary: "Retrieve a specific TimeSlot record."
-      operationId: "getTimeSlotById"
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
       responses:
         "200":
-          description: "The requested TimeSlot record."
+          description: The requested TimeSlot entity.
           content:
             application/json:
               schema:
@@ -1352,11 +1579,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "TimeSlot"
-      summary: "Replace a TimeSlot record."
-      operationId: "replaceTimeSlot"
+      - TimeSlot
+      summary: Replace a TimeSlot entity.
+      operationId: replaceTimeSlot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -1364,57 +1591,129 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "billOfMaterialKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: billOfMaterialKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "timeSlotKey"
-      in: "path"
-      description: "The unique identifier for the specific TimeSlot."
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /bill-of-materials/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /bill-of-materials/batch:
+    post:
+      summary: Bulk create bill-of-materials
+      operationId: createBillOfMaterialBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/BillOfMaterialCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BillOfMaterial"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     BillOfMaterial:
-      type: "object"
+      type: object
       properties:
         bill_of_material_key:
-          type: "string"
-          description: "Unique identifier for the Bill of Materi..."
-          example: "BOM-PROD-001-REV01"
+          type: string
+          description: Unique identifier for the Bill of Materi...
+          example: BOM-PROD-001-REV01
         bill_of_material_id:
-          type: "string"
-          description: "Unique identifier for the Bill of Materi..."
-          example: "BOM-PROD-001-REV01"
+          type: string
+          description: Unique identifier for the Bill of Materi...
+          example: BOM-PROD-001-REV01
         identifiers:
           $ref: "#/components/schemas/PartIdentifiers"
         product_identifier:
-          type: "string"
-          description: "Identifier for the finished product or a..."
-          example: "PROD-XYZ-ASSEMBLY"
+          type: string
+          description: Identifier for the finished product or a...
+          example: PROD-XYZ-ASSEMBLY
         revision:
-          type: "string"
-          description: "Revision number or code for this specifi..."
-          example: "A"
+          type: string
+          description: Revision number or code for this specifi...
+          example: A
         effective_date:
-          type: "string"
-          description: "The date from which this BOM revision be..."
-          format: "date"
-          example: "2024-07-01"
+          type: string
+          description: The date from which this BOM revision be...
+          format: date
+          example: 2024-07-01
         product_status_type:
           $ref: "#/components/schemas/ProductStatusTypes"
         components:
@@ -1424,81 +1723,81 @@ components:
       description: "Represents a Bill of Material (BOM), detailing ..."
     BillOfMaterialCreate:
       required:
-      - "bill_of_material_key"
-      type: "object"
-      description: "BillOfMaterial Create for Post"
+      - bill_of_material_key
+      type: object
+      description: BillOfMaterial Create for Post
       allOf:
       - $ref: "#/components/schemas/BillOfMaterial"
     BillOfMaterialUpdate:
-      type: "object"
+      type: object
       properties:
         product_identifier:
-          type: "string"
-          description: "Identifier for the finished product or a..."
-          example: "PROD-XYZ-ASSEMBLY"
+          type: string
+          description: Identifier for the finished product or a...
+          example: PROD-XYZ-ASSEMBLY
         components:
           $ref: "#/components/schemas/BomComponents"
         identifiers:
           $ref: "#/components/schemas/PartIdentifiers"
         effective_date:
-          type: "string"
-          description: "The date from which this BOM revision be..."
-          format: "date"
-          example: "2024-07-01"
+          type: string
+          description: The date from which this BOM revision be...
+          format: date
+          example: 2024-07-01
         product_status_type:
           $ref: "#/components/schemas/ProductStatusTypes"
         part_specification:
           $ref: "#/components/schemas/PartSpecification"
         revision:
-          type: "string"
-          description: "Revision number or code for this specifi..."
-          example: "A"
-      description: "BillOfMaterial Update for Patch and Put"
+          type: string
+          description: Revision number or code for this specifi...
+          example: A
+      description: BillOfMaterial Update for Patch and Put
     BomComponent:
-      type: "object"
+      type: object
       properties:
         bom_component_id:
-          type: "string"
-          description: "Identifier for the component or sub-asse..."
-          example: "PART-12345"
+          type: string
+          description: Identifier for the component or sub-asse...
+          example: PART-12345
         bom_component_key:
-          type: "string"
-          description: "Identifier for the component or sub-asse..."
-          example: "PART-12345"
+          type: string
+          description: Identifier for the component or sub-asse...
+          example: PART-12345
         quantity:
-          type: "string"
-          description: "The required quantity of this component ..."
+          type: string
+          description: The required quantity of this component ...
           example: "5"
         textual_details:
           $ref: "#/components/schemas/TextualDetails"
         component_identifiers:
           $ref: "#/components/schemas/PartIdentifiers"
         revision:
-          type: "string"
-          description: "Revision number or code for this specifi..."
-          example: "A"
+          type: string
+          description: Revision number or code for this specifi...
+          example: A
         effective_period:
           $ref: "#/components/schemas/EffectivePeriod"
         product_status_type:
           $ref: "#/components/schemas/ProductStatusTypes"
         part_specification:
           $ref: "#/components/schemas/PartSpecification"
-      description: "Represents a single component or sub-assembly w..."
+      description: Represents a single component or sub-assembly w...
     BomComponentCreate:
       required:
-      - "bom_component_key"
-      type: "object"
-      description: "BomComponent Create for Post"
+      - bom_component_key
+      type: object
+      description: BomComponent Create for Post
       allOf:
       - $ref: "#/components/schemas/BomComponent"
     BomComponentUpdate:
-      type: "object"
+      type: object
       properties:
         textual_details:
           $ref: "#/components/schemas/TextualDetails"
         quantity:
-          type: "string"
-          description: "The required quantity of this component ..."
+          type: string
+          description: The required quantity of this component ...
           example: "5"
         component_identifiers:
           $ref: "#/components/schemas/PartIdentifiers"
@@ -1509,295 +1808,295 @@ components:
         part_specification:
           $ref: "#/components/schemas/PartSpecification"
         revision:
-          type: "string"
-          description: "Revision number or code for this specifi..."
-          example: "A"
-      description: "BomComponent Update for Patch and Put"
+          type: string
+          description: Revision number or code for this specifi...
+          example: A
+      description: BomComponent Update for Patch and Put
     BomComponents:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/BomComponent"
     Codes:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     DaysOfWeekTypes:
-      type: "string"
-      description: "types of days of weeks."
+      type: string
+      description: types of days of weeks.
       enum:
-      - "SUN"
-      - "MON"
-      - "TUES"
-      - "WED"
-      - "THURS"
-      - "FRI"
-      - "SAT"
+      - SUN
+      - MON
+      - TUES
+      - WED
+      - THURS
+      - FRI
+      - SAT
     DurationUOMTypes:
-      type: "string"
-      description: "types of duration u o ms."
+      type: string
+      description: types of duration u o ms.
       enum:
-      - "MINUTES"
-      - "HOURS"
-      - "DAYS"
-      - "DAY_OF_MONTH"
-      - "WEEKS"
-      - "BI_WEEKS"
-      - "SEMI_MONTHS"
-      - "MONTHS"
-      - "QUARTERS"
-      - "SEMI_YEARS"
-      - "YEARS"
-      - "MULTI_YEARS"
-      - "CUSTOM"
-      - "OCCURRENCE"
-      - "UNLIMITED"
-      - "NONE"
-      - "OTHER"
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
     EffectivePeriod:
-      type: "object"
+      type: object
       properties:
         effective_period_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key identifying the effective per... Pat..."
+          type: string
+          description: Unique key identifying the effective per... Pat...
         active_indicator:
-          type: "boolean"
-          description: "Indicator if the period is currently act..."
+          type: boolean
+          description: Indicator if the period is currently act...
         exclusive_indicator:
-          type: "boolean"
-          description: "Indicator if the period is exclusive"
+          type: boolean
+          description: Indicator if the period is exclusive
         start_date_time:
-          type: "string"
-          description: "Start date and time of the effective per..."
-          format: "date-time"
+          type: string
+          description: Start date and time of the effective per...
+          format: date-time
         complete_date_time:
-          type: "string"
-          description: "Completion date and time of the effectiv..."
-          format: "date-time"
+          type: string
+          description: Completion date and time of the effectiv...
+          format: date-time
         duration_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         duration_value:
-          type: "string"
-          description: "Value of the duration"
+          type: string
+          description: Value of the duration
         recur_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         recur_count:
-          type: "string"
-          description: "Count of recurrence"
+          type: string
+          description: Count of recurrence
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
-          type: "string"
-          description: "Criteria defining recurrence"
+          type: string
+          description: Criteria defining recurrence
         recur_indicator:
-          type: "boolean"
-          description: "Indicator if recurrence is enabled"
+          type: boolean
+          description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: "Effective Period"
+      description: Effective Period
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     Identifier:
-      type: "object"
+      type: object
       properties:
         identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: "External system identifier"
+      description: External system identifier
     IdentifierCreate:
       required:
-      - "identifier_key"
-      type: "object"
-      description: "Identifier Create for Post"
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
-      description: "Identifier Update for Patch and Put"
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
     Identifiers:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/Identifier"
     Memo:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     PartConditionGradeTypes:
-      type: "string"
-      description: "types of part condition grades."
+      type: string
+      description: types of part condition grades.
       enum:
-      - "EXCELLENT"
-      - "LIKE_NEW"
-      - "VERY_GOOD"
-      - "GOOD"
-      - "ACCEPTABLE"
-      - "FAIR"
-      - "POOR"
-      - "DAMAGED"
-      - "UNGRADED"
-      - "OTHER"
+      - EXCELLENT
+      - LIKE_NEW
+      - VERY_GOOD
+      - GOOD
+      - ACCEPTABLE
+      - FAIR
+      - POOR
+      - DAMAGED
+      - UNGRADED
+      - OTHER
     PartConditionTypes:
-      type: "string"
-      description: "types of part conditions."
+      type: string
+      description: types of part conditions.
       enum:
-      - "NEW"
-      - "NEW_OLD_STOCK"
-      - "REMANUFACTURED"
-      - "REBUILT"
-      - "REFURBISHED"
-      - "USED"
-      - "SALVAGE"
-      - "DAMAGED_MINOR"
-      - "DAMAGED_COSMETIC"
-      - "SCRAP"
-      - "COLLECTIBLE"
-      - "OTHER"
+      - NEW
+      - NEW_OLD_STOCK
+      - REMANUFACTURED
+      - REBUILT
+      - REFURBISHED
+      - USED
+      - SALVAGE
+      - DAMAGED_MINOR
+      - DAMAGED_COSMETIC
+      - SCRAP
+      - COLLECTIBLE
+      - OTHER
     PartIdentifier:
-      type: "object"
+      type: object
       properties:
         part_identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key identifying the part identifi... Pat..."
+          type: string
+          description: Unique key identifying the part identifi... Pat...
         part_identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier ID for the part identi... Pat..."
+          type: string
+          description: Unique identifier ID for the part identi... Pat...
         part_identifier_type:
           $ref: "#/components/schemas/PartIdentifierTypes"
         part_identifier_value:
           maxLength: 255
           minLength: 1
-          type: "string"
-          description: "Value of the part identifier"
+          type: string
+          description: Value of the part identifier
         description:
           maxLength: 500
-          type: "string"
-          description: "Optional description for the part identi..."
+          type: string
+          description: Optional description for the part identi...
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         part_names:
           $ref: "#/components/schemas/PartNames"
-      description: "nullable"
+      description: nullable
     PartIdentifierCreate:
       required:
-      - "part_identifier_key"
-      type: "object"
-      description: "PartIdentifier Create for Post"
+      - part_identifier_key
+      type: object
+      description: PartIdentifier Create for Post
       allOf:
       - $ref: "#/components/schemas/PartIdentifier"
     PartIdentifierTypes:
-      type: "string"
-      description: "types of part identifiers."
+      type: string
+      description: types of part identifiers.
       enum:
-      - "VIN"
-      - "SKU"
-      - "UPCA"
-      - "UPCE"
-      - "ISBN"
-      - "MPN"
-      - "CONFIG_CODE"
-      - "MFR_CODE"
-      - "ALT_CODE"
-      - "STOCK_NBR"
-      - "UNIV_CODE"
-      - "PRODUCT_CODE"
-      - "CATALOG_CODE"
-      - "NAME"
-      - "NUMBER"
-      - "PREFIX"
-      - "COUNTRY_OF_ORIGIN_CODE"
-      - "MODEL_CODE"
-      - "MAKE_CODE"
-      - "YEAR_CODE"
-      - "MARKET_DIVISION_CODE"
-      - "TRIM_CODE"
-      - "STYLE_CODE"
-      - "SUB_MODEL_CODE"
-      - "ENGINE_CODE"
-      - "TRANSMISSION_CODE"
-      - "DRAWING_NUMBER"
-      - "OTHER"
+      - VIN
+      - SKU
+      - UPCA
+      - UPCE
+      - ISBN
+      - MPN
+      - CONFIG_CODE
+      - MFR_CODE
+      - ALT_CODE
+      - STOCK_NBR
+      - UNIV_CODE
+      - PRODUCT_CODE
+      - CATALOG_CODE
+      - NAME
+      - NUMBER
+      - PREFIX
+      - COUNTRY_OF_ORIGIN_CODE
+      - MODEL_CODE
+      - MAKE_CODE
+      - YEAR_CODE
+      - MARKET_DIVISION_CODE
+      - TRIM_CODE
+      - STYLE_CODE
+      - SUB_MODEL_CODE
+      - ENGINE_CODE
+      - TRANSMISSION_CODE
+      - DRAWING_NUMBER
+      - OTHER
     PartIdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         part_identifier_type:
           $ref: "#/components/schemas/PartIdentifierTypes"
@@ -1806,41 +2105,41 @@ components:
         part_identifier_value:
           maxLength: 255
           minLength: 1
-          type: "string"
-          description: "Value of the part identifier"
+          type: string
+          description: Value of the part identifier
         description:
           maxLength: 500
-          type: "string"
-          description: "Optional description for the part identi..."
+          type: string
+          description: Optional description for the part identi...
         part_names:
           $ref: "#/components/schemas/PartNames"
-      description: "PartIdentifier Update for Patch and Put"
+      description: PartIdentifier Update for Patch and Put
     PartIdentifiers:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PartIdentifier"
     PartName:
-      type: "object"
+      type: object
       properties:
         part_name_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier for the part name Pattern: ^[..."
         part_name_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the part name Pattern: ^[a-zA-..."
         part_prefix:
           $ref: "#/components/schemas/Codes"
         part_suffix:
           $ref: "#/components/schemas/Codes"
         description:
-          type: "string"
-          description: "Description of the part name"
+          type: string
+          description: Description of the part name
         language:
           $ref: "#/components/schemas/Codes"
         locale:
@@ -1855,29 +2154,29 @@ components:
           $ref: "#/components/schemas/PartNameTypes"
         part_number:
           $ref: "#/components/schemas/Codes"
-      description: "nullable"
+      description: nullable
     PartNameCreate:
       required:
-      - "part_name_key"
-      type: "object"
-      description: "PartName Create for Post"
+      - part_name_key
+      type: object
+      description: PartName Create for Post
       allOf:
       - $ref: "#/components/schemas/PartName"
     PartNameTypes:
-      type: "string"
-      description: "types of part names."
+      type: string
+      description: types of part names.
       enum:
-      - "GENERIC"
-      - "MANUFACTURING"
-      - "MARKETING"
-      - "CORE"
-      - "REMANUFACTURING"
-      - "OEM"
-      - "AFTERMARKET"
-      - "SUPERSEDING"
-      - "SUPERSEDED"
+      - GENERIC
+      - MANUFACTURING
+      - MARKETING
+      - CORE
+      - REMANUFACTURING
+      - OEM
+      - AFTERMARKET
+      - SUPERSEDING
+      - SUPERSEDED
     PartNameUpdate:
-      type: "object"
+      type: object
       properties:
         part_name_type:
           $ref: "#/components/schemas/PartNameTypes"
@@ -1886,8 +2185,8 @@ components:
         marketing_name:
           $ref: "#/components/schemas/Codes"
         description:
-          type: "string"
-          description: "Description of the part name"
+          type: string
+          description: Description of the part name
         alias:
           $ref: "#/components/schemas/Codes"
         part_number:
@@ -1900,38 +2199,38 @@ components:
           $ref: "#/components/schemas/Codes"
         long_name:
           $ref: "#/components/schemas/Codes"
-      description: "PartName Update for Patch and Put"
+      description: PartName Update for Patch and Put
     PartNames:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PartName"
     PartSpecification:
-      type: "object"
+      type: object
       properties:
         part_specification_id:
           maxLength: 50
           minLength: 5
-          type: "string"
-          description: "Unique identifier ID for the supersessio..."
+          type: string
+          description: Unique identifier ID for the supersessio...
         part_specification_key:
           maxLength: 50
           minLength: 5
-          type: "string"
-          description: "Unique identifier ID for the supersessio..."
+          type: string
+          description: Unique identifier ID for the supersessio...
         part_name_type:
           $ref: "#/components/schemas/PartNameTypes"
         part_condition_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PartConditionTypes"
         part_condition_grade_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PartConditionGradeTypes"
         unit_of_measures:
@@ -1940,53 +2239,53 @@ components:
           $ref: "#/components/schemas/Identifiers"
         minimum_order_quantity:
           minimum: 0
-          type: "integer"
-          description: "Minimum quantity allowed per order."
-          format: "int32"
+          type: integer
+          description: Minimum quantity allowed per order.
+          format: int32
           example: "10"
         fixed_order_quantity:
           minimum: 0
-          type: "integer"
-          description: "Fixed quantity required for ordering thi..."
-          format: "int32"
+          type: integer
+          description: Fixed quantity required for ordering thi...
+          format: int32
           example: "25"
         package_quantity:
           minimum: 0
-          type: "integer"
-          description: "Quantity of items per package unit."
-          format: "int32"
+          type: integer
+          description: Quantity of items per package unit.
+          format: int32
           example: "50"
         item_quantity:
           minimum: 0
-          type: "integer"
-          description: "Base item quantity if the part represent..."
-          format: "int32"
+          type: integer
+          description: Base item quantity if the part represent...
+          format: int32
           example: "1"
         product_package_type:
           $ref: "#/components/schemas/ProductPackageTypes"
-      description: "Criteria for filtering by specific part attribu..."
+      description: Criteria for filtering by specific part attribu...
     PartSpecificationCreate:
       required:
-      - "part_specification_key"
-      type: "object"
-      description: "PartSpecification Create for Post"
+      - part_specification_key
+      type: object
+      description: PartSpecification Create for Post
       allOf:
       - $ref: "#/components/schemas/PartSpecification"
     PartSpecificationUpdate:
-      type: "object"
+      type: object
       properties:
         part_condition_grade_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PartConditionGradeTypes"
         package_quantity:
           minimum: 0
-          type: "integer"
-          description: "Quantity of items per package unit."
-          format: "int32"
+          type: integer
+          description: Quantity of items per package unit.
+          format: int32
           example: "50"
         part_name_type:
           $ref: "#/components/schemas/PartNameTypes"
@@ -1996,79 +2295,79 @@ components:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/PartConditionTypes"
         minimum_order_quantity:
           minimum: 0
-          type: "integer"
-          description: "Minimum quantity allowed per order."
-          format: "int32"
+          type: integer
+          description: Minimum quantity allowed per order.
+          format: int32
           example: "10"
         fixed_order_quantity:
           minimum: 0
-          type: "integer"
-          description: "Fixed quantity required for ordering thi..."
-          format: "int32"
+          type: integer
+          description: Fixed quantity required for ordering thi...
+          format: int32
           example: "25"
         item_quantity:
           minimum: 0
-          type: "integer"
-          description: "Base item quantity if the part represent..."
-          format: "int32"
+          type: integer
+          description: Base item quantity if the part represent...
+          format: int32
           example: "1"
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
         product_package_type:
           $ref: "#/components/schemas/ProductPackageTypes"
-      description: "PartSpecification Update for Patch and Put"
+      description: PartSpecification Update for Patch and Put
     ProductPackageTypes:
-      type: "string"
-      description: "types of product packages."
+      type: string
+      description: types of product packages.
       enum:
-      - "SKU"
-      - "COMPONENT"
-      - "STANDALONE"
-      - "ITEM"
-      - "UNIT"
-      - "OCCURRENCE"
-      - "EACH"
-      - "KIT"
-      - "BUNDLE"
-      - "GROUP"
-      - "MIXED_BUNDLE"
-      - "PURE_BUNDLE"
-      - "SET"
-      - "PACK"
-      - "CASE"
-      - "PALLET"
-      - "SERVICE"
-      - "SUBSCRIPTION"
-      - "PRODUCT"
+      - SKU
+      - COMPONENT
+      - STANDALONE
+      - ITEM
+      - UNIT
+      - OCCURRENCE
+      - EACH
+      - KIT
+      - BUNDLE
+      - GROUP
+      - MIXED_BUNDLE
+      - PURE_BUNDLE
+      - SET
+      - PACK
+      - CASE
+      - PALLET
+      - SERVICE
+      - SUBSCRIPTION
+      - PRODUCT
     ProductStatusTypes:
-      type: "string"
-      description: "types of product status."
+      type: string
+      description: types of product status.
       enum:
-      - "DRAFT"
-      - "PENDING"
-      - "REVIEW"
-      - "ACTIVE"
-      - "PILOT"
-      - "RETIRED"
-      - "CANCELLED"
-      - "SUSPENDED"
-      - "OBSOLETE"
-      - "UNAVAILABLE"
-      - "TERMINATED"
+      - DRAFT
+      - PENDING
+      - REVIEW
+      - ACTIVE
+      - PILOT
+      - RETIRED
+      - CANCELLED
+      - SUSPENDED
+      - OBSOLETE
+      - UNAVAILABLE
+      - TERMINATED
     TextualDetail:
-      type: "object"
+      type: object
       properties:
         textual_detail_key:
-          type: "string"
-          description: "Natural key or business-friendly key for..."
+          type: string
+          description: Natural key or business-friendly key for...
         textual_detail_id:
-          type: "string"
-          description: "Unique identifier for textual detail."
+          type: string
+          description: Unique identifier for textual detail.
         comments:
           $ref: "#/components/schemas/Memo"
         locale_codes:
@@ -2076,48 +2375,48 @@ components:
         notes:
           $ref: "#/components/schemas/Memo"
         short_description:
-          type: "string"
-          description: "Short description for the detail."
+          type: string
+          description: Short description for the detail.
         description:
-          type: "string"
-          description: "Full description in memo format."
+          type: string
+          description: Full description in memo format.
         text_key:
-          type: "string"
-          description: "Key reference for reusable text blocks."
+          type: string
+          description: Key reference for reusable text blocks.
         name:
-          type: "string"
-          description: "Name or title of the textual detail."
+          type: string
+          description: Name or title of the textual detail.
         value:
-          type: "string"
-          description: "Value associated with the textual detail..."
+          type: string
+          description: Value associated with the textual detail...
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         groups:
           $ref: "#/components/schemas/Codes"
         label:
-          type: "string"
-          description: "Label for UI representation."
+          type: string
+          description: Label for UI representation.
         alt_text:
-          type: "string"
-          description: "Alternative text for accessibility or im..."
+          type: string
+          description: Alternative text for accessibility or im...
         textual_detail_code:
-          type: "string"
-          description: "Code identifier for textual detail refer..."
+          type: string
+          description: Code identifier for textual detail refer...
         tags:
           $ref: "#/components/schemas/Codes"
         uom_display:
-          type: "string"
-          description: "Unit of Measure display value."
+          type: string
+          description: Unit of Measure display value.
         uom_code:
-          type: "string"
+          type: string
           description: "Unit of Measure code (e.g., EA, PR)."
-      description: "not nullable"
+      description: not nullable
     TextualDetails:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/TextualDetail"
     TimeSlot:
-      type: "object"
+      type: object
       properties:
         time_slot_key:
           maximum: 100
@@ -2125,32 +2424,32 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique business key for the time slot. Pattern:..."
+          type: string
+          description: Unique business key for the time slot. Pattern:...
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
-          format: "date-time"
+          format: date-time
         recurring_indicator:
-          type: "boolean"
-          description: "Indicates if the time slot is recurring."
+          type: boolean
+          description: Indicates if the time slot is recurring.
         recurring_period:
           $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
-          type: "string"
+          type: string
           description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
-          format: "date-time"
+          format: date-time
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
+          type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         time_slot_id:
@@ -2159,99 +2458,99 @@ components:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier for the time slot reco... Pat..."
+          type: string
+          description: Unique identifier for the time slot reco... Pat...
         week_of_date:
           maxItems: 255
           minItems: 1
           uniqueItems: true
-          type: "array"
-          format: "date"
+          type: array
+          format: date
           items:
-            type: "string"
-      description: "Range of time for the appointment including sta..."
+            type: string
+      description: Range of time for the appointment including sta...
     TimeslotDirectiveTypes:
-      type: "string"
-      description: "types of timeslot directives."
+      type: string
+      description: types of timeslot directives.
       enum:
-      - "AFTER"
-      - "ANYTIME"
-      - "BEFORE"
-      - "BETWEEN"
-      - "BLOCK"
-      - "UNKNOWN"
+      - AFTER
+      - ANYTIME
+      - BEFORE
+      - BETWEEN
+      - BLOCK
+      - UNKNOWN
     UOMQuantityCategoryTypes:
-      type: "string"
-      description: "types of u o m quantity categorys."
+      type: string
+      description: types of u o m quantity categorys.
       enum:
-      - "COUNT"
-      - "WEIGHT"
-      - "VOLUME"
-      - "TIME"
-      - "NET_WEIGHT"
-      - "NET_VOLUME"
-      - "PACKAGE_QUANTITY"
-      - "MIN_ORDER_QUANTITY"
-      - "GROSS_WEIGHT"
-      - "GROSS_VOLUME"
-      - "SHIPPING_WEIGHT"
-      - "DIMENSIONAL_WEIGHT"
-      - "MATERIAL"
-      - "ELECTRICAL_RATING"
-      - "DEFAULT_LEAD_TIME"
-      - "MAX_LEAD_TIME"
-      - "DIMENSION_UNIT"
-      - "MIN_LENGTH"
-      - "MAX_LENGTH"
-      - "MIN_WIDTH"
-      - "MAX_WIDTH"
-      - "MIN_HEIGHT"
-      - "MAX_HEIGHT"
-      - "MIN_WEIGHT"
-      - "MAX_WEIGHT"
-      - "MAX_ORDER_QUANTITY"
-      - "MIN_ORDER_AVAILABLE"
-      - "DIMENSIONS"
-      - "SHIPPING_DIM_LENGTH"
-      - "SHIPPING_DIM_WIDTH"
-      - "SHIPPING_DIM_HEIGHT"
-      - "SHIPPING_DIM_GROSS_WEIGHT"
-      - "SHIPPING_DIM_NET_WEIGHT"
-      - "SHELF_LIFE_HOURS"
-      - "EXPIRATION_DATE"
-      - "MIN_PAYMENT_PERCENT"
-      - "MIN_PAYMENT_AMOUNT"
+      - COUNT
+      - WEIGHT
+      - VOLUME
+      - TIME
+      - NET_WEIGHT
+      - NET_VOLUME
+      - PACKAGE_QUANTITY
+      - MIN_ORDER_QUANTITY
+      - GROSS_WEIGHT
+      - GROSS_VOLUME
+      - SHIPPING_WEIGHT
+      - DIMENSIONAL_WEIGHT
+      - MATERIAL
+      - ELECTRICAL_RATING
+      - DEFAULT_LEAD_TIME
+      - MAX_LEAD_TIME
+      - DIMENSION_UNIT
+      - MIN_LENGTH
+      - MAX_LENGTH
+      - MIN_WIDTH
+      - MAX_WIDTH
+      - MIN_HEIGHT
+      - MAX_HEIGHT
+      - MIN_WEIGHT
+      - MAX_WEIGHT
+      - MAX_ORDER_QUANTITY
+      - MIN_ORDER_AVAILABLE
+      - DIMENSIONS
+      - SHIPPING_DIM_LENGTH
+      - SHIPPING_DIM_WIDTH
+      - SHIPPING_DIM_HEIGHT
+      - SHIPPING_DIM_GROSS_WEIGHT
+      - SHIPPING_DIM_NET_WEIGHT
+      - SHELF_LIFE_HOURS
+      - EXPIRATION_DATE
+      - MIN_PAYMENT_PERCENT
+      - MIN_PAYMENT_AMOUNT
     UnitOfMeasure:
-      type: "object"
+      type: object
       properties:
         unit_of_measure_key:
           maxLength: 100
           minLength: 1
           pattern: "^[a-zA-Z0-9_.-]+$"
-          type: "string"
+          type: string
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
         unit_name:
           maxLength: 50
           minLength: 1
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unit of Measure Pattern: ^[a-zA-Z0-9_]+$ (Alpha..."
         uom_value:
           maxLength: 100
           minLength: 1
           pattern: "^[a-zA-Z0-9_.-]+$"
-          type: "string"
+          type: string
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
         uom_quantity_category_type:
           $ref: "#/components/schemas/UOMQuantityCategoryTypes"
-      description: "value price with unit of measure"
+      description: value price with unit of measure
     UnitOfMeasures:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/UnitOfMeasure"
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -2263,26 +2562,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

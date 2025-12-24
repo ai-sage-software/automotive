@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **NotificationReference**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **NotificationReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -177,7 +184,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references</span> <br/>
-        <span class="api-summary">Retrieve a list of all NotificationReference records. getNotificationReferences</span>
+        <span class="api-summary">Retrieve a list of NotificationReference entities. getNotificationReference</span>
     </span>
 </div>
 
@@ -185,7 +192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references</span> <br/>
-        <span class="api-summary">Create a new NotificationReference record. createNotificationReference</span>
+        <span class="api-summary">Create a new NotificationReference entity. createNotificationReference</span>
     </span>
 </div>
 
@@ -194,7 +201,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific NotificationReference record. getotificationReferenceById</span>
+        <span class="api-summary">Retrieve a specific NotificationReference entity. getotificationReferenceById</span>
     </span>
 </div>
 
@@ -202,7 +209,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a NotificationReference record. replaceNotificationReference</span>
+        <span class="api-summary">Replace a NotificationReference entity. replaceNotificationReference</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a NotificationReference record. updateNotificationReference</span>
+        <span class="api-summary">Partially update a NotificationReference entity. updateNotificationReference</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a NotificationReference Record deleteNotificationReferenceRecord</span>
+        <span class="api-summary">Delete a NotificationReference entity deleteNotificationReferenceEntity</span>
     </span>
 </div>
 
@@ -227,7 +234,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by notificationReferenceKey. getIdentifiersByNotificationReferenceKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by notificationReferenceKey. getIdentifierByNotificationReferenceKey</span>
     </span>
 </div>
 
@@ -235,7 +242,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -244,7 +251,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -252,7 +259,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -260,7 +267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -268,7 +275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -278,8 +285,8 @@ The following resources follow a consistent pattern under NotificationReferencer
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **notification-reference** | /notification-references | listNotificationReferences | createNotificationReference | getNotificationReferences | updateNotificationReferences | deleteNotificationReferences |
-    | **identifier** | /notification-references/{notificationReferenceKey}/identifiers | listIdentifiersByNotificationReferenceKey | createIdentifier | getIdentifiersByNotificationReferenceKey | updateIdentifiersByNotificationReferenceKey | deleteIdentifiersByNotificationReferenceKey |
+    | **notification-reference** | /notification-references | listNotificationReference | createNotificationReference | getNotificationReference | updateNotificationReference | deleteNotificationReference |
+    | **identifier** | /notification-references/{notificationReferenceKey}/identifiers | listIdentifierByNotificationReferenceKey | createIdentifier | getIdentifierByNotificationReferenceKey | updateIdentifierByNotificationReferenceKey | deleteIdentifierByNotificationReferenceKey |
 
 ***Note on List Operations:***
 

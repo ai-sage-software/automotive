@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrackReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **TaxSplit**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrackReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -22,6 +29,7 @@ The API is structured around the domain **service_parts** and **PartOrder** reso
     | **FinancialCategoryReference** | /part-orders/{partOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartOrders |
     | **StaffAssignmentReference** | /part-orders/{partOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to PartOrders |
     | **FeeReference** | /part-orders/{partOrderKey}/fee-references | Manages FeeReferences belonging to PartOrders |
+    | **Money** | /part-orders/{partOrderKey}/moneys | Manages Moneys belonging to PartOrders |
     | **Identifier** | /part-orders/{partOrderKey}/identifiers | Manages Identifiers belonging to PartOrders |
     | **PartReference** | /part-orders/{partOrderKey}/part-references | Manages PartReferences belonging to PartOrders |
     | **EffectivePeriod** | /part-orders/{partOrderKey}/effective-periods | Manages EffectivePeriods belonging to PartOrders |
@@ -115,6 +123,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
+💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
@@ -124,7 +133,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PriceTypes** : types of prices.<br/>
-💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **SalesPipelineStageTypes** : types of sales pipeline stages.<br/>
@@ -138,6 +146,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 ✅ **EffectivePeriod** : Effective Period<br/>
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
 ✅ **TextualDetail** : not nullable<br/>
 ✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 ✅ **UnitOfMeasure** : value price with unit of measure<br/>
@@ -227,7 +236,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders</span> <br/>
-        <span class="api-summary">Retrieve a list of all PartOrder records. getPartOrders</span>
+        <span class="api-summary">Retrieve a list of PartOrder entities. getPartOrder</span>
     </span>
 </div>
 
@@ -235,7 +244,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders</span> <br/>
-        <span class="api-summary">Create a new PartOrder record. createPartOrder</span>
+        <span class="api-summary">Create a new PartOrder entity. createPartOrder</span>
     </span>
 </div>
 
@@ -244,7 +253,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartOrder record. getartOrderById</span>
+        <span class="api-summary">Retrieve a specific PartOrder entity. getartOrderById</span>
     </span>
 </div>
 
@@ -252,7 +261,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}</span> <br/>
-        <span class="api-summary">Replace a PartOrder record. replacePartOrder</span>
+        <span class="api-summary">Replace a PartOrder entity. replacePartOrder</span>
     </span>
 </div>
 
@@ -260,7 +269,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}</span> <br/>
-        <span class="api-summary">Partially update a PartOrder record. updatePartOrder</span>
+        <span class="api-summary">Partially update a PartOrder entity. updatePartOrder</span>
     </span>
 </div>
 
@@ -268,7 +277,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}</span> <br/>
-        <span class="api-summary">Delete a PartOrder Record deletePartOrderRecord</span>
+        <span class="api-summary">Delete a PartOrder entity deletePartOrderEntity</span>
     </span>
 </div>
 
@@ -277,7 +286,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentTermReference records scoped by partOrderKey. getPaymentTermReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of PaymentTermReference entities scoped by partOrderKey. getPaymentTermReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -285,7 +294,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references</span> <br/>
-        <span class="api-summary">Create a new PaymentTermReference record. createPaymentTermReference</span>
+        <span class="api-summary">Create a new PaymentTermReference entity. createPaymentTermReference</span>
     </span>
 </div>
 
@@ -294,7 +303,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentTermReference record. getaymentTermReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentTermReference entity. getaymentTermReferenceById</span>
     </span>
 </div>
 
@@ -302,7 +311,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentTermReference record. replacePaymentTermReference</span>
+        <span class="api-summary">Replace a PaymentTermReference entity. replacePaymentTermReference</span>
     </span>
 </div>
 
@@ -310,7 +319,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTermReference record. updatePaymentTermReference</span>
+        <span class="api-summary">Partially update a PaymentTermReference entity. updatePaymentTermReference</span>
     </span>
 </div>
 
@@ -318,7 +327,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentTermReference Record deletePaymentTermReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentTermReference entity deletePaymentTermReferenceEntity</span>
     </span>
 </div>
 
@@ -327,7 +336,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references</span> <br/>
-        <span class="api-summary">Retrieve a list of DiscountReference records scoped by partOrderKey. getDiscountReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of DiscountReference entities scoped by partOrderKey. getDiscountReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -335,7 +344,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references</span> <br/>
-        <span class="api-summary">Create a new DiscountReference record. createDiscountReference</span>
+        <span class="api-summary">Create a new DiscountReference entity. createDiscountReference</span>
     </span>
 </div>
 
@@ -344,7 +353,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DiscountReference record. getiscountReferenceById</span>
+        <span class="api-summary">Retrieve a specific DiscountReference entity. getiscountReferenceById</span>
     </span>
 </div>
 
@@ -352,7 +361,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a DiscountReference record. replaceDiscountReference</span>
+        <span class="api-summary">Replace a DiscountReference entity. replaceDiscountReference</span>
     </span>
 </div>
 
@@ -360,7 +369,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountReference record. updateDiscountReference</span>
+        <span class="api-summary">Partially update a DiscountReference entity. updateDiscountReference</span>
     </span>
 </div>
 
@@ -368,7 +377,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a DiscountReference Record deleteDiscountReferenceRecord</span>
+        <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
     </span>
 </div>
 
@@ -377,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references</span> <br/>
-        <span class="api-summary">Retrieve a list of AddressReference records scoped by partOrderKey. getAddressReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of AddressReference entities scoped by partOrderKey. getAddressReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -385,7 +394,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references</span> <br/>
-        <span class="api-summary">Create a new AddressReference record. createAddressReference</span>
+        <span class="api-summary">Create a new AddressReference entity. createAddressReference</span>
     </span>
 </div>
 
@@ -394,7 +403,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AddressReference record. getddressReferenceById</span>
+        <span class="api-summary">Retrieve a specific AddressReference entity. getddressReferenceById</span>
     </span>
 </div>
 
@@ -402,7 +411,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a AddressReference record. replaceAddressReference</span>
+        <span class="api-summary">Replace a AddressReference entity. replaceAddressReference</span>
     </span>
 </div>
 
@@ -410,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressReference record. updateAddressReference</span>
+        <span class="api-summary">Partially update a AddressReference entity. updateAddressReference</span>
     </span>
 </div>
 
@@ -418,7 +427,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a AddressReference Record deleteAddressReferenceRecord</span>
+        <span class="api-summary">Delete a AddressReference entity deleteAddressReferenceEntity</span>
     </span>
 </div>
 
@@ -427,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialCategoryReference records scoped by partOrderKey. getFinancialCategoryReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference entities scoped by partOrderKey. getFinancialCategoryReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -435,7 +444,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references</span> <br/>
-        <span class="api-summary">Create a new FinancialCategoryReference record. createFinancialCategoryReference</span>
+        <span class="api-summary">Create a new FinancialCategoryReference entity. createFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -444,7 +453,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialCategoryReference record. getinancialCategoryReferenceById</span>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference entity. getinancialCategoryReferenceById</span>
     </span>
 </div>
 
@@ -452,7 +461,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialCategoryReference record. replaceFinancialCategoryReference</span>
+        <span class="api-summary">Replace a FinancialCategoryReference entity. replaceFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -460,7 +469,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialCategoryReference record. updateFinancialCategoryReference</span>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updateFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -468,7 +477,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialCategoryReference Record deleteFinancialCategoryReferenceRecord</span>
+        <span class="api-summary">Delete a FinancialCategoryReference entity deleteFinancialCategoryReferenceEntity</span>
     </span>
 </div>
 
@@ -477,7 +486,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references</span> <br/>
-        <span class="api-summary">Retrieve a list of StaffAssignmentReference records scoped by partOrderKey. getStaffAssignmentReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of StaffAssignmentReference entities scoped by partOrderKey. getStaffAssignmentReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -485,7 +494,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references</span> <br/>
-        <span class="api-summary">Create a new StaffAssignmentReference record. createStaffAssignmentReference</span>
+        <span class="api-summary">Create a new StaffAssignmentReference entity. createStaffAssignmentReference</span>
     </span>
 </div>
 
@@ -494,7 +503,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific StaffAssignmentReference record. gettaffAssignmentReferenceById</span>
+        <span class="api-summary">Retrieve a specific StaffAssignmentReference entity. gettaffAssignmentReferenceById</span>
     </span>
 </div>
 
@@ -502,7 +511,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a StaffAssignmentReference record. replaceStaffAssignmentReference</span>
+        <span class="api-summary">Replace a StaffAssignmentReference entity. replaceStaffAssignmentReference</span>
     </span>
 </div>
 
@@ -510,7 +519,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a StaffAssignmentReference record. updateStaffAssignmentReference</span>
+        <span class="api-summary">Partially update a StaffAssignmentReference entity. updateStaffAssignmentReference</span>
     </span>
 </div>
 
@@ -518,7 +527,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a StaffAssignmentReference Record deleteStaffAssignmentReferenceRecord</span>
+        <span class="api-summary">Delete a StaffAssignmentReference entity deleteStaffAssignmentReferenceEntity</span>
     </span>
 </div>
 
@@ -527,7 +536,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FeeReference records scoped by partOrderKey. getFeeReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by partOrderKey. getFeeReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -535,7 +544,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references</span> <br/>
-        <span class="api-summary">Create a new FeeReference record. createFeeReference</span>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
     </span>
 </div>
 
@@ -544,7 +553,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FeeReference record. geteeReferenceById</span>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
     </span>
 </div>
 
@@ -552,7 +561,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FeeReference record. replaceFeeReference</span>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
     </span>
 </div>
 
@@ -560,7 +569,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference record. updateFeeReference</span>
+        <span class="api-summary">Partially update a FeeReference entity. updateFeeReference</span>
     </span>
 </div>
 
@@ -568,7 +577,33 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FeeReference Record deleteFeeReferenceRecord</span>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/moneys
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/moneys</span> <br/>
+        <span class="api-summary">Retrieve a list of Money entities scoped by partOrderKey. getMoneyByPartOrderKey</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/moneys/{moneyKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -577,7 +612,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by partOrderKey. getIdentifiersByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by partOrderKey. getIdentifierByPartOrderKey</span>
     </span>
 </div>
 
@@ -585,7 +620,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -594,7 +629,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -602,7 +637,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -610,7 +645,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -618,7 +653,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -627,7 +662,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartReference records scoped by partOrderKey. getPartReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of PartReference entities scoped by partOrderKey. getPartReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -635,7 +670,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references</span> <br/>
-        <span class="api-summary">Create a new PartReference record. createPartReference</span>
+        <span class="api-summary">Create a new PartReference entity. createPartReference</span>
     </span>
 </div>
 
@@ -644,7 +679,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartReference record. getartReferenceById</span>
+        <span class="api-summary">Retrieve a specific PartReference entity. getartReferenceById</span>
     </span>
 </div>
 
@@ -652,7 +687,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartReference record. replacePartReference</span>
+        <span class="api-summary">Replace a PartReference entity. replacePartReference</span>
     </span>
 </div>
 
@@ -660,7 +695,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartReference record. updatePartReference</span>
+        <span class="api-summary">Partially update a PartReference entity. updatePartReference</span>
     </span>
 </div>
 
@@ -668,7 +703,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references/{partReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartReference Record deletePartReferenceRecord</span>
+        <span class="api-summary">Delete a PartReference entity deletePartReferenceEntity</span>
     </span>
 </div>
 
@@ -677,7 +712,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by partOrderKey. getEffectivePeriodsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by partOrderKey. getEffectivePeriodByPartOrderKey</span>
     </span>
 </div>
 
@@ -686,7 +721,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -694,7 +729,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -703,7 +738,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items</span> <br/>
-        <span class="api-summary">Retrieve a list of PartOrderItem records scoped by partOrderKey. getPartOrderItemsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of PartOrderItem entities scoped by partOrderKey. getPartOrderItemByPartOrderKey</span>
     </span>
 </div>
 
@@ -711,7 +746,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items</span> <br/>
-        <span class="api-summary">Create a new PartOrderItem record. createPartOrderItem</span>
+        <span class="api-summary">Create a new PartOrderItem entity. createPartOrderItem</span>
     </span>
 </div>
 
@@ -720,7 +755,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items/{partOrderItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartOrderItem record. getartOrderItemById</span>
+        <span class="api-summary">Retrieve a specific PartOrderItem entity. getartOrderItemById</span>
     </span>
 </div>
 
@@ -728,7 +763,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items/{partOrderItemKey}</span> <br/>
-        <span class="api-summary">Replace a PartOrderItem record. replacePartOrderItem</span>
+        <span class="api-summary">Replace a PartOrderItem entity. replacePartOrderItem</span>
     </span>
 </div>
 
@@ -736,7 +771,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items/{partOrderItemKey}</span> <br/>
-        <span class="api-summary">Partially update a PartOrderItem record. updatePartOrderItem</span>
+        <span class="api-summary">Partially update a PartOrderItem entity. updatePartOrderItem</span>
     </span>
 </div>
 
@@ -744,7 +779,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-order-items/{partOrderItemKey}</span> <br/>
-        <span class="api-summary">Delete a PartOrderItem Record deletePartOrderItemRecord</span>
+        <span class="api-summary">Delete a PartOrderItem entity deletePartOrderItemEntity</span>
     </span>
 </div>
 
@@ -753,7 +788,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references</span> <br/>
-        <span class="api-summary">Retrieve a list of CreditReference records scoped by partOrderKey. getCreditReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of CreditReference entities scoped by partOrderKey. getCreditReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -761,7 +796,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references</span> <br/>
-        <span class="api-summary">Create a new CreditReference record. createCreditReference</span>
+        <span class="api-summary">Create a new CreditReference entity. createCreditReference</span>
     </span>
 </div>
 
@@ -770,7 +805,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CreditReference record. getreditReferenceById</span>
+        <span class="api-summary">Retrieve a specific CreditReference entity. getreditReferenceById</span>
     </span>
 </div>
 
@@ -778,7 +813,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a CreditReference record. replaceCreditReference</span>
+        <span class="api-summary">Replace a CreditReference entity. replaceCreditReference</span>
     </span>
 </div>
 
@@ -786,7 +821,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditReference record. updateCreditReference</span>
+        <span class="api-summary">Partially update a CreditReference entity. updateCreditReference</span>
     </span>
 </div>
 
@@ -794,7 +829,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a CreditReference Record deleteCreditReferenceRecord</span>
+        <span class="api-summary">Delete a CreditReference entity deleteCreditReferenceEntity</span>
     </span>
 </div>
 
@@ -803,7 +838,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references</span> <br/>
-        <span class="api-summary">Retrieve a list of SalesProfileReference records scoped by partOrderKey. getSalesProfileReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of SalesProfileReference entities scoped by partOrderKey. getSalesProfileReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -811,7 +846,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references</span> <br/>
-        <span class="api-summary">Create a new SalesProfileReference record. createSalesProfileReference</span>
+        <span class="api-summary">Create a new SalesProfileReference entity. createSalesProfileReference</span>
     </span>
 </div>
 
@@ -820,7 +855,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references/{salesProfileReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific SalesProfileReference record. getalesProfileReferenceById</span>
+        <span class="api-summary">Retrieve a specific SalesProfileReference entity. getalesProfileReferenceById</span>
     </span>
 </div>
 
@@ -828,7 +863,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references/{salesProfileReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a SalesProfileReference record. replaceSalesProfileReference</span>
+        <span class="api-summary">Replace a SalesProfileReference entity. replaceSalesProfileReference</span>
     </span>
 </div>
 
@@ -836,7 +871,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references/{salesProfileReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a SalesProfileReference record. updateSalesProfileReference</span>
+        <span class="api-summary">Partially update a SalesProfileReference entity. updateSalesProfileReference</span>
     </span>
 </div>
 
@@ -844,7 +879,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/sales-profile-references/{salesProfileReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a SalesProfileReference Record deleteSalesProfileReferenceRecord</span>
+        <span class="api-summary">Delete a SalesProfileReference entity deleteSalesProfileReferenceEntity</span>
     </span>
 </div>
 
@@ -853,7 +888,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RebateReference records scoped by partOrderKey. getRebateReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of RebateReference entities scoped by partOrderKey. getRebateReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -861,7 +896,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references</span> <br/>
-        <span class="api-summary">Create a new RebateReference record. createRebateReference</span>
+        <span class="api-summary">Create a new RebateReference entity. createRebateReference</span>
     </span>
 </div>
 
@@ -870,7 +905,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RebateReference record. getebateReferenceById</span>
+        <span class="api-summary">Retrieve a specific RebateReference entity. getebateReferenceById</span>
     </span>
 </div>
 
@@ -878,7 +913,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RebateReference record. replaceRebateReference</span>
+        <span class="api-summary">Replace a RebateReference entity. replaceRebateReference</span>
     </span>
 </div>
 
@@ -886,7 +921,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RebateReference record. updateRebateReference</span>
+        <span class="api-summary">Partially update a RebateReference entity. updateRebateReference</span>
     </span>
 </div>
 
@@ -894,7 +929,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RebateReference Record deleteRebateReferenceRecord</span>
+        <span class="api-summary">Delete a RebateReference entity deleteRebateReferenceEntity</span>
     </span>
 </div>
 
@@ -903,7 +938,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ShipmentReference records scoped by partOrderKey. getShipmentReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of ShipmentReference entities scoped by partOrderKey. getShipmentReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -911,7 +946,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references</span> <br/>
-        <span class="api-summary">Create a new ShipmentReference record. createShipmentReference</span>
+        <span class="api-summary">Create a new ShipmentReference entity. createShipmentReference</span>
     </span>
 </div>
 
@@ -920,7 +955,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ShipmentReference record. gethipmentReferenceById</span>
+        <span class="api-summary">Retrieve a specific ShipmentReference entity. gethipmentReferenceById</span>
     </span>
 </div>
 
@@ -928,7 +963,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ShipmentReference record. replaceShipmentReference</span>
+        <span class="api-summary">Replace a ShipmentReference entity. replaceShipmentReference</span>
     </span>
 </div>
 
@@ -936,7 +971,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ShipmentReference record. updateShipmentReference</span>
+        <span class="api-summary">Partially update a ShipmentReference entity. updateShipmentReference</span>
     </span>
 </div>
 
@@ -944,7 +979,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/shipment-references/{shipmentReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ShipmentReference Record deleteShipmentReferenceRecord</span>
+        <span class="api-summary">Delete a ShipmentReference entity deleteShipmentReferenceEntity</span>
     </span>
 </div>
 
@@ -953,7 +988,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures</span> <br/>
-        <span class="api-summary">Retrieve a list of UnitOfMeasure records scoped by partOrderKey. getUnitOfMeasuresByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of UnitOfMeasure entities scoped by partOrderKey. getUnitOfMeasureByPartOrderKey</span>
     </span>
 </div>
 
@@ -962,7 +997,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific UnitOfMeasure record. getnitOfMeasureById</span>
+        <span class="api-summary">Retrieve a specific UnitOfMeasure entity. getnitOfMeasureById</span>
     </span>
 </div>
 
@@ -970,7 +1005,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/unit-of-measures/{unitOfMeasureKey}</span> <br/>
-        <span class="api-summary">Replace a UnitOfMeasure record. replaceUnitOfMeasure</span>
+        <span class="api-summary">Replace a UnitOfMeasure entity. replaceUnitOfMeasure</span>
     </span>
 </div>
 
@@ -979,7 +1014,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of TaxSplit records scoped by partOrderKey. getTaxSplitsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of TaxSplit entities scoped by partOrderKey. getTaxSplitByPartOrderKey</span>
     </span>
 </div>
 
@@ -987,7 +1022,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits</span> <br/>
-        <span class="api-summary">Create a new TaxSplit record. createTaxSplit</span>
+        <span class="api-summary">Create a new TaxSplit entity. createTaxSplit</span>
     </span>
 </div>
 
@@ -996,7 +1031,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TaxSplit record. getaxSplitById</span>
+        <span class="api-summary">Retrieve a specific TaxSplit entity. getaxSplitById</span>
     </span>
 </div>
 
@@ -1004,7 +1039,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Replace a TaxSplit record. replaceTaxSplit</span>
+        <span class="api-summary">Replace a TaxSplit entity. replaceTaxSplit</span>
     </span>
 </div>
 
@@ -1012,7 +1047,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxSplit record. updateTaxSplit</span>
+        <span class="api-summary">Partially update a TaxSplit entity. updateTaxSplit</span>
     </span>
 </div>
 
@@ -1020,7 +1055,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Delete a TaxSplit Record deleteTaxSplitRecord</span>
+        <span class="api-summary">Delete a TaxSplit entity deleteTaxSplitEntity</span>
     </span>
 </div>
 
@@ -1029,7 +1064,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentScheduleReference records scoped by partOrderKey. getPaymentScheduleReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of PaymentScheduleReference entities scoped by partOrderKey. getPaymentScheduleReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1037,7 +1072,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references</span> <br/>
-        <span class="api-summary">Create a new PaymentScheduleReference record. createPaymentScheduleReference</span>
+        <span class="api-summary">Create a new PaymentScheduleReference entity. createPaymentScheduleReference</span>
     </span>
 </div>
 
@@ -1046,7 +1081,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentScheduleReference record. getaymentScheduleReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentScheduleReference entity. getaymentScheduleReferenceById</span>
     </span>
 </div>
 
@@ -1054,7 +1089,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentScheduleReference record. replacePaymentScheduleReference</span>
+        <span class="api-summary">Replace a PaymentScheduleReference entity. replacePaymentScheduleReference</span>
     </span>
 </div>
 
@@ -1062,7 +1097,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentScheduleReference record. updatePaymentScheduleReference</span>
+        <span class="api-summary">Partially update a PaymentScheduleReference entity. updatePaymentScheduleReference</span>
     </span>
 </div>
 
@@ -1070,7 +1105,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/payment-schedule-references/{paymentScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentScheduleReference Record deletePaymentScheduleReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentScheduleReference entity deletePaymentScheduleReferenceEntity</span>
     </span>
 </div>
 
@@ -1079,7 +1114,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PricePlanReference records scoped by partOrderKey. getPricePlanReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of PricePlanReference entities scoped by partOrderKey. getPricePlanReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1087,7 +1122,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references</span> <br/>
-        <span class="api-summary">Create a new PricePlanReference record. createPricePlanReference</span>
+        <span class="api-summary">Create a new PricePlanReference entity. createPricePlanReference</span>
     </span>
 </div>
 
@@ -1096,7 +1131,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PricePlanReference record. getricePlanReferenceById</span>
+        <span class="api-summary">Retrieve a specific PricePlanReference entity. getricePlanReferenceById</span>
     </span>
 </div>
 
@@ -1104,7 +1139,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PricePlanReference record. replacePricePlanReference</span>
+        <span class="api-summary">Replace a PricePlanReference entity. replacePricePlanReference</span>
     </span>
 </div>
 
@@ -1112,7 +1147,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlanReference record. updatePricePlanReference</span>
+        <span class="api-summary">Partially update a PricePlanReference entity. updatePricePlanReference</span>
     </span>
 </div>
 
@@ -1120,7 +1155,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PricePlanReference Record deletePricePlanReferenceRecord</span>
+        <span class="api-summary">Delete a PricePlanReference entity deletePricePlanReferenceEntity</span>
     </span>
 </div>
 
@@ -1129,7 +1164,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccountReference records scoped by partOrderKey. getControlAccountReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by partOrderKey. getControlAccountReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1137,7 +1172,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references</span> <br/>
-        <span class="api-summary">Create a new ControlAccountReference record. createControlAccountReference</span>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
     </span>
 </div>
 
@@ -1146,7 +1181,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccountReference record. getontrolAccountReferenceById</span>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
     </span>
 </div>
 
@@ -1154,7 +1189,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccountReference record. replaceControlAccountReference</span>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
     </span>
 </div>
 
@@ -1162,7 +1197,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference record. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
     </span>
 </div>
 
@@ -1170,7 +1205,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccountReference Record deleteControlAccountReferenceRecord</span>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
     </span>
 </div>
 
@@ -1179,7 +1214,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references</span> <br/>
-        <span class="api-summary">Retrieve a list of RewardReference records scoped by partOrderKey. getRewardReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of RewardReference entities scoped by partOrderKey. getRewardReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1187,7 +1222,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references</span> <br/>
-        <span class="api-summary">Create a new RewardReference record. createRewardReference</span>
+        <span class="api-summary">Create a new RewardReference entity. createRewardReference</span>
     </span>
 </div>
 
@@ -1196,7 +1231,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific RewardReference record. getewardReferenceById</span>
+        <span class="api-summary">Retrieve a specific RewardReference entity. getewardReferenceById</span>
     </span>
 </div>
 
@@ -1204,7 +1239,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a RewardReference record. replaceRewardReference</span>
+        <span class="api-summary">Replace a RewardReference entity. replaceRewardReference</span>
     </span>
 </div>
 
@@ -1212,7 +1247,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardReference record. updateRewardReference</span>
+        <span class="api-summary">Partially update a RewardReference entity. updateRewardReference</span>
     </span>
 </div>
 
@@ -1220,7 +1255,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a RewardReference Record deleteRewardReferenceRecord</span>
+        <span class="api-summary">Delete a RewardReference entity deleteRewardReferenceEntity</span>
     </span>
 </div>
 
@@ -1229,7 +1264,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references</span> <br/>
-        <span class="api-summary">Retrieve a list of CustomerOrderReference records scoped by partOrderKey. getCustomerOrderReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of CustomerOrderReference entities scoped by partOrderKey. getCustomerOrderReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1237,7 +1272,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references</span> <br/>
-        <span class="api-summary">Create a new CustomerOrderReference record. createCustomerOrderReference</span>
+        <span class="api-summary">Create a new CustomerOrderReference entity. createCustomerOrderReference</span>
     </span>
 </div>
 
@@ -1246,7 +1281,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references/{customerOrderReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CustomerOrderReference record. getustomerOrderReferenceById</span>
+        <span class="api-summary">Retrieve a specific CustomerOrderReference entity. getustomerOrderReferenceById</span>
     </span>
 </div>
 
@@ -1254,7 +1289,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references/{customerOrderReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a CustomerOrderReference record. replaceCustomerOrderReference</span>
+        <span class="api-summary">Replace a CustomerOrderReference entity. replaceCustomerOrderReference</span>
     </span>
 </div>
 
@@ -1262,7 +1297,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references/{customerOrderReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CustomerOrderReference record. updateCustomerOrderReference</span>
+        <span class="api-summary">Partially update a CustomerOrderReference entity. updateCustomerOrderReference</span>
     </span>
 </div>
 
@@ -1270,7 +1305,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/customer-order-references/{customerOrderReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a CustomerOrderReference Record deleteCustomerOrderReferenceRecord</span>
+        <span class="api-summary">Delete a CustomerOrderReference entity deleteCustomerOrderReferenceEntity</span>
     </span>
 </div>
 
@@ -1279,7 +1314,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price records scoped by partOrderKey. getPricesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of Price entities scoped by partOrderKey. getPriceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1287,7 +1322,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices</span> <br/>
-        <span class="api-summary">Create a new Price record. createPrice</span>
+        <span class="api-summary">Create a new Price entity. createPrice</span>
     </span>
 </div>
 
@@ -1296,7 +1331,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price record. getriceById</span>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -1304,7 +1339,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Replace a Price record. replacePrice</span>
+        <span class="api-summary">Replace a Price entity. replacePrice</span>
     </span>
 </div>
 
@@ -1312,7 +1347,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price record. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePrice</span>
     </span>
 </div>
 
@@ -1320,7 +1355,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Delete a Price Record deletePriceRecord</span>
+        <span class="api-summary">Delete a Price entity deletePriceEntity</span>
     </span>
 </div>
 
@@ -1329,7 +1364,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialEvent records scoped by partOrderKey. getFinancialEventsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of FinancialEvent entities scoped by partOrderKey. getFinancialEventByPartOrderKey</span>
     </span>
 </div>
 
@@ -1337,7 +1372,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events</span> <br/>
-        <span class="api-summary">Create a new FinancialEvent record. createFinancialEvent</span>
+        <span class="api-summary">Create a new FinancialEvent entity. createFinancialEvent</span>
     </span>
 </div>
 
@@ -1346,7 +1381,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialEvent record. getinancialEventById</span>
+        <span class="api-summary">Retrieve a specific FinancialEvent entity. getinancialEventById</span>
     </span>
 </div>
 
@@ -1354,7 +1389,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialEvent record. replaceFinancialEvent</span>
+        <span class="api-summary">Replace a FinancialEvent entity. replaceFinancialEvent</span>
     </span>
 </div>
 
@@ -1362,7 +1397,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialEvent record. updateFinancialEvent</span>
+        <span class="api-summary">Partially update a FinancialEvent entity. updateFinancialEvent</span>
     </span>
 </div>
 
@@ -1370,7 +1405,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialEvent Record deleteFinancialEventRecord</span>
+        <span class="api-summary">Delete a FinancialEvent entity deleteFinancialEventEntity</span>
     </span>
 </div>
 
@@ -1379,7 +1414,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by partOrderKey. getTextualDetailsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by partOrderKey. getTextualDetailByPartOrderKey</span>
     </span>
 </div>
 
@@ -1387,7 +1422,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -1396,7 +1431,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -1404,7 +1439,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -1412,7 +1447,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -1420,7 +1455,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -1429,7 +1464,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references</span> <br/>
-        <span class="api-summary">Retrieve a list of LenderReference records scoped by partOrderKey. getLenderReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of LenderReference entities scoped by partOrderKey. getLenderReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1437,7 +1472,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references</span> <br/>
-        <span class="api-summary">Create a new LenderReference record. createLenderReference</span>
+        <span class="api-summary">Create a new LenderReference entity. createLenderReference</span>
     </span>
 </div>
 
@@ -1446,7 +1481,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references/{lenderReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific LenderReference record. getenderReferenceById</span>
+        <span class="api-summary">Retrieve a specific LenderReference entity. getenderReferenceById</span>
     </span>
 </div>
 
@@ -1454,7 +1489,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references/{lenderReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a LenderReference record. replaceLenderReference</span>
+        <span class="api-summary">Replace a LenderReference entity. replaceLenderReference</span>
     </span>
 </div>
 
@@ -1462,7 +1497,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references/{lenderReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a LenderReference record. updateLenderReference</span>
+        <span class="api-summary">Partially update a LenderReference entity. updateLenderReference</span>
     </span>
 </div>
 
@@ -1470,7 +1505,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/lender-references/{lenderReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a LenderReference Record deleteLenderReferenceRecord</span>
+        <span class="api-summary">Delete a LenderReference entity deleteLenderReferenceEntity</span>
     </span>
 </div>
 
@@ -1479,7 +1514,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialTrackReference records scoped by partOrderKey. getFinancialTrackReferencesByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of FinancialTrackReference entities scoped by partOrderKey. getFinancialTrackReferenceByPartOrderKey</span>
     </span>
 </div>
 
@@ -1487,7 +1522,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references</span> <br/>
-        <span class="api-summary">Create a new FinancialTrackReference record. createFinancialTrackReference</span>
+        <span class="api-summary">Create a new FinancialTrackReference entity. createFinancialTrackReference</span>
     </span>
 </div>
 
@@ -1496,7 +1531,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references/{financialTrackReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialTrackReference record. getinancialTrackReferenceById</span>
+        <span class="api-summary">Retrieve a specific FinancialTrackReference entity. getinancialTrackReferenceById</span>
     </span>
 </div>
 
@@ -1504,7 +1539,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references/{financialTrackReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialTrackReference record. replaceFinancialTrackReference</span>
+        <span class="api-summary">Replace a FinancialTrackReference entity. replaceFinancialTrackReference</span>
     </span>
 </div>
 
@@ -1512,7 +1547,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references/{financialTrackReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialTrackReference record. updateFinancialTrackReference</span>
+        <span class="api-summary">Partially update a FinancialTrackReference entity. updateFinancialTrackReference</span>
     </span>
 </div>
 
@@ -1520,7 +1555,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-track-references/{financialTrackReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialTrackReference Record deleteFinancialTrackReferenceRecord</span>
+        <span class="api-summary">Delete a FinancialTrackReference entity deleteFinancialTrackReferenceEntity</span>
     </span>
 </div>
 
@@ -1529,7 +1564,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialSplit records scoped by partOrderKey. getFinancialSplitsByPartOrderKey</span>
+        <span class="api-summary">Retrieve a list of FinancialSplit entities scoped by partOrderKey. getFinancialSplitByPartOrderKey</span>
     </span>
 </div>
 
@@ -1537,7 +1572,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits</span> <br/>
-        <span class="api-summary">Create a new FinancialSplit record. createFinancialSplit</span>
+        <span class="api-summary">Create a new FinancialSplit entity. createFinancialSplit</span>
     </span>
 </div>
 
@@ -1546,7 +1581,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialSplit record. getinancialSplitById</span>
+        <span class="api-summary">Retrieve a specific FinancialSplit entity. getinancialSplitById</span>
     </span>
 </div>
 
@@ -1554,7 +1589,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialSplit record. replaceFinancialSplit</span>
+        <span class="api-summary">Replace a FinancialSplit entity. replaceFinancialSplit</span>
     </span>
 </div>
 
@@ -1562,7 +1597,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplit record. updateFinancialSplit</span>
+        <span class="api-summary">Partially update a FinancialSplit entity. updateFinancialSplit</span>
     </span>
 </div>
 
@@ -1570,7 +1605,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialSplit Record deleteFinancialSplitRecord</span>
+        <span class="api-summary">Delete a FinancialSplit entity deleteFinancialSplitEntity</span>
     </span>
 </div>
 
@@ -1580,34 +1615,35 @@ The following resources follow a consistent pattern under PartOrderroot with key
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **part-order** | /part-orders | listPartOrders | createPartOrder | getPartOrders | updatePartOrders | deletePartOrders |
-    | **payment-term-reference** | /part-orders/{partOrderKey}/payment-term-references | listPaymentTermReferencesByPartOrderKey | createPaymentTermReference | getPaymentTermReferencesByPartOrderKey | updatePaymentTermReferencesByPartOrderKey | deletePaymentTermReferencesByPartOrderKey |
-    | **discount-reference** | /part-orders/{partOrderKey}/discount-references | listDiscountReferencesByPartOrderKey | createDiscountReference | getDiscountReferencesByPartOrderKey | updateDiscountReferencesByPartOrderKey | deleteDiscountReferencesByPartOrderKey |
-    | **address-reference** | /part-orders/{partOrderKey}/address-references | listAddressReferencesByPartOrderKey | createAddressReference | getAddressReferencesByPartOrderKey | updateAddressReferencesByPartOrderKey | deleteAddressReferencesByPartOrderKey |
-    | **financial-category-reference** | /part-orders/{partOrderKey}/financial-category-references | listFinancialCategoryReferencesByPartOrderKey | createFinancialCategoryReference | getFinancialCategoryReferencesByPartOrderKey | updateFinancialCategoryReferencesByPartOrderKey | deleteFinancialCategoryReferencesByPartOrderKey |
-    | **staff-assignment-reference** | /part-orders/{partOrderKey}/staff-assignment-references | listStaffAssignmentReferencesByPartOrderKey | createStaffAssignmentReference | getStaffAssignmentReferencesByPartOrderKey | updateStaffAssignmentReferencesByPartOrderKey | deleteStaffAssignmentReferencesByPartOrderKey |
-    | **fee-reference** | /part-orders/{partOrderKey}/fee-references | listFeeReferencesByPartOrderKey | createFeeReference | getFeeReferencesByPartOrderKey | updateFeeReferencesByPartOrderKey | deleteFeeReferencesByPartOrderKey |
-    | **identifier** | /part-orders/{partOrderKey}/identifiers | listIdentifiersByPartOrderKey | createIdentifier | getIdentifiersByPartOrderKey | updateIdentifiersByPartOrderKey | deleteIdentifiersByPartOrderKey |
-    | **part-reference** | /part-orders/{partOrderKey}/part-references | listPartReferencesByPartOrderKey | createPartReference | getPartReferencesByPartOrderKey | updatePartReferencesByPartOrderKey | deletePartReferencesByPartOrderKey |
-    | **effective-period** | /part-orders/{partOrderKey}/effective-periods | listEffectivePeriodsByPartOrderKey |  | getEffectivePeriodsByPartOrderKey | updateEffectivePeriodsByPartOrderKey | deleteEffectivePeriodsByPartOrderKey |
-    | **part-order-item** | /part-orders/{partOrderKey}/part-order-items | listPartOrderItemsByPartOrderKey | createPartOrderItem | getPartOrderItemsByPartOrderKey | updatePartOrderItemsByPartOrderKey | deletePartOrderItemsByPartOrderKey |
-    | **credit-reference** | /part-orders/{partOrderKey}/credit-references | listCreditReferencesByPartOrderKey | createCreditReference | getCreditReferencesByPartOrderKey | updateCreditReferencesByPartOrderKey | deleteCreditReferencesByPartOrderKey |
-    | **sales-profile-reference** | /part-orders/{partOrderKey}/sales-profile-references | listSalesProfileReferencesByPartOrderKey | createSalesProfileReference | getSalesProfileReferencesByPartOrderKey | updateSalesProfileReferencesByPartOrderKey | deleteSalesProfileReferencesByPartOrderKey |
-    | **rebate-reference** | /part-orders/{partOrderKey}/rebate-references | listRebateReferencesByPartOrderKey | createRebateReference | getRebateReferencesByPartOrderKey | updateRebateReferencesByPartOrderKey | deleteRebateReferencesByPartOrderKey |
-    | **shipment-reference** | /part-orders/{partOrderKey}/shipment-references | listShipmentReferencesByPartOrderKey | createShipmentReference | getShipmentReferencesByPartOrderKey | updateShipmentReferencesByPartOrderKey | deleteShipmentReferencesByPartOrderKey |
-    | **unit-of-measure** | /part-orders/{partOrderKey}/unit-of-measures | listUnitOfMeasuresByPartOrderKey |  | getUnitOfMeasuresByPartOrderKey | updateUnitOfMeasuresByPartOrderKey | deleteUnitOfMeasuresByPartOrderKey |
-    | **tax-split** | /part-orders/{partOrderKey}/tax-splits | listTaxSplitsByPartOrderKey | createTaxSplit | getTaxSplitsByPartOrderKey | updateTaxSplitsByPartOrderKey | deleteTaxSplitsByPartOrderKey |
-    | **payment-schedule-reference** | /part-orders/{partOrderKey}/payment-schedule-references | listPaymentScheduleReferencesByPartOrderKey | createPaymentScheduleReference | getPaymentScheduleReferencesByPartOrderKey | updatePaymentScheduleReferencesByPartOrderKey | deletePaymentScheduleReferencesByPartOrderKey |
-    | **price-plan-reference** | /part-orders/{partOrderKey}/price-plan-references | listPricePlanReferencesByPartOrderKey | createPricePlanReference | getPricePlanReferencesByPartOrderKey | updatePricePlanReferencesByPartOrderKey | deletePricePlanReferencesByPartOrderKey |
-    | **control-account-reference** | /part-orders/{partOrderKey}/control-account-references | listControlAccountReferencesByPartOrderKey | createControlAccountReference | getControlAccountReferencesByPartOrderKey | updateControlAccountReferencesByPartOrderKey | deleteControlAccountReferencesByPartOrderKey |
-    | **reward-reference** | /part-orders/{partOrderKey}/reward-references | listRewardReferencesByPartOrderKey | createRewardReference | getRewardReferencesByPartOrderKey | updateRewardReferencesByPartOrderKey | deleteRewardReferencesByPartOrderKey |
-    | **customer-order-reference** | /part-orders/{partOrderKey}/customer-order-references | listCustomerOrderReferencesByPartOrderKey | createCustomerOrderReference | getCustomerOrderReferencesByPartOrderKey | updateCustomerOrderReferencesByPartOrderKey | deleteCustomerOrderReferencesByPartOrderKey |
-    | **price** | /part-orders/{partOrderKey}/prices | listPricesByPartOrderKey | createPrice | getPricesByPartOrderKey | updatePricesByPartOrderKey | deletePricesByPartOrderKey |
-    | **financial-event** | /part-orders/{partOrderKey}/financial-events | listFinancialEventsByPartOrderKey | createFinancialEvent | getFinancialEventsByPartOrderKey | updateFinancialEventsByPartOrderKey | deleteFinancialEventsByPartOrderKey |
-    | **textual-detail** | /part-orders/{partOrderKey}/textual-details | listTextualDetailsByPartOrderKey | createTextualDetail | getTextualDetailsByPartOrderKey | updateTextualDetailsByPartOrderKey | deleteTextualDetailsByPartOrderKey |
-    | **lender-reference** | /part-orders/{partOrderKey}/lender-references | listLenderReferencesByPartOrderKey | createLenderReference | getLenderReferencesByPartOrderKey | updateLenderReferencesByPartOrderKey | deleteLenderReferencesByPartOrderKey |
-    | **financial-track-reference** | /part-orders/{partOrderKey}/financial-track-references | listFinancialTrackReferencesByPartOrderKey | createFinancialTrackReference | getFinancialTrackReferencesByPartOrderKey | updateFinancialTrackReferencesByPartOrderKey | deleteFinancialTrackReferencesByPartOrderKey |
-    | **financial-split** | /part-orders/{partOrderKey}/financial-splits | listFinancialSplitsByPartOrderKey | createFinancialSplit | getFinancialSplitsByPartOrderKey | updateFinancialSplitsByPartOrderKey | deleteFinancialSplitsByPartOrderKey |
+    | **part-order** | /part-orders | listPartOrder | createPartOrder | getPartOrder | updatePartOrder | deletePartOrder |
+    | **payment-term-reference** | /part-orders/{partOrderKey}/payment-term-references | listPaymentTermReferenceByPartOrderKey | createPaymentTermReference | getPaymentTermReferenceByPartOrderKey | updatePaymentTermReferenceByPartOrderKey | deletePaymentTermReferenceByPartOrderKey |
+    | **discount-reference** | /part-orders/{partOrderKey}/discount-references | listDiscountReferenceByPartOrderKey | createDiscountReference | getDiscountReferenceByPartOrderKey | updateDiscountReferenceByPartOrderKey | deleteDiscountReferenceByPartOrderKey |
+    | **address-reference** | /part-orders/{partOrderKey}/address-references | listAddressReferenceByPartOrderKey | createAddressReference | getAddressReferenceByPartOrderKey | updateAddressReferenceByPartOrderKey | deleteAddressReferenceByPartOrderKey |
+    | **financial-category-reference** | /part-orders/{partOrderKey}/financial-category-references | listFinancialCategoryReferenceByPartOrderKey | createFinancialCategoryReference | getFinancialCategoryReferenceByPartOrderKey | updateFinancialCategoryReferenceByPartOrderKey | deleteFinancialCategoryReferenceByPartOrderKey |
+    | **staff-assignment-reference** | /part-orders/{partOrderKey}/staff-assignment-references | listStaffAssignmentReferenceByPartOrderKey | createStaffAssignmentReference | getStaffAssignmentReferenceByPartOrderKey | updateStaffAssignmentReferenceByPartOrderKey | deleteStaffAssignmentReferenceByPartOrderKey |
+    | **fee-reference** | /part-orders/{partOrderKey}/fee-references | listFeeReferenceByPartOrderKey | createFeeReference | getFeeReferenceByPartOrderKey | updateFeeReferenceByPartOrderKey | deleteFeeReferenceByPartOrderKey |
+    | **money** | /part-orders/{partOrderKey}/moneys | listMoneyByPartOrderKey |  | getMoneyByPartOrderKey | updateMoneyByPartOrderKey | deleteMoneyByPartOrderKey |
+    | **identifier** | /part-orders/{partOrderKey}/identifiers | listIdentifierByPartOrderKey | createIdentifier | getIdentifierByPartOrderKey | updateIdentifierByPartOrderKey | deleteIdentifierByPartOrderKey |
+    | **part-reference** | /part-orders/{partOrderKey}/part-references | listPartReferenceByPartOrderKey | createPartReference | getPartReferenceByPartOrderKey | updatePartReferenceByPartOrderKey | deletePartReferenceByPartOrderKey |
+    | **effective-period** | /part-orders/{partOrderKey}/effective-periods | listEffectivePeriodByPartOrderKey |  | getEffectivePeriodByPartOrderKey | updateEffectivePeriodByPartOrderKey | deleteEffectivePeriodByPartOrderKey |
+    | **part-order-item** | /part-orders/{partOrderKey}/part-order-items | listPartOrderItemByPartOrderKey | createPartOrderItem | getPartOrderItemByPartOrderKey | updatePartOrderItemByPartOrderKey | deletePartOrderItemByPartOrderKey |
+    | **credit-reference** | /part-orders/{partOrderKey}/credit-references | listCreditReferenceByPartOrderKey | createCreditReference | getCreditReferenceByPartOrderKey | updateCreditReferenceByPartOrderKey | deleteCreditReferenceByPartOrderKey |
+    | **sales-profile-reference** | /part-orders/{partOrderKey}/sales-profile-references | listSalesProfileReferenceByPartOrderKey | createSalesProfileReference | getSalesProfileReferenceByPartOrderKey | updateSalesProfileReferenceByPartOrderKey | deleteSalesProfileReferenceByPartOrderKey |
+    | **rebate-reference** | /part-orders/{partOrderKey}/rebate-references | listRebateReferenceByPartOrderKey | createRebateReference | getRebateReferenceByPartOrderKey | updateRebateReferenceByPartOrderKey | deleteRebateReferenceByPartOrderKey |
+    | **shipment-reference** | /part-orders/{partOrderKey}/shipment-references | listShipmentReferenceByPartOrderKey | createShipmentReference | getShipmentReferenceByPartOrderKey | updateShipmentReferenceByPartOrderKey | deleteShipmentReferenceByPartOrderKey |
+    | **unit-of-measure** | /part-orders/{partOrderKey}/unit-of-measures | listUnitOfMeasureByPartOrderKey |  | getUnitOfMeasureByPartOrderKey | updateUnitOfMeasureByPartOrderKey | deleteUnitOfMeasureByPartOrderKey |
+    | **tax-split** | /part-orders/{partOrderKey}/tax-splits | listTaxSplitByPartOrderKey | createTaxSplit | getTaxSplitByPartOrderKey | updateTaxSplitByPartOrderKey | deleteTaxSplitByPartOrderKey |
+    | **payment-schedule-reference** | /part-orders/{partOrderKey}/payment-schedule-references | listPaymentScheduleReferenceByPartOrderKey | createPaymentScheduleReference | getPaymentScheduleReferenceByPartOrderKey | updatePaymentScheduleReferenceByPartOrderKey | deletePaymentScheduleReferenceByPartOrderKey |
+    | **price-plan-reference** | /part-orders/{partOrderKey}/price-plan-references | listPricePlanReferenceByPartOrderKey | createPricePlanReference | getPricePlanReferenceByPartOrderKey | updatePricePlanReferenceByPartOrderKey | deletePricePlanReferenceByPartOrderKey |
+    | **control-account-reference** | /part-orders/{partOrderKey}/control-account-references | listControlAccountReferenceByPartOrderKey | createControlAccountReference | getControlAccountReferenceByPartOrderKey | updateControlAccountReferenceByPartOrderKey | deleteControlAccountReferenceByPartOrderKey |
+    | **reward-reference** | /part-orders/{partOrderKey}/reward-references | listRewardReferenceByPartOrderKey | createRewardReference | getRewardReferenceByPartOrderKey | updateRewardReferenceByPartOrderKey | deleteRewardReferenceByPartOrderKey |
+    | **customer-order-reference** | /part-orders/{partOrderKey}/customer-order-references | listCustomerOrderReferenceByPartOrderKey | createCustomerOrderReference | getCustomerOrderReferenceByPartOrderKey | updateCustomerOrderReferenceByPartOrderKey | deleteCustomerOrderReferenceByPartOrderKey |
+    | **price** | /part-orders/{partOrderKey}/prices | listPriceByPartOrderKey | createPrice | getPriceByPartOrderKey | updatePriceByPartOrderKey | deletePriceByPartOrderKey |
+    | **financial-event** | /part-orders/{partOrderKey}/financial-events | listFinancialEventByPartOrderKey | createFinancialEvent | getFinancialEventByPartOrderKey | updateFinancialEventByPartOrderKey | deleteFinancialEventByPartOrderKey |
+    | **textual-detail** | /part-orders/{partOrderKey}/textual-details | listTextualDetailByPartOrderKey | createTextualDetail | getTextualDetailByPartOrderKey | updateTextualDetailByPartOrderKey | deleteTextualDetailByPartOrderKey |
+    | **lender-reference** | /part-orders/{partOrderKey}/lender-references | listLenderReferenceByPartOrderKey | createLenderReference | getLenderReferenceByPartOrderKey | updateLenderReferenceByPartOrderKey | deleteLenderReferenceByPartOrderKey |
+    | **financial-track-reference** | /part-orders/{partOrderKey}/financial-track-references | listFinancialTrackReferenceByPartOrderKey | createFinancialTrackReference | getFinancialTrackReferenceByPartOrderKey | updateFinancialTrackReferenceByPartOrderKey | deleteFinancialTrackReferenceByPartOrderKey |
+    | **financial-split** | /part-orders/{partOrderKey}/financial-splits | listFinancialSplitByPartOrderKey | createFinancialSplit | getFinancialSplitByPartOrderKey | updateFinancialSplitByPartOrderKey | deleteFinancialSplitByPartOrderKey |
 
 ***Note on List Operations:***
 

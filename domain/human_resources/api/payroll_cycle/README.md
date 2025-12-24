@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollCycle**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollCycle**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -184,7 +191,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles</span> <br/>
-        <span class="api-summary">Retrieve a list of all PayrollCycle records. getPayrollCycles</span>
+        <span class="api-summary">Retrieve a list of PayrollCycle entities. getPayrollCycle</span>
     </span>
 </div>
 
@@ -192,7 +199,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles</span> <br/>
-        <span class="api-summary">Create a new PayrollCycle record. createPayrollCycle</span>
+        <span class="api-summary">Create a new PayrollCycle entity. createPayrollCycle</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollCycle record. getayrollCycleById</span>
+        <span class="api-summary">Retrieve a specific PayrollCycle entity. getayrollCycleById</span>
     </span>
 </div>
 
@@ -209,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollCycle record. replacePayrollCycle</span>
+        <span class="api-summary">Replace a PayrollCycle entity. replacePayrollCycle</span>
     </span>
 </div>
 
@@ -217,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollCycle record. updatePayrollCycle</span>
+        <span class="api-summary">Partially update a PayrollCycle entity. updatePayrollCycle</span>
     </span>
 </div>
 
@@ -225,7 +232,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollCycle Record deletePayrollCycleRecord</span>
+        <span class="api-summary">Delete a PayrollCycle entity deletePayrollCycleEntity</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by payrollCycleKey. getIdentifiersByPayrollCycleKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by payrollCycleKey. getIdentifierByPayrollCycleKey</span>
     </span>
 </div>
 
@@ -242,7 +249,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -259,7 +266,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -267,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -275,7 +282,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -284,7 +291,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by payrollCycleKey. getEffectivePeriodsByPayrollCycleKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by payrollCycleKey. getEffectivePeriodByPayrollCycleKey</span>
     </span>
 </div>
 
@@ -293,7 +300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -301,7 +308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -310,7 +317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by payrollCycleKey. getTimeSlotsByPayrollCycleKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by payrollCycleKey. getTimeSlotByPayrollCycleKey</span>
     </span>
 </div>
 
@@ -319,7 +326,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -327,7 +334,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -337,10 +344,10 @@ The following resources follow a consistent pattern under PayrollCycleroot with 
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **payroll-cycle** | /payroll-cycles | listPayrollCycles | createPayrollCycle | getPayrollCycles | updatePayrollCycles | deletePayrollCycles |
-    | **identifier** | /payroll-cycles/{payrollCycleKey}/identifiers | listIdentifiersByPayrollCycleKey | createIdentifier | getIdentifiersByPayrollCycleKey | updateIdentifiersByPayrollCycleKey | deleteIdentifiersByPayrollCycleKey |
-    | **effective-period** | /payroll-cycles/{payrollCycleKey}/effective-periods | listEffectivePeriodsByPayrollCycleKey |  | getEffectivePeriodsByPayrollCycleKey | updateEffectivePeriodsByPayrollCycleKey | deleteEffectivePeriodsByPayrollCycleKey |
-    | **time-slot** | /payroll-cycles/{payrollCycleKey}/time-slots | listTimeSlotsByPayrollCycleKey |  | getTimeSlotsByPayrollCycleKey | updateTimeSlotsByPayrollCycleKey | deleteTimeSlotsByPayrollCycleKey |
+    | **payroll-cycle** | /payroll-cycles | listPayrollCycle | createPayrollCycle | getPayrollCycle | updatePayrollCycle | deletePayrollCycle |
+    | **identifier** | /payroll-cycles/{payrollCycleKey}/identifiers | listIdentifierByPayrollCycleKey | createIdentifier | getIdentifierByPayrollCycleKey | updateIdentifierByPayrollCycleKey | deleteIdentifierByPayrollCycleKey |
+    | **effective-period** | /payroll-cycles/{payrollCycleKey}/effective-periods | listEffectivePeriodByPayrollCycleKey |  | getEffectivePeriodByPayrollCycleKey | updateEffectivePeriodByPayrollCycleKey | deleteEffectivePeriodByPayrollCycleKey |
+    | **time-slot** | /payroll-cycles/{payrollCycleKey}/time-slots | listTimeSlotByPayrollCycleKey |  | getTimeSlotByPayrollCycleKey | updateTimeSlotByPayrollCycleKey | deleteTimeSlotByPayrollCycleKey |
 
 ***Note on List Operations:***
 

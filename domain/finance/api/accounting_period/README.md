@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **Identifier**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **Identifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -177,7 +184,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of all AccountingPeriod records. getAccountingPeriods</span>
+        <span class="api-summary">Retrieve a list of AccountingPeriod entities. getAccountingPeriod</span>
     </span>
 </div>
 
@@ -185,7 +192,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods</span> <br/>
-        <span class="api-summary">Create a new AccountingPeriod record. createAccountingPeriod</span>
+        <span class="api-summary">Create a new AccountingPeriod entity. createAccountingPeriod</span>
     </span>
 </div>
 
@@ -194,7 +201,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AccountingPeriod record. getccountingPeriodById</span>
+        <span class="api-summary">Retrieve a specific AccountingPeriod entity. getccountingPeriodById</span>
     </span>
 </div>
 
@@ -202,7 +209,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Replace a AccountingPeriod record. replaceAccountingPeriod</span>
+        <span class="api-summary">Replace a AccountingPeriod entity. replaceAccountingPeriod</span>
     </span>
 </div>
 
@@ -210,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod record. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
     </span>
 </div>
 
@@ -218,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Delete a AccountingPeriod Record deleteAccountingPeriodRecord</span>
+        <span class="api-summary">Delete a AccountingPeriod entity deleteAccountingPeriodEntity</span>
     </span>
 </div>
 
@@ -227,7 +234,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by accountingPeriodKey. getIdentifiersByAccountingPeriodKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by accountingPeriodKey. getIdentifierByAccountingPeriodKey</span>
     </span>
 </div>
 
@@ -235,7 +242,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -244,7 +251,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -252,7 +259,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -260,7 +267,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -268,7 +275,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -278,8 +285,8 @@ The following resources follow a consistent pattern under AccountingPeriodroot w
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **accounting-period** | /accounting-periods | listAccountingPeriods | createAccountingPeriod | getAccountingPeriods | updateAccountingPeriods | deleteAccountingPeriods |
-    | **identifier** | /accounting-periods/{accountingPeriodKey}/identifiers | listIdentifiersByAccountingPeriodKey | createIdentifier | getIdentifiersByAccountingPeriodKey | updateIdentifiersByAccountingPeriodKey | deleteIdentifiersByAccountingPeriodKey |
+    | **accounting-period** | /accounting-periods | listAccountingPeriod | createAccountingPeriod | getAccountingPeriod | updateAccountingPeriod | deleteAccountingPeriod |
+    | **identifier** | /accounting-periods/{accountingPeriodKey}/identifiers | listIdentifierByAccountingPeriodKey | createIdentifier | getIdentifierByAccountingPeriodKey | updateIdentifierByAccountingPeriodKey | deleteIdentifierByAccountingPeriodKey |
 
 ***Note on List Operations:***
 

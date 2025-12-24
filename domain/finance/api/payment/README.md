@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Identifier**, **Payment**, **PaymentMethodReference**, **PaymentTransaction**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **Payment**, **PaymentMethodReference**, **PaymentTransaction**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -184,7 +191,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments</span> <br/>
-        <span class="api-summary">Retrieve a list of all Payment records. getPayments</span>
+        <span class="api-summary">Retrieve a list of Payment entities. getPayment</span>
     </span>
 </div>
 
@@ -192,7 +199,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payments</span> <br/>
-        <span class="api-summary">Create a new Payment record. createPayment</span>
+        <span class="api-summary">Create a new Payment entity. createPayment</span>
     </span>
 </div>
 
@@ -201,7 +208,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Payment record. getaymentById</span>
+        <span class="api-summary">Retrieve a specific Payment entity. getaymentById</span>
     </span>
 </div>
 
@@ -209,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}</span> <br/>
-        <span class="api-summary">Replace a Payment record. replacePayment</span>
+        <span class="api-summary">Replace a Payment entity. replacePayment</span>
     </span>
 </div>
 
@@ -217,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}</span> <br/>
-        <span class="api-summary">Partially update a Payment record. updatePayment</span>
+        <span class="api-summary">Partially update a Payment entity. updatePayment</span>
     </span>
 </div>
 
@@ -225,7 +232,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}</span> <br/>
-        <span class="api-summary">Delete a Payment Record deletePaymentRecord</span>
+        <span class="api-summary">Delete a Payment entity deletePaymentEntity</span>
     </span>
 </div>
 
@@ -234,7 +241,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentTransaction records scoped by paymentKey. getPaymentTransactionsByPaymentKey</span>
+        <span class="api-summary">Retrieve a list of PaymentTransaction entities scoped by paymentKey. getPaymentTransactionByPaymentKey</span>
     </span>
 </div>
 
@@ -242,7 +249,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions</span> <br/>
-        <span class="api-summary">Create a new PaymentTransaction record. createPaymentTransaction</span>
+        <span class="api-summary">Create a new PaymentTransaction entity. createPaymentTransaction</span>
     </span>
 </div>
 
@@ -251,7 +258,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions/{paymentTransactionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentTransaction record. getaymentTransactionById</span>
+        <span class="api-summary">Retrieve a specific PaymentTransaction entity. getaymentTransactionById</span>
     </span>
 </div>
 
@@ -259,7 +266,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions/{paymentTransactionKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentTransaction record. replacePaymentTransaction</span>
+        <span class="api-summary">Replace a PaymentTransaction entity. replacePaymentTransaction</span>
     </span>
 </div>
 
@@ -267,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions/{paymentTransactionKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTransaction record. updatePaymentTransaction</span>
+        <span class="api-summary">Partially update a PaymentTransaction entity. updatePaymentTransaction</span>
     </span>
 </div>
 
@@ -275,7 +282,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions/{paymentTransactionKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentTransaction Record deletePaymentTransactionRecord</span>
+        <span class="api-summary">Delete a PaymentTransaction entity deletePaymentTransactionEntity</span>
     </span>
 </div>
 
@@ -284,7 +291,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by paymentKey. getMoneysByPaymentKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by paymentKey. getMoneyByPaymentKey</span>
     </span>
 </div>
 
@@ -293,7 +300,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -301,7 +308,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -310,7 +317,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by paymentKey. getIdentifiersByPaymentKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by paymentKey. getIdentifierByPaymentKey</span>
     </span>
 </div>
 
@@ -318,7 +325,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -327,7 +334,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -335,7 +342,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -343,7 +350,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -351,7 +358,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -360,7 +367,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentMethodReference records scoped by paymentKey. getPaymentMethodReferencesByPaymentKey</span>
+        <span class="api-summary">Retrieve a list of PaymentMethodReference entities scoped by paymentKey. getPaymentMethodReferenceByPaymentKey</span>
     </span>
 </div>
 
@@ -368,7 +375,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Create a new PaymentMethodReference record. createPaymentMethodReference</span>
+        <span class="api-summary">Create a new PaymentMethodReference entity. createPaymentMethodReference</span>
     </span>
 </div>
 
@@ -377,7 +384,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentMethodReference record. getaymentMethodReferenceById</span>
+        <span class="api-summary">Retrieve a specific PaymentMethodReference entity. getaymentMethodReferenceById</span>
     </span>
 </div>
 
@@ -385,7 +392,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentMethodReference record. replacePaymentMethodReference</span>
+        <span class="api-summary">Replace a PaymentMethodReference entity. replacePaymentMethodReference</span>
     </span>
 </div>
 
@@ -393,7 +400,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentMethodReference record. updatePaymentMethodReference</span>
+        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePaymentMethodReference</span>
     </span>
 </div>
 
@@ -401,7 +408,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentMethodReference Record deletePaymentMethodReferenceRecord</span>
+        <span class="api-summary">Delete a PaymentMethodReference entity deletePaymentMethodReferenceEntity</span>
     </span>
 </div>
 
@@ -411,11 +418,11 @@ The following resources follow a consistent pattern under Paymentroot with key {
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **payment** | /payments | listPayments | createPayment | getPayments | updatePayments | deletePayments |
-    | **payment-transaction** | /payments/{paymentKey}/payment-transactions | listPaymentTransactionsByPaymentKey | createPaymentTransaction | getPaymentTransactionsByPaymentKey | updatePaymentTransactionsByPaymentKey | deletePaymentTransactionsByPaymentKey |
-    | **money** | /payments/{paymentKey}/moneys | listMoneysByPaymentKey |  | getMoneysByPaymentKey | updateMoneysByPaymentKey | deleteMoneysByPaymentKey |
-    | **identifier** | /payments/{paymentKey}/identifiers | listIdentifiersByPaymentKey | createIdentifier | getIdentifiersByPaymentKey | updateIdentifiersByPaymentKey | deleteIdentifiersByPaymentKey |
-    | **payment-method-reference** | /payments/{paymentKey}/payment-method-references | listPaymentMethodReferencesByPaymentKey | createPaymentMethodReference | getPaymentMethodReferencesByPaymentKey | updatePaymentMethodReferencesByPaymentKey | deletePaymentMethodReferencesByPaymentKey |
+    | **payment** | /payments | listPayment | createPayment | getPayment | updatePayment | deletePayment |
+    | **payment-transaction** | /payments/{paymentKey}/payment-transactions | listPaymentTransactionByPaymentKey | createPaymentTransaction | getPaymentTransactionByPaymentKey | updatePaymentTransactionByPaymentKey | deletePaymentTransactionByPaymentKey |
+    | **money** | /payments/{paymentKey}/moneys | listMoneyByPaymentKey |  | getMoneyByPaymentKey | updateMoneyByPaymentKey | deleteMoneyByPaymentKey |
+    | **identifier** | /payments/{paymentKey}/identifiers | listIdentifierByPaymentKey | createIdentifier | getIdentifierByPaymentKey | updateIdentifierByPaymentKey | deleteIdentifierByPaymentKey |
+    | **payment-method-reference** | /payments/{paymentKey}/payment-method-references | listPaymentMethodReferenceByPaymentKey | createPaymentMethodReference | getPaymentMethodReferenceByPaymentKey | updatePaymentMethodReferenceByPaymentKey | deletePaymentMethodReferenceByPaymentKey |
 
 ***Note on List Operations:***
 

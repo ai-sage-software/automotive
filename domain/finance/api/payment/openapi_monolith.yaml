@@ -1,50 +1,78 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: This API provides a standardized interface for ...
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+security:
+- industry-oauth:
+  - standard:read
+- member-api-key: []
+- {}
 paths:
   /payments:
     get:
       tags:
-      - "Payment"
-      summary: "Retrieve a list of all Payment records."
-      operationId: "listPayments"
+      - Payment
+      summary: Retrieve a list of Payment entities.
+      operationId: listPayment
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Payment records."
+          description: A list of Payment entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Payment"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Payment"
-      summary: "Create a new Payment record."
-      operationId: "createPayment"
+      - Payment
+      summary: Create a new Payment entity.
+      operationId: createPayment
       requestBody:
-        description: "Payment data to create the new resource."
+        description: Payment data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +80,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "Payment created successfully."
+          description: Payment created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/payments/PR-1234567"
+                type: string
+                example: /payments/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Payment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /payments/{paymentKey}:
     get:
       tags:
-      - "Payment"
-      summary: "Retrieve a specific Payment record."
-      operationId: "getPaymentById"
+      - Payment
+      summary: Retrieve a specific Payment entity.
+      operationId: getPaymentById
       responses:
         "200":
-          description: "The requested Payment record."
+          description: The requested Payment entity.
           content:
             application/json:
               schema:
@@ -86,11 +116,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Payment"
-      summary: "Replace a Payment record."
-      operationId: "replacePayment"
+      - Payment
+      summary: Replace a Payment entity.
+      operationId: replacePayment
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +128,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Payment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Payment"
-      summary: "Delete a Payment Record"
-      description: "Marks the Payment record as inactive or removes..."
-      operationId: "deletePaymentRecord"
+      - Payment
+      summary: Delete a Payment entity
+      description: Marks the Payment entity as inactive or removes...
+      operationId: deletePaymentEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Payment"
-      summary: "Partially update a Payment record."
-      operationId: "updatePayment"
+      - Payment
+      summary: Partially update a Payment entity.
+      operationId: updatePayment
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PaymentUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Payment"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the specific Payment."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the specific Payment.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payments/{paymentKey}/payment-transactions:
     get:
       tags:
-      - "PaymentTransaction"
-      summary: "Retrieve a list of PaymentTransaction records s..."
-      operationId: "listPaymentTransactionsByPaymentKey"
+      - PaymentTransaction
+      summary: Retrieve a list of PaymentTransaction entities ...
+      operationId: listPaymentTransactionByPaymentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PaymentTransaction records."
+          description: A list of PaymentTransaction entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PaymentTransaction"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentTransaction"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PaymentTransaction"
-      summary: "Create a new PaymentTransaction record."
-      operationId: "createPaymentTransaction"
+      - PaymentTransaction
+      summary: Create a new PaymentTransaction entity.
+      operationId: createPaymentTransaction
       requestBody:
-        description: "PaymentTransaction data to create the new resou..."
+        description: PaymentTransaction data to create the new resou...
         content:
           application/json:
             schema:
@@ -198,37 +249,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PaymentTransaction created successfully."
+          description: PaymentTransaction created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentTransaction"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payments/{paymentKey}/payment-transactions/{paymentTransactionKey}:
     get:
       tags:
-      - "PaymentTransaction"
-      summary: "Retrieve a specific PaymentTransaction record."
-      operationId: "getPaymentTransactionById"
+      - PaymentTransaction
+      summary: Retrieve a specific PaymentTransaction entity.
+      operationId: getPaymentTransactionById
       responses:
         "200":
-          description: "The requested PaymentTransaction record."
+          description: The requested PaymentTransaction entity.
           content:
             application/json:
               schema:
@@ -239,11 +292,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PaymentTransaction"
-      summary: "Replace a PaymentTransaction record."
-      operationId: "replacePaymentTransaction"
+      - PaymentTransaction
+      summary: Replace a PaymentTransaction entity.
+      operationId: replacePaymentTransaction
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,114 +304,135 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentTransaction"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PaymentTransaction"
-      summary: "Delete a PaymentTransaction Record"
-      description: "Marks the PaymentTransaction record as inactive..."
-      operationId: "deletePaymentTransactionRecord"
+      - PaymentTransaction
+      summary: Delete a PaymentTransaction entity
+      description: Marks the PaymentTransaction entity as inactive...
+      operationId: deletePaymentTransactionEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PaymentTransaction"
-      summary: "Partially update a PaymentTransaction record."
-      operationId: "updatePaymentTransaction"
+      - PaymentTransaction
+      summary: Partially update a PaymentTransaction entity.
+      operationId: updatePaymentTransaction
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PaymentTransactionUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PaymentTransaction"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "paymentTransactionKey"
-      in: "path"
-      description: "The unique identifier for the specific PaymentTransaction."
+        type: string
+    - name: paymentTransactionKey
+      in: path
+      description: The unique identifier for the specific PaymentTransaction.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payments/{paymentKey}/moneys:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a list of Money records scoped by paym..."
-      operationId: "listMoneysByPaymentKey"
+      - Money
+      summary: Retrieve a list of Money entities scoped by pay...
+      operationId: listMoneyByPaymentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Money records."
+          description: A list of Money entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Money"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Money"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payments/{paymentKey}/moneys/{moneyKey}:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a specific Money record."
-      operationId: "getMoneyById"
+      - Money
+      summary: Retrieve a specific Money entity.
+      operationId: getMoneyById
       responses:
         "200":
-          description: "The requested Money record."
+          description: The requested Money entity.
           content:
             application/json:
               schema:
@@ -369,11 +443,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Money"
-      summary: "Replace a Money record."
-      operationId: "replaceMoney"
+      - Money
+      summary: Replace a Money entity.
+      operationId: replaceMoney
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -381,69 +455,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Money"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "moneyKey"
-      in: "path"
-      description: "The unique identifier for the specific Money."
+        type: string
+    - name: moneyKey
+      in: path
+      description: The unique identifier for the specific Money.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payments/{paymentKey}/identifiers:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a list of Identifier records scoped by..."
-      operationId: "listIdentifiersByPaymentKey"
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped b...
+      operationId: listIdentifierByPaymentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Identifier records."
+          description: A list of Identifier entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "Identifier"
-      summary: "Create a new Identifier record."
-      operationId: "createIdentifier"
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
       requestBody:
-        description: "Identifier data to create the new resource."
+        description: Identifier data to create the new resource.
         content:
           application/json:
             schema:
@@ -451,37 +544,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "Identifier created successfully."
+          description: Identifier created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payments/{paymentKey}/identifiers/{identifierKey}:
     get:
       tags:
-      - "Identifier"
-      summary: "Retrieve a specific Identifier record."
-      operationId: "getIdentifierById"
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
       responses:
         "200":
-          description: "The requested Identifier record."
+          description: The requested Identifier entity.
           content:
             application/json:
               schema:
@@ -492,11 +587,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Identifier"
-      summary: "Replace a Identifier record."
-      operationId: "replaceIdentifier"
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -504,105 +599,126 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "Identifier"
-      summary: "Delete a Identifier Record"
-      description: "Marks the Identifier record as inactive or remo..."
-      operationId: "deleteIdentifierRecord"
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or remo...
+      operationId: deleteIdentifierEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "Identifier"
-      summary: "Partially update a Identifier record."
-      operationId: "updateIdentifier"
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/IdentifierUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "identifierKey"
-      in: "path"
-      description: "The unique identifier for the specific Identifier."
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /payments/{paymentKey}/payment-method-references:
     get:
       tags:
-      - "PaymentMethodReference"
-      summary: "Retrieve a list of PaymentMethodReference recor..."
-      operationId: "listPaymentMethodReferencesByPaymentKey"
+      - PaymentMethodReference
+      summary: Retrieve a list of PaymentMethodReference entit...
+      operationId: listPaymentMethodReferenceByPaymentKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of PaymentMethodReference records."
+          description: A list of PaymentMethodReference entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/PaymentMethodReference"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentMethodReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "PaymentMethodReference"
-      summary: "Create a new PaymentMethodReference record."
-      operationId: "createPaymentMethodReference"
+      - PaymentMethodReference
+      summary: Create a new PaymentMethodReference entity.
+      operationId: createPaymentMethodReference
       requestBody:
-        description: "PaymentMethodReference data to create the new r..."
+        description: PaymentMethodReference data to create the new r...
         content:
           application/json:
             schema:
@@ -610,37 +726,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "PaymentMethodReference created successfully."
+          description: PaymentMethodReference created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentMethodReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}:
     get:
       tags:
-      - "PaymentMethodReference"
-      summary: "Retrieve a specific PaymentMethodReference record."
-      operationId: "getPaymentMethodReferenceById"
+      - PaymentMethodReference
+      summary: Retrieve a specific PaymentMethodReference entity.
+      operationId: getPaymentMethodReferenceById
       responses:
         "200":
-          description: "The requested PaymentMethodReference record."
+          description: The requested PaymentMethodReference entity.
           content:
             application/json:
               schema:
@@ -651,11 +769,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "PaymentMethodReference"
-      summary: "Replace a PaymentMethodReference record."
-      operationId: "replacePaymentMethodReference"
+      - PaymentMethodReference
+      summary: Replace a PaymentMethodReference entity.
+      operationId: replacePaymentMethodReference
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -663,199 +781,273 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentMethodReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "PaymentMethodReference"
-      summary: "Delete a PaymentMethodReference Record"
-      description: "Marks the PaymentMethodReference record as inac..."
-      operationId: "deletePaymentMethodReferenceRecord"
+      - PaymentMethodReference
+      summary: Delete a PaymentMethodReference entity
+      description: Marks the PaymentMethodReference entity as inac...
+      operationId: deletePaymentMethodReferenceEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "PaymentMethodReference"
-      summary: "Partially update a PaymentMethodReference record."
-      operationId: "updatePaymentMethodReference"
+      - PaymentMethodReference
+      summary: Partially update a PaymentMethodReference entity.
+      operationId: updatePaymentMethodReference
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PaymentMethodReferenceUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the update..."
+          description: Entity updated successfully. Returns the update...
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/PaymentMethodReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "paymentKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "paymentMethodReferenceKey"
-      in: "path"
-      description: "The unique identifier for the specific PaymentMethodReference."
+        type: string
+    - name: paymentMethodReferenceKey
+      in: path
+      description: The unique identifier for the specific PaymentMethodReference.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
+  /payments/health:
+    get:
+      summary: Health Check
+      description: Public endpoint to verify service availability.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                required:
+                - status
+                - version
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: up
+                    enum:
+                    - up
+                    - down
+                    - maintenance
+                  version:
+                    type: string
+                    description: The version of the ontology implemented by this service.
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    description: Server time in ISO-8601 format.
+                    format: date-time
+                    example: 2025-12-21T23:00:00Z
+      security:
+      - {}
+  /payments/batch:
+    post:
+      summary: Bulk create payments
+      operationId: createPaymentBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  maxItems: 100
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PaymentCreate"
+      responses:
+        "200":
+          description: Batch processing complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succeeded:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          format: int32
+                        error:
+                          $ref: "#/components/schemas/ErrorDetail"
 components:
   schemas:
     Codes:
-      type: "array"
+      type: array
       items:
-        type: "string"
+        type: string
     ErrorDetail:
       required:
-      - "code"
-      - "message"
-      - "timestamp"
-      type: "object"
+      - code
+      - message
+      - timestamp
+      type: object
       properties:
         code:
-          type: "string"
+          type: string
           description: "A unique, system-defined error code (e.g., 'AUT..."
-          example: "NOT_FOUND_PR"
+          example: NOT_FOUND_PR
         message:
-          type: "string"
-          description: "A human-readable summary providing specific det..."
-          example: "Personnel Record with ID PR-1234567 was not found."
+          type: string
+          description: A human-readable summary providing specific det...
+          example: Personnel Record with ID PR-1234567 was not found.
         details:
-          type: "array"
-          description: "Optional array of specific field-level validati..."
+          type: array
+          description: Optional array of specific field-level validati...
           items:
-            type: "object"
+            type: object
             properties:
               field:
-                type: "string"
+                type: string
                 description: "The specific field that failed validation (e.g., 'firstName')."
-                example: "payrollId"
+                example: payrollId
               issue:
-                type: "string"
+                type: string
                 description: "The validation message for the field (e.g., 'must be\
                   \ numeric')."
-                example: "must be unique"
+                example: must be unique
         timestamp:
-          type: "string"
+          type: string
           description: "The time the error occurred, in ISO 8601 format."
-          format: "date-time"
-          example: "2025-11-10T10:30:00Z"
-      description: "Standard format for all API error responses."
+          format: date-time
+          example: 2025-11-10T10:30:00Z
+      description: Standard format for all API error responses.
     Identifier:
-      type: "object"
+      type: object
       properties:
         identifier_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
+          type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: "External system identifier"
+      description: External system identifier
     IdentifierCreate:
       required:
-      - "identifier_key"
-      type: "object"
-      description: "Identifier Create for Post"
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
       allOf:
       - $ref: "#/components/schemas/Identifier"
     IdentifierUpdate:
-      type: "object"
+      type: object
       properties:
         system_codes:
           $ref: "#/components/schemas/Codes"
         identifier_type:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         context:
-          type: "string"
-          description: "Context or domain of the identifier"
+          type: string
+          description: Context or domain of the identifier
         detail:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
+          type: string
+          description: The monetary or hours-based value of the...
         value:
-          type: "string"
-          description: "The monetary or hours-based value of the..."
-      description: "Identifier Update for Patch and Put"
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
     Money:
-      type: "object"
+      type: object
       properties:
         money_key:
-          type: "string"
-          description: "The unique key for the monetary value."
+          type: string
+          description: The unique key for the monetary value.
         money_id:
-          type: "string"
-          description: "The unique ID for the monetary value."
+          type: string
+          description: The unique ID for the monetary value.
         currency_code:
-          type: "string"
+          type: string
           description: "ISO currency code, e.g., 'USD'."
         display_value:
-          type: "string"
-          description: "The locale-specific display format for t..."
+          type: string
+          description: The locale-specific display format for t...
         locale:
-          type: "string"
+          type: string
           description: "The locale code (e.g., en-US, fr-FR)."
         value:
-          type: "string"
-          description: "The monetary value."
+          type: string
+          description: The monetary value.
       description: "Represents a monetary value, including its curr..."
     Payment:
-      type: "object"
+      type: object
       properties:
         payment_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         payment_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         target_amount:
@@ -863,70 +1055,70 @@ components:
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the payment was associ..."
-          format: "date-time"
-      description: "Reference to a PaymentMethod (Party) Aggregate ..."
+          type: string
+          description: The date and time the payment was associ...
+          format: date-time
+      description: Reference to a PaymentMethod (Party) Aggregate ...
     PaymentAmountTypes:
-      type: "string"
-      description: "types of payment amounts."
+      type: string
+      description: types of payment amounts.
       enum:
-      - "PARTIAL_REFUND"
-      - "TOTAL_REFUND"
-      - "TOTAL_INTEREST"
-      - "TOTAL_PAYMENT"
-      - "TOTAL_PRINCIPAL"
-      - "TOTAL_FINANCED"
-      - "DOWN_PAYMENT"
-      - "TRADE_IN_ALLOWANCE"
-      - "CREDIT_CARD_PAYMENT"
-      - "CASH_PAYMENT"
-      - "CHECK_PAYMENT"
-      - "EFT_PAYMENT"
-      - "PAYMENT_EVENT"
-      - "SCHEDULED_PAYMENT_EVENT"
-      - "BASE_PAYMENT_EVENT"
-      - "DESIRED_PAYMENT"
-      - "ADMIN_FEE"
-      - "GOVERNMENT_FEE"
-      - "SERVICE_FEE"
-      - "LATE_FEE"
-      - "PAYROLL"
-      - "OTHER"
+      - PARTIAL_REFUND
+      - TOTAL_REFUND
+      - TOTAL_INTEREST
+      - TOTAL_PAYMENT
+      - TOTAL_PRINCIPAL
+      - TOTAL_FINANCED
+      - DOWN_PAYMENT
+      - TRADE_IN_ALLOWANCE
+      - CREDIT_CARD_PAYMENT
+      - CASH_PAYMENT
+      - CHECK_PAYMENT
+      - EFT_PAYMENT
+      - PAYMENT_EVENT
+      - SCHEDULED_PAYMENT_EVENT
+      - BASE_PAYMENT_EVENT
+      - DESIRED_PAYMENT
+      - ADMIN_FEE
+      - GOVERNMENT_FEE
+      - SERVICE_FEE
+      - LATE_FEE
+      - PAYROLL
+      - OTHER
     PaymentCreate:
       required:
-      - "payment_key"
-      type: "object"
-      description: "Payment Create for Post"
+      - payment_key
+      type: object
+      description: Payment Create for Post
       allOf:
       - $ref: "#/components/schemas/Payment"
     PaymentMethodReference:
-      type: "object"
+      type: object
       properties:
         payment_method_reference_id:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique identifier value for the referenc... Pat..."
+          type: string
+          description: Unique identifier value for the referenc... Pat...
         payment_method_reference_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "Unique key value for the reference recor... Pat..."
+          type: string
+          description: Unique key value for the reference recor... Pat...
         payment_method_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
-          type: "string"
-          description: "The unique key identifying the reference... Pat..."
+          type: string
+          description: The unique key identifying the reference... Pat...
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
         processor_options:
@@ -934,19 +1126,26 @@ components:
         snapshot_details:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the paymentMethod was ..."
-          format: "date-time"
-      description: "Reference to a PaymentMethod (Party) Aggregate ..."
+          type: string
+          description: The date and time the paymentMethod was ...
+          format: date-time
+        paid_date:
+          type: string
+          description: The date the purchase order was created ...
+          format: date
+          example: 2025-07-23
+        payment_status_type:
+          $ref: "#/components/schemas/PaymentStatusTypes"
+      description: Reference to a PaymentMethod (Party) Aggregate ...
     PaymentMethodReferenceCreate:
       required:
-      - "payment_method_reference_key"
-      type: "object"
-      description: "PaymentMethodReference Create for Post"
+      - payment_method_reference_key
+      type: object
+      description: PaymentMethodReference Create for Post
       allOf:
       - $ref: "#/components/schemas/PaymentMethodReference"
     PaymentMethodReferenceUpdate:
-      type: "object"
+      type: object
       properties:
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
@@ -955,89 +1154,96 @@ components:
         snapshot_details:
           $ref: "#/components/schemas/Identifier"
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the paymentMethod was ..."
-          format: "date-time"
-      description: "PaymentMethodReference Update for Patch and Put"
+          type: string
+          description: The date and time the paymentMethod was ...
+          format: date-time
+        paid_date:
+          type: string
+          description: The date the purchase order was created ...
+          format: date
+          example: 2025-07-23
+        payment_status_type:
+          $ref: "#/components/schemas/PaymentStatusTypes"
+      description: PaymentMethodReference Update for Patch and Put
     PaymentMethodTypes:
-      type: "string"
-      description: "types of payment methods."
+      type: string
+      description: types of payment methods.
       enum:
-      - "CASH"
-      - "CHECK"
-      - "MONEY_ORDER"
-      - "CASH_ON_DELIVERY"
-      - "CREDIT_CARD"
-      - "DEBIT_CARD"
-      - "GIFT_CARD"
-      - "EFT"
-      - "ONLINE_BANK_TRANSFER"
-      - "MOBILE_WALLET"
-      - "CRYPTOCURRENCY"
-      - "ONLINE_PAYMENT_PLATFORM"
-      - "PAYROLL_DEDUCTION"
-      - "FINANCE"
-      - "LEASE"
-      - "RENTAL"
-      - "TERMS"
-      - "DUE_ON_RECEIPT"
-      - "TRADE_IN"
-      - "REWARD_POINTS"
-      - "STORE_CREDIT"
-      - "EXCHANGE"
-      - "OTHER"
-      - "NOT_APPLICABLE"
+      - CASH
+      - CHECK
+      - MONEY_ORDER
+      - CASH_ON_DELIVERY
+      - CREDIT_CARD
+      - DEBIT_CARD
+      - GIFT_CARD
+      - EFT
+      - ONLINE_BANK_TRANSFER
+      - MOBILE_WALLET
+      - CRYPTOCURRENCY
+      - ONLINE_PAYMENT_PLATFORM
+      - PAYROLL_DEDUCTION
+      - FINANCE
+      - LEASE
+      - RENTAL
+      - TERMS
+      - DUE_ON_RECEIPT
+      - TRADE_IN
+      - REWARD_POINTS
+      - STORE_CREDIT
+      - EXCHANGE
+      - OTHER
+      - NOT_APPLICABLE
     PaymentStatusTypes:
-      type: "string"
-      description: "types of payment status."
+      type: string
+      description: types of payment status.
       enum:
-      - "CREATED"
-      - "PENDING"
-      - "PROCESSING"
-      - "PROCESSED"
-      - "COMPLETED"
-      - "SUCCEEDED"
-      - "PAID"
-      - "REJECTED"
-      - "SCHEDULED"
-      - "SUBMITTED"
-      - "DEFERRED"
-      - "DEFERRED_INTERNAL"
-      - "CLEARED"
-      - "FRAUD_REVIEW"
-      - "APPROVED"
-      - "ACCEPTED"
-      - "REQUIRES_ACTION"
-      - "REQUIRES_PAYMENT_STATUS"
-      - "AUTO_SCHEDULED"
-      - "AUTO_INITIATED"
-      - "MANUAL_INITIATED"
-      - "PENDING_PAYER_FUNDS"
-      - "FAILED"
-      - "DENIED"
-      - "EXPIRED"
-      - "CANCELLED"
-      - "VOIDED"
-      - "REVERSED"
-      - "REFUNDED"
-      - "PAYROLL_PENDING"
-      - "PAYROLL_FINALIZED"
-      - "ACTIVE"
-      - "INACTIVE"
-      - "FUNDED"
-      - "RETURNED"
+      - CREATED
+      - PENDING
+      - PROCESSING
+      - PROCESSED
+      - COMPLETED
+      - SUCCEEDED
+      - PAID
+      - REJECTED
+      - SCHEDULED
+      - SUBMITTED
+      - DEFERRED
+      - DEFERRED_INTERNAL
+      - CLEARED
+      - FRAUD_REVIEW
+      - APPROVED
+      - ACCEPTED
+      - REQUIRES_ACTION
+      - REQUIRES_PAYMENT_STATUS
+      - AUTO_SCHEDULED
+      - AUTO_INITIATED
+      - MANUAL_INITIATED
+      - PENDING_PAYER_FUNDS
+      - FAILED
+      - DENIED
+      - EXPIRED
+      - CANCELLED
+      - VOIDED
+      - REVERSED
+      - REFUNDED
+      - PAYROLL_PENDING
+      - PAYROLL_FINALIZED
+      - ACTIVE
+      - INACTIVE
+      - FUNDED
+      - RETURNED
     PaymentTransaction:
-      type: "object"
+      type: object
       properties:
         payment_amount_key:
-          type: "string"
-          description: "A unique key for the payment amount."
+          type: string
+          description: A unique key for the payment amount.
         payment_amount_id:
-          type: "string"
-          description: "A unique key for the payment amount."
+          type: string
+          description: A unique key for the payment amount.
         payment_amount_type:
           $ref: "#/components/schemas/PaymentAmountTypes"
         payment_method_reference:
@@ -1046,53 +1252,53 @@ components:
           $ref: "#/components/schemas/Money"
         payment_transaction_status_type:
           $ref: "#/components/schemas/PaymentTransactionStatusTypes"
-      description: "Represents the type and value of a payment amount."
+      description: Represents the type and value of a payment amount.
     PaymentTransactionCreate:
       required:
-      - "payment_transaction_key"
-      type: "object"
-      description: "PaymentTransaction Create for Post"
+      - payment_transaction_key
+      type: object
+      description: PaymentTransaction Create for Post
       allOf:
       - $ref: "#/components/schemas/PaymentTransaction"
     PaymentTransactionStatusTypes:
-      type: "string"
-      description: "types of payment transaction status."
+      type: string
+      description: types of payment transaction status.
       enum:
-      - "NONE"
-      - "EXPIRED"
-      - "CAPTURED"
-      - "CONFIRMATION"
-      - "VOID"
-      - "APPROVE"
-      - "REFUNDED"
-      - "PARTIALLY_REFUNDED"
-      - "AUTHORIZE"
-      - "PENDING_MERCHANT"
-      - "SUSPENDED"
-      - "OPEN"
-      - "PEND"
-      - "PROCESS"
-      - "DECLINE"
-      - "DUE"
-      - "INCURRED"
-      - "CUSTOM_CODE"
-      - "USER_HOLD"
-      - "ADMIN_HOLD"
-      - "ACTIVATED"
-      - "DEACTIVATE"
-      - "CANCEL"
-      - "CONFIRM"
-      - "CLOSE"
-      - "TRIAL"
-      - "SUBSCRIPTION"
-      - "OVERRIDE"
-      - "UPGRADE"
-      - "HOLD_ON_RENEWAL"
-      - "HOLD_ON_DATE"
-      - "PAYMENT"
-      - "DOWNGRADE"
+      - NONE
+      - EXPIRED
+      - CAPTURED
+      - CONFIRMATION
+      - VOID
+      - APPROVE
+      - REFUNDED
+      - PARTIALLY_REFUNDED
+      - AUTHORIZE
+      - PENDING_MERCHANT
+      - SUSPENDED
+      - OPEN
+      - PEND
+      - PROCESS
+      - DECLINE
+      - DUE
+      - INCURRED
+      - CUSTOM_CODE
+      - USER_HOLD
+      - ADMIN_HOLD
+      - ACTIVATED
+      - DEACTIVATE
+      - CANCEL
+      - CONFIRM
+      - CLOSE
+      - TRIAL
+      - SUBSCRIPTION
+      - OVERRIDE
+      - UPGRADE
+      - HOLD_ON_RENEWAL
+      - HOLD_ON_DATE
+      - PAYMENT
+      - DOWNGRADE
     PaymentTransactionUpdate:
-      type: "object"
+      type: object
       properties:
         amount:
           $ref: "#/components/schemas/Money"
@@ -1102,31 +1308,31 @@ components:
           $ref: "#/components/schemas/PaymentMethodReference"
         payment_amount_type:
           $ref: "#/components/schemas/PaymentAmountTypes"
-      description: "PaymentTransaction Update for Patch and Put"
+      description: PaymentTransaction Update for Patch and Put
     PaymentTransactions:
-      type: "array"
+      type: array
       items:
         $ref: "#/components/schemas/PaymentTransaction"
     PaymentUpdate:
-      type: "object"
+      type: object
       properties:
         target_amount:
           $ref: "#/components/schemas/Money"
         context:
-          type: "string"
-          description: "Context or domain of the reference."
+          type: string
+          description: Context or domain of the reference.
         occurrence_date_time:
-          type: "string"
-          description: "The date and time the payment was associ..."
-          format: "date-time"
+          type: string
+          description: The date and time the payment was associ...
+          format: date-time
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
-      description: "Payment Update for Patch and Put"
+      description: Payment Update for Patch and Put
   responses:
     NotFoundError:
-      description: "The requested resource was not found."
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -1138,26 +1344,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: "Authentication failed. The access token is miss..."
+      description: Authentication failed. The access token is miss...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ForbiddenError:
-      description: "The authenticated user does not have the necess..."
+      description: The authenticated user does not have the necess...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: "The request could not be completed because it c..."
+      description: The request could not be completed because it c...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: "An unexpected error occurred on the server whil..."
+      description: An unexpected error occurred on the server whil...
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+  securitySchemes:
+    industry-oauth:
+      type: oauth2
+      description: Centralized OAuth2 service for all industry members
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            standard:read: Read access
+    member-api-key:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+    bearer-auth:
+      type: http
+      description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT

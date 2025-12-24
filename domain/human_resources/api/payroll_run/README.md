@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PayrollPayment**, **PayrollRun**, **Position**, **ProductSubject**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **Identifier**, **PayrollPayment**, **PayrollRun**, **Position**, **ProductSubject**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -93,7 +100,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
-💠 **CommunicationChannelTypes** : types of communication channels.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PaymentExecutionContextTypes** : types of payment execution contexts.<br/>
@@ -101,6 +107,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PayrollRunStatusTypes** : types of payroll run status.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **CommunicationChannelTypes** : Defines the various types of communication chan...<br/>
 💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
@@ -195,7 +202,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs</span> <br/>
-        <span class="api-summary">Retrieve a list of all PayrollRun records. getPayrollRuns</span>
+        <span class="api-summary">Retrieve a list of PayrollRun entities. getPayrollRun</span>
     </span>
 </div>
 
@@ -203,7 +210,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs</span> <br/>
-        <span class="api-summary">Create a new PayrollRun record. createPayrollRun</span>
+        <span class="api-summary">Create a new PayrollRun entity. createPayrollRun</span>
     </span>
 </div>
 
@@ -212,7 +219,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollRun record. getayrollRunById</span>
+        <span class="api-summary">Retrieve a specific PayrollRun entity. getayrollRunById</span>
     </span>
 </div>
 
@@ -220,7 +227,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollRun record. replacePayrollRun</span>
+        <span class="api-summary">Replace a PayrollRun entity. replacePayrollRun</span>
     </span>
 </div>
 
@@ -228,7 +235,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollRun record. updatePayrollRun</span>
+        <span class="api-summary">Partially update a PayrollRun entity. updatePayrollRun</span>
     </span>
 </div>
 
@@ -236,7 +243,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollRun Record deletePayrollRunRecord</span>
+        <span class="api-summary">Delete a PayrollRun entity deletePayrollRunEntity</span>
     </span>
 </div>
 
@@ -245,7 +252,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by payrollRunKey. getIdentifiersByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by payrollRunKey. getIdentifierByPayrollRunKey</span>
     </span>
 </div>
 
@@ -253,7 +260,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -262,7 +269,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -270,7 +277,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -278,7 +285,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -286,7 +293,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -295,7 +302,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address records scoped by payrollRunKey. getAddresssByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of Address entities scoped by payrollRunKey. getAddressByPayrollRunKey</span>
     </span>
 </div>
 
@@ -303,7 +310,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address record. createAddress</span>
+        <span class="api-summary">Create a new Address entity. createAddress</span>
     </span>
 </div>
 
@@ -312,7 +319,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
+        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
     </span>
 </div>
 
@@ -320,7 +327,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address record. replaceAddress</span>
+        <span class="api-summary">Replace a Address entity. replaceAddress</span>
     </span>
 </div>
 
@@ -328,7 +335,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address record. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updateAddress</span>
     </span>
 </div>
 
@@ -336,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
+        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
     </span>
 </div>
 
@@ -345,7 +352,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by payrollRunKey. getEffectivePeriodsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by payrollRunKey. getEffectivePeriodByPayrollRunKey</span>
     </span>
 </div>
 
@@ -354,7 +361,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -362,7 +369,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -371,7 +378,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects</span> <br/>
-        <span class="api-summary">Retrieve a list of ProductSubject records scoped by payrollRunKey. getProductSubjectsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of ProductSubject entities scoped by payrollRunKey. getProductSubjectByPayrollRunKey</span>
     </span>
 </div>
 
@@ -379,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects</span> <br/>
-        <span class="api-summary">Create a new ProductSubject record. createProductSubject</span>
+        <span class="api-summary">Create a new ProductSubject entity. createProductSubject</span>
     </span>
 </div>
 
@@ -388,7 +395,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects/{productSubjectKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ProductSubject record. getroductSubjectById</span>
+        <span class="api-summary">Retrieve a specific ProductSubject entity. getroductSubjectById</span>
     </span>
 </div>
 
@@ -396,7 +403,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects/{productSubjectKey}</span> <br/>
-        <span class="api-summary">Replace a ProductSubject record. replaceProductSubject</span>
+        <span class="api-summary">Replace a ProductSubject entity. replaceProductSubject</span>
     </span>
 </div>
 
@@ -404,7 +411,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects/{productSubjectKey}</span> <br/>
-        <span class="api-summary">Partially update a ProductSubject record. updateProductSubject</span>
+        <span class="api-summary">Partially update a ProductSubject entity. updateProductSubject</span>
     </span>
 </div>
 
@@ -412,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/product-subjects/{productSubjectKey}</span> <br/>
-        <span class="api-summary">Delete a ProductSubject Record deleteProductSubjectRecord</span>
+        <span class="api-summary">Delete a ProductSubject entity deleteProductSubjectEntity</span>
     </span>
 </div>
 
@@ -421,7 +428,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments</span> <br/>
-        <span class="api-summary">Retrieve a list of PayrollPayment records scoped by payrollRunKey. getPayrollPaymentsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of PayrollPayment entities scoped by payrollRunKey. getPayrollPaymentByPayrollRunKey</span>
     </span>
 </div>
 
@@ -429,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments</span> <br/>
-        <span class="api-summary">Create a new PayrollPayment record. createPayrollPayment</span>
+        <span class="api-summary">Create a new PayrollPayment entity. createPayrollPayment</span>
     </span>
 </div>
 
@@ -438,7 +445,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments/{payrollPaymentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollPayment record. getayrollPaymentById</span>
+        <span class="api-summary">Retrieve a specific PayrollPayment entity. getayrollPaymentById</span>
     </span>
 </div>
 
@@ -446,7 +453,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments/{payrollPaymentKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollPayment record. replacePayrollPayment</span>
+        <span class="api-summary">Replace a PayrollPayment entity. replacePayrollPayment</span>
     </span>
 </div>
 
@@ -454,7 +461,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments/{payrollPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollPayment record. updatePayrollPayment</span>
+        <span class="api-summary">Partially update a PayrollPayment entity. updatePayrollPayment</span>
     </span>
 </div>
 
@@ -462,7 +469,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/payroll-payments/{payrollPaymentKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollPayment Record deletePayrollPaymentRecord</span>
+        <span class="api-summary">Delete a PayrollPayment entity deletePayrollPaymentEntity</span>
     </span>
 </div>
 
@@ -471,7 +478,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by payrollRunKey. getTimeSlotsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by payrollRunKey. getTimeSlotByPayrollRunKey</span>
     </span>
 </div>
 
@@ -480,7 +487,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -488,7 +495,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -497,7 +504,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods</span> <br/>
-        <span class="api-summary">Retrieve a list of ContactMethod records scoped by payrollRunKey. getContactMethodsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of ContactMethod entities scoped by payrollRunKey. getContactMethodByPayrollRunKey</span>
     </span>
 </div>
 
@@ -505,7 +512,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods</span> <br/>
-        <span class="api-summary">Create a new ContactMethod record. createContactMethod</span>
+        <span class="api-summary">Create a new ContactMethod entity. createContactMethod</span>
     </span>
 </div>
 
@@ -514,7 +521,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods/{contactMethodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ContactMethod record. getontactMethodById</span>
+        <span class="api-summary">Retrieve a specific ContactMethod entity. getontactMethodById</span>
     </span>
 </div>
 
@@ -522,7 +529,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods/{contactMethodKey}</span> <br/>
-        <span class="api-summary">Replace a ContactMethod record. replaceContactMethod</span>
+        <span class="api-summary">Replace a ContactMethod entity. replaceContactMethod</span>
     </span>
 </div>
 
@@ -530,7 +537,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods/{contactMethodKey}</span> <br/>
-        <span class="api-summary">Partially update a ContactMethod record. updateContactMethod</span>
+        <span class="api-summary">Partially update a ContactMethod entity. updateContactMethod</span>
     </span>
 </div>
 
@@ -538,7 +545,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/contact-methods/{contactMethodKey}</span> <br/>
-        <span class="api-summary">Delete a ContactMethod Record deleteContactMethodRecord</span>
+        <span class="api-summary">Delete a ContactMethod entity deleteContactMethodEntity</span>
     </span>
 </div>
 
@@ -547,7 +554,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels</span> <br/>
-        <span class="api-summary">Retrieve a list of CommunicationChannel records scoped by payrollRunKey. getCommunicationChannelsByPayrollRunKey</span>
+        <span class="api-summary">Retrieve a list of CommunicationChannel entities scoped by payrollRunKey. getCommunicationChannelByPayrollRunKey</span>
     </span>
 </div>
 
@@ -555,7 +562,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels</span> <br/>
-        <span class="api-summary">Create a new CommunicationChannel record. createCommunicationChannel</span>
+        <span class="api-summary">Create a new CommunicationChannel entity. createCommunicationChannel</span>
     </span>
 </div>
 
@@ -564,7 +571,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CommunicationChannel record. getommunicationChannelById</span>
+        <span class="api-summary">Retrieve a specific CommunicationChannel entity. getommunicationChannelById</span>
     </span>
 </div>
 
@@ -572,7 +579,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Replace a CommunicationChannel record. replaceCommunicationChannel</span>
+        <span class="api-summary">Replace a CommunicationChannel entity. replaceCommunicationChannel</span>
     </span>
 </div>
 
@@ -580,7 +587,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Partially update a CommunicationChannel record. updateCommunicationChannel</span>
+        <span class="api-summary">Partially update a CommunicationChannel entity. updateCommunicationChannel</span>
     </span>
 </div>
 
@@ -588,7 +595,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-runs/{payrollRunKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Delete a CommunicationChannel Record deleteCommunicationChannelRecord</span>
+        <span class="api-summary">Delete a CommunicationChannel entity deleteCommunicationChannelEntity</span>
     </span>
 </div>
 
@@ -598,15 +605,15 @@ The following resources follow a consistent pattern under PayrollRunroot with ke
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **payroll-run** | /payroll-runs | listPayrollRuns | createPayrollRun | getPayrollRuns | updatePayrollRuns | deletePayrollRuns |
-    | **identifier** | /payroll-runs/{payrollRunKey}/identifiers | listIdentifiersByPayrollRunKey | createIdentifier | getIdentifiersByPayrollRunKey | updateIdentifiersByPayrollRunKey | deleteIdentifiersByPayrollRunKey |
-    | **addresse** | /payroll-runs/{payrollRunKey}/addresses | listAddresssByPayrollRunKey | createAddress | getAddresssByPayrollRunKey | updateAddresssByPayrollRunKey | deleteAddresssByPayrollRunKey |
-    | **effective-period** | /payroll-runs/{payrollRunKey}/effective-periods | listEffectivePeriodsByPayrollRunKey |  | getEffectivePeriodsByPayrollRunKey | updateEffectivePeriodsByPayrollRunKey | deleteEffectivePeriodsByPayrollRunKey |
-    | **product-subject** | /payroll-runs/{payrollRunKey}/product-subjects | listProductSubjectsByPayrollRunKey | createProductSubject | getProductSubjectsByPayrollRunKey | updateProductSubjectsByPayrollRunKey | deleteProductSubjectsByPayrollRunKey |
-    | **payroll-payment** | /payroll-runs/{payrollRunKey}/payroll-payments | listPayrollPaymentsByPayrollRunKey | createPayrollPayment | getPayrollPaymentsByPayrollRunKey | updatePayrollPaymentsByPayrollRunKey | deletePayrollPaymentsByPayrollRunKey |
-    | **time-slot** | /payroll-runs/{payrollRunKey}/time-slots | listTimeSlotsByPayrollRunKey |  | getTimeSlotsByPayrollRunKey | updateTimeSlotsByPayrollRunKey | deleteTimeSlotsByPayrollRunKey |
-    | **contact-method** | /payroll-runs/{payrollRunKey}/contact-methods | listContactMethodsByPayrollRunKey | createContactMethod | getContactMethodsByPayrollRunKey | updateContactMethodsByPayrollRunKey | deleteContactMethodsByPayrollRunKey |
-    | **communication-channel** | /payroll-runs/{payrollRunKey}/communication-channels | listCommunicationChannelsByPayrollRunKey | createCommunicationChannel | getCommunicationChannelsByPayrollRunKey | updateCommunicationChannelsByPayrollRunKey | deleteCommunicationChannelsByPayrollRunKey |
+    | **payroll-run** | /payroll-runs | listPayrollRun | createPayrollRun | getPayrollRun | updatePayrollRun | deletePayrollRun |
+    | **identifier** | /payroll-runs/{payrollRunKey}/identifiers | listIdentifierByPayrollRunKey | createIdentifier | getIdentifierByPayrollRunKey | updateIdentifierByPayrollRunKey | deleteIdentifierByPayrollRunKey |
+    | **addresse** | /payroll-runs/{payrollRunKey}/addresses | listAddressByPayrollRunKey | createAddress | getAddressByPayrollRunKey | updateAddressByPayrollRunKey | deleteAddressByPayrollRunKey |
+    | **effective-period** | /payroll-runs/{payrollRunKey}/effective-periods | listEffectivePeriodByPayrollRunKey |  | getEffectivePeriodByPayrollRunKey | updateEffectivePeriodByPayrollRunKey | deleteEffectivePeriodByPayrollRunKey |
+    | **product-subject** | /payroll-runs/{payrollRunKey}/product-subjects | listProductSubjectByPayrollRunKey | createProductSubject | getProductSubjectByPayrollRunKey | updateProductSubjectByPayrollRunKey | deleteProductSubjectByPayrollRunKey |
+    | **payroll-payment** | /payroll-runs/{payrollRunKey}/payroll-payments | listPayrollPaymentByPayrollRunKey | createPayrollPayment | getPayrollPaymentByPayrollRunKey | updatePayrollPaymentByPayrollRunKey | deletePayrollPaymentByPayrollRunKey |
+    | **time-slot** | /payroll-runs/{payrollRunKey}/time-slots | listTimeSlotByPayrollRunKey |  | getTimeSlotByPayrollRunKey | updateTimeSlotByPayrollRunKey | deleteTimeSlotByPayrollRunKey |
+    | **contact-method** | /payroll-runs/{payrollRunKey}/contact-methods | listContactMethodByPayrollRunKey | createContactMethod | getContactMethodByPayrollRunKey | updateContactMethodByPayrollRunKey | deleteContactMethodByPayrollRunKey |
+    | **communication-channel** | /payroll-runs/{payrollRunKey}/communication-channels | listCommunicationChannelByPayrollRunKey | createCommunicationChannel | getCommunicationChannelByPayrollRunKey | updateCommunicationChannelByPayrollRunKey | deleteCommunicationChannelByPayrollRunKey |
 
 ***Note on List Operations:***
 

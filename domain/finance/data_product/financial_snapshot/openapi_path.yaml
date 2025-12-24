@@ -1,50 +1,80 @@
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Domain API Specification"
-  description: "Automotive Retail Ontology."
-  version: "1.0.0"
+  title: Automotive Retail Systems API
+  description: "This API provides a standardized interface for Automotive Retail operations,\
+    \ built upon a formal Retail Ontology. It enables seamless integration between\
+    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
+    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
+    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
+    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
+    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
+    \ CI/CD environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
 paths:
   /financial-snapshots:
     get:
       tags:
-      - "FinancialSnapshot"
-      summary: "Retrieve a list of all FinancialSnapshot records."
-      operationId: "listFinancialSnapshots"
+      - FinancialSnapshot
+      summary: Retrieve a list of FinancialSnapshot entities.
+      operationId: listFinancialSnapshot
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialSnapshot records."
+          description: A list of FinancialSnapshot entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialSnapshot"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialSnapshot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialSnapshot"
-      summary: "Create a new FinancialSnapshot record."
-      operationId: "createFinancialSnapshot"
+      - FinancialSnapshot
+      summary: Create a new FinancialSnapshot entity.
+      operationId: createFinancialSnapshot
       requestBody:
-        description: "FinancialSnapshot data to create the new resource."
+        description: FinancialSnapshot data to create the new resource.
         content:
           application/json:
             schema:
@@ -52,30 +82,32 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialSnapshot created successfully."
+          description: FinancialSnapshot created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/financial-snapshots/PR-1234567"
+                type: string
+                example: /financial-snapshots/PR-1234567
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
   /financial-snapshots/{financialSnapshotKey}:
     get:
       tags:
-      - "FinancialSnapshot"
-      summary: "Retrieve a specific FinancialSnapshot record."
-      operationId: "getFinancialSnapshotById"
+      - FinancialSnapshot
+      summary: Retrieve a specific FinancialSnapshot entity.
+      operationId: getFinancialSnapshotById
       responses:
         "200":
-          description: "The requested FinancialSnapshot record."
+          description: The requested FinancialSnapshot entity.
           content:
             application/json:
               schema:
@@ -86,11 +118,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialSnapshot"
-      summary: "Replace a FinancialSnapshot record."
-      operationId: "replaceFinancialSnapshot"
+      - FinancialSnapshot
+      summary: Replace a FinancialSnapshot entity.
+      operationId: replaceFinancialSnapshot
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -98,99 +130,120 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialSnapshot"
-      summary: "Delete a FinancialSnapshot Record"
-      description: "Marks the FinancialSnapshot record as inactive or removes it entirely."
-      operationId: "deleteFinancialSnapshotRecord"
+      - FinancialSnapshot
+      summary: Delete a FinancialSnapshot entity
+      description: Marks the FinancialSnapshot entity as inactive or removes it entirely.
+      operationId: deleteFinancialSnapshotEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialSnapshot"
-      summary: "Partially update a FinancialSnapshot record."
-      operationId: "updateFinancialSnapshot"
+      - FinancialSnapshot
+      summary: Partially update a FinancialSnapshot entity.
+      operationId: updateFinancialSnapshot
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialSnapshotUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshot"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialSnapshot."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the specific FinancialSnapshot.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items:
     get:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Retrieve a list of FinancialSnapshotLineItem records scoped by financialSnapshotKey."
-      operationId: "listFinancialSnapshotLineItemsByFinancialSnapshotKey"
+      - FinancialSnapshotLineItem
+      summary: Retrieve a list of FinancialSnapshotLineItem entities scoped by financialSnapshotKey.
+      operationId: listFinancialSnapshotLineItemByFinancialSnapshotKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialSnapshotLineItem records."
+          description: A list of FinancialSnapshotLineItem entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialSnapshotLineItem"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialSnapshotLineItem"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Create a new FinancialSnapshotLineItem record."
-      operationId: "createFinancialSnapshotLineItem"
+      - FinancialSnapshotLineItem
+      summary: Create a new FinancialSnapshotLineItem entity.
+      operationId: createFinancialSnapshotLineItem
       requestBody:
-        description: "FinancialSnapshotLineItem data to create the new resource."
+        description: FinancialSnapshotLineItem data to create the new resource.
         content:
           application/json:
             schema:
@@ -198,37 +251,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialSnapshotLineItem created successfully."
+          description: FinancialSnapshotLineItem created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotLineItem"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}:
     get:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Retrieve a specific FinancialSnapshotLineItem record."
-      operationId: "getFinancialSnapshotLineItemById"
+      - FinancialSnapshotLineItem
+      summary: Retrieve a specific FinancialSnapshotLineItem entity.
+      operationId: getFinancialSnapshotLineItemById
       responses:
         "200":
-          description: "The requested FinancialSnapshotLineItem record."
+          description: The requested FinancialSnapshotLineItem entity.
           content:
             application/json:
               schema:
@@ -239,11 +294,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Replace a FinancialSnapshotLineItem record."
-      operationId: "replaceFinancialSnapshotLineItem"
+      - FinancialSnapshotLineItem
+      summary: Replace a FinancialSnapshotLineItem entity.
+      operationId: replaceFinancialSnapshotLineItem
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -251,115 +306,136 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotLineItem"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Delete a FinancialSnapshotLineItem Record"
-      description: "Marks the FinancialSnapshotLineItem record as inactive or removes\
-        \ it entirely."
-      operationId: "deleteFinancialSnapshotLineItemRecord"
+      - FinancialSnapshotLineItem
+      summary: Delete a FinancialSnapshotLineItem entity
+      description: Marks the FinancialSnapshotLineItem entity as inactive or removes
+        it entirely.
+      operationId: deleteFinancialSnapshotLineItemEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialSnapshotLineItem"
-      summary: "Partially update a FinancialSnapshotLineItem record."
-      operationId: "updateFinancialSnapshotLineItem"
+      - FinancialSnapshotLineItem
+      summary: Partially update a FinancialSnapshotLineItem entity.
+      operationId: updateFinancialSnapshotLineItem
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialSnapshotLineItemUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotLineItem"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialSnapshotLineItemKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialSnapshotLineItem."
+        type: string
+    - name: financialSnapshotLineItemKey
+      in: path
+      description: The unique identifier for the specific FinancialSnapshotLineItem.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
   /financial-snapshots/{financialSnapshotKey}/moneys:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a list of Money records scoped by financialSnapshotKey."
-      operationId: "listMoneysByFinancialSnapshotKey"
+      - Money
+      summary: Retrieve a list of Money entities scoped by financialSnapshotKey.
+      operationId: listMoneyByFinancialSnapshotKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of Money records."
+          description: A list of Money entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Money"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Money"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
+        type: string
   /financial-snapshots/{financialSnapshotKey}/moneys/{moneyKey}:
     get:
       tags:
-      - "Money"
-      summary: "Retrieve a specific Money record."
-      operationId: "getMoneyById"
+      - Money
+      summary: Retrieve a specific Money entity.
+      operationId: getMoneyById
       responses:
         "200":
-          description: "The requested Money record."
+          description: The requested Money entity.
           content:
             application/json:
               schema:
@@ -370,11 +446,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "Money"
-      summary: "Replace a Money record."
-      operationId: "replaceMoney"
+      - Money
+      summary: Replace a Money entity.
+      operationId: replaceMoney
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -382,69 +458,88 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Money"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "moneyKey"
-      in: "path"
-      description: "The unique identifier for the specific Money."
+        type: string
+    - name: moneyKey
+      in: path
+      description: The unique identifier for the specific Money.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
-  /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias:
+        type: string
+        example: PR-1234567
+  /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria:
     get:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Retrieve a list of FinancialSnapshotCriteria records scoped by financialSnapshotKey."
-      operationId: "listFinancialSnapshotCriteriasByFinancialSnapshotKey"
+      - FinancialSnapshotCriteria
+      summary: Retrieve a list of FinancialSnapshotCriteria entities scoped by financialSnapshotKey.
+      operationId: listFinancialSnapshotCriteriaByFinancialSnapshotKey
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "Maximum number of records to return."
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
         schema:
           maximum: 100
           minimum: 1
-          type: "integer"
+          type: integer
           default: 50
-      - name: "cursor"
-        in: "query"
-        description: "starting point for next set of results"
+      - name: cursor
+        in: query
+        description: starting point for next set of results
         schema:
-          type: "string"
+          type: string
       responses:
         "200":
-          description: "A list of FinancialSnapshotCriteria records."
+          description: A list of FinancialSnapshotCriteria entities.
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/FinancialSnapshotCriteria"
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialSnapshotCriteria"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Create a new FinancialSnapshotCriteria record."
-      operationId: "createFinancialSnapshotCriteria"
+      - FinancialSnapshotCriteria
+      summary: Create a new FinancialSnapshotCriteria entity.
+      operationId: createFinancialSnapshotCriteria
       requestBody:
-        description: "FinancialSnapshotCriteria data to create the new resource."
+        description: FinancialSnapshotCriteria data to create the new resource.
         content:
           application/json:
             schema:
@@ -452,37 +547,39 @@ paths:
         required: true
       responses:
         "201":
-          description: "FinancialSnapshotCriteria created successfully."
+          description: FinancialSnapshotCriteria created successfully.
           headers:
             Location:
-              description: "The URI of the newly created resource."
+              description: The URI of the newly created resource.
               schema:
-                type: "string"
-                example: "/part-search-results/PS-12345/bill-of-materials/BOM-001"
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotCriteria"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "409":
           $ref: "#/components/responses/ConflictError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-  /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criterias/{financialSnapshotCriteriaKey}:
+        type: string
+  /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}:
     get:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Retrieve a specific FinancialSnapshotCriteria record."
-      operationId: "getFinancialSnapshotCriteriaById"
+      - FinancialSnapshotCriteria
+      summary: Retrieve a specific FinancialSnapshotCriteria entity.
+      operationId: getFinancialSnapshotCriteriaById
       responses:
         "200":
-          description: "The requested FinancialSnapshotCriteria record."
+          description: The requested FinancialSnapshotCriteria entity.
           content:
             application/json:
               schema:
@@ -493,11 +590,11 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
     put:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Replace a FinancialSnapshotCriteria record."
-      operationId: "replaceFinancialSnapshotCriteria"
+      - FinancialSnapshotCriteria
+      summary: Replace a FinancialSnapshotCriteria entity.
+      operationId: replaceFinancialSnapshotCriteria
       requestBody:
-        description: "Full record data to replace the existing resource."
+        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
@@ -505,65 +602,69 @@ paths:
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotCriteria"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Delete a FinancialSnapshotCriteria Record"
-      description: "Marks the FinancialSnapshotCriteria record as inactive or removes\
-        \ it entirely."
-      operationId: "deleteFinancialSnapshotCriteriaRecord"
+      - FinancialSnapshotCriteria
+      summary: Delete a FinancialSnapshotCriteria entity
+      description: Marks the FinancialSnapshotCriteria entity as inactive or removes
+        it entirely.
+      operationId: deleteFinancialSnapshotCriteriaEntity
       responses:
         "204":
-          description: "Record successfully deleted (or deactivated)."
+          description: Entity successfully deleted (or deactivated).
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     patch:
       tags:
-      - "FinancialSnapshotCriteria"
-      summary: "Partially update a FinancialSnapshotCriteria record."
-      operationId: "updateFinancialSnapshotCriteria"
+      - FinancialSnapshotCriteria
+      summary: Partially update a FinancialSnapshotCriteria entity.
+      operationId: updateFinancialSnapshotCriteria
       requestBody:
-        description: "Included Fields to be updated will be modified."
+        description: Included Fields to be updated will be modified.
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/FinancialSnapshotCriteriaUpdate"
         required: true
       responses:
         "200":
-          description: "Record updated successfully. Returns the updated record."
+          description: Entity updated successfully. Returns the updated entity.
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: "#/components/schemas/FinancialSnapshotCriteria"
         "400":
           $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     parameters:
-    - name: "financialSnapshotKey"
-      in: "path"
-      description: "The unique identifier for the parent resource."
+    - name: financialSnapshotKey
+      in: path
+      description: The unique identifier for the parent resource.
       required: true
       schema:
-        type: "string"
-    - name: "financialSnapshotCriteriaKey"
-      in: "path"
-      description: "The unique identifier for the specific FinancialSnapshotCriteria."
+        type: string
+    - name: financialSnapshotCriteriaKey
+      in: path
+      description: The unique identifier for the specific FinancialSnapshotCriteria.
       required: true
       schema:
-        type: "string"
-        example: "PR-1234567"
+        type: string
+        example: PR-1234567
 components:
   schemas: {}

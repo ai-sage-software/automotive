@@ -1,6 +1,13 @@
-## 🚗 STAR Domain API Specification (Automotive Retail Ontology.)
+## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
 
-This contains the OpenAPI specification for the **Domain API Specification**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+**Key Capabilities:**
+* **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
+* **Inventory Orchestration:** Real-time visibility into warehouse and dealership stock.
+* **Financial Workflows:** Automated invoicing and batch processing for high-volume retail transactions.
+
+Designed for high-reliability CI/CD environments and asynchronous batch processing.)
+
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Dealer**, **DealerService**, **Department**, **Identifier**, **MetricNameValue**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -221,7 +228,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers</span> <br/>
-        <span class="api-summary">Retrieve a list of all Dealer records. getDealers</span>
+        <span class="api-summary">Retrieve a list of Dealer entities. getDealer</span>
     </span>
 </div>
 
@@ -229,7 +236,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers</span> <br/>
-        <span class="api-summary">Create a new Dealer record. createDealer</span>
+        <span class="api-summary">Create a new Dealer entity. createDealer</span>
     </span>
 </div>
 
@@ -238,7 +245,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Dealer record. getealerById</span>
+        <span class="api-summary">Retrieve a specific Dealer entity. getealerById</span>
     </span>
 </div>
 
@@ -246,7 +253,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}</span> <br/>
-        <span class="api-summary">Replace a Dealer record. replaceDealer</span>
+        <span class="api-summary">Replace a Dealer entity. replaceDealer</span>
     </span>
 </div>
 
@@ -254,7 +261,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}</span> <br/>
-        <span class="api-summary">Partially update a Dealer record. updateDealer</span>
+        <span class="api-summary">Partially update a Dealer entity. updateDealer</span>
     </span>
 </div>
 
@@ -262,7 +269,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}</span> <br/>
-        <span class="api-summary">Delete a Dealer Record deleteDealerRecord</span>
+        <span class="api-summary">Delete a Dealer entity deleteDealerEntity</span>
     </span>
 </div>
 
@@ -271,7 +278,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PersonName records scoped by dealerKey. getPersonNamesByDealerKey</span>
+        <span class="api-summary">Retrieve a list of PersonName entities scoped by dealerKey. getPersonNameByDealerKey</span>
     </span>
 </div>
 
@@ -279,7 +286,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names</span> <br/>
-        <span class="api-summary">Create a new PersonName record. createPersonName</span>
+        <span class="api-summary">Create a new PersonName entity. createPersonName</span>
     </span>
 </div>
 
@@ -288,7 +295,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PersonName record. getersonNameById</span>
+        <span class="api-summary">Retrieve a specific PersonName entity. getersonNameById</span>
     </span>
 </div>
 
@@ -296,7 +303,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Replace a PersonName record. replacePersonName</span>
+        <span class="api-summary">Replace a PersonName entity. replacePersonName</span>
     </span>
 </div>
 
@@ -304,7 +311,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName record. updatePersonName</span>
+        <span class="api-summary">Partially update a PersonName entity. updatePersonName</span>
     </span>
 </div>
 
@@ -312,7 +319,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Delete a PersonName Record deletePersonNameRecord</span>
+        <span class="api-summary">Delete a PersonName entity deletePersonNameEntity</span>
     </span>
 </div>
 
@@ -321,7 +328,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates</span> <br/>
-        <span class="api-summary">Retrieve a list of PayrollRate records scoped by dealerKey. getPayrollRatesByDealerKey</span>
+        <span class="api-summary">Retrieve a list of PayrollRate entities scoped by dealerKey. getPayrollRateByDealerKey</span>
     </span>
 </div>
 
@@ -329,7 +336,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates</span> <br/>
-        <span class="api-summary">Create a new PayrollRate record. createPayrollRate</span>
+        <span class="api-summary">Create a new PayrollRate entity. createPayrollRate</span>
     </span>
 </div>
 
@@ -338,7 +345,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PayrollRate record. getayrollRateById</span>
+        <span class="api-summary">Retrieve a specific PayrollRate entity. getayrollRateById</span>
     </span>
 </div>
 
@@ -346,7 +353,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Replace a PayrollRate record. replacePayrollRate</span>
+        <span class="api-summary">Replace a PayrollRate entity. replacePayrollRate</span>
     </span>
 </div>
 
@@ -354,7 +361,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollRate record. updatePayrollRate</span>
+        <span class="api-summary">Partially update a PayrollRate entity. updatePayrollRate</span>
     </span>
 </div>
 
@@ -362,7 +369,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Delete a PayrollRate Record deletePayrollRateRecord</span>
+        <span class="api-summary">Delete a PayrollRate entity deletePayrollRateEntity</span>
     </span>
 </div>
 
@@ -371,7 +378,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address records scoped by dealerKey. getAddresssByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Address entities scoped by dealerKey. getAddressByDealerKey</span>
     </span>
 </div>
 
@@ -379,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address record. createAddress</span>
+        <span class="api-summary">Create a new Address entity. createAddress</span>
     </span>
 </div>
 
@@ -388,7 +395,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address record. getddressById</span>
+        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
     </span>
 </div>
 
@@ -396,7 +403,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address record. replaceAddress</span>
+        <span class="api-summary">Replace a Address entity. replaceAddress</span>
     </span>
 </div>
 
@@ -404,7 +411,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address record. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updateAddress</span>
     </span>
 </div>
 
@@ -412,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address Record deleteAddressRecord</span>
+        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
     </span>
 </div>
 
@@ -421,7 +428,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members</span> <br/>
-        <span class="api-summary">Retrieve a list of StaffMember records scoped by dealerKey. getStaffMembersByDealerKey</span>
+        <span class="api-summary">Retrieve a list of StaffMember entities scoped by dealerKey. getStaffMemberByDealerKey</span>
     </span>
 </div>
 
@@ -429,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members</span> <br/>
-        <span class="api-summary">Create a new StaffMember record. createStaffMember</span>
+        <span class="api-summary">Create a new StaffMember entity. createStaffMember</span>
     </span>
 </div>
 
@@ -438,7 +445,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific StaffMember record. gettaffMemberById</span>
+        <span class="api-summary">Retrieve a specific StaffMember entity. gettaffMemberById</span>
     </span>
 </div>
 
@@ -446,7 +453,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Replace a StaffMember record. replaceStaffMember</span>
+        <span class="api-summary">Replace a StaffMember entity. replaceStaffMember</span>
     </span>
 </div>
 
@@ -454,7 +461,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Partially update a StaffMember record. updateStaffMember</span>
+        <span class="api-summary">Partially update a StaffMember entity. updateStaffMember</span>
     </span>
 </div>
 
@@ -462,7 +469,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Delete a StaffMember Record deleteStaffMemberRecord</span>
+        <span class="api-summary">Delete a StaffMember entity deleteStaffMemberEntity</span>
     </span>
 </div>
 
@@ -471,7 +478,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events</span> <br/>
-        <span class="api-summary">Retrieve a list of PrivacyEvent records scoped by dealerKey. getPrivacyEventsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of PrivacyEvent entities scoped by dealerKey. getPrivacyEventByDealerKey</span>
     </span>
 </div>
 
@@ -479,7 +486,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events</span> <br/>
-        <span class="api-summary">Create a new PrivacyEvent record. createPrivacyEvent</span>
+        <span class="api-summary">Create a new PrivacyEvent entity. createPrivacyEvent</span>
     </span>
 </div>
 
@@ -488,7 +495,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PrivacyEvent record. getrivacyEventById</span>
+        <span class="api-summary">Retrieve a specific PrivacyEvent entity. getrivacyEventById</span>
     </span>
 </div>
 
@@ -496,7 +503,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Replace a PrivacyEvent record. replacePrivacyEvent</span>
+        <span class="api-summary">Replace a PrivacyEvent entity. replacePrivacyEvent</span>
     </span>
 </div>
 
@@ -504,7 +511,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyEvent record. updatePrivacyEvent</span>
+        <span class="api-summary">Partially update a PrivacyEvent entity. updatePrivacyEvent</span>
     </span>
 </div>
 
@@ -512,7 +519,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Delete a PrivacyEvent Record deletePrivacyEventRecord</span>
+        <span class="api-summary">Delete a PrivacyEvent entity deletePrivacyEventEntity</span>
     </span>
 </div>
 
@@ -521,7 +528,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot records scoped by dealerKey. getTimeSlotsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by dealerKey. getTimeSlotByDealerKey</span>
     </span>
 </div>
 
@@ -530,7 +537,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot record. getimeSlotById</span>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -538,7 +545,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot record. replaceTimeSlot</span>
+        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
@@ -547,7 +554,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccount records scoped by dealerKey. getControlAccountsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of ControlAccount entities scoped by dealerKey. getControlAccountByDealerKey</span>
     </span>
 </div>
 
@@ -555,7 +562,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts</span> <br/>
-        <span class="api-summary">Create a new ControlAccount record. createControlAccount</span>
+        <span class="api-summary">Create a new ControlAccount entity. createControlAccount</span>
     </span>
 </div>
 
@@ -564,7 +571,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccount record. getontrolAccountById</span>
+        <span class="api-summary">Retrieve a specific ControlAccount entity. getontrolAccountById</span>
     </span>
 </div>
 
@@ -572,7 +579,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccount record. replaceControlAccount</span>
+        <span class="api-summary">Replace a ControlAccount entity. replaceControlAccount</span>
     </span>
 </div>
 
@@ -580,7 +587,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount record. updateControlAccount</span>
+        <span class="api-summary">Partially update a ControlAccount entity. updateControlAccount</span>
     </span>
 </div>
 
@@ -588,7 +595,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccount Record deleteControlAccountRecord</span>
+        <span class="api-summary">Delete a ControlAccount entity deleteControlAccountEntity</span>
     </span>
 </div>
 
@@ -597,7 +604,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels</span> <br/>
-        <span class="api-summary">Retrieve a list of CommunicationChannel records scoped by dealerKey. getCommunicationChannelsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of CommunicationChannel entities scoped by dealerKey. getCommunicationChannelByDealerKey</span>
     </span>
 </div>
 
@@ -605,7 +612,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels</span> <br/>
-        <span class="api-summary">Create a new CommunicationChannel record. createCommunicationChannel</span>
+        <span class="api-summary">Create a new CommunicationChannel entity. createCommunicationChannel</span>
     </span>
 </div>
 
@@ -614,7 +621,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CommunicationChannel record. getommunicationChannelById</span>
+        <span class="api-summary">Retrieve a specific CommunicationChannel entity. getommunicationChannelById</span>
     </span>
 </div>
 
@@ -622,7 +629,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Replace a CommunicationChannel record. replaceCommunicationChannel</span>
+        <span class="api-summary">Replace a CommunicationChannel entity. replaceCommunicationChannel</span>
     </span>
 </div>
 
@@ -630,7 +637,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Partially update a CommunicationChannel record. updateCommunicationChannel</span>
+        <span class="api-summary">Partially update a CommunicationChannel entity. updateCommunicationChannel</span>
     </span>
 </div>
 
@@ -638,7 +645,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Delete a CommunicationChannel Record deleteCommunicationChannelRecord</span>
+        <span class="api-summary">Delete a CommunicationChannel entity deleteCommunicationChannelEntity</span>
     </span>
 </div>
 
@@ -647,7 +654,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations</span> <br/>
-        <span class="api-summary">Retrieve a list of Authorization records scoped by dealerKey. getAuthorizationsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Authorization entities scoped by dealerKey. getAuthorizationByDealerKey</span>
     </span>
 </div>
 
@@ -655,7 +662,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations</span> <br/>
-        <span class="api-summary">Create a new Authorization record. createAuthorization</span>
+        <span class="api-summary">Create a new Authorization entity. createAuthorization</span>
     </span>
 </div>
 
@@ -664,7 +671,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Authorization record. getuthorizationById</span>
+        <span class="api-summary">Retrieve a specific Authorization entity. getuthorizationById</span>
     </span>
 </div>
 
@@ -672,7 +679,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Replace a Authorization record. replaceAuthorization</span>
+        <span class="api-summary">Replace a Authorization entity. replaceAuthorization</span>
     </span>
 </div>
 
@@ -680,7 +687,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization record. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
     </span>
 </div>
 
@@ -688,7 +695,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Delete a Authorization Record deleteAuthorizationRecord</span>
+        <span class="api-summary">Delete a Authorization entity deleteAuthorizationEntity</span>
     </span>
 </div>
 
@@ -697,7 +704,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/moneys</span> <br/>
-        <span class="api-summary">Retrieve a list of Money records scoped by dealerKey. getMoneysByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Money entities scoped by dealerKey. getMoneyByDealerKey</span>
     </span>
 </div>
 
@@ -706,7 +713,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money record. getoneyById</span>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
 
@@ -714,7 +721,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money record. replaceMoney</span>
+        <span class="api-summary">Replace a Money entity. replaceMoney</span>
     </span>
 </div>
 
@@ -723,7 +730,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
-        <span class="api-summary">Retrieve a list of Department records scoped by dealerKey. getDepartmentsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Department entities scoped by dealerKey. getDepartmentByDealerKey</span>
     </span>
 </div>
 
@@ -731,7 +738,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments</span> <br/>
-        <span class="api-summary">Create a new Department record. createDepartment</span>
+        <span class="api-summary">Create a new Department entity. createDepartment</span>
     </span>
 </div>
 
@@ -740,7 +747,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Department record. getepartmentById</span>
+        <span class="api-summary">Retrieve a specific Department entity. getepartmentById</span>
     </span>
 </div>
 
@@ -748,7 +755,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Replace a Department record. replaceDepartment</span>
+        <span class="api-summary">Replace a Department entity. replaceDepartment</span>
     </span>
 </div>
 
@@ -756,7 +763,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department record. updateDepartment</span>
+        <span class="api-summary">Partially update a Department entity. updateDepartment</span>
     </span>
 </div>
 
@@ -764,7 +771,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Delete a Department Record deleteDepartmentRecord</span>
+        <span class="api-summary">Delete a Department entity deleteDepartmentEntity</span>
     </span>
 </div>
 
@@ -773,7 +780,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Retrieve a list of MetricNameValue records scoped by dealerKey. getMetricNameValuesByDealerKey</span>
+        <span class="api-summary">Retrieve a list of MetricNameValue entities scoped by dealerKey. getMetricNameValueByDealerKey</span>
     </span>
 </div>
 
@@ -781,7 +788,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Create a new MetricNameValue record. createMetricNameValue</span>
+        <span class="api-summary">Create a new MetricNameValue entity. createMetricNameValue</span>
     </span>
 </div>
 
@@ -790,7 +797,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific MetricNameValue record. getetricNameValueById</span>
+        <span class="api-summary">Retrieve a specific MetricNameValue entity. getetricNameValueById</span>
     </span>
 </div>
 
@@ -798,7 +805,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Replace a MetricNameValue record. replaceMetricNameValue</span>
+        <span class="api-summary">Replace a MetricNameValue entity. replaceMetricNameValue</span>
     </span>
 </div>
 
@@ -806,7 +813,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricNameValue record. updateMetricNameValue</span>
+        <span class="api-summary">Partially update a MetricNameValue entity. updateMetricNameValue</span>
     </span>
 </div>
 
@@ -814,7 +821,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Delete a MetricNameValue Record deleteMetricNameValueRecord</span>
+        <span class="api-summary">Delete a MetricNameValue entity deleteMetricNameValueEntity</span>
     </span>
 </div>
 
@@ -823,7 +830,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier records scoped by dealerKey. getIdentifiersByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by dealerKey. getIdentifierByDealerKey</span>
     </span>
 </div>
 
@@ -831,7 +838,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier record. createIdentifier</span>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
@@ -840,7 +847,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier record. getdentifierById</span>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -848,7 +855,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier record. replaceIdentifier</span>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
@@ -856,7 +863,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier record. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
     </span>
 </div>
 
@@ -864,7 +871,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier Record deleteIdentifierRecord</span>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -873,7 +880,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
-        <span class="api-summary">Retrieve a list of DealerService records scoped by dealerKey. getDealerServicesByDealerKey</span>
+        <span class="api-summary">Retrieve a list of DealerService entities scoped by dealerKey. getDealerServiceByDealerKey</span>
     </span>
 </div>
 
@@ -881,7 +888,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services</span> <br/>
-        <span class="api-summary">Create a new DealerService record. createDealerService</span>
+        <span class="api-summary">Create a new DealerService entity. createDealerService</span>
     </span>
 </div>
 
@@ -890,7 +897,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific DealerService record. getealerServiceById</span>
+        <span class="api-summary">Retrieve a specific DealerService entity. getealerServiceById</span>
     </span>
 </div>
 
@@ -898,7 +905,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Replace a DealerService record. replaceDealerService</span>
+        <span class="api-summary">Replace a DealerService entity. replaceDealerService</span>
     </span>
 </div>
 
@@ -906,7 +913,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Partially update a DealerService record. updateDealerService</span>
+        <span class="api-summary">Partially update a DealerService entity. updateDealerService</span>
     </span>
 </div>
 
@@ -914,7 +921,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/dealer-services/{dealerServiceKey}</span> <br/>
-        <span class="api-summary">Delete a DealerService Record deleteDealerServiceRecord</span>
+        <span class="api-summary">Delete a DealerService entity deleteDealerServiceEntity</span>
     </span>
 </div>
 
@@ -923,7 +930,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod records scoped by dealerKey. getEffectivePeriodsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by dealerKey. getEffectivePeriodByDealerKey</span>
     </span>
 </div>
 
@@ -932,7 +939,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod record. getffectivePeriodById</span>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
     </span>
 </div>
 
@@ -940,7 +947,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod record. replaceEffectivePeriod</span>
+        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 
@@ -949,7 +956,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
-        <span class="api-summary">Retrieve a list of PrivacyItem records scoped by dealerKey. getPrivacyItemsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of PrivacyItem entities scoped by dealerKey. getPrivacyItemByDealerKey</span>
     </span>
 </div>
 
@@ -957,7 +964,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items</span> <br/>
-        <span class="api-summary">Create a new PrivacyItem record. createPrivacyItem</span>
+        <span class="api-summary">Create a new PrivacyItem entity. createPrivacyItem</span>
     </span>
 </div>
 
@@ -966,7 +973,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PrivacyItem record. getrivacyItemById</span>
+        <span class="api-summary">Retrieve a specific PrivacyItem entity. getrivacyItemById</span>
     </span>
 </div>
 
@@ -974,7 +981,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Replace a PrivacyItem record. replacePrivacyItem</span>
+        <span class="api-summary">Replace a PrivacyItem entity. replacePrivacyItem</span>
     </span>
 </div>
 
@@ -982,7 +989,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyItem record. updatePrivacyItem</span>
+        <span class="api-summary">Partially update a PrivacyItem entity. updatePrivacyItem</span>
     </span>
 </div>
 
@@ -990,7 +997,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Delete a PrivacyItem Record deletePrivacyItemRecord</span>
+        <span class="api-summary">Delete a PrivacyItem entity deletePrivacyItemEntity</span>
     </span>
 </div>
 
@@ -999,7 +1006,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details</span> <br/>
-        <span class="api-summary">Retrieve a list of TextualDetail records scoped by dealerKey. getTextualDetailsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of TextualDetail entities scoped by dealerKey. getTextualDetailByDealerKey</span>
     </span>
 </div>
 
@@ -1007,7 +1014,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details</span> <br/>
-        <span class="api-summary">Create a new TextualDetail record. createTextualDetail</span>
+        <span class="api-summary">Create a new TextualDetail entity. createTextualDetail</span>
     </span>
 </div>
 
@@ -1016,7 +1023,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TextualDetail record. getextualDetailById</span>
+        <span class="api-summary">Retrieve a specific TextualDetail entity. getextualDetailById</span>
     </span>
 </div>
 
@@ -1024,7 +1031,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Replace a TextualDetail record. replaceTextualDetail</span>
+        <span class="api-summary">Replace a TextualDetail entity. replaceTextualDetail</span>
     </span>
 </div>
 
@@ -1032,7 +1039,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Partially update a TextualDetail record. updateTextualDetail</span>
+        <span class="api-summary">Partially update a TextualDetail entity. updateTextualDetail</span>
     </span>
 </div>
 
@@ -1040,7 +1047,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/textual-details/{textualDetailKey}</span> <br/>
-        <span class="api-summary">Delete a TextualDetail Record deleteTextualDetailRecord</span>
+        <span class="api-summary">Delete a TextualDetail entity deleteTextualDetailEntity</span>
     </span>
 </div>
 
@@ -1049,7 +1056,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
-        <span class="api-summary">Retrieve a list of Person records scoped by dealerKey. getPersonsByDealerKey</span>
+        <span class="api-summary">Retrieve a list of Person entities scoped by dealerKey. getPersonByDealerKey</span>
     </span>
 </div>
 
@@ -1057,7 +1064,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people</span> <br/>
-        <span class="api-summary">Create a new Person record. createPerson</span>
+        <span class="api-summary">Create a new Person entity. createPerson</span>
     </span>
 </div>
 
@@ -1066,7 +1073,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Person record. getersonById</span>
+        <span class="api-summary">Retrieve a specific Person entity. getersonById</span>
     </span>
 </div>
 
@@ -1074,7 +1081,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Replace a Person record. replacePerson</span>
+        <span class="api-summary">Replace a Person entity. replacePerson</span>
     </span>
 </div>
 
@@ -1082,7 +1089,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person record. updatePerson</span>
+        <span class="api-summary">Partially update a Person entity. updatePerson</span>
     </span>
 </div>
 
@@ -1090,7 +1097,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
         <span class="api-path">/dealers/{dealerKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Delete a Person Record deletePersonRecord</span>
+        <span class="api-summary">Delete a Person entity deletePersonEntity</span>
     </span>
 </div>
 
@@ -1100,25 +1107,25 @@ The following resources follow a consistent pattern under Dealerroot with key {D
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **dealer** | /dealers | listDealers | createDealer | getDealers | updateDealers | deleteDealers |
-    | **person-name** | /dealers/{dealerKey}/person-names | listPersonNamesByDealerKey | createPersonName | getPersonNamesByDealerKey | updatePersonNamesByDealerKey | deletePersonNamesByDealerKey |
-    | **payroll-rate** | /dealers/{dealerKey}/payroll-rates | listPayrollRatesByDealerKey | createPayrollRate | getPayrollRatesByDealerKey | updatePayrollRatesByDealerKey | deletePayrollRatesByDealerKey |
-    | **addresse** | /dealers/{dealerKey}/addresses | listAddresssByDealerKey | createAddress | getAddresssByDealerKey | updateAddresssByDealerKey | deleteAddresssByDealerKey |
-    | **staff-member** | /dealers/{dealerKey}/staff-members | listStaffMembersByDealerKey | createStaffMember | getStaffMembersByDealerKey | updateStaffMembersByDealerKey | deleteStaffMembersByDealerKey |
-    | **privacy-event** | /dealers/{dealerKey}/privacy-events | listPrivacyEventsByDealerKey | createPrivacyEvent | getPrivacyEventsByDealerKey | updatePrivacyEventsByDealerKey | deletePrivacyEventsByDealerKey |
-    | **time-slot** | /dealers/{dealerKey}/time-slots | listTimeSlotsByDealerKey |  | getTimeSlotsByDealerKey | updateTimeSlotsByDealerKey | deleteTimeSlotsByDealerKey |
-    | **control-account** | /dealers/{dealerKey}/control-accounts | listControlAccountsByDealerKey | createControlAccount | getControlAccountsByDealerKey | updateControlAccountsByDealerKey | deleteControlAccountsByDealerKey |
-    | **communication-channel** | /dealers/{dealerKey}/communication-channels | listCommunicationChannelsByDealerKey | createCommunicationChannel | getCommunicationChannelsByDealerKey | updateCommunicationChannelsByDealerKey | deleteCommunicationChannelsByDealerKey |
-    | **authorization** | /dealers/{dealerKey}/authorizations | listAuthorizationsByDealerKey | createAuthorization | getAuthorizationsByDealerKey | updateAuthorizationsByDealerKey | deleteAuthorizationsByDealerKey |
-    | **money** | /dealers/{dealerKey}/moneys | listMoneysByDealerKey |  | getMoneysByDealerKey | updateMoneysByDealerKey | deleteMoneysByDealerKey |
-    | **department** | /dealers/{dealerKey}/departments | listDepartmentsByDealerKey | createDepartment | getDepartmentsByDealerKey | updateDepartmentsByDealerKey | deleteDepartmentsByDealerKey |
-    | **metric-name-value** | /dealers/{dealerKey}/metric-name-values | listMetricNameValuesByDealerKey | createMetricNameValue | getMetricNameValuesByDealerKey | updateMetricNameValuesByDealerKey | deleteMetricNameValuesByDealerKey |
-    | **identifier** | /dealers/{dealerKey}/identifiers | listIdentifiersByDealerKey | createIdentifier | getIdentifiersByDealerKey | updateIdentifiersByDealerKey | deleteIdentifiersByDealerKey |
-    | **dealer-service** | /dealers/{dealerKey}/dealer-services | listDealerServicesByDealerKey | createDealerService | getDealerServicesByDealerKey | updateDealerServicesByDealerKey | deleteDealerServicesByDealerKey |
-    | **effective-period** | /dealers/{dealerKey}/effective-periods | listEffectivePeriodsByDealerKey |  | getEffectivePeriodsByDealerKey | updateEffectivePeriodsByDealerKey | deleteEffectivePeriodsByDealerKey |
-    | **privacy-item** | /dealers/{dealerKey}/privacy-items | listPrivacyItemsByDealerKey | createPrivacyItem | getPrivacyItemsByDealerKey | updatePrivacyItemsByDealerKey | deletePrivacyItemsByDealerKey |
-    | **textual-detail** | /dealers/{dealerKey}/textual-details | listTextualDetailsByDealerKey | createTextualDetail | getTextualDetailsByDealerKey | updateTextualDetailsByDealerKey | deleteTextualDetailsByDealerKey |
-    | **people** | /dealers/{dealerKey}/people | listPersonsByDealerKey | createPerson | getPersonsByDealerKey | updatePersonsByDealerKey | deletePersonsByDealerKey |
+    | **dealer** | /dealers | listDealer | createDealer | getDealer | updateDealer | deleteDealer |
+    | **person-name** | /dealers/{dealerKey}/person-names | listPersonNameByDealerKey | createPersonName | getPersonNameByDealerKey | updatePersonNameByDealerKey | deletePersonNameByDealerKey |
+    | **payroll-rate** | /dealers/{dealerKey}/payroll-rates | listPayrollRateByDealerKey | createPayrollRate | getPayrollRateByDealerKey | updatePayrollRateByDealerKey | deletePayrollRateByDealerKey |
+    | **addresse** | /dealers/{dealerKey}/addresses | listAddressByDealerKey | createAddress | getAddressByDealerKey | updateAddressByDealerKey | deleteAddressByDealerKey |
+    | **staff-member** | /dealers/{dealerKey}/staff-members | listStaffMemberByDealerKey | createStaffMember | getStaffMemberByDealerKey | updateStaffMemberByDealerKey | deleteStaffMemberByDealerKey |
+    | **privacy-event** | /dealers/{dealerKey}/privacy-events | listPrivacyEventByDealerKey | createPrivacyEvent | getPrivacyEventByDealerKey | updatePrivacyEventByDealerKey | deletePrivacyEventByDealerKey |
+    | **time-slot** | /dealers/{dealerKey}/time-slots | listTimeSlotByDealerKey |  | getTimeSlotByDealerKey | updateTimeSlotByDealerKey | deleteTimeSlotByDealerKey |
+    | **control-account** | /dealers/{dealerKey}/control-accounts | listControlAccountByDealerKey | createControlAccount | getControlAccountByDealerKey | updateControlAccountByDealerKey | deleteControlAccountByDealerKey |
+    | **communication-channel** | /dealers/{dealerKey}/communication-channels | listCommunicationChannelByDealerKey | createCommunicationChannel | getCommunicationChannelByDealerKey | updateCommunicationChannelByDealerKey | deleteCommunicationChannelByDealerKey |
+    | **authorization** | /dealers/{dealerKey}/authorizations | listAuthorizationByDealerKey | createAuthorization | getAuthorizationByDealerKey | updateAuthorizationByDealerKey | deleteAuthorizationByDealerKey |
+    | **money** | /dealers/{dealerKey}/moneys | listMoneyByDealerKey |  | getMoneyByDealerKey | updateMoneyByDealerKey | deleteMoneyByDealerKey |
+    | **department** | /dealers/{dealerKey}/departments | listDepartmentByDealerKey | createDepartment | getDepartmentByDealerKey | updateDepartmentByDealerKey | deleteDepartmentByDealerKey |
+    | **metric-name-value** | /dealers/{dealerKey}/metric-name-values | listMetricNameValueByDealerKey | createMetricNameValue | getMetricNameValueByDealerKey | updateMetricNameValueByDealerKey | deleteMetricNameValueByDealerKey |
+    | **identifier** | /dealers/{dealerKey}/identifiers | listIdentifierByDealerKey | createIdentifier | getIdentifierByDealerKey | updateIdentifierByDealerKey | deleteIdentifierByDealerKey |
+    | **dealer-service** | /dealers/{dealerKey}/dealer-services | listDealerServiceByDealerKey | createDealerService | getDealerServiceByDealerKey | updateDealerServiceByDealerKey | deleteDealerServiceByDealerKey |
+    | **effective-period** | /dealers/{dealerKey}/effective-periods | listEffectivePeriodByDealerKey |  | getEffectivePeriodByDealerKey | updateEffectivePeriodByDealerKey | deleteEffectivePeriodByDealerKey |
+    | **privacy-item** | /dealers/{dealerKey}/privacy-items | listPrivacyItemByDealerKey | createPrivacyItem | getPrivacyItemByDealerKey | updatePrivacyItemByDealerKey | deletePrivacyItemByDealerKey |
+    | **textual-detail** | /dealers/{dealerKey}/textual-details | listTextualDetailByDealerKey | createTextualDetail | getTextualDetailByDealerKey | updateTextualDetailByDealerKey | deleteTextualDetailByDealerKey |
+    | **people** | /dealers/{dealerKey}/people | listPersonByDealerKey | createPerson | getPersonByDealerKey | updatePersonByDealerKey | deletePersonByDealerKey |
 
 ***Note on List Operations:***
 
