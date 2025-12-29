@@ -1,4 +1,4 @@
-## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
+## 🚗 STAR Automotive Retail Systems API (A standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration 
 
 **Key Capabilities:**
 * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountPolicy**, **Garage**, **GarageItem**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **Party**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**, **VehicleIdentifier**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ContactMethod**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Garage**, **GarageItem**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **Party**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**, **VehicleIdentifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -122,6 +122,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **CommunicationChannelTypes** : types of communication channels.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DepartmentTypes** : types of departments.<br/>
+💠 **DiscountTypes** : types of discounts.<br/>
+💠 **DueOnTypes** : types of due ons.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **GenderTypes** : types of genders.<br/>
 💠 **LocationTypes** : types of locations.<br/>
@@ -138,19 +140,18 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PrivacyLegalBasisTypes** : types of privacy legal basis.<br/>
 💠 **PrivacyStateTypes** : types of privacy states.<br/>
 💠 **PrivacyTypes** : types of privacys.<br/>
+💠 **ProductStateTypes** : types of product states.<br/>
+💠 **ProductViewTypes** : types of product views.<br/>
 💠 **RoleTypes** : types of roles.<br/>
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
-💠 **ProductViewTypes** : Undocumented Enum<br/>
-💠 **ProductStateTypes** : Undocumented Enum<br/>
-💠 **DiscountTypes** : Defines various types of discounts, such as per...<br/>
-💠 **ValidationTypes** : Represents the level and type of validation an ...<br/>
-💠 **DueOnTypes** : Defines various types of events or triggers on ...<br/>
+💠 **ValidationTypes** : types of validations.<br/>
 💠 **PriceTypes** : entity<br/>
 💠 **FinancialCategoryTypes** : Financial Category Types<br/>
 💠 **ControlAccountTypes** : entity<br/>
 💠 **ControlAccountRoleTypes** : Control Account Role.<br/>
 💠 **ControlAccountStatusTypes** : Defines the various states or statuses for a fi...<br/>
+💠 **UnitOfMeasureTypes** : Represents a comprehensive list of units of mea...<br/>
 
 ## ✅ Entities
 
@@ -660,14 +661,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
-    </span>
-</div>
-
 ### /parties/{partyKey}/address-locales
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -933,14 +926,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/parties/{partyKey}/effective-periods/{effectivePeriodKey}</span> <br/>
         <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/parties/{partyKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
     </span>
 </div>
 

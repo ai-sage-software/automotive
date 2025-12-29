@@ -1,4 +1,4 @@
-## 🚗 STAR Automotive Retail Systems API (This API provides a standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration between Master Catalog systems, Inventory Management, and Financial Invoicing workflows. 
+## 🚗 STAR Automotive Retail Systems API (A standardized interface for Automotive Retail operations, built upon a formal Retail Ontology. It enables seamless integration 
 
 **Key Capabilities:**
 * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.
@@ -313,14 +313,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys/{moneyKey}</span> <br/>
-        <span class="api-summary">Replace a Money entity. replaceMoney</span>
-    </span>
-</div>
-
 ### /payroll-stubs/{payrollStubKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -389,14 +381,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Replace a EffectivePeriod entity. replaceEffectivePeriod</span>
-    </span>
-</div>
-
 ### /payroll-stubs/{payrollStubKey}/payroll-components
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -462,14 +446,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/time-slots/{timeSlotKey}</span> <br/>
         <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Replace a TimeSlot entity. replaceTimeSlot</span>
     </span>
 </div>
 
