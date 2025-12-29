@@ -1,14 +1,13 @@
 openapi: 3.0.1
 info:
   title: Automotive Retail Systems API
-  description: "This API provides a standardized interface for Automotive Retail operations,\
-    \ built upon a formal Retail Ontology. It enables seamless integration between\
-    \ Master Catalog systems, Inventory Management, and Financial Invoicing workflows.\
-    \ \n\n**Key Capabilities:**\n* **Catalog Management:** Unified definitions for\
-    \ parts, assemblies, and BOMs.\n* **Inventory Orchestration:** Real-time visibility\
-    \ into warehouse and dealership stock.\n* **Financial Workflows:** Automated invoicing\
-    \ and batch processing for high-volume retail transactions.\n\nDesigned for high-reliability\
-    \ CI/CD environments and asynchronous batch processing."
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
     name: Platform Architecture Team
     url: www.starstandard.org
@@ -64,8 +63,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -88,7 +91,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /receipts/PR-1234567
+                example: /receipts/KEY78L
           content:
             application/json:
               schema:
@@ -97,8 +100,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /receipts/{receiptKey}:
     get:
       tags:
@@ -111,16 +120,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Receipt"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+                $ref: "#/components/schemas/ReceiptResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - Receipt
       summary: Replace a Receipt entity.
       operationId: replaceReceipt
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -131,6 +153,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -139,8 +166,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - Receipt
@@ -150,15 +185,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - Receipt
       summary: Partially update a Receipt entity.
       operationId: updateReceipt
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -169,16 +220,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Receipt"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -186,7 +250,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78v
   /receipts/{receiptKey}/shipment-references:
     get:
       tags:
@@ -233,8 +297,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -266,8 +334,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -288,15 +362,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - ShipmentReference
       summary: Replace a ShipmentReference entity.
       operationId: replaceShipmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -307,6 +394,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -315,8 +407,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - ShipmentReference
@@ -326,15 +426,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - ShipmentReference
       summary: Partially update a ShipmentReference entity.
       operationId: updateShipmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -345,16 +461,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -368,7 +497,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vG
   /receipts/{receiptKey}/unit-of-measures:
     get:
       tags:
@@ -415,8 +544,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
@@ -439,35 +572,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnitOfMeasure"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-    put:
-      tags:
-      - UnitOfMeasure
-      summary: Replace a UnitOfMeasure entity.
-      operationId: replaceUnitOfMeasure
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UnitOfMeasure"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the updated entity.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnitOfMeasure"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -481,7 +595,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGO
   /receipts/{receiptKey}/positions:
     get:
       tags:
@@ -528,8 +642,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -561,8 +679,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -583,15 +707,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Position"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - Position
       summary: Replace a Position entity.
       operationId: replacePosition
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -602,6 +739,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -610,8 +752,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - Position
@@ -621,15 +771,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - Position
       summary: Partially update a Position entity.
       operationId: updatePosition
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -640,16 +806,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Position"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -663,7 +842,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg
   /receipts/{receiptKey}/time-slots:
     get:
       tags:
@@ -710,8 +889,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
@@ -734,35 +917,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeSlot"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-    put:
-      tags:
-      - TimeSlot
-      summary: Replace a TimeSlot entity.
-      operationId: replaceTimeSlot
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TimeSlot"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the updated entity.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TimeSlot"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -776,7 +940,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7
   /receipts/{receiptKey}/address-references:
     get:
       tags:
@@ -823,8 +987,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -856,8 +1024,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -878,15 +1052,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AddressReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - AddressReference
       summary: Replace a AddressReference entity.
       operationId: replaceAddressReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -897,6 +1084,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -905,8 +1097,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - AddressReference
@@ -916,15 +1116,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - AddressReference
       summary: Partially update a AddressReference entity.
       operationId: updateAddressReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -935,16 +1151,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/AddressReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -958,7 +1187,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7e
   /receipts/{receiptKey}/party-references:
     get:
       tags:
@@ -1005,8 +1234,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1038,8 +1271,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1060,15 +1299,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartyReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - PartyReference
       summary: Replace a PartyReference entity.
       operationId: replacePartyReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1079,6 +1331,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1087,8 +1344,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - PartyReference
@@ -1098,15 +1363,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - PartyReference
       summary: Partially update a PartyReference entity.
       operationId: updatePartyReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -1117,16 +1398,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/PartyReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1140,7 +1434,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eE
   /receipts/{receiptKey}/staff-assignment-references:
     get:
       tags:
@@ -1187,8 +1481,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1220,8 +1518,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1242,15 +1546,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StaffAssignmentReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - StaffAssignmentReference
       summary: Replace a StaffAssignmentReference entity.
       operationId: replaceStaffAssignmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1261,6 +1578,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1269,8 +1591,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - StaffAssignmentReference
@@ -1281,15 +1611,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - StaffAssignmentReference
       summary: Partially update a StaffAssignmentReference entity.
       operationId: updateStaffAssignmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -1300,16 +1646,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/StaffAssignmentReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1323,7 +1682,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEk
   /receipts/{receiptKey}/shipment-events:
     get:
       tags:
@@ -1370,8 +1729,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1403,8 +1766,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1425,15 +1794,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentEvent"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - ShipmentEvent
       summary: Replace a ShipmentEvent entity.
       operationId: replaceShipmentEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1444,6 +1826,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1452,8 +1839,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - ShipmentEvent
@@ -1463,15 +1858,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - ShipmentEvent
       summary: Partially update a ShipmentEvent entity.
       operationId: updateShipmentEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -1482,16 +1893,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ShipmentEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1505,7 +1929,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkA
   /receipts/{receiptKey}/identifiers:
     get:
       tags:
@@ -1552,8 +1976,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1585,8 +2013,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1607,15 +2041,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - Identifier
       summary: Replace a Identifier entity.
       operationId: replaceIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1626,6 +2073,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1634,8 +2086,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - Identifier
@@ -1645,15 +2105,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - Identifier
       summary: Partially update a Identifier entity.
       operationId: updateIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -1664,16 +2140,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1687,7 +2176,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAd
   /receipts/{receiptKey}/prices:
     get:
       tags:
@@ -1734,8 +2223,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1767,8 +2260,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1789,15 +2288,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Price"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - Price
       summary: Replace a Price entity.
       operationId: replacePrice
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1808,6 +2320,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1816,8 +2333,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - Price
@@ -1827,15 +2352,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - Price
       summary: Partially update a Price entity.
       operationId: updatePrice
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -1846,16 +2387,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Price"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1869,7 +2423,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE
   /receipts/{receiptKey}/purchase-order-references:
     get:
       tags:
@@ -1916,8 +2470,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -1949,8 +2507,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -1971,15 +2535,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PurchaseOrderReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - PurchaseOrderReference
       summary: Replace a PurchaseOrderReference entity.
       operationId: replacePurchaseOrderReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -1990,6 +2567,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -1998,8 +2580,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - PurchaseOrderReference
@@ -2010,15 +2600,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - PurchaseOrderReference
       summary: Partially update a PurchaseOrderReference entity.
       operationId: updatePurchaseOrderReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -2029,16 +2635,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/PurchaseOrderReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2052,7 +2671,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5
   /receipts/{receiptKey}/receipt-line-items:
     get:
       tags:
@@ -2099,8 +2718,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -2132,8 +2755,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2154,15 +2783,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReceiptLineItem"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - ReceiptLineItem
       summary: Replace a ReceiptLineItem entity.
       operationId: replaceReceiptLineItem
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -2173,6 +2815,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -2181,8 +2828,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - ReceiptLineItem
@@ -2192,15 +2847,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - ReceiptLineItem
       summary: Partially update a ReceiptLineItem entity.
       operationId: updateReceiptLineItem
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -2211,16 +2882,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ReceiptLineItem"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2234,7 +2918,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b
   /receipts/{receiptKey}/part-references:
     get:
       tags:
@@ -2281,8 +2965,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -2314,8 +3002,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2336,15 +3030,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PartReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - PartReference
       summary: Replace a PartReference entity.
       operationId: replacePartReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -2355,6 +3062,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -2363,8 +3075,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - PartReference
@@ -2374,15 +3094,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - PartReference
       summary: Partially update a PartReference entity.
       operationId: updatePartReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -2393,16 +3129,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/PartReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2416,7 +3165,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b0
   /receipts/{receiptKey}/effective-periods:
     get:
       tags:
@@ -2463,8 +3212,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     parameters:
@@ -2487,35 +3240,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EffectivePeriod"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-    put:
-      tags:
-      - EffectivePeriod
-      summary: Replace a EffectivePeriod entity.
-      operationId: replaceEffectivePeriod
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EffectivePeriod"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the updated entity.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EffectivePeriod"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2529,7 +3263,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b0b
   /receipts/{receiptKey}/lifecycle-events:
     get:
       tags:
@@ -2576,8 +3310,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -2609,8 +3347,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2631,15 +3375,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LifecycleEvent"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - LifecycleEvent
       summary: Replace a LifecycleEvent entity.
       operationId: replaceLifecycleEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -2650,6 +3407,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -2658,8 +3420,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - LifecycleEvent
@@ -2669,15 +3439,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - LifecycleEvent
       summary: Partially update a LifecycleEvent entity.
       operationId: updateLifecycleEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -2688,16 +3474,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/LifecycleEvent"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2711,7 +3510,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b0bA
   /receipts/{receiptKey}/warehouse-references:
     get:
       tags:
@@ -2758,8 +3557,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -2791,8 +3594,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2813,15 +3622,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/WarehouseReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - WarehouseReference
       summary: Replace a WarehouseReference entity.
       operationId: replaceWarehouseReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -2832,6 +3654,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -2840,8 +3667,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - WarehouseReference
@@ -2851,15 +3686,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - WarehouseReference
       summary: Partially update a WarehouseReference entity.
       operationId: updateWarehouseReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -2870,16 +3721,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/WarehouseReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2893,7 +3757,7 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b0bAf
   /receipts/{receiptKey}/financial-track-references:
     get:
       tags:
@@ -2940,8 +3804,12 @@ paths:
                     type: integer
                     description: "Total entities matching the query (optional, may\
                       \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/ServerError"
     post:
@@ -2973,8 +3841,14 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -2995,15 +3869,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialTrackReference"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     put:
       tags:
       - FinancialTrackReference
       summary: Replace a FinancialTrackReference entity.
       operationId: replaceFinancialTrackReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Full entity data to replace the existing resource.
         content:
@@ -3014,6 +3901,11 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -3022,8 +3914,16 @@ paths:
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     delete:
       tags:
       - FinancialTrackReference
@@ -3034,15 +3934,31 @@ paths:
       responses:
         "204":
           description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     patch:
       tags:
       - FinancialTrackReference
       summary: Partially update a FinancialTrackReference entity.
       operationId: updateFinancialTrackReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Included Fields to be updated will be modified.
         content:
@@ -3053,16 +3969,29 @@ paths:
       responses:
         "200":
           description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
           content:
-            application/merge-patch+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/FinancialTrackReference"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
     parameters:
     - name: receiptKey
       in: path
@@ -3076,6 +4005,6 @@ paths:
       required: true
       schema:
         type: string
-        example: PR-1234567
+        example: KEY78vGOg7eEkAdE5b0bAfp
 components:
   schemas: {}
