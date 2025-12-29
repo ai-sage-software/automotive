@@ -130,8 +130,8 @@ Backward compatibility by default. Breaking changes require versioning.
 ## 🤝 Contributing
 
 Contact STAR
-> Steve Zadoorian - steve@starstandard.org
-Paco Escobar - pescobar@starstandard.org
+> - Steve Zadoorian - steve@starstandard.org
+- Paco Escobar - pescobar@starstandard.org
 
 ---
 
