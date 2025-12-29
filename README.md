@@ -131,7 +131,7 @@ Backward compatibility by default. Breaking changes require versioning.
 
 Contact STAR
 > - Steve Zadoorian - steve@starstandard.org
-> - Paco Escobar - pescobar@starstandard.org
+> - Paco Escobar    - pescobar@starstandard.org
 
 ---
 
