@@ -7,7 +7,7 @@ These rules exist to ensure:
 - Interoperability across vendors
 - Automated validation
 - Clear evolution of standards
-.
+
 
 ---
 
@@ -97,3 +97,4 @@ Every schema change must include:
 ## 🏁 Final Note
 
 When in doubt, favor **clarity, stability, and explicit intent**.
+
