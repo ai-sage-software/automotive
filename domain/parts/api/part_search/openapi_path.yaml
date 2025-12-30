@@ -1,0 +1,1550 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths:
+  /part-searches:
+    get:
+      tags:
+      - PartSearch
+      summary: Retrieve a list of PartSearch entities.
+      operationId: listPartSearch
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartSearch entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartSearch"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartSearch
+      summary: Create a new PartSearch entity.
+      operationId: createPartSearch
+      requestBody:
+        description: PartSearch data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartSearchCreate"
+        required: true
+      responses:
+        "201":
+          description: PartSearch created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-searches/KEY78a
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearch"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /part-searches/{partSearchKey}:
+    get:
+      tags:
+      - PartSearch
+      summary: Retrieve a specific PartSearch entity.
+      operationId: getPartSearchById
+      responses:
+        "200":
+          description: The requested PartSearch entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearchResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartSearch
+      summary: Replace a PartSearch entity.
+      operationId: replacePartSearch
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartSearch"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearch"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartSearch
+      summary: Delete a PartSearch entity
+      description: Marks the PartSearch entity as inactive or removes it entirely.
+      operationId: deletePartSearchEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartSearch
+      summary: Partially update a PartSearch entity.
+      operationId: updatePartSearch
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartSearchUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearch"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the specific PartSearch.
+      required: true
+      schema:
+        type: string
+        example: KEY78p
+  /part-searches/{partSearchKey}/part-price-criteria:
+    get:
+      tags:
+      - PartPriceCriteria
+      summary: Retrieve a list of PartPriceCriteria entities scoped by partSearchKey.
+      operationId: listPartPriceCriteriaByPartSearchKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartPriceCriteria entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartPriceCriteria"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartPriceCriteria
+      summary: Create a new PartPriceCriteria entity.
+      operationId: createPartPriceCriteria
+      requestBody:
+        description: PartPriceCriteria data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartPriceCriteriaCreate"
+        required: true
+      responses:
+        "201":
+          description: PartPriceCriteria created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartPriceCriteria"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /part-searches/{partSearchKey}/part-price-criteria/{partPriceCriteriaKey}:
+    get:
+      tags:
+      - PartPriceCriteria
+      summary: Retrieve a specific PartPriceCriteria entity.
+      operationId: getPartPriceCriteriaById
+      responses:
+        "200":
+          description: The requested PartPriceCriteria entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartPriceCriteria"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartPriceCriteria
+      summary: Replace a PartPriceCriteria entity.
+      operationId: replacePartPriceCriteria
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartPriceCriteria"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartPriceCriteria"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartPriceCriteria
+      summary: Delete a PartPriceCriteria entity
+      description: Marks the PartPriceCriteria entity as inactive or removes it entirely.
+      operationId: deletePartPriceCriteriaEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartPriceCriteria
+      summary: Partially update a PartPriceCriteria entity.
+      operationId: updatePartPriceCriteria
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartPriceCriteriaUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartPriceCriteria"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partPriceCriteriaKey
+      in: path
+      description: The unique identifier for the specific PartPriceCriteria.
+      required: true
+      schema:
+        type: string
+        example: KEY78pc
+  /part-searches/{partSearchKey}/part-search-results:
+    get:
+      tags:
+      - PartSearchResult
+      summary: Retrieve a list of PartSearchResult entities scoped by partSearchKey.
+      operationId: listPartSearchResultByPartSearchKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartSearchResult entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartSearchResult"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartSearchResult
+      summary: Create a new PartSearchResult entity.
+      operationId: createPartSearchResult
+      requestBody:
+        description: PartSearchResult data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartSearchResultCreate"
+        required: true
+      responses:
+        "201":
+          description: PartSearchResult created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /part-searches/{partSearchKey}/part-search-results/{partSearchResultKey}:
+    get:
+      tags:
+      - PartSearchResult
+      summary: Retrieve a specific PartSearchResult entity.
+      operationId: getPartSearchResultById
+      responses:
+        "200":
+          description: The requested PartSearchResult entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartSearchResult
+      summary: Replace a PartSearchResult entity.
+      operationId: replacePartSearchResult
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartSearchResult"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartSearchResult
+      summary: Delete a PartSearchResult entity
+      description: Marks the PartSearchResult entity as inactive or removes it entirely.
+      operationId: deletePartSearchResultEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartSearchResult
+      summary: Partially update a PartSearchResult entity.
+      operationId: updatePartSearchResult
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartSearchResultUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartSearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partSearchResultKey
+      in: path
+      description: The unique identifier for the specific PartSearchResult.
+      required: true
+      schema:
+        type: string
+        example: KEY78pcH
+  /part-searches/{partSearchKey}/identifiers:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by partSearchKey.
+      operationId: listIdentifierByPartSearchKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Identifier entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
+      requestBody:
+        description: Identifier data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentifierCreate"
+        required: true
+      responses:
+        "201":
+          description: Identifier created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /part-searches/{partSearchKey}/identifiers/{identifierKey}:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
+      responses:
+        "200":
+          description: The requested Identifier entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Identifier"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/IdentifierUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
+      required: true
+      schema:
+        type: string
+        example: KEY78pcHu
+  /part-searches/{partSearchKey}/part-names:
+    get:
+      tags:
+      - PartName
+      summary: Retrieve a list of PartName entities scoped by partSearchKey.
+      operationId: listPartNameByPartSearchKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartName entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartName"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartName
+      summary: Create a new PartName entity.
+      operationId: createPartName
+      requestBody:
+        description: PartName data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartNameCreate"
+        required: true
+      responses:
+        "201":
+          description: PartName created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartName"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /part-searches/{partSearchKey}/part-names/{partNameKey}:
+    get:
+      tags:
+      - PartName
+      summary: Retrieve a specific PartName entity.
+      operationId: getPartNameById
+      responses:
+        "200":
+          description: The requested PartName entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartName"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartName
+      summary: Replace a PartName entity.
+      operationId: replacePartName
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartName"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartName"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartName
+      summary: Delete a PartName entity
+      description: Marks the PartName entity as inactive or removes it entirely.
+      operationId: deletePartNameEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartName
+      summary: Partially update a PartName entity.
+      operationId: updatePartName
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartNameUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartName"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partNameKey
+      in: path
+      description: The unique identifier for the specific PartName.
+      required: true
+      schema:
+        type: string
+        example: KEY78pcHue
+  /part-searches/{partSearchKey}/part-identifiers:
+    get:
+      tags:
+      - PartIdentifier
+      summary: Retrieve a list of PartIdentifier entities scoped by partSearchKey.
+      operationId: listPartIdentifierByPartSearchKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartIdentifier entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartIdentifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartIdentifier
+      summary: Create a new PartIdentifier entity.
+      operationId: createPartIdentifier
+      requestBody:
+        description: PartIdentifier data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartIdentifierCreate"
+        required: true
+      responses:
+        "201":
+          description: PartIdentifier created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartIdentifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /part-searches/{partSearchKey}/part-identifiers/{partIdentifierKey}:
+    get:
+      tags:
+      - PartIdentifier
+      summary: Retrieve a specific PartIdentifier entity.
+      operationId: getPartIdentifierById
+      responses:
+        "200":
+          description: The requested PartIdentifier entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartIdentifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartIdentifier
+      summary: Replace a PartIdentifier entity.
+      operationId: replacePartIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartIdentifier"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartIdentifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartIdentifier
+      summary: Delete a PartIdentifier entity
+      description: Marks the PartIdentifier entity as inactive or removes it entirely.
+      operationId: deletePartIdentifierEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartIdentifier
+      summary: Partially update a PartIdentifier entity.
+      operationId: updatePartIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartIdentifierUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartIdentifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: partSearchKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partIdentifierKey
+      in: path
+      description: The unique identifier for the specific PartIdentifier.
+      required: true
+      schema:
+        type: string
+        example: KEY78pcHueH
+components:
+  schemas: {}

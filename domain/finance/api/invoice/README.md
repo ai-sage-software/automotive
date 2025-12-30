@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **EffectivePeriod**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialEventReference**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **Money**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**, **TextualDetail**, **TimeSlot**, **UnitOfMeasure**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialEventReference**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -148,6 +148,11 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **EffectivePeriod** : Effective Period<br/>
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **TextualDetail** : not nullable<br/>
+✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
+✅ **UnitOfMeasure** : value price with unit of measure<br/>
 
 ---
 

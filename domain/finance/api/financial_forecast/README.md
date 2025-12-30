@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **EffectivePeriod**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Money**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**, **TextualDetail**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -121,6 +121,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **EffectivePeriod** : Effective Period<br/>
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **TextualDetail** : not nullable<br/>
 
 ---
 

@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **Money**, **Payment**, **PaymentMethodReference**, **PaymentTransaction**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **Payment**, **PaymentMethodReference**, **PaymentTransaction**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -104,6 +104,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
 
 ---
 

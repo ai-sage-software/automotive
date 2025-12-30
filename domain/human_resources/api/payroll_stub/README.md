@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **EffectivePeriod**, **Identifier**, **Money**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**, **TimeSlot**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **PayrollComponent**, **PayrollStub**, **TaxReportingContext**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -111,6 +111,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **EffectivePeriod** : Effective Period<br/>
+✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
 
 ---
 

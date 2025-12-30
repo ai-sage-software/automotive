@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **EffectivePeriod**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyReference**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **TimeSlot**, **UnitOfMeasure**, **WarehouseReference**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyReference**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **WarehouseReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -126,6 +126,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **EffectivePeriod** : Effective Period<br/>
+✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
+✅ **UnitOfMeasure** : value price with unit of measure<br/>
 
 ---
 
