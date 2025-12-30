@@ -46,7 +46,7 @@ It brings together:
 
 ---
 
-## 📁 Repository Structure (Detailed)
+## 📁 Repository Structure
 
 ### domain/ — Canonical Domain Models
 Source of truth for STAR automotive business concepts. Schemas here are stable, versioned, and reusable.
@@ -78,8 +78,9 @@ Externally consumable tools and integrations.
 ### resources/ — Examples
 Sample payloads and reference material.
 
-### legacy/ — JSON schemas created from XML schemas
+### legacy/ — Historical JSON schemas and schemas translated from STAR XML
 Historical XML schemas converted to JSON schemas
+JSON schemas that were developed prior to the STAR Domain Model project which utilizes Domain Driven Design
 
 ### .github/workflows/ — CI / Automation
 Validation and quality enforcement pipelines.
@@ -88,13 +89,14 @@ Validation and quality enforcement pipelines.
 
 ## 🚀 Getting Started
 
-Clone the repo and start with `_getting_started/README.md`.
+Start with `_getting_started/README.md`.
 
 ---
 
 ## 🧠 Domain Modeling Philosophy
 
 - Domain-driven design
+- small and self-contained aggregates, minimizing the number of other aggregates they directly reference or traverse
 - Aggregate ownership boundaries
 - Versioned evolution
 - Metadata-first interoperability
