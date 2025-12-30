@@ -57,7 +57,7 @@ Enhanced entities are used for Create and Update operations.  This allows the tr
 
 1.  **View the Interactive Docs:** Load the `openapi_monolith.yaml` file into an interactive tool like **Swagger UI**, **Redoc**, or **Postman** to browse endpoints, schemas, and test calls.
 2.  **Make a First Call:** To retrieve the base list of resources, you can make an unauthenticated **GET** request to:
-> `https://[Your-API-Host]/budget-variance-report`
+> `https://[Your-API-Host]/budgetvariancereports`
 
 ### C. Integrate the API into Your Application 💻
 
@@ -646,3 +646,196 @@ Standard HTTP status codes are used to indicate the outcome of an operation:
     | **500 Server Error** | An unexpected error occurred on the server. | #/components/responses/ServerError |
 
 *Explore with Tools:** Load the specification into tools like **Swagger UI**, **Redoc**, or **Postman** for interactive documentation and testing.
+
+
+## Batch Processing
+
+## Bulk Create BudgetVarianceReport (`POST /budgetvariancereports/batch`)
+
+The `/budgetvariancereports/batch` endpoint allows you to create multiple BudgetVarianceReport entities in a single HTTP request. This is significantly more efficient than making individual calls when dealing with large datasets, as it reduces network overhead and connection latency.
+
+### Overview
+
+This endpoint processes an array of BudgetVarianceReport and provides a **partial success** response. This means that if some items in your list are invalid, the valid items will still be created, and the API will return a detailed report of which specific items failed.
+
+---
+
+### Request Structure
+
+The request body must be a JSON object containing an `items` array.
+
+* **Max Items:** 100 per request.
+* **Schema:** Each object in the `items` array should follow the `BudgetVarianceReportCreate` schema.
+
+**Example Request Body:**
+
+```json
+{
+"items": [
+{ "name": "Widget A", "sku": "W-001", "price": 10.99 },
+{ "name": "Widget B", "sku": "W-002", "price": 15.50 }
+]
+}
+
+```
+
+---
+
+### Response Handling
+
+The API returns a `200 OK` status code once the batch has been processed. The response body categorizes the results into two arrays: `succeeded` and `failed`.
+
+#### 1. Succeeded Array
+
+Contains the full objects of the BudgetVarianceReport that were successfully created, including server-generated fields like `id` or `createdAt`.
+
+#### 2. Failed Array
+
+Contains error objects for items that could not be processed. Each error object includes:
+
+* **`index`**: The zero-based position of the item in your original request array (to help you identify which specific entry failed).
+* **`error`**: A detailed explanation of why the creation failed (e.g., validation errors or duplicate SKUs).
+
+**Example Response Body:**
+
+```json
+{
+"succeeded": [
+{ "id": "123", "name": "Widget A", "sku": "W-001", "price": 10.99 }
+],
+"failed": [
+{
+"index": 1,
+"error": {
+"code": "DUPLICATE_SKU",
+"message": "A BudgetVarianceReport with SKU W-002 already exists."
+}
+}
+]
+}
+
+```
+
+---
+
+### Best Practices
+
+* **Chunking:** If you have 500 items to create, split them into 5 separate requests of 100 items each.
+* **Idempotency:** Ensure your client handles the `failed` array appropriately. You may want to correct the data and retry only the failed indices.
+* **Transactional Safety:** Note that this endpoint is **not** atomic. If 50 items succeed and 50 fail, the 50 successful items remain in the database.
+
+## Health Check (`GET /budgetvariancereports/health`)
+
+The `/budgetvariancereports/health` endpoint is a public diagnostic tool used to verify the current availability and operational state of the service. It is designed to be used by load balancers, monitoring tools, and automated deployment pipelines.
+
+---
+
+### Overview
+
+This endpoint provides a quick "heartbeat" of the BudgetVarianceReport aggregated root. Because it is a public endpoint, it typically does not require authentication, making it ideal for external uptime monitors (like Pingdom or UptimeRobot) to ensure the service is responsive.
+
+### Response Structure
+
+A successful health check returns a `200 OK` status with a JSON object detailing the service status and metadata.
+
+| Property | Type | Description |
+| --- | --- | --- |
+| **`status`** | `string` | The current state of the service. (See [Status Codes](https://www.google.com/search?q=%23status-codes)) |
+| **`version`** | `string` | The version of the ontology/API currently implemented. |
+| **`timestamp`** | `string` | The current server time in ISO-8601 format. |
+
+---
+
+### Status Codes
+
+The `status` field will return one of the following values:
+
+* **`up`**: The service is fully operational and reachable.
+* **`down`**: The service is experiencing an outage or critical failure.
+* **`maintenance`**: The service is intentionally offline for scheduled updates or repairs.
+
+**Example Response:**
+
+```json
+{
+"status": "up",
+"version": "1.0.0",
+"timestamp": "2025-12-21T23:00:00Z"
+}
+
+```
+
+---
+
+### Common Use Cases
+
+* **Load Balancing**: Configure your load balancer to poll this endpoint. If the status is anything other than `up`, the balancer can automatically route traffic away from the unhealthy instance.
+* **CI/CD Pipelines**: After a deployment, scripts can poll this endpoint to confirm the new version is live and reporting a healthy status before finalizing the rollout.
+* **Integration Debugging**: Quickly verify that the network path to the API is open without needing to send complex, authenticated requests.
+
+## BudgetVarianceReport Commands and State Management
+
+The budgetvariancereports API can handle complex business workflows. Rather than simple attribute updates, state changes are driven by explicit "Commands" that represent business intents.
+
+---
+
+### 1. Executing Commands (`POST /budgetvariancereports/{BudgetVarianceReportKey}/commands`)
+
+This endpoint is the single entry point for all intents that change the state of a BudgetVarianceReport (e.g., rescheduling, cancelling, or deleting).
+
+**Request Components:**
+
+* **`type`**: The specific intent (e.g., `RescheduleSlot`).
+* **`workflow_state`**: The target lifecycle state (e.g., `DELETED`).
+* **`context`**: A flexible object containing the parameters required for that specific command type.
+
+**Immediate Response:**
+The API will return a `status`. If the operation is long-running, you will receive a `PENDING` or `PROCESSING` status along with a `commandId` and a `retry_after` header/property.
+
+---
+
+### 2. Command Polling (`GET /budgetvariancereports/{BudgetVarianceReportKey}/commands/{commandId}`)
+
+For asynchronous commands, use this endpoint to track progress.
+
+* **`progress`**: An integer (0-100) indicating how far along the background task is.
+* **`status`**: Watch for `SUCCESS` to retrieve the final `result` object, or `FAILED` to inspect the `errors` array.
+* **`REQUIRES_ACTION`**: This status indicates the workflow is paused and needs user intervention or additional data to proceed.
+
+**Polling Logic Example:**
+
+1. Submit Command  receive `commandId`.
+2. If status is `PROCESSING`, wait  seconds (defined by `retry_after`).
+3. Fetch status via `GET`.
+4. Repeat until terminal state (`SUCCESS` or `FAILED`).
+
+---
+
+### 3. Capability Discovery (`GET /budgetvariancereports/capabilities`)
+
+Before sending a command, you can "discover" what actions are valid for a BudgetVarianceReport based on its current state. This endpoint describes the **State Machine** governing the resource.
+
+**Key Fields:**
+
+* **`from_states`**: The states the BudgetVarianceReport must be in to accept this command.
+* **`to_state`**: The resulting state after a successful command execution.
+* **`parameters_ref`**: A reference to the data schema required in the `context` of the command.
+
+#### Example Capabilities Table
+
+| Command Type | From States | To State | Description |
+| --- | --- | --- | --- |
+| `CancelBudgetVarianceReport` | `CREATED`, `ACTIVE` | `DELETED` | Voids the BudgetVarianceReport . |
+| `ActivateBudgetVarianceReport` | `PENDING` | `ACTIVE` | Moves a BudgetVarianceReport into the operational pool. |
+
+---
+
+### Execution Status Summary
+
+| Status | Meaning | Action |
+| --- | --- | --- |
+| **`SUCCESS`** | Operation complete. | Process the `result` object. |
+| **`PENDING` / `PROCESSING**` | Task is in the queue or running. | Poll again after `retry_after` period. |
+| **`FAILED` / `VALIDATION_ERROR**` | Request was invalid or failed. | Check `message` and `errors`. Do not retry without changes. |
+| **`MITIGATION_APPLIED`** | A failure occurred but was auto-corrected. | Verify the state of the entity. |
+| **`REQUIRES_ACTION`** | Workflow is blocked. | Manual intervention or a follow-up command is needed. |

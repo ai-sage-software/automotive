@@ -1,0 +1,93 @@
+@startuml InvoicePaymentStateDiagram
+
+title Invoice Payment Transaction Flow
+
+' Define the starting point
+[*] --> CREATED
+
+' 1. Initial/Setup States
+state CREATED
+state SUBMITTED
+state SCHEDULED
+state DEFERRED
+state REQUIRES_ACTION
+
+' 2. Core Processing States
+state PENDING
+state PROCESSING
+state FRAUD_REVIEW
+state REQUIRES_PAYMENT_STATUS
+
+' 3. Authorization & Success States
+state APPROVED
+state ACCEPTED
+state PROCESSED
+state COMPLETED
+state SUCCEEDED
+state PAID
+state CLEARED
+
+' 4. Terminal Failure & Reversal States
+state FAILED
+state DENIED
+state REJECTED
+state EXPIRED
+state CANCELLED
+state VOIDED
+state REVERSED
+state REFUNDED
+
+' --- Transitions ---
+
+' A. Initiation and Preparation
+CREATED --> SUBMITTED : payment initiated
+SUBMITTED --> PENDING : system starts processing
+CREATED --> SCHEDULED : Future execution date set
+SCHEDULED --> PENDING : execution time reached
+
+SUBMITTED --> REQUIRES_ACTION : 3DS or user verification required
+REQUIRES_ACTION --> PENDING : user action completed
+SUBMITTED --> DEFERRED : internal deferral logic
+
+' B. Core Processing
+PENDING --> PROCESSING : sent to gateway
+PENDING --> FRAUD_REVIEW : flagged for review
+FRAUD_REVIEW --> PROCESSING : review passed
+
+PROCESSING --> APPROVED : authorization successful
+PROCESSING --> FAILED : gateway error / decline
+PROCESSING --> REQUIRES_PAYMENT_STATUS : pending external status
+
+' C. Success Path
+APPROVED --> ACCEPTED : internal acknowledgment
+ACCEPTED --> PROCESSED : funds settled / captured
+PROCESSED --> COMPLETED : transaction closure
+COMPLETED --> SUCCEEDED : final success status
+SUCCEEDED --> PAID : labeled as paid
+PAID --> CLEARED : funds cleared in bank
+
+' D. Failure Path (from Processing)
+PROCESSING --> REJECTED : bank rejection
+PROCESSING --> DENIED : provider denial
+PROCESSING --> EXPIRED : timeout
+
+' E. Cancellation / Early Exit
+CREATED --> CANCELLED : invoice/order canceled before submission
+
+' F. Reversal / Post-Success Actions
+APPROVED --> VOIDED : voided before settlement
+PROCESSED --> REVERSED : reversal (e.g., ACH return)
+PROCESSED --> REFUNDED : full or partial refund
+
+' G. Terminal End States (All terminal states lead to the end)
+FAILED --> [*]
+DENIED --> [*]
+REJECTED --> [*]
+EXPIRED --> [*]
+CANCELLED --> [*]
+VOIDED --> [*]
+REVERSED --> [*]
+REFUNDED --> [*]
+CLEARED --> [*]
+
+@enduml
