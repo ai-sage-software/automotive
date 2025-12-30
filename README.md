@@ -33,6 +33,7 @@ It brings together:
 - Best practices for schema design and API governance
 - Tooling to validate, lint, transform, and generate artifacts
 - Documentation and diagrams to make complex automotive domains approachable
+- Legacy APIs that were developed before the STAR Domain Model wich utilizes a Domain Drive Design approach
 - Legacy artifacts derived from XML schemas to support backward compatibility and migration
 
 ---
