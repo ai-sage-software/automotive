@@ -34,8 +34,9 @@ cd automotive
 ## 🤝 How to engage with STAR
 
 Contact STAR for more information:
-> - Steve Zadoorian - steve@starstandard.org
+- Steve Zadoorian - steve@starstandard.org
 - Paco Escobar - pescobar@starstandard.org
+
 
 
 
