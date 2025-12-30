@@ -33,7 +33,7 @@ It brings together:
 - Best practices for schema design and API governance
 - Tooling to validate, lint, transform, and generate artifacts
 - Documentation and diagrams to make complex automotive domains approachable
-- Legacy APIs that were developed before the STAR Domain Model wich utilizes a Domain Driven Design approach
+- Legacy APIs that were developed before the STAR Domain Model wich utilizes a Domain-Driven Design approach
 - Legacy artifacts derived from XML schemas to support backward compatibility and migration
 - 📘 New to Domain-Driven Design?  
 See: [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
@@ -83,7 +83,7 @@ Sample payloads and reference material.
 
 ### legacy/ — Historical JSON schemas and schemas translated from STAR XML
 Historical XML schemas converted to JSON schemas
-JSON schemas that were developed prior to the STAR Domain Model project which utilizes Domain Driven Design
+JSON schemas that were developed prior to the STAR Domain Model project which utilizes a Domain-Driven Design approach
 
 ### .github/workflows/ — CI / Automation
 Validation and quality enforcement pipelines.
@@ -98,7 +98,7 @@ Start with `_getting_started/README.md`.
 
 ## 🧠 Domain Modeling Philosophy
 
-- Domain-driven design
+- Domain-Driven design
 - small and self-contained aggregates, minimizing the number of other aggregates they directly reference or traverse
 - Aggregate ownership boundaries
 - Versioned evolution
