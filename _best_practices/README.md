@@ -2,6 +2,10 @@
 
 This document defines the **modeling, schema, and governance best practices** for the STAR `automotive` repository.
 
+These practices assume familiarity with Domain-Driven Design (DDD).
+- 📘 New to Domain-Driven Design?  
+See: [Domain-Driven Design 101](../docs/arch/domain_driven_design_101.md)
+
 These rules exist to ensure:
 - Long-term stability
 - Interoperability across vendors
@@ -97,4 +101,5 @@ Every schema change must include:
 ## 🏁 Final Note
 
 When in doubt, favor **clarity, stability, and explicit intent**.
+
 
