@@ -82,8 +82,8 @@ Externally consumable tools and integrations.
 Sample payloads and reference material.
 
 ### legacy/ — Historical JSON schemas and schemas translated from STAR XML
-Historical XML schemas converted to JSON schemas
-JSON schemas that were developed prior to the STAR Domain Model project which utilizes a Domain-Driven Design approach
+- Historical XML schemas converted to JSON schemas
+- JSON schemas that were developed prior to the STAR Domain Model project which utilizes a Domain-Driven Design approach
 
 ### .github/workflows/ — CI / Automation
 Validation and quality enforcement pipelines.
