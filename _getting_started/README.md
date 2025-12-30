@@ -7,7 +7,7 @@ Welcome! This guide helps you get productive quickly in the STAR automotive repo
 ## 🚀 Initial Setup
 
 Before continuing it is recommended that you review:
-- docs/arch/domain_driven_design_101.md
+- [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
 
 ```bash
 git clone https://github.com/starstandard/automotive.git
@@ -39,6 +39,7 @@ cd automotive
 Contact STAR for more information:
 - Steve Zadoorian - steve@starstandard.org
 - Paco Escobar - pescobar@starstandard.org
+
 
 
 
