@@ -92,7 +92,7 @@ Validation and quality enforcement pipelines.
 
 ## 🚀 Getting Started
 
-Start with `_getting_started/README.md`.
+Start with: [Getting Started — automotive Repository](_getting_started/README.md)
 
 ---
 
