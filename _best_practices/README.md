@@ -101,5 +101,7 @@ Every schema change must include:
 ## 🏁 Final Note
 
 When in doubt, favor **clarity, stability, and explicit intent**.
+[Dig deeper into the STAR REST API Naming and Design Rules:](domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/README.md)
+
 
 
