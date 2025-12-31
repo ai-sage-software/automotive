@@ -142,7 +142,7 @@ Contact STAR
 
 ## 🏛 Governance & Best Practices
 
-See `_best_practices/README.md`.
+See: [Best Practices — STAR Automotive Domain](_best_practices/README.md)
 
 ---
 
