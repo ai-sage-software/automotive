@@ -1,6 +1,6 @@
 # Best Practices — STAR Automotive Domain
 
-This document defines the **modeling, schema, and governance best practices** for the STAR `automotive` repository.
+This document defines the **modeling, schema, naming conventions and governance best practices** for the STAR `automotive` repository.
 
 These practices assume familiarity with Domain-Driven Design (DDD).
 - 📘 New to Domain-Driven Design?  
@@ -102,6 +102,7 @@ Every schema change must include:
 
 - When in doubt, favor **clarity, stability, and explicit intent**.
 - [Dig deeper into the STAR REST API Naming and Design Rules:](../domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/README.md)
+
 
 
 
