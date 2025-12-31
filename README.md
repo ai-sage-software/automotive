@@ -45,7 +45,13 @@ See: [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
 - STAR working groups and contributors
 - OEMs, dealers, and suppliers
 - Platform and API engineers
+- Business Information Teams
+- Product Teams
 - Data architects & governance teams
+- Solutions Teams
+- QA Teams
+- Data Integration Partners
+  
 
 ---
 
