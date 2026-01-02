@@ -57,7 +57,7 @@ See: [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
 
 ## 📁 Repository Structure
 
-### domain/ — Canonical Domain Models adhering to the Domain-Driven Design develpoment approach
+### domain/ — Canonical Domain Models adhering to the Domain-Driven Design development approach
 Source of truth for STAR automotive business concepts. Schemas here are stable, versioned, and reusable.
 
 ### [docs/ — Documentation](docs/)
