@@ -60,7 +60,7 @@ See: [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
 ### domain/ — Canonical Domain Models
 Source of truth for STAR automotive business concepts. Schemas here are stable, versioned, and reusable.
 
-### docs/ — Documentation
+### [docs/ — Documentation](docs/)
 Human-readable explanations, rationale, specifications, and usage guidance.
 
 ### diagrams/ — Visual Models
