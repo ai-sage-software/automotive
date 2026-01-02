@@ -18,7 +18,7 @@ The API adheres to the **OpenAPI 3.0.1** standard.
 ---
 
 
-The API is structured around the domain **service_parts** and **PartMaster** resource as the primary entity, with several resources scoped under it via various path parameters.
+The API is structured around the domain **parts** and **PartMaster** resource as the primary entity, with several resources scoped under it via various path parameters.
 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
