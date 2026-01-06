@@ -1,4 +1,4 @@
-# STAR API Governance – Spectral Rules (Plain English)
+# STAR API Governance – Spectral Rules
 
 ## Purpose
 This document explains the STAR API governance rules enforced using Spectral.
@@ -69,18 +69,12 @@ and enable gradual enforcement.
 **Why:** Incorrect pluralization.
 **Fix:** Use `criteria`.
 
----
-
-## STAR Naming Conventions (SHOULD)
 
 - Schemas: PascalCase
 - Properties: snake_case
 - operationId: camelCase
 - Enum values: UPPER_SNAKE_CASE
 
----
-
-## Motive Retail Recommendations (SHOULD)
 
 ### Schemas with *_key should expose _links
 **Why:** Supports discoverability and navigation.
@@ -127,4 +121,3 @@ Executed automatically via GitHub Actions on push and pull requests.
 - Faster reviews
 - Consistent APIs
 - Enforced standards as code
-
