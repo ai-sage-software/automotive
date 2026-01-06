@@ -1,6 +1,5 @@
 # STAR API Governance Rules
 
-## What is this?
 This document explains the **Spectral rules** used in this repository.
 Its goal is to help **API designers, reviewers, and business stakeholders** understand *why* rules exist — not how to code them.
 
