@@ -1,4 +1,4 @@
-# STAR API Governance – Spectral Rules (Plain English)
+# STAR API Governance – Spectral Rules
 
 ## Purpose
 This document explains the **STAR API governance rules** enforced using **Spectral**.
