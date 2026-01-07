@@ -12,7 +12,8 @@ info:
   version: 1.0.0
 servers:
 - url: /v1_0_0
-  description: server
+  description: Automotive Retail API. All requests must comply with the Standards
+    Version identified in the headers.
 security:
 - industry-oauth:
   - standard:read
@@ -109,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /financial-snapshots/KEY78J
+                example: /financial-snapshots/KEY78Q
           content:
             application/json:
               schema:
@@ -280,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78l
+        example: KEY783
   /financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items:
     get:
       tags:
@@ -555,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78lQ
+        example: KEY783e
   /financial-snapshots/{financialSnapshotKey}/moneys:
     get:
       tags:
@@ -672,7 +673,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78lQ4
+        example: KEY783ep
   /financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria:
     get:
       tags:
@@ -947,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78lQ4g
+        example: KEY783epv
   /financial-snapshots/health:
     get:
       summary: Health Check
@@ -1023,6 +1024,81 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+  /financial-snapshots/exports:
+    post:
+      summary: Initiate a bulk FinancialSnapshot export
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  default: parquet
+                  enum:
+                  - xml
+                  - json
+                  - avro
+                  - parquet
+                  - csv
+                date_range:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: date
+                    end:
+                      type: string
+                      format: date
+                data_contract_key:
+                  type: string
+                  description: "The identifier of the specific data contract/projection\
+                    \ (e.g., 'customer_contact_v1')"
+                  example: contact_details_only
+                compression:
+                  type: string
+                  default: snappy
+                  enum:
+                  - snappy
+                  - gzip
+                  - lzo
+                destination:
+                  type: object
+                  properties:
+                    retrieval_url:
+                      type: string
+                      description: The URL where the user intends to receive or pull
+                        the data
+                      format: uri
+                  description: Configuration for file retrieval
+      responses:
+        "202":
+          description: Export job created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportJob"
+  /financial-snapshots/exports/{exportId}:
+    get:
+      summary: Get export status
+      parameters:
+      - name: exportId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Current status and file URLs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportJob"
   /financial-snapshots/{financialSnapshotKey}/commands:
     post:
       summary: Execute a business workflow on FinancialSnapshot
@@ -1080,7 +1156,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #390d133f has been successfully cancelled."
+                    example: "Invoice #465815c9 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1088,7 +1164,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: e840fc60
+                    example: 2edfe68b
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1170,7 +1246,9 @@ paths:
                       $ref: "#/components/schemas/ErrorDetail"
   /financial-snapshots/capabilities:
     get:
-      summary: Discover FinancialSnapshot State Machine
+      summary: Discover FinancialSnapshot Capabilities
+      description: Returns the state machine commands and available data products
+        for export.
       operationId: getFinancialSnapshotCapabilities
       responses:
         "200":
@@ -1210,6 +1288,41 @@ paths:
                         parameters_ref:
                           type: string
                           example: "#/components/schemas/FinancialSnapshot"
+                  available_exports:
+                    type: array
+                    description: List of pre-defined data projections available for
+                      bulk export
+                    items:
+                      type: object
+                      properties:
+                        data_product_id:
+                          type: string
+                          example: customer_contact_v1
+                        description:
+                          type: string
+                          example: Optimized view containing only non-sensitive contact
+                            details.
+                        supported_formats:
+                          type: array
+                          example:
+                          - parquet
+                          - csv
+                          items:
+                            type: string
+                            enum:
+                            - xml
+                            - json
+                            - avro
+                            - parquet
+                            - csv
+                        columns:
+                          type: array
+                          example:
+                          - first_name
+                          - last_name
+                          - email
+                          items:
+                            type: string
 components:
   schemas:
     ErrorDetail:
@@ -1450,6 +1563,51 @@ components:
           type: string
           description: The monetary value.
       description: "Represents a monetary value, including its curr..."
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: parquet
+          enum:
+          - xml
+          - json
+          - avro
+          - parquet
+          - csv
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
     CommandOption:
       type: object
       properties:
