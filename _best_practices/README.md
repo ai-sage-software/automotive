@@ -77,6 +77,7 @@ These rules exist to ensure:
 - Spectral rules enforce naming, structure, and governance
 - Validation failures must be fixed at the schema level
 - Rules change only through governance approval
+- See: [Spectral Rules](../docs/api-governance/README.md)
 
 ---
 
@@ -102,6 +103,7 @@ Every schema change must include:
 
 - When in doubt, favor **clarity, stability, and explicit intent**.
 - [Dig deeper into the STAR REST API Naming and Design Rules:](../domain/_GETTING_STARTED/NAMING_AND_DESIGN_RULES/README.md)
+
 
 
 
