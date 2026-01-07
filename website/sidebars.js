@@ -4,7 +4,7 @@ module.exports = {
     {
       type: 'doc',
       id: 'intro',
-      label: 'Domain Atlas',
+      label: STAR Domain Model',
     },
     {
       type: 'category',
