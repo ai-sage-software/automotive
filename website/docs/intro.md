@@ -14,6 +14,6 @@ This portal is GitHub-backed (the repo is the source of truth), and optimized fo
 - Domain root: https://github.com/starstandard/automotive/tree/main/domain
 - Diagrams: https://github.com/starstandard/automotive/tree/main/diagrams
 
-## Domains (auto-generated)
+## Domains
 
 Go to **Domains** in the left sidebar to browse everything under `domain/`.
