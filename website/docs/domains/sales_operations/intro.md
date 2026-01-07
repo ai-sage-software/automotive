@@ -2,15 +2,13 @@
 title: sales_operations
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/sales_operations
+# sales_operations
 
-## What’s in this domain?
+- Source folder: `/domain/sales_operations`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/sales_operations
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **sales_operations** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/sales_operations` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

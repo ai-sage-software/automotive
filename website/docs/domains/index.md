@@ -1,12 +1,14 @@
 ---
-title: Domains
+title: "Domains"
+description: "This section is generated from the repo’s /domain folder at build time."
 ---
 
-This section is **generated from the repo’s `/domain` folder** at build time.
+# Domains
 
-## Domain folders
+This list is generated from the repository’s `domain/` folder.
 
-- **_GETTING_STARTED** → [Open](./_GETTING_STARTED/intro)
+## Available domains
+
 - **core** → [Open](./core/intro)
 - **data_products** → [Open](./data_products/intro)
 - **finance** → [Open](./finance/intro)
@@ -23,3 +25,7 @@ This section is **generated from the repo’s `/domain` folder** at build time.
 - **telematics_vehicle_events** → [Open](./telematics_vehicle_events/intro)
 - **warranty_insurance** → [Open](./warranty_insurance/intro)
 - **workflows** → [Open](./workflows/intro)
+
+## Exclusions
+
+Folders starting with `_` or `.` are excluded (for example: `_GETTING_STARTED`).

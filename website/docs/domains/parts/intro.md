@@ -2,15 +2,13 @@
 title: parts
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/parts
+# parts
 
-## What’s in this domain?
+- Source folder: `/domain/parts`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/parts
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **parts** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/parts` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

@@ -2,15 +2,13 @@
 title: finance
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/finance
+# finance
 
-## What’s in this domain?
+- Source folder: `/domain/finance`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/finance
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **finance** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/finance` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

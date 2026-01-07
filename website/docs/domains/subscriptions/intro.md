@@ -2,15 +2,13 @@
 title: subscriptions
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/subscriptions
+# subscriptions
 
-## What’s in this domain?
+- Source folder: `/domain/subscriptions`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/subscriptions
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **subscriptions** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/subscriptions` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

@@ -2,15 +2,13 @@
 title: marketing_loyalty
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/marketing_loyalty
+# marketing_loyalty
 
-## What’s in this domain?
+- Source folder: `/domain/marketing_loyalty`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/marketing_loyalty
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **marketing_loyalty** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/marketing_loyalty` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

@@ -2,15 +2,13 @@
 title: party_identity
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/party_identity
+# party_identity
 
-## What’s in this domain?
+- Source folder: `/domain/party_identity`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/party_identity
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **party_identity** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/party_identity` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

@@ -2,15 +2,13 @@
 title: warranty_insurance
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/warranty_insurance
+# warranty_insurance
 
-## What’s in this domain?
+- Source folder: `/domain/warranty_insurance`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/warranty_insurance
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **warranty_insurance** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/warranty_insurance` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

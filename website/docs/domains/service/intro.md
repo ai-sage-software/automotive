@@ -2,15 +2,13 @@
 title: service
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/service
+# service
 
-## What’s in this domain?
+- Source folder: `/domain/service`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/service
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **service** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/service` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

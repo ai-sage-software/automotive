@@ -2,15 +2,13 @@
 title: human_resources
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/human_resources
+# human_resources
 
-## What’s in this domain?
+- Source folder: `/domain/human_resources`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/human_resources
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **human_resources** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/human_resources` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

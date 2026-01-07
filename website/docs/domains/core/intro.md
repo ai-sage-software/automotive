@@ -2,15 +2,13 @@
 title: core
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/core
+# core
 
-## What’s in this domain?
+- Source folder: `/domain/core`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/core
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **core** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/core` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

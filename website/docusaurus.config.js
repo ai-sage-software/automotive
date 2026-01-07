@@ -12,8 +12,15 @@ module.exports = {
   organizationName: 'starstandard',
   projectName: 'automotive',
 
+  // Keep strict build behavior for broken site links
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+
+  // ✅ Fix deprecation: move broken markdown handling here
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
 
   i18n: {
     defaultLocale: 'en',
@@ -25,7 +32,7 @@ module.exports = {
       'classic',
       {
         docs: {
-          routeBasePath: '/',          // docs at site root
+          routeBasePath: '/', // docs at site root (https://starstandard.github.io/automotive/)
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/starstandard/automotive/edit/main/website/',
         },
@@ -59,7 +66,10 @@ module.exports = {
         {
           title: 'Repository',
           items: [
-            { label: 'starstandard/automotive', href: 'https://github.com/starstandard/automotive' },
+            {
+              label: 'starstandard/automotive',
+              href: 'https://github.com/starstandard/automotive',
+            },
           ],
         },
       ],

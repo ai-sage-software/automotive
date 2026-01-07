@@ -2,15 +2,13 @@
 title: incentives_programs
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/incentives_programs
+# incentives_programs
 
-## What’s in this domain?
+- Source folder: `/domain/incentives_programs`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/incentives_programs
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **incentives_programs** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/incentives_programs` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

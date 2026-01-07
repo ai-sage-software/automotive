@@ -2,15 +2,13 @@
 title: workflows
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/workflows
+# workflows
 
-## What’s in this domain?
+- Source folder: `/domain/workflows`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/workflows
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **workflows** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/workflows` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:

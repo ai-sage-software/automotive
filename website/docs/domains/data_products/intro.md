@@ -2,15 +2,13 @@
 title: data_products
 ---
 
-GitHub: https://github.com/starstandard/automotive/tree/main/domain/data_products
+# data_products
 
-## What’s in this domain?
+- Source folder: `/domain/data_products`
+- GitHub: https://github.com/starstandard/automotive/tree/main/domain/data_products
 
-Add a short business-friendly description here.
+## What’s inside
+This page is a friendly entry point for the **data_products** domain.
 
-## Key artifacts
+> Tip: Add a `README.md` inside `/domain/data_products` and we can enhance this page by auto-pulling summary text from it.
 
-- APIs:
-- Schemas:
-- Examples:
-- Diagrams:
