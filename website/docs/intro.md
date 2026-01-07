@@ -56,7 +56,7 @@ It brings together:
 - Legacy APIs that were developed before the STAR Domain Model wich utilizes a Domain-Driven Design approach
 - Legacy artifacts derived from XML schemas to support backward compatibility and migration
 - 📘 New to Domain-Driven Design?  
-See: [Domain-Driven Design 101](docs/arch/domain_driven_design_101.md)
+See: [Domain-Driven Design 101](https://github.com/starstandard/automotive/blob/main/docs/arch/domain_driven_design_101.md)
 
 ---
 
