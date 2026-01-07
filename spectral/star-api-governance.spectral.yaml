@@ -1,34 +1,29 @@
 extends:
-  - "spectral:oas"
+  - spectral:oas
 
 rules:
-  # ----------------------------
-  # MUST (errors / publish blockers
-  # ----------------------------
+  # ============================
+  # MUST (errors / publish blockers)
+  # ============================
 
   oas3-arrays-must-have-items:
     description: "MUST: array schemas must define items."
     message: "Array schema is missing `items`."
     severity: error
-    given: "$..schemas[*]"
+    given: "$..[?(@ && @.type=='array')]"
     then:
-      function: schema
-      functionOptions:
-        schema:
-          allOf:
-            - if:
-                properties:
-                  type: { const: array }
-              then:
-                required: [items]
+      field: items
+      function: truthy
 
   oas3-no-invalid-exampleSetFlag:
     description: "MUST: forbid non-OpenAPI field `exampleSetFlag`."
     message: "Invalid field `exampleSetFlag` found. Use `x-...` vendor extension or remove."
     severity: error
-    given: "$..exampleSetFlag"
+    given: "$..*~"
     then:
-      function: truthy
+      function: pattern
+      functionOptions:
+        notMatch: "^exampleSetFlag$"
 
   oas3-securityschemes-required:
     description: "MUST: components.securitySchemes must exist."
@@ -47,30 +42,22 @@ rules:
               required: [securitySchemes]
 
   patch-must-use-merge-patch:
-    description: "MUST: PATCH should use application/merge-patch+json (or explicitly justified)."
+    description: "MUST: PATCH should include application/merge-patch+json (or explicitly justified)."
     message: "PATCH requestBody must include 'application/merge-patch+json'."
     severity: error
-    given: "$.paths[*][patch]"
+    given: "$.paths[*].patch.requestBody.content"
     then:
       function: schema
       functionOptions:
         schema:
           type: object
-          required: [requestBody]
-          properties:
-            requestBody:
-              type: object
-              required: [content]
-              properties:
-                content:
-                  type: object
-                  required: ["application/merge-patch+json"]
+          required: ["application/merge-patch+json"]
 
   must-quantity-be-numeric:
     description: "MUST: quantity fields must be numeric (integer or number), not string."
-    message: "Field '{{property}}' must be numeric (integer/number)."
+    message: "Field 'quantity' must be numeric (integer/number)."
     severity: error
-    given: "$..properties[?(@property === 'quantity')]"
+    given: "$..properties.quantity"
     then:
       function: schema
       functionOptions:
@@ -83,23 +70,70 @@ rules:
     description: "MUST: do not combine format: date-time with an HH:mm-only pattern."
     message: "Schema uses format 'date-time' with an HH:mm-only pattern; choose one."
     severity: error
-    given: "$..properties[?(@property === 'start_time' || @property === 'end_time')]"
+    given: "$..properties[?(@property == 'start_time' || @property == 'end_time')]"
     then:
       function: schema
       functionOptions:
         schema:
-          allOf:
-            - not:
-                allOf:
-                  - properties:
-                      format:
-                        const: date-time
-                  - properties:
-                      pattern:
-                        const: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          not:
+            allOf:
+              - properties:
+                  format:
+                    const: date-time
+              - properties:
+                  pattern:
+                    const: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+
+  # ============================
+  # MUST (errors) - STAR Naming Conventions
+  # ============================
+
+  must-schema-names-be-pascalcase:
+    description: "MUST: schema names must be PascalCase."
+    message: "Schema name '{{property}}' must be PascalCase (e.g., PartMaster)."
+    severity: error
+    given: "$.components.schemas.*~"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][a-zA-Z0-9]*$"
+
+  must-property-names-be-snake_case:
+    description: "MUST: property names must be snake_case."
+    message: "Property name '{{property}}' must be snake_case (lowercase with underscores)."
+    severity: error
+    given: "$.components.schemas.*.properties.*~"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-z0-9_]*$"
+
+  must-operationid-be-camelcase:
+    description: "MUST: operationId must be camelCase."
+    message: "operationId '{{value}}' must be camelCase (e.g., listParts)."
+    severity: error
+    given: "$.paths[*][*].operationId"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-zA-Z0-9]*$"
+
+  must-enum-values-be-upper-snake-case:
+    description: "MUST: enum values for string enums should be UPPER_SNAKE_CASE."
+    message: "Enum value '{{value}}' must be UPPER_SNAKE_CASE."
+    severity: error
+    given: "$..[?(@ && @.type=='string')].enum[*]"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][A-Z0-9_]*$"
+
+  # ============================
+  # SHOULD (warnings)
+  # ============================
 
   should-operationid-avoid-bad-plurals:
-    description: "SHOULD: avoid common operationId typos (Inventorys/Searchs/Categorys/Regulatorys)."
+    description: "SHOULD: avoid common operationId plural typos."
     message: "operationId '{{value}}' contains a common typo pluralization (e.g., 'Inventorys')."
     severity: warn
     given: "$.paths[*][*].operationId"
@@ -110,7 +144,7 @@ rules:
 
   should-avoid-boilerplate-info-description:
     description: "SHOULD: avoid boilerplate info.description text."
-    message: "info.description appears to be boilerplate; replace with domain-specific description."
+    message: "info.description appears boilerplate; replace with domain-specific description."
     severity: warn
     given: "$.info.description"
     then:
@@ -119,10 +153,10 @@ rules:
         notMatch: "(Automotive Retail Ontology|generated by|auto-generated|template)"
 
   should-list-get-not-return-bare-array:
-    description: "SHOULD: list GET endpoints should return an envelope object (e.g., {data, next_cursor})."
+    description: "SHOULD: list GET endpoints should return an envelope object (not a bare array)."
     message: "GET list endpoint response returns a bare array; prefer an envelope object for pagination/metadata."
     severity: warn
-    given: "$.paths[*][get].responses[?(@property.match(/^(200|206)$/))].content..schema"
+    given: "$.paths[*].get.responses[?(@property.match(/^(200|206)$/))].content.application/json.schema"
     then:
       function: schema
       functionOptions:
@@ -132,19 +166,27 @@ rules:
 
   should-operation-tags-be-defined-globally:
     description: "SHOULD: operation tags must be defined in root tags."
-    message: "Operation tags must be defined in root 'tags:' section."
+    message: "Operation tags should be defined in root 'tags:' section."
     severity: warn
     given: "$.paths[*][*].tags[*]"
     then:
       function: truthy
 
-  # ----------------------------
-  # SHOULD (warnings)
-  # ----------------------------
+  should-define-401-unauthorized:
+    description: "SHOULD: define 401 response for authentication failures."
+    message: "Operation should define 401 Unauthorized."
+    severity: warn
+    given: "$.paths[*][*].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["401"]
 
   should-define-403-forbidden:
     description: "SHOULD: define 403 response for authorization failures."
-    message: "Operation should define a 403 Forbidden response."
+    message: "Operation should define 403 Forbidden."
     severity: warn
     given: "$.paths[*][*].responses"
     then:
@@ -154,9 +196,33 @@ rules:
           type: object
           required: ["403"]
 
+  should-define-404-not-found:
+    description: "SHOULD: define 404 response for missing resources."
+    message: "Operation should define 404 Not Found."
+    severity: warn
+    given: "$.paths[*][*].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["404"]
+
+  should-define-409-conflict-for-write-ops:
+    description: "SHOULD: define 409 response for conflicts on POST/PUT."
+    message: "POST/PUT should define 409 Conflict."
+    severity: warn
+    given: "$.paths[*]['post','put'].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["409"]
+
   should-define-500-error:
     description: "SHOULD: define 500 response for internal errors."
-    message: "Operation should define a 500 response."
+    message: "Operation should define 500."
     severity: warn
     given: "$.paths[*][*].responses"
     then:
@@ -165,6 +231,68 @@ rules:
         schema:
           type: object
           required: ["500"]
+
+  should-single-resource-define-500:
+    description: "SHOULD: single-resource endpoints (paths with {id}) should define 500."
+    message: "Single-resource operation should define 500."
+    severity: warn
+    given: "$.paths[?(@property.match(/\\{[^}]+\\}/))]['get','put','patch','delete'].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["500"]
+
+  should-write-ops-define-401:
+    description: "SHOULD: POST/PUT/PATCH operations should define 401."
+    message: "Write operation should define 401."
+    severity: warn
+    given: "$.paths[*]['post','put','patch'].responses"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["401"]
+
+  should-post-include-location-header:
+    description: "SHOULD: POST success responses should include Location header with a path-like example."
+    message: "POST response should include headers.Location with an example starting with '/'."
+    severity: warn
+    given: "$.paths[*].post.responses[?(@property.match(/^(200|201|202)$/))]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["headers"]
+          properties:
+            headers:
+              type: object
+              required: ["Location"]
+              properties:
+                Location:
+                  type: object
+                  properties:
+                    example:
+                      type: string
+                      pattern: "^/"
+
+  should-mark-id-fields-readonly:
+    description: "SHOULD: properties ending with _id should be marked readOnly: true."
+    message: "Property '{{property}}' looks server-generated; mark as readOnly: true."
+    severity: warn
+    given: "$..properties[?(@property.match(/_id$/))]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["readOnly"]
+          properties:
+            readOnly:
+              const: true
 
   should-avoid-criterias-in-paths:
     description: "SHOULD: avoid 'criterias' in paths; use 'criteria'."
@@ -176,56 +304,143 @@ rules:
       functionOptions:
         notMatch: "criterias"
 
-  # ----------------------------
-  # SHOULD (warnings) - STAR Naming Conventions
-  # ----------------------------
+  # ============================
+  # SHOULD (warnings) - MotiveRetail-inspired
+  # ============================
 
-  should-schema-names-be-pascalcase:
-    description: "SHOULD: schema names must be PascalCase."
-    message: "Schema name '{{property}}' should be PascalCase (e.g., PartMaster)."
+  should-schemas-with-keys-have-links:
+    description: "SHOULD: schemas that include *_key fields should include a _links object for navigation."
+    message: "Schema contains '*_key' fields but no '_links' object. Consider adding HATEOAS links."
     severity: warn
-    given: "$.components.schemas.*~"
+    given: "$.components.schemas[*]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          allOf:
+            - if:
+                type: object
+                properties:
+                  properties:
+                    type: object
+                    patternProperties:
+                      ".*_key$": {}
+              then:
+                properties:
+                  properties:
+                    required: ["_links"]
+
+  should-define-securityschemes:
+    description: "SHOULD: define components.securitySchemes."
+    message: "components.securitySchemes is missing. Define auth mechanisms used by 401 responses."
+    severity: warn
+    given: "$.components"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ["securitySchemes"]
+
+  should-total-quantity-be-numeric:
+    description: "SHOULD: total_quantity should be numeric."
+    message: "total_quantity should be integer/number (not string)."
+    severity: warn
+    given: "$..properties.total_quantity"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - type: integer
+            - type: number
+
+  should-latitude-be-numeric:
+    description: "SHOULD: latitude should be numeric."
+    message: "latitude should be number (not string)."
+    severity: warn
+    given: "$..properties.latitude"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: number
+
+  should-longitude-be-numeric:
+    description: "SHOULD: longitude should be numeric."
+    message: "longitude should be number (not string)."
+    severity: warn
+    given: "$..properties.longitude"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: number
+
+  should-price-value-be-numeric:
+    description: "SHOULD: price.value should be numeric."
+    message: "price.value should be number (not string)."
+    severity: warn
+    given: "$..properties.price.properties.value"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: number
+
+  should-avoid-generic-path-param-example:
+    description: "SHOULD: avoid generic path parameter example PR-1234567 across all resources."
+    message: "Parameter example uses generic 'PR-1234567'. Use a resource-specific example."
+    severity: warn
+    given: "$..parameters[*].example"
     then:
       function: pattern
       functionOptions:
-        match: "^[A-Z][a-zA-Z0-9]*$"
+        notMatch: "^PR-1234567$"
 
-  should-property-names-be-snake_case:
-    description: "SHOULD: property names must be snake_case."
-    message: "Property name '{{property}}' should be snake_case (lowercase with underscores)."
+  should-not-use-minmax-on-strings:
+    description: "SHOULD: do not use minimum/maximum on string-typed schemas (use minLength/maxLength)."
+    message: "String schema defines minimum/maximum; use minLength/maxLength instead."
     severity: warn
-    given: "$.components.schemas.*.properties.*~"
+    given: "$..[?(@ && @.type=='string')]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          not:
+            anyOf:
+              - required: ["minimum"]
+              - required: ["maximum"]
+
+  should-servers-url-include-version:
+    description: "SHOULD: include an explicit version in servers.url (e.g., /v1) or document a strategy."
+    message: "servers.url does not appear to include a version segment like /v1."
+    severity: warn
+    given: "$.servers[*].url"
     then:
       function: pattern
       functionOptions:
-        match: "^[a-z][a-z0-9_]*$"
+        match: "/v[0-9]+"
 
-  should-operationid-be-camelcase:
-    description: "SHOULD: operationId must be camelCase."
-    message: "operationId '{{value}}' should be camelCase (e.g., listPartOrders)."
+  should-resource-schemas-have-audit-fields:
+    description: "SHOULD: resource schemas should include created_at/updated_at timestamps."
+    message: "Consider adding created_at and updated_at (format: date-time) for auditability."
     severity: warn
-    given: "$.paths[*][*].operationId"
+    given: "$.components.schemas[*].properties"
     then:
-      function: pattern
+      function: schema
       functionOptions:
-        match: "^[a-z][a-zA-Z0-9]*$"
+        schema:
+          anyOf:
+            - required: ["created_at"]
+            - required: ["updated_at"]
 
-  should-enum-values-be-upper-snake-case:
-    description: "SHOULD: enum values (for string enums) should be UPPER_SNAKE_CASE."
-    message: "Enum value '{{value}}' should be UPPER_SNAKE_CASE."
-    severity: warn
-    given: "$..[?(@ && @.type=='string')].enum[*]"
-    then:
-      function: pattern
-      functionOptions:
-        match: "^[A-Z][A-Z0-9_]*$"
-
-  # ----------------------------
+  # ============================
   # MAY (info)
-  # ----------------------------
+  # ============================
 
   may-document-versioning:
-    description: "MAY: include explicit versioning strategy (e.g., /v1 or headers)."
+    description: "MAY: document a versioning strategy (e.g., /v1 or headers)."
     message: "Consider documenting API versioning strategy."
     severity: info
     given: "$.info.version"
