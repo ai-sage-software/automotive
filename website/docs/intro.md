@@ -1,5 +1,5 @@
 ---
-title: STAR Domain Atlas
+title: STAR Domain Model
 description: Friendly navigation for the STAR Automotive Domain Model
 slug: /
 ---
