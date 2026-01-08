@@ -48,7 +48,7 @@ module.exports = {
     navbar: {
       title: 'STAR Docs',
       items: [
-        { to: '/', label: 'Domain Atlas', position: 'left' },
+        { to: '/', label: 'Domain Model', position: 'left' },
         { to: '/getting-started/overview', label: 'Getting Started', position: 'left' },
         { href: 'https://github.com/starstandard/automotive', label: 'GitHub', position: 'right' },
       ],
@@ -59,7 +59,7 @@ module.exports = {
         {
           title: 'Docs',
           items: [
-            { label: 'Domain Atlas', to: '/' },
+            { label: 'Domain Model', to: '/' },
             { label: 'Getting Started', to: '/getting-started/overview' },
           ],
         },
