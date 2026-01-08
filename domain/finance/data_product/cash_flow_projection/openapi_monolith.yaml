@@ -12,7 +12,8 @@ info:
   version: 1.0.0
 servers:
 - url: /v1_0_0
-  description: server
+  description: Automotive Retail API. All requests must comply with the Standards
+    Version identified in the headers.
 security:
 - industry-oauth:
   - standard:read
@@ -109,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /cash-flow-projections/KEY78X
+                example: /cash-flow-projections/KEY78s
           content:
             application/json:
               schema:
@@ -280,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78C
+        example: KEY78Q
   /cash-flow-projections/{cashFlowProjectionKey}/moneys:
     get:
       tags:
@@ -397,7 +398,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78Ce
+        example: KEY78Qn
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios:
     get:
       tags:
@@ -672,7 +673,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78Cer
+        example: KEY78Qnu
   /cash-flow-projections/{cashFlowProjectionKey}/identifiers:
     get:
       tags:
@@ -947,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78CerD
+        example: KEY78QnuO
   /cash-flow-projections/{cashFlowProjectionKey}/accounting-periods:
     get:
       tags:
@@ -1222,7 +1223,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78CerDr
+        example: KEY78QnuOV
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items:
     get:
       tags:
@@ -1497,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78CerDrr
+        example: KEY78QnuOV8
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria:
     get:
       tags:
@@ -1772,7 +1773,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78CerDrrF
+        example: KEY78QnuOV8w
   /cash-flow-projections/health:
     get:
       summary: Health Check
@@ -1848,6 +1849,81 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+  /cash-flow-projections/exports:
+    post:
+      summary: Initiate a bulk CashFlowProjection export
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  default: parquet
+                  enum:
+                  - xml
+                  - json
+                  - avro
+                  - parquet
+                  - csv
+                date_range:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: date
+                    end:
+                      type: string
+                      format: date
+                data_contract_key:
+                  type: string
+                  description: "The identifier of the specific data contract/projection\
+                    \ (e.g., 'customer_contact_v1')"
+                  example: contact_details_only
+                compression:
+                  type: string
+                  default: snappy
+                  enum:
+                  - snappy
+                  - gzip
+                  - lzo
+                destination:
+                  type: object
+                  properties:
+                    retrieval_url:
+                      type: string
+                      description: The URL where the user intends to receive or pull
+                        the data
+                      format: uri
+                  description: Configuration for file retrieval
+      responses:
+        "202":
+          description: Export job created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportJob"
+  /cash-flow-projections/exports/{exportId}:
+    get:
+      summary: Get export status
+      parameters:
+      - name: exportId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Current status and file URLs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportJob"
   /cash-flow-projections/{cashFlowProjectionKey}/commands:
     post:
       summary: Execute a business workflow on CashFlowProjection
@@ -1905,7 +1981,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #2e796d0e has been successfully cancelled."
+                    example: "Invoice #ca4049a0 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1913,7 +1989,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 3c4925c7
+                    example: 9c277d9e
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1995,7 +2071,9 @@ paths:
                       $ref: "#/components/schemas/ErrorDetail"
   /cash-flow-projections/capabilities:
     get:
-      summary: Discover CashFlowProjection State Machine
+      summary: Discover CashFlowProjection Capabilities
+      description: Returns the state machine commands and available data products
+        for export.
       operationId: getCashFlowProjectionCapabilities
       responses:
         "200":
@@ -2035,6 +2113,41 @@ paths:
                         parameters_ref:
                           type: string
                           example: "#/components/schemas/CashFlowProjection"
+                  available_exports:
+                    type: array
+                    description: List of pre-defined data projections available for
+                      bulk export
+                    items:
+                      type: object
+                      properties:
+                        data_product_id:
+                          type: string
+                          example: customer_contact_v1
+                        description:
+                          type: string
+                          example: Optimized view containing only non-sensitive contact
+                            details.
+                        supported_formats:
+                          type: array
+                          example:
+                          - parquet
+                          - csv
+                          items:
+                            type: string
+                            enum:
+                            - xml
+                            - json
+                            - avro
+                            - parquet
+                            - csv
+                        columns:
+                          type: array
+                          example:
+                          - first_name
+                          - last_name
+                          - email
+                          items:
+                            type: string
 components:
   schemas:
     AccountingPeriod:
@@ -2545,6 +2658,51 @@ components:
       - NONE
       - CUSTOM
       - OTHER
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: parquet
+          enum:
+          - xml
+          - json
+          - avro
+          - parquet
+          - csv
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
     CommandOption:
       type: object
       properties:
