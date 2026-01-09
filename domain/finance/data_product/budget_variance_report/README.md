@@ -24,7 +24,7 @@ The API is structured around the domain **finance** and **BudgetVarianceReport**
 | :--- | :--- | :--- |
     | **BudgetVarianceReport** | /budget-variance-reports | Manages BudgetVarianceReports |
     | **BudgetVarianceLineItem** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-line-items | Manages BudgetVarianceLineItems belonging to BudgetVarianceReports |
-    | **Money** | /budget-variance-reports/{budgetVarianceReportKey}/moneys | Manages Moneys belonging to BudgetVarianceReports |
+    | **Money** | /budget-variance-reports/{budgetVarianceReportKey}/money | Manages Money belonging to BudgetVarianceReports |
     | **GeneralLedgerReference** | /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references | Manages GeneralLedgerReferences belonging to BudgetVarianceReports |
     | **Identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | Manages Identifiers belonging to BudgetVarianceReports |
     | **AccountingPeriod** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | Manages AccountingPeriods belonging to BudgetVarianceReports |
@@ -288,20 +288,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /budget-variance-reports/{budgetVarianceReportKey}/moneys
+### /budget-variance-reports/{budgetVarianceReportKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/moneys</span> <br/>
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by budgetVarianceReportKey. getMoneyByBudgetVarianceReportKey</span>
     </span>
 </div>
 
-### /budget-variance-reports/{budgetVarianceReportKey}/moneys/{moneyKey}
+### /budget-variance-reports/{budgetVarianceReportKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -614,7 +614,7 @@ The following resources follow a consistent pattern under BudgetVarianceReportro
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **budget-variance-report** | /budget-variance-reports | listBudgetVarianceReport | createBudgetVarianceReport | getBudgetVarianceReport | updateBudgetVarianceReport | deleteBudgetVarianceReport |
     | **budget-variance-line-item** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-line-items | listBudgetVarianceLineItemByBudgetVarianceReportKey | createBudgetVarianceLineItem | getBudgetVarianceLineItemByBudgetVarianceReportKey | updateBudgetVarianceLineItemByBudgetVarianceReportKey | deleteBudgetVarianceLineItemByBudgetVarianceReportKey |
-    | **money** | /budget-variance-reports/{budgetVarianceReportKey}/moneys | listMoneyByBudgetVarianceReportKey |  | getMoneyByBudgetVarianceReportKey | updateMoneyByBudgetVarianceReportKey | deleteMoneyByBudgetVarianceReportKey |
+    | **money** | /budget-variance-reports/{budgetVarianceReportKey}/money | listMoneyByBudgetVarianceReportKey |  | getMoneyByBudgetVarianceReportKey | updateMoneyByBudgetVarianceReportKey | deleteMoneyByBudgetVarianceReportKey |
     | **general-ledger-reference** | /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references | listGeneralLedgerReferenceByBudgetVarianceReportKey | createGeneralLedgerReference | getGeneralLedgerReferenceByBudgetVarianceReportKey | updateGeneralLedgerReferenceByBudgetVarianceReportKey | deleteGeneralLedgerReferenceByBudgetVarianceReportKey |
     | **identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | listIdentifierByBudgetVarianceReportKey | createIdentifier | getIdentifierByBudgetVarianceReportKey | updateIdentifierByBudgetVarianceReportKey | deleteIdentifierByBudgetVarianceReportKey |
     | **accounting-period** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | listAccountingPeriodByBudgetVarianceReportKey | createAccountingPeriod | getAccountingPeriodByBudgetVarianceReportKey | updateAccountingPeriodByBudgetVarianceReportKey | deleteAccountingPeriodByBudgetVarianceReportKey |

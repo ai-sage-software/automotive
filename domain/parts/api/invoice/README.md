@@ -29,7 +29,7 @@ The API is structured around the domain **parts** and **Invoice** resource as th
     | **AddressReference** | /invoices/{invoiceKey}/address-references | Manages AddressReferences belonging to Invoices |
     | **FinancialCategoryReference** | /invoices/{invoiceKey}/financial-category-references | Manages FinancialCategoryReferences belonging to Invoices |
     | **FeeReference** | /invoices/{invoiceKey}/fee-references | Manages FeeReferences belonging to Invoices |
-    | **Money** | /invoices/{invoiceKey}/moneys | Manages Moneys belonging to Invoices |
+    | **Money** | /invoices/{invoiceKey}/money | Manages Money belonging to Invoices |
     | **Identifier** | /invoices/{invoiceKey}/identifiers | Manages Identifiers belonging to Invoices |
     | **PartReference** | /invoices/{invoiceKey}/part-references | Manages PartReferences belonging to Invoices |
     | **EffectivePeriod** | /invoices/{invoiceKey}/effective-periods | Manages EffectivePeriods belonging to Invoices |
@@ -584,20 +584,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /invoices/{invoiceKey}/moneys
+### /invoices/{invoiceKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/moneys</span> <br/>
+        <span class="api-path">/invoices/{invoiceKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by invoiceKey. getMoneyByInvoiceKey</span>
     </span>
 </div>
 
-### /invoices/{invoiceKey}/moneys/{moneyKey}
+### /invoices/{invoiceKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/invoices/{invoiceKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -1519,7 +1519,7 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **address-reference** | /invoices/{invoiceKey}/address-references | listAddressReferenceByInvoiceKey | createAddressReference | getAddressReferenceByInvoiceKey | updateAddressReferenceByInvoiceKey | deleteAddressReferenceByInvoiceKey |
     | **financial-category-reference** | /invoices/{invoiceKey}/financial-category-references | listFinancialCategoryReferenceByInvoiceKey | createFinancialCategoryReference | getFinancialCategoryReferenceByInvoiceKey | updateFinancialCategoryReferenceByInvoiceKey | deleteFinancialCategoryReferenceByInvoiceKey |
     | **fee-reference** | /invoices/{invoiceKey}/fee-references | listFeeReferenceByInvoiceKey | createFeeReference | getFeeReferenceByInvoiceKey | updateFeeReferenceByInvoiceKey | deleteFeeReferenceByInvoiceKey |
-    | **money** | /invoices/{invoiceKey}/moneys | listMoneyByInvoiceKey |  | getMoneyByInvoiceKey | updateMoneyByInvoiceKey | deleteMoneyByInvoiceKey |
+    | **money** | /invoices/{invoiceKey}/money | listMoneyByInvoiceKey |  | getMoneyByInvoiceKey | updateMoneyByInvoiceKey | deleteMoneyByInvoiceKey |
     | **identifier** | /invoices/{invoiceKey}/identifiers | listIdentifierByInvoiceKey | createIdentifier | getIdentifierByInvoiceKey | updateIdentifierByInvoiceKey | deleteIdentifierByInvoiceKey |
     | **part-reference** | /invoices/{invoiceKey}/part-references | listPartReferenceByInvoiceKey | createPartReference | getPartReferenceByInvoiceKey | updatePartReferenceByInvoiceKey | deletePartReferenceByInvoiceKey |
     | **effective-period** | /invoices/{invoiceKey}/effective-periods | listEffectivePeriodByInvoiceKey |  | getEffectivePeriodByInvoiceKey | updateEffectivePeriodByInvoiceKey | deleteEffectivePeriodByInvoiceKey |

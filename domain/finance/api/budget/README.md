@@ -23,7 +23,7 @@ The API is structured around the domain **finance** and **Budget** resource as t
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **Budget** | /budgets | Manages Budgets |
-    | **Money** | /budgets/{budgetKey}/moneys | Manages Moneys belonging to Budgets |
+    | **Money** | /budgets/{budgetKey}/money | Manages Money belonging to Budgets |
     | **GeneralLedgerReference** | /budgets/{budgetKey}/general-ledger-references | Manages GeneralLedgerReferences belonging to Budgets |
     | **Identifier** | /budgets/{budgetKey}/identifiers | Manages Identifiers belonging to Budgets |
     | **BudgetItem** | /budgets/{budgetKey}/budget-items | Manages BudgetItems belonging to Budgets |
@@ -237,20 +237,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /budgets/{budgetKey}/moneys
+### /budgets/{budgetKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/budgets/{budgetKey}/moneys</span> <br/>
+        <span class="api-path">/budgets/{budgetKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by budgetKey. getMoneyByBudgetKey</span>
     </span>
 </div>
 
-### /budgets/{budgetKey}/moneys/{moneyKey}
+### /budgets/{budgetKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/budgets/{budgetKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/budgets/{budgetKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -512,7 +512,7 @@ The following resources follow a consistent pattern under Budgetroot with key {B
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **budget** | /budgets | listBudget | createBudget | getBudget | updateBudget | deleteBudget |
-    | **money** | /budgets/{budgetKey}/moneys | listMoneyByBudgetKey |  | getMoneyByBudgetKey | updateMoneyByBudgetKey | deleteMoneyByBudgetKey |
+    | **money** | /budgets/{budgetKey}/money | listMoneyByBudgetKey |  | getMoneyByBudgetKey | updateMoneyByBudgetKey | deleteMoneyByBudgetKey |
     | **general-ledger-reference** | /budgets/{budgetKey}/general-ledger-references | listGeneralLedgerReferenceByBudgetKey | createGeneralLedgerReference | getGeneralLedgerReferenceByBudgetKey | updateGeneralLedgerReferenceByBudgetKey | deleteGeneralLedgerReferenceByBudgetKey |
     | **identifier** | /budgets/{budgetKey}/identifiers | listIdentifierByBudgetKey | createIdentifier | getIdentifierByBudgetKey | updateIdentifierByBudgetKey | deleteIdentifierByBudgetKey |
     | **budget-item** | /budgets/{budgetKey}/budget-items | listBudgetItemByBudgetKey | createBudgetItem | getBudgetItemByBudgetKey | updateBudgetItemByBudgetKey | deleteBudgetItemByBudgetKey |

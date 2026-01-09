@@ -32,7 +32,7 @@ The API is structured around the domain **party_identity** and **Dealer** resour
     | **ControlAccount** | /dealers/{dealerKey}/control-accounts | Manages ControlAccounts belonging to Dealers |
     | **CommunicationChannel** | /dealers/{dealerKey}/communication-channels | Manages CommunicationChannels belonging to Dealers |
     | **Authorization** | /dealers/{dealerKey}/authorizations | Manages Authorizations belonging to Dealers |
-    | **Money** | /dealers/{dealerKey}/moneys | Manages Moneys belonging to Dealers |
+    | **Money** | /dealers/{dealerKey}/money | Manages Money belonging to Dealers |
     | **Department** | /dealers/{dealerKey}/departments | Manages Departments belonging to Dealers |
     | **MetricNameValue** | /dealers/{dealerKey}/metric-name-values | Manages MetricNameValues belonging to Dealers |
     | **Identifier** | /dealers/{dealerKey}/identifiers | Manages Identifiers belonging to Dealers |
@@ -691,20 +691,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /dealers/{dealerKey}/moneys
+### /dealers/{dealerKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/moneys</span> <br/>
+        <span class="api-path">/dealers/{dealerKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by dealerKey. getMoneyByDealerKey</span>
     </span>
 </div>
 
-### /dealers/{dealerKey}/moneys/{moneyKey}
+### /dealers/{dealerKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/dealers/{dealerKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/dealers/{dealerKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -1061,7 +1061,7 @@ The following resources follow a consistent pattern under Dealerroot with key {D
     | **control-account** | /dealers/{dealerKey}/control-accounts | listControlAccountByDealerKey | createControlAccount | getControlAccountByDealerKey | updateControlAccountByDealerKey | deleteControlAccountByDealerKey |
     | **communication-channel** | /dealers/{dealerKey}/communication-channels | listCommunicationChannelByDealerKey | createCommunicationChannel | getCommunicationChannelByDealerKey | updateCommunicationChannelByDealerKey | deleteCommunicationChannelByDealerKey |
     | **authorization** | /dealers/{dealerKey}/authorizations | listAuthorizationByDealerKey | createAuthorization | getAuthorizationByDealerKey | updateAuthorizationByDealerKey | deleteAuthorizationByDealerKey |
-    | **money** | /dealers/{dealerKey}/moneys | listMoneyByDealerKey |  | getMoneyByDealerKey | updateMoneyByDealerKey | deleteMoneyByDealerKey |
+    | **money** | /dealers/{dealerKey}/money | listMoneyByDealerKey |  | getMoneyByDealerKey | updateMoneyByDealerKey | deleteMoneyByDealerKey |
     | **department** | /dealers/{dealerKey}/departments | listDepartmentByDealerKey | createDepartment | getDepartmentByDealerKey | updateDepartmentByDealerKey | deleteDepartmentByDealerKey |
     | **metric-name-value** | /dealers/{dealerKey}/metric-name-values | listMetricNameValueByDealerKey | createMetricNameValue | getMetricNameValueByDealerKey | updateMetricNameValueByDealerKey | deleteMetricNameValueByDealerKey |
     | **identifier** | /dealers/{dealerKey}/identifiers | listIdentifierByDealerKey | createIdentifier | getIdentifierByDealerKey | updateIdentifierByDealerKey | deleteIdentifierByDealerKey |

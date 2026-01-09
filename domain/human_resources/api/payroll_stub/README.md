@@ -24,7 +24,7 @@ The API is structured around the domain **human_resources** and **PayrollStub** 
 | :--- | :--- | :--- |
     | **PayrollStub** | /payroll-stubs | Manages PayrollStubs |
     | **TaxReportingContext** | /payroll-stubs/{payrollStubKey}/tax-reporting-contexts | Manages TaxReportingContexts belonging to PayrollStubs |
-    | **Money** | /payroll-stubs/{payrollStubKey}/moneys | Manages Moneys belonging to PayrollStubs |
+    | **Money** | /payroll-stubs/{payrollStubKey}/money | Manages Money belonging to PayrollStubs |
     | **Identifier** | /payroll-stubs/{payrollStubKey}/identifiers | Manages Identifiers belonging to PayrollStubs |
     | **EffectivePeriod** | /payroll-stubs/{payrollStubKey}/effective-periods | Manages EffectivePeriods belonging to PayrollStubs |
     | **PayrollComponent** | /payroll-stubs/{payrollStubKey}/payroll-components | Manages PayrollComponents belonging to PayrollStubs |
@@ -295,20 +295,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payroll-stubs/{payrollStubKey}/moneys
+### /payroll-stubs/{payrollStubKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys</span> <br/>
+        <span class="api-path">/payroll-stubs/{payrollStubKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by payrollStubKey. getMoneyByPayrollStubKey</span>
     </span>
 </div>
 
-### /payroll-stubs/{payrollStubKey}/moneys/{moneyKey}
+### /payroll-stubs/{payrollStubKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payroll-stubs/{payrollStubKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/payroll-stubs/{payrollStubKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -457,7 +457,7 @@ The following resources follow a consistent pattern under PayrollStubroot with k
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **payroll-stub** | /payroll-stubs | listPayrollStub | createPayrollStub | getPayrollStub | updatePayrollStub | deletePayrollStub |
     | **tax-reporting-context** | /payroll-stubs/{payrollStubKey}/tax-reporting-contexts | listTaxReportingContextByPayrollStubKey | createTaxReportingContext | getTaxReportingContextByPayrollStubKey | updateTaxReportingContextByPayrollStubKey | deleteTaxReportingContextByPayrollStubKey |
-    | **money** | /payroll-stubs/{payrollStubKey}/moneys | listMoneyByPayrollStubKey |  | getMoneyByPayrollStubKey | updateMoneyByPayrollStubKey | deleteMoneyByPayrollStubKey |
+    | **money** | /payroll-stubs/{payrollStubKey}/money | listMoneyByPayrollStubKey |  | getMoneyByPayrollStubKey | updateMoneyByPayrollStubKey | deleteMoneyByPayrollStubKey |
     | **identifier** | /payroll-stubs/{payrollStubKey}/identifiers | listIdentifierByPayrollStubKey | createIdentifier | getIdentifierByPayrollStubKey | updateIdentifierByPayrollStubKey | deleteIdentifierByPayrollStubKey |
     | **effective-period** | /payroll-stubs/{payrollStubKey}/effective-periods | listEffectivePeriodByPayrollStubKey |  | getEffectivePeriodByPayrollStubKey | updateEffectivePeriodByPayrollStubKey | deleteEffectivePeriodByPayrollStubKey |
     | **payroll-component** | /payroll-stubs/{payrollStubKey}/payroll-components | listPayrollComponentByPayrollStubKey | createPayrollComponent | getPayrollComponentByPayrollStubKey | updatePayrollComponentByPayrollStubKey | deletePayrollComponentByPayrollStubKey |
