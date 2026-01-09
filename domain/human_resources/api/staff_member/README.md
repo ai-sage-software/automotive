@@ -33,7 +33,7 @@ The API is structured around the domain **human_resources** and **StaffMember** 
     | **CommunicationChannel** | /staff-members/{staffMemberKey}/communication-channels | Manages CommunicationChannels belonging to StaffMembers |
     | **AddressLocale** | /staff-members/{staffMemberKey}/address-locales | Manages AddressLocales belonging to StaffMembers |
     | **Authorization** | /staff-members/{staffMemberKey}/authorizations | Manages Authorizations belonging to StaffMembers |
-    | **Money** | /staff-members/{staffMemberKey}/moneys | Manages Moneys belonging to StaffMembers |
+    | **Money** | /staff-members/{staffMemberKey}/money | Manages Money belonging to StaffMembers |
     | **Department** | /staff-members/{staffMemberKey}/departments | Manages Departments belonging to StaffMembers |
     | **MetricNameValue** | /staff-members/{staffMemberKey}/metric-name-values | Manages MetricNameValues belonging to StaffMembers |
     | **Identifier** | /staff-members/{staffMemberKey}/identifiers | Manages Identifiers belonging to StaffMembers |
@@ -740,20 +740,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/moneys
+### /staff-members/{staffMemberKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/moneys</span> <br/>
+        <span class="api-path">/staff-members/{staffMemberKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by staffMemberKey. getMoneyByStaffMemberKey</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/moneys/{moneyKey}
+### /staff-members/{staffMemberKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/staff-members/{staffMemberKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -1061,7 +1061,7 @@ The following resources follow a consistent pattern under StaffMemberroot with k
     | **communication-channel** | /staff-members/{staffMemberKey}/communication-channels | listCommunicationChannelByStaffMemberKey | createCommunicationChannel | getCommunicationChannelByStaffMemberKey | updateCommunicationChannelByStaffMemberKey | deleteCommunicationChannelByStaffMemberKey |
     | **address-locale** | /staff-members/{staffMemberKey}/address-locales | listAddressLocaleByStaffMemberKey | createAddressLocale | getAddressLocaleByStaffMemberKey | updateAddressLocaleByStaffMemberKey | deleteAddressLocaleByStaffMemberKey |
     | **authorization** | /staff-members/{staffMemberKey}/authorizations | listAuthorizationByStaffMemberKey | createAuthorization | getAuthorizationByStaffMemberKey | updateAuthorizationByStaffMemberKey | deleteAuthorizationByStaffMemberKey |
-    | **money** | /staff-members/{staffMemberKey}/moneys | listMoneyByStaffMemberKey |  | getMoneyByStaffMemberKey | updateMoneyByStaffMemberKey | deleteMoneyByStaffMemberKey |
+    | **money** | /staff-members/{staffMemberKey}/money | listMoneyByStaffMemberKey |  | getMoneyByStaffMemberKey | updateMoneyByStaffMemberKey | deleteMoneyByStaffMemberKey |
     | **department** | /staff-members/{staffMemberKey}/departments | listDepartmentByStaffMemberKey | createDepartment | getDepartmentByStaffMemberKey | updateDepartmentByStaffMemberKey | deleteDepartmentByStaffMemberKey |
     | **metric-name-value** | /staff-members/{staffMemberKey}/metric-name-values | listMetricNameValueByStaffMemberKey | createMetricNameValue | getMetricNameValueByStaffMemberKey | updateMetricNameValueByStaffMemberKey | deleteMetricNameValueByStaffMemberKey |
     | **identifier** | /staff-members/{staffMemberKey}/identifiers | listIdentifierByStaffMemberKey | createIdentifier | getIdentifierByStaffMemberKey | updateIdentifierByStaffMemberKey | deleteIdentifierByStaffMemberKey |

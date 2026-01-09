@@ -32,7 +32,7 @@ The API is structured around the domain **party_identity** and **OrgProfile** re
     | **TimeSlot** | /org-profiles/{orgProfileKey}/time-slots | Manages TimeSlots belonging to OrgProfiles |
     | **ControlAccount** | /org-profiles/{orgProfileKey}/control-accounts | Manages ControlAccounts belonging to OrgProfiles |
     | **Authorization** | /org-profiles/{orgProfileKey}/authorizations | Manages Authorizations belonging to OrgProfiles |
-    | **Money** | /org-profiles/{orgProfileKey}/moneys | Manages Moneys belonging to OrgProfiles |
+    | **Money** | /org-profiles/{orgProfileKey}/money | Manages Money belonging to OrgProfiles |
     | **Department** | /org-profiles/{orgProfileKey}/departments | Manages Departments belonging to OrgProfiles |
     | **MetricNameValue** | /org-profiles/{orgProfileKey}/metric-name-values | Manages MetricNameValues belonging to OrgProfiles |
     | **Identifier** | /org-profiles/{orgProfileKey}/identifiers | Manages Identifiers belonging to OrgProfiles |
@@ -708,20 +708,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/moneys
+### /org-profiles/{orgProfileKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/moneys</span> <br/>
+        <span class="api-path">/org-profiles/{orgProfileKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by orgProfileKey. getMoneyByOrgProfileKey</span>
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/moneys/{moneyKey}
+### /org-profiles/{orgProfileKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/org-profiles/{orgProfileKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -1378,7 +1378,7 @@ The following resources follow a consistent pattern under OrgProfileroot with ke
     | **time-slot** | /org-profiles/{orgProfileKey}/time-slots | listTimeSlotByOrgProfileKey |  | getTimeSlotByOrgProfileKey | updateTimeSlotByOrgProfileKey | deleteTimeSlotByOrgProfileKey |
     | **control-account** | /org-profiles/{orgProfileKey}/control-accounts | listControlAccountByOrgProfileKey | createControlAccount | getControlAccountByOrgProfileKey | updateControlAccountByOrgProfileKey | deleteControlAccountByOrgProfileKey |
     | **authorization** | /org-profiles/{orgProfileKey}/authorizations | listAuthorizationByOrgProfileKey | createAuthorization | getAuthorizationByOrgProfileKey | updateAuthorizationByOrgProfileKey | deleteAuthorizationByOrgProfileKey |
-    | **money** | /org-profiles/{orgProfileKey}/moneys | listMoneyByOrgProfileKey |  | getMoneyByOrgProfileKey | updateMoneyByOrgProfileKey | deleteMoneyByOrgProfileKey |
+    | **money** | /org-profiles/{orgProfileKey}/money | listMoneyByOrgProfileKey |  | getMoneyByOrgProfileKey | updateMoneyByOrgProfileKey | deleteMoneyByOrgProfileKey |
     | **department** | /org-profiles/{orgProfileKey}/departments | listDepartmentByOrgProfileKey | createDepartment | getDepartmentByOrgProfileKey | updateDepartmentByOrgProfileKey | deleteDepartmentByOrgProfileKey |
     | **metric-name-value** | /org-profiles/{orgProfileKey}/metric-name-values | listMetricNameValueByOrgProfileKey | createMetricNameValue | getMetricNameValueByOrgProfileKey | updateMetricNameValueByOrgProfileKey | deleteMetricNameValueByOrgProfileKey |
     | **identifier** | /org-profiles/{orgProfileKey}/identifiers | listIdentifierByOrgProfileKey | createIdentifier | getIdentifierByOrgProfileKey | updateIdentifierByOrgProfileKey | deleteIdentifierByOrgProfileKey |

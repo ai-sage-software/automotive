@@ -24,7 +24,7 @@ The API is structured around the domain **finance** and **Payment** resource as 
 | :--- | :--- | :--- |
     | **Payment** | /payments | Manages Payments |
     | **PaymentTransaction** | /payments/{paymentKey}/payment-transactions | Manages PaymentTransactions belonging to Payments |
-    | **Money** | /payments/{paymentKey}/moneys | Manages Moneys belonging to Payments |
+    | **Money** | /payments/{paymentKey}/money | Manages Money belonging to Payments |
     | **Identifier** | /payments/{paymentKey}/identifiers | Manages Identifiers belonging to Payments |
     | **PaymentMethodReference** | /payments/{paymentKey}/payment-method-references | Manages PaymentMethodReferences belonging to Payments |
 
@@ -286,20 +286,20 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /payments/{paymentKey}/moneys
+### /payments/{paymentKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payments/{paymentKey}/moneys</span> <br/>
+        <span class="api-path">/payments/{paymentKey}/money</span> <br/>
         <span class="api-summary">Retrieve a list of Money entities scoped by paymentKey. getMoneyByPaymentKey</span>
     </span>
 </div>
 
-### /payments/{paymentKey}/moneys/{moneyKey}
+### /payments/{paymentKey}/money/{moneyKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/payments/{paymentKey}/moneys/{moneyKey}</span> <br/>
+        <span class="api-path">/payments/{paymentKey}/money/{moneyKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
     </span>
 </div>
@@ -412,7 +412,7 @@ The following resources follow a consistent pattern under Paymentroot with key {
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **payment** | /payments | listPayment | createPayment | getPayment | updatePayment | deletePayment |
     | **payment-transaction** | /payments/{paymentKey}/payment-transactions | listPaymentTransactionByPaymentKey | createPaymentTransaction | getPaymentTransactionByPaymentKey | updatePaymentTransactionByPaymentKey | deletePaymentTransactionByPaymentKey |
-    | **money** | /payments/{paymentKey}/moneys | listMoneyByPaymentKey |  | getMoneyByPaymentKey | updateMoneyByPaymentKey | deleteMoneyByPaymentKey |
+    | **money** | /payments/{paymentKey}/money | listMoneyByPaymentKey |  | getMoneyByPaymentKey | updateMoneyByPaymentKey | deleteMoneyByPaymentKey |
     | **identifier** | /payments/{paymentKey}/identifiers | listIdentifierByPaymentKey | createIdentifier | getIdentifierByPaymentKey | updateIdentifierByPaymentKey | deleteIdentifierByPaymentKey |
     | **payment-method-reference** | /payments/{paymentKey}/payment-method-references | listPaymentMethodReferenceByPaymentKey | createPaymentMethodReference | getPaymentMethodReferenceByPaymentKey | updatePaymentMethodReferenceByPaymentKey | deletePaymentMethodReferenceByPaymentKey |
 
