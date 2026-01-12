@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /shipments/KEY78w
+                example: /shipments/KEY78v
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788
+        example: KEY781
   /shipments/{shipmentKey}/invoice-references:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788b
+        example: KEY781B
   /shipments/{shipmentKey}/party-references:
     get:
       tags:
@@ -831,7 +831,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bV
+        example: KEY781BN
   /shipments/{shipmentKey}/shipment-events:
     get:
       tags:
@@ -1106,7 +1106,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs
+        example: KEY781BN2
   /shipments/{shipmentKey}/identifiers:
     get:
       tags:
@@ -1381,7 +1381,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2
+        example: KEY781BN2d
   /shipments/{shipmentKey}/unit-of-measures:
     get:
       tags:
@@ -1498,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2u
+        example: KEY781BN2dk
   /shipments/{shipmentKey}/positions:
     get:
       tags:
@@ -1773,7 +1773,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2uF
+        example: KEY781BN2dkG
   /shipments/{shipmentKey}/effective-periods:
     get:
       tags:
@@ -1890,7 +1890,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2uFp
+        example: KEY781BN2dkGl
   /shipments/{shipmentKey}/time-slots:
     get:
       tags:
@@ -2007,7 +2007,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2uFpm
+        example: KEY781BN2dkGlg
   /shipments/{shipmentKey}/address-references:
     get:
       tags:
@@ -2282,7 +2282,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY788bVs2uFpmS
+        example: KEY781BN2dkGlgq
   /shipments/health:
     get:
       summary: Health Check
@@ -2305,11 +2305,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -2530,7 +2530,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #cd434c9a has been successfully cancelled."
+                    example: "Invoice #3c3efc5d has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -2538,7 +2538,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 1b317c4b
+                    example: 1e6204a7
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2587,7 +2587,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -2631,13 +2631,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -2656,12 +2663,6 @@ components:
         address_reference_key:
           type: string
           description: A unique key for the address reference.
-        address_reference_id:
-          type: string
-          description: A unique key for the address reference.
-        address_key:
-          type: string
-          description: The unique value of the address key.
         address_reference_value:
           type: string
           description: The unique value of the address referenc...
@@ -2721,7 +2722,7 @@ components:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-      description: "A reference to an address, including its unique..."
+      description: address.reference.desc
     AddressReferenceCreate:
       required:
       - address_reference_key
@@ -2828,13 +2829,168 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
-      - SOLD_BY
-      - SHIPPED_BY
       - OTHER
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: Shipment
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/Shipment"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     Codes:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     DaysOfWeekTypes:
       type: string
       description: types of days of weeks.
@@ -2910,7 +3066,7 @@ components:
           description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: Effective Period
+      description: effective.period.desc
     ErrorDetail:
       required:
       - category
@@ -2972,6 +3128,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: Shipment
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     Identifier:
       type: object
       properties:
@@ -3001,7 +3235,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: External system identifier
+      description: identifier.desc
     IdentifierCreate:
       required:
       - identifier_key
@@ -3059,7 +3293,7 @@ components:
           format: date-time
         invoice_type:
           $ref: "#/components/schemas/InvoiceTypes"
-      description: "Reference to an Invoice Aggregate Root, represe..."
+      description: invoice.reference.desc
     InvoiceReferenceCreate:
       required:
       - invoice_reference_key
@@ -3154,7 +3388,7 @@ components:
           format: date-time
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
-      description: External system identifier
+      description: party.reference.desc
     PartyReferenceCreate:
       required:
       - party_reference_key
@@ -3302,10 +3536,14 @@ components:
       type: object
       properties:
         position_id:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Unique identifier for this position
           example: pos-001
         position_key:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Business key for this position record
           example: POS-ATL-WEST
@@ -3326,6 +3564,8 @@ components:
           description: Bearing direction (compass)
           example: NW
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -3341,7 +3581,7 @@ components:
           type: array
           items:
             type: string
-      description: "position meta-data that includes postal code, a..."
+      description: position.desc
     PositionCreate:
       required:
       - position_key
@@ -3370,6 +3610,8 @@ components:
           description: Latitude of the location
           example: "33.7490"
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -3385,6 +3627,48 @@ components:
           description: Longitude of the location
           example: "-84.3880"
       description: Position Update for Patch and Put
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          example: https://api.yourdomain.com/errors/validation-failed
+        title:
+          type: string
+          example: Intent Validation Failed
+        status:
+          type: integer
+          format: int32
+          example: 422
+        detail:
+          type: string
+          example: The export request could not be processed due to business constraints.
+        instance:
+          type: string
+          format: uri
+          example: /money/exports
+        intent:
+          type: string
+          example: InitiateMoneyExport
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              message:
+                type: string
+                example: Export exceeds your monthly data tier limit.
+              path:
+                type: string
+                example: date_range.start
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
     Shipment:
       type: object
       properties:
@@ -3458,7 +3742,7 @@ components:
           $ref: "#/components/schemas/AddressReferences"
         shipment_events:
           $ref: "#/components/schemas/ShipmentEvents"
-      description: A single line item for a Parts Invoice.
+      description: shipment.desc
     ShipmentCreate:
       required:
       - shipment_key
@@ -3533,6 +3817,10 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/ShipmentEvent"
+    ShipmentResponse:
+      allOf:
+      - $ref: "#/components/schemas/Shipment"
+      - $ref: "#/components/schemas/ShipmentWorkflowMetadata"
     ShipmentStateTypes:
       type: string
       description: types of shipment states.
@@ -3616,6 +3904,23 @@ components:
           description: The unique identifier of the parent invo...
           example: inv_789def456
       description: Shipment Update for Patch and Put
+    ShipmentWorkflowMetadata:
+      type: object
+      properties:
+        current_state:
+          type: string
+          description: The current lifecycle phase of this entity.
+          enum:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
+          type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
+          items:
+            $ref: "#/components/schemas/CommandOption"
     ShippingMethodTypes:
       type: string
       description: types of shipping methods.
@@ -3660,7 +3965,8 @@ components:
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\\
+            d)?$"
           type: string
           description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
           format: date-time
@@ -3672,7 +3978,8 @@ components:
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\\
+            d)?$"
           type: string
           description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
           format: date-time
@@ -3699,7 +4006,7 @@ components:
           format: date
           items:
             type: string
-      description: Range of time for the appointment including sta...
+      description: time.slot.desc
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.
@@ -3774,167 +4081,11 @@ components:
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
         uom_quantity_category_type:
           $ref: "#/components/schemas/UOMQuantityCategoryTypes"
-      description: value price with unit of measure
+      description: unit.of.measure.desc
     UnitOfMeasures:
       type: array
       items:
         $ref: "#/components/schemas/UnitOfMeasure"
-    ExportFile:
-      type: object
-      properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
-          type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: Shipment
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
-    ProblemDetail:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-          example: https://api.yourdomain.com/errors/validation-failed
-        title:
-          type: string
-          example: Intent Validation Failed
-        status:
-          type: integer
-          format: int32
-          example: 422
-        detail:
-          type: string
-          example: The export request could not be processed due to business constraints.
-        instance:
-          type: string
-          format: uri
-          example: /money/exports
-        intent:
-          type: string
-          example: InitiateMoneyExport
-        violations:
-          type: array
-          items:
-            type: object
-            properties:
-              rule:
-                type: string
-                example: INSUFFICIENT_FUNDS
-              message:
-                type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
-                type: string
-                example: date_range.start
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    ShipmentWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    ShipmentResponse:
-      allOf:
-      - $ref: "#/components/schemas/Shipment"
-      - $ref: "#/components/schemas/ShipmentWorkflowMetadata"
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

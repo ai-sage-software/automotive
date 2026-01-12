@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /journal-entry-transactions/KEY78h
+                example: /journal-entry-transactions/KEY78F
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78G
+        example: KEY78u
   /journal-entry-transactions/{journalEntryTransactionKey}/money:
     get:
       tags:
@@ -398,7 +398,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GP
+        example: KEY78uQ
   /journal-entry-transactions/{journalEntryTransactionKey}/general-ledger-references:
     get:
       tags:
@@ -673,7 +673,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GPu
+        example: KEY78uQy
   /journal-entry-transactions/{journalEntryTransactionKey}/identifiers:
     get:
       tags:
@@ -948,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GPu5
+        example: KEY78uQyN
   /journal-entry-transactions/{journalEntryTransactionKey}/control-account-references:
     get:
       tags:
@@ -1223,7 +1223,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GPu5d
+        example: KEY78uQyNl
   /journal-entry-transactions/{journalEntryTransactionKey}/journal-entries:
     get:
       tags:
@@ -1498,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GPu5dC
+        example: KEY78uQyNlT
   /journal-entry-transactions/{journalEntryTransactionKey}/subsidiary-ledger-references:
     get:
       tags:
@@ -1773,7 +1773,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78GPu5dCm
+        example: KEY78uQyNlTf
   /journal-entry-transactions/health:
     get:
       summary: Health Check
@@ -1796,11 +1796,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -2022,7 +2022,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #4f48ddd7 has been successfully cancelled."
+                    example: "Invoice #4fcc5eaa has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -2030,7 +2030,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 7797784c
+                    example: 8bfa8fc2
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2079,7 +2079,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -2123,13 +2123,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -2142,10 +2149,167 @@ paths:
                 $ref: "#/components/schemas/Capabilities"
 components:
   schemas:
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: JournalEntryTransaction
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/JournalEntryTransaction"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     Codes:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ControlAccountReference:
       type: object
       properties:
@@ -2178,7 +2342,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: External system identifier
+      description: control.account.reference.desc
     ControlAccountReferenceCreate:
       required:
       - control_account_reference_key
@@ -2295,6 +2459,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: JournalEntryTransaction
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     FinancialFlowStatusTypes:
       type: string
       description: types of financial flow status.
@@ -2350,7 +2592,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: External system reference
+      description: general.ledger.reference.desc
     GeneralLedgerReferenceCreate:
       required:
       - general_ledger_reference_key
@@ -2406,7 +2648,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: External system identifier
+      description: identifier.desc
     IdentifierCreate:
       required:
       - identifier_key
@@ -2506,7 +2748,7 @@ components:
         accounting_period_key:
           type: string
           description: The ID of the reference account for the ...
-      description: journal entry for general ledger
+      description: journal.entry.desc
     JournalEntryCreate:
       required:
       - journal_entry_key
@@ -2553,7 +2795,7 @@ components:
         accounting_period_key:
           type: string
           description: The ID of the reference account for the ...
-      description: Represents the header of a General Ledger (GL) ...
+      description: journal.entry.transaction.desc
     JournalEntryTransactionCreate:
       required:
       - journal_entry_transaction_key
@@ -2561,6 +2803,10 @@ components:
       description: JournalEntryTransaction Create for Post
       allOf:
       - $ref: "#/components/schemas/JournalEntryTransaction"
+    JournalEntryTransactionResponse:
+      allOf:
+      - $ref: "#/components/schemas/JournalEntryTransaction"
+      - $ref: "#/components/schemas/JournalEntryTransactionWorkflowMetadata"
     JournalEntryTransactionUpdate:
       type: object
       properties:
@@ -2582,6 +2828,23 @@ components:
           format: date
           example: 2025-09-30T00:00:00Z
       description: JournalEntryTransaction Update for Patch and Put
+    JournalEntryTransactionWorkflowMetadata:
+      type: object
+      properties:
+        current_state:
+          type: string
+          description: The current lifecycle phase of this entity.
+          enum:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
+          type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
+          items:
+            $ref: "#/components/schemas/CommandOption"
     JournalEntryUpdate:
       type: object
       properties:
@@ -2652,7 +2915,7 @@ components:
         value:
           type: string
           description: The monetary value.
-      description: "Represents a monetary value, including its curr..."
+      description: money.desc
     OrganizationTypes:
       type: string
       description: types of organizations.
@@ -2668,139 +2931,6 @@ components:
       - SECTION
       - TEAM
       - OTHER
-    SubsidiaryLedgerReference:
-      type: object
-      properties:
-        subsidiary_ledger_reference_id:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: Unique identifier for the Subsidiary Led... Pat...
-        subsidiary_ledger_reference_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: Business key for the Subsidiary Ledger r... Pat...
-        subsidiary_ledger_transaction_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: The key of the referenced Subsidiary Led... Pat...
-        context:
-          type: string
-          description: Context or domain of the Sub-Ledger tran...
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        subsidiary_ledger_identifier:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
-          type: string
-          description: The date and time the Journal Entry refe...
-          format: date-time
-      description: Immutable reference from a Journal Entry back t...
-    SubsidiaryLedgerReferenceCreate:
-      required:
-      - subsidiary_ledger_reference_key
-      type: object
-      description: SubsidiaryLedgerReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/SubsidiaryLedgerReference"
-    SubsidiaryLedgerReferenceUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        context:
-          type: string
-          description: Context or domain of the Sub-Ledger tran...
-        occurrence_date_time:
-          type: string
-          description: The date and time the Journal Entry refe...
-          format: date-time
-        subsidiary_ledger_identifier:
-          $ref: "#/components/schemas/Identifier"
-      description: SubsidiaryLedgerReference Update for Patch and Put
-    ExportFile:
-      type: object
-      properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
-          type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: JournalEntryTransaction
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
     ProblemDetail:
       type: object
       properties:
@@ -2843,42 +2973,61 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CommandOption:
+    SubsidiaryLedgerReference:
       type: object
       properties:
-        type:
+        subsidiary_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
+          description: Unique identifier for the Subsidiary Led... Pat...
+        subsidiary_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
+          description: Business key for the Subsidiary Ledger r... Pat...
+        subsidiary_ledger_transaction_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    JournalEntryTransactionWorkflowMetadata:
+          description: The key of the referenced Subsidiary Led... Pat...
+        context:
+          type: string
+          description: Context or domain of the Sub-Ledger tran...
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        subsidiary_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the Journal Entry refe...
+          format: date-time
+      description: subsidiary.ledger.reference.desc
+    SubsidiaryLedgerReferenceCreate:
+      required:
+      - subsidiary_ledger_reference_key
       type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    JournalEntryTransactionResponse:
+      description: SubsidiaryLedgerReference Create for Post
       allOf:
-      - $ref: "#/components/schemas/JournalEntryTransaction"
-      - $ref: "#/components/schemas/JournalEntryTransactionWorkflowMetadata"
+      - $ref: "#/components/schemas/SubsidiaryLedgerReference"
+    SubsidiaryLedgerReferenceUpdate:
+      type: object
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        context:
+          type: string
+          description: Context or domain of the Sub-Ledger tran...
+        occurrence_date_time:
+          type: string
+          description: The date and time the Journal Entry refe...
+          format: date-time
+        subsidiary_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+      description: SubsidiaryLedgerReference Update for Patch and Put
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

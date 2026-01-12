@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /warehouses/KEY780
+                example: /warehouses/KEY78S
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78q
+        example: KEY78Q
   /warehouses/{warehouseKey}/authorizations:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78qO
+        example: KEY78Qv
   /warehouses/{warehouseKey}/identifiers:
     get:
       tags:
@@ -831,7 +831,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78qOJ
+        example: KEY78QvQ
   /warehouses/{warehouseKey}/addresses:
     get:
       tags:
@@ -1106,7 +1106,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78qOJ5
+        example: KEY78QvQL
   /warehouses/{warehouseKey}/positions:
     get:
       tags:
@@ -1381,7 +1381,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78qOJ5I
+        example: KEY78QvQLO
   /warehouses/{warehouseKey}/address-locales:
     get:
       tags:
@@ -1656,7 +1656,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78qOJ5IK
+        example: KEY78QvQLOp
   /warehouses/health:
     get:
       summary: Health Check
@@ -1679,11 +1679,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -1904,7 +1904,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #00fd3d7a has been successfully cancelled."
+                    example: "Invoice #d4c3f185 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1912,7 +1912,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: fd02f78f
+                    example: 62f7846b
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1961,7 +1961,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -2005,13 +2005,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -2153,7 +2160,7 @@ components:
           pattern: "^[a-z]{2}(-[A-Z]{2})?$"
           type: string
           description: Locale code associated with this address... Pat...
-      description: Address represents a physical or mailing locati...
+      description: address.desc
     AddressCreate:
       required:
       - address_key
@@ -2192,7 +2199,7 @@ components:
           $ref: "#/components/schemas/Codes"
         location_type:
           $ref: "#/components/schemas/LocationTypes"
-      description: External system address locale including region...
+      description: address.locale.desc
     AddressLocaleCreate:
       required:
       - address_locale_key
@@ -2252,8 +2259,6 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
-      - SOLD_BY
-      - SHIPPED_BY
       - OTHER
     AddressUpdate:
       type: object
@@ -2389,7 +2394,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Business key uniquely identifying the au... Pat...
-      description: Establish authorization level
+      description: authorization.desc
     AuthorizationCreate:
       required:
       - authorization_key
@@ -2412,10 +2417,167 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Authorization"
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: Warehouse
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/Warehouse"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     Codes:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ErrorDetail:
       required:
       - category
@@ -2477,6 +2639,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: Warehouse
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     Identifier:
       type: object
       properties:
@@ -2506,7 +2746,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: External system identifier
+      description: identifier.desc
     IdentifierCreate:
       required:
       - identifier_key
@@ -2566,10 +2806,14 @@ components:
       type: object
       properties:
         position_id:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Unique identifier for this position
           example: pos-001
         position_key:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Business key for this position record
           example: POS-ATL-WEST
@@ -2590,6 +2834,8 @@ components:
           description: Bearing direction (compass)
           example: NW
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -2605,7 +2851,7 @@ components:
           type: array
           items:
             type: string
-      description: "position meta-data that includes postal code, a..."
+      description: position.desc
     PositionCreate:
       required:
       - position_key
@@ -2634,6 +2880,8 @@ components:
           description: Latitude of the location
           example: "33.7490"
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -2649,6 +2897,48 @@ components:
           description: Longitude of the location
           example: "-84.3880"
       description: Position Update for Patch and Put
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          example: https://api.yourdomain.com/errors/validation-failed
+        title:
+          type: string
+          example: Intent Validation Failed
+        status:
+          type: integer
+          format: int32
+          example: 422
+        detail:
+          type: string
+          example: The export request could not be processed due to business constraints.
+        instance:
+          type: string
+          format: uri
+          example: /money/exports
+        intent:
+          type: string
+          example: InitiateMoneyExport
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              message:
+                type: string
+                example: Export exceeds your monthly data tier limit.
+              path:
+                type: string
+                example: date_range.start
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
     Warehouse:
       type: object
       properties:
@@ -2704,7 +2994,7 @@ components:
             type: string
         addresses:
           $ref: "#/components/schemas/Addresses"
-      description: Warehouse represents a physical or virtual stor...
+      description: warehouse.desc
     WarehouseCreate:
       required:
       - warehouse_key
@@ -2712,6 +3002,10 @@ components:
       description: Warehouse Create for Post
       allOf:
       - $ref: "#/components/schemas/Warehouse"
+    WarehouseResponse:
+      allOf:
+      - $ref: "#/components/schemas/Warehouse"
+      - $ref: "#/components/schemas/WarehouseWorkflowMetadata"
     WarehouseTypes:
       type: string
       description: types of warehouses.
@@ -2764,141 +3058,6 @@ components:
           items:
             $ref: "#/components/schemas/WarehouseTypes"
       description: Warehouse Update for Patch and Put
-    ExportFile:
-      type: object
-      properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
-          type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: Warehouse
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
-    ProblemDetail:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-          example: https://api.yourdomain.com/errors/validation-failed
-        title:
-          type: string
-          example: Intent Validation Failed
-        status:
-          type: integer
-          format: int32
-          example: 422
-        detail:
-          type: string
-          example: The export request could not be processed due to business constraints.
-        instance:
-          type: string
-          format: uri
-          example: /money/exports
-        intent:
-          type: string
-          example: InitiateMoneyExport
-        violations:
-          type: array
-          items:
-            type: object
-            properties:
-              rule:
-                type: string
-                example: INSUFFICIENT_FUNDS
-              message:
-                type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
-                type: string
-                example: date_range.start
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
     WarehouseWorkflowMetadata:
       type: object
       properties:
@@ -2916,10 +3075,6 @@ components:
             now.
           items:
             $ref: "#/components/schemas/CommandOption"
-    WarehouseResponse:
-      allOf:
-      - $ref: "#/components/schemas/Warehouse"
-      - $ref: "#/components/schemas/WarehouseWorkflowMetadata"
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

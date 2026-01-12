@@ -104,7 +104,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -146,22 +146,22 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **ValidationTypes** : types of validations.<br/>
-💠 **PriceTypes** : entity<br/>
-💠 **FinancialCategoryTypes** : Financial Category Types<br/>
-💠 **ControlAccountTypes** : entity<br/>
-💠 **ControlAccountRoleTypes** : Control Account Role.<br/>
-💠 **ControlAccountStatusTypes** : Defines the various states or statuses for a fi...<br/>
-💠 **UnitOfMeasureTypes** : Represents a comprehensive list of units of mea...<br/>
+💠 **PriceTypes** : Undocumented Enum<br/>
+💠 **FinancialCategoryTypes** : Undocumented Enum<br/>
+💠 **ControlAccountTypes** : Undocumented Enum<br/>
+💠 **ControlAccountRoleTypes** : Undocumented Enum<br/>
+💠 **ControlAccountStatusTypes** : Undocumented Enum<br/>
+💠 **UnitOfMeasureTypes** : Undocumented Enum<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Link** : Represents a Hypermedia as the Engine of Application State (HATEOS) link, providing information on how to interact with a related resource.<br/>
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Link** : link.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 

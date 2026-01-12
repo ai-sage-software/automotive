@@ -102,7 +102,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -115,7 +115,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **HazardClassTypes** : types of hazard class.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
@@ -130,22 +129,23 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductStageTypes** : types of product stages.<br/>
 💠 **SalesStatusTypes** : types of sales status.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
 💠 **UOMLeadTimeTypes** : types of u o m lead times.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 💠 **UOMTimeTypes** : types of u o m times.<br/>
-💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
-💠 **PartMasterSuperSessionTypes** : entity<br/>
+💠 **DurationUOMTypes** : Undocumented Enum<br/>
+💠 **PartMasterSuperSessionTypes** : Undocumented Enum<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **UnitOfMeasure** : value price with unit of measure<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 

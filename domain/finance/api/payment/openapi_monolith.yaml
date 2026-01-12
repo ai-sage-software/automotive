@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /payments/KEY78A
+                example: /payments/KEY78z
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY785
+        example: KEY78R
   /payments/{paymentKey}/payment-transactions:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY7850
+        example: KEY78R4
   /payments/{paymentKey}/money:
     get:
       tags:
@@ -673,7 +673,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY7850J
+        example: KEY78R4R
   /payments/{paymentKey}/identifiers:
     get:
       tags:
@@ -948,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY7850Jb
+        example: KEY78R4RP
   /payments/{paymentKey}/payment-method-references:
     get:
       tags:
@@ -1223,7 +1223,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY7850Jbe
+        example: KEY78R4RP1
   /payments/health:
     get:
       summary: Health Check
@@ -1246,11 +1246,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -1471,7 +1471,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #758f61a9 has been successfully cancelled."
+                    example: "Invoice #f4fe60da has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1479,7 +1479,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 23a48779
+                    example: a7c07c12
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1528,7 +1528,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -1572,13 +1572,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -1591,10 +1598,167 @@ paths:
                 $ref: "#/components/schemas/Capabilities"
 components:
   schemas:
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: Payment
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/Payment"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     Codes:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ErrorDetail:
       required:
       - category
@@ -1656,6 +1820,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: Payment
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     Identifier:
       type: object
       properties:
@@ -1685,7 +1927,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: External system identifier
+      description: identifier.desc
     IdentifierCreate:
       required:
       - identifier_key
@@ -1732,7 +1974,7 @@ components:
         value:
           type: string
           description: The monetary value.
-      description: "Represents a monetary value, including its curr..."
+      description: money.desc
     Payment:
       type: object
       properties:
@@ -1761,7 +2003,7 @@ components:
           type: string
           description: The date and time the payment was associ...
           format: date-time
-      description: Reference to a PaymentMethod (Party) Aggregate ...
+      description: payment.desc
     PaymentAmountTypes:
       type: string
       description: types of payment amounts.
@@ -1829,14 +2071,7 @@ components:
           type: string
           description: The date and time the paymentMethod was ...
           format: date-time
-        paid_date:
-          type: string
-          description: The date the purchase order was created ...
-          format: date
-          example: 2025-07-23
-        payment_status_type:
-          $ref: "#/components/schemas/PaymentStatusTypes"
-      description: Reference to a PaymentMethod (Party) Aggregate ...
+      description: payment.method.reference.desc
     PaymentMethodReferenceCreate:
       required:
       - payment_method_reference_key
@@ -1860,13 +2095,6 @@ components:
           type: string
           description: The date and time the paymentMethod was ...
           format: date-time
-        paid_date:
-          type: string
-          description: The date the purchase order was created ...
-          format: date
-          example: 2025-07-23
-        payment_status_type:
-          $ref: "#/components/schemas/PaymentStatusTypes"
       description: PaymentMethodReference Update for Patch and Put
     PaymentMethodTypes:
       type: string
@@ -1896,6 +2124,10 @@ components:
       - EXCHANGE
       - OTHER
       - NOT_APPLICABLE
+    PaymentResponse:
+      allOf:
+      - $ref: "#/components/schemas/Payment"
+      - $ref: "#/components/schemas/PaymentWorkflowMetadata"
     PaymentStatusTypes:
       type: string
       description: types of payment status.
@@ -1952,7 +2184,7 @@ components:
           $ref: "#/components/schemas/Money"
         payment_transaction_status_type:
           $ref: "#/components/schemas/PaymentTransactionStatusTypes"
-      description: Represents the type and value of a payment amount.
+      description: payment.transaction.desc
     PaymentTransactionCreate:
       required:
       - payment_transaction_key
@@ -2030,84 +2262,23 @@ components:
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
       description: Payment Update for Patch and Put
-    ExportFile:
+    PaymentWorkflowMetadata:
       type: object
       properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
+        current_state:
           type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
+          description: The current lifecycle phase of this entity.
           enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
           type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
           items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: Payment
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
+            $ref: "#/components/schemas/CommandOption"
     ProblemDetail:
       type: object
       properties:
@@ -2150,42 +2321,6 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    PaymentWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    PaymentResponse:
-      allOf:
-      - $ref: "#/components/schemas/Payment"
-      - $ref: "#/components/schemas/PaymentWorkflowMetadata"
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

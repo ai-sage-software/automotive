@@ -106,7 +106,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -123,7 +123,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
-💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
@@ -133,23 +132,24 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PriceTypes** : types of prices.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **SalesPipelineStageTypes** : types of sales pipeline stages.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
+💠 **DaysOfWeekTypes** : Undocumented Enum<br/>
+💠 **TimeslotDirectiveTypes** : Undocumented Enum<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
-✅ **UnitOfMeasure** : value price with unit of measure<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 

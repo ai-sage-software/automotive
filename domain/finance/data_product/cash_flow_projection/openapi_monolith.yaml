@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /cash-flow-projections/KEY78U
+                example: /cash-flow-projections/KEY78L
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780
+        example: KEY78O
   /cash-flow-projections/{cashFlowProjectionKey}/money:
     get:
       tags:
@@ -398,7 +398,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780H
+        example: KEY78Oe
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios:
     get:
       tags:
@@ -673,7 +673,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780HU
+        example: KEY78Oe1
   /cash-flow-projections/{cashFlowProjectionKey}/identifiers:
     get:
       tags:
@@ -948,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780HUc
+        example: KEY78Oe11
   /cash-flow-projections/{cashFlowProjectionKey}/accounting-periods:
     get:
       tags:
@@ -1223,7 +1223,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780HUc9
+        example: KEY78Oe110
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items:
     get:
       tags:
@@ -1498,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780HUc9w
+        example: KEY78Oe110k
   /cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria:
     get:
       tags:
@@ -1773,7 +1773,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY780HUc9wQ
+        example: KEY78Oe110kw
   /cash-flow-projections/health:
     get:
       summary: Health Check
@@ -1796,11 +1796,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -2021,7 +2021,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #00e68da4 has been successfully cancelled."
+                    example: "Invoice #e4146c5a has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -2029,7 +2029,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 4c0c0c60
+                    example: c68f8efd
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2078,7 +2078,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -2122,13 +2122,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -2176,7 +2183,7 @@ components:
           type: integer
           description: The fiscal year this period belongs to.
           format: int32
-      description: "Defines a fiscal period, including its unique i..."
+      description: accounting.period.desc
     AccountingPeriodCreate:
       required:
       - accounting_period_key
@@ -2223,6 +2230,148 @@ components:
           description: The beginning date of the accounting per...
           format: date
       description: AccountingPeriod Update for Patch and Put
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: CashFlowProjection
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/CashFlowProjection"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     CashFlowLineItem:
       type: object
       properties:
@@ -2251,7 +2400,7 @@ components:
         source_category:
           type: string
           description: The source type or category for this flo...
-      description: Represents the aggregated expected cash flow fo...
+      description: cash.flow.line.item.desc
     CashFlowLineItemCreate:
       required:
       - cash_flow_line_item_key
@@ -2309,7 +2458,7 @@ components:
           $ref: "#/components/schemas/AccountingPeriod"
         line_items:
           $ref: "#/components/schemas/CashFlowLineItems"
-      description: The final generated report representing the pro...
+      description: cash.flow.projection.desc
     CashFlowProjectionCreate:
       required:
       - cash_flow_projection_key
@@ -2365,7 +2514,7 @@ components:
           format: date
         opening_cash_balance:
           $ref: "#/components/schemas/Money"
-      description: Defines the criteria and scope for generating a...
+      description: cash.flow.projection.criteria.desc
     CashFlowProjectionCriteriaCreate:
       required:
       - cash_flow_projection_criteria_key
@@ -2403,6 +2552,10 @@ components:
           description: The start date for the forecast period (...
           format: date
       description: CashFlowProjectionCriteria Update for Patch and...
+    CashFlowProjectionResponse:
+      allOf:
+      - $ref: "#/components/schemas/CashFlowProjection"
+      - $ref: "#/components/schemas/CashFlowProjectionWorkflowMetadata"
     CashFlowProjectionUpdate:
       type: object
       properties:
@@ -2421,6 +2574,23 @@ components:
           description: The date the projection was generated.
           format: date
       description: CashFlowProjection Update for Patch and Put
+    CashFlowProjectionWorkflowMetadata:
+      type: object
+      properties:
+        current_state:
+          type: string
+          description: The current lifecycle phase of this entity.
+          enum:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
+          type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
+          items:
+            $ref: "#/components/schemas/CommandOption"
     CashFlowScenario:
       type: object
       properties:
@@ -2471,6 +2641,21 @@ components:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ErrorDetail:
       required:
       - category
@@ -2532,123 +2717,6 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
-    Identifier:
-      type: object
-      properties:
-        identifier_id:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
-        identifier_key:
-          maxLength: 50
-          minLength: 5
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: "Business key for the identifier Pattern: ^[a-zA..."
-        context:
-          type: string
-          description: Context or domain of the identifier
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-      description: External system identifier
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        context:
-          type: string
-          description: Context or domain of the identifier
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-      description: Identifier Update for Patch and Put
-    Identifiers:
-      type: array
-      items:
-        $ref: "#/components/schemas/Identifier"
-    Money:
-      type: object
-      properties:
-        money_key:
-          type: string
-          description: The unique key for the monetary value.
-        money_id:
-          type: string
-          description: The unique ID for the monetary value.
-        currency_code:
-          type: string
-          description: "ISO currency code, e.g., 'USD'."
-        display_value:
-          type: string
-          description: The locale-specific display format for t...
-        locale:
-          type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
-        value:
-          type: string
-          description: The monetary value.
-      description: "Represents a monetary value, including its curr..."
-    UOMTimeTypes:
-      type: string
-      description: types of u o m times.
-      enum:
-      - NANOSECOND
-      - MICROSECOND
-      - MILLISECOND
-      - SECOND
-      - MINUTE
-      - HOUR
-      - DAY
-      - WEEK
-      - MONTH
-      - YEAR
-      - DECADE
-      - CENTURY
-      - MILLENNIUM
-      - PERCENTAGE_OF_HOUR
-      - DURATION
-      - MINUTES
-      - HOURS
-      - DAYS
-      - WEEKS
-      - DAY_OF_MONTH
-      - BI_WEEKS
-      - SEMI_MONTHS
-      - MONTHS
-      - QUARTERS
-      - SEMI_YEARS
-      - YEARS
-      - MULTI_YEARS
-      - OCCURRENCE
-      - UNLIMITED
-      - NONE
-      - CUSTOM
-      - OTHER
     ExportFile:
       type: object
       properties:
@@ -2700,8 +2768,8 @@ components:
         event_type:
           type: string
           enum:
-          - export.completed
-          - export.failed
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
         occurred_at:
           type: string
           format: date-time
@@ -2727,6 +2795,87 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/ExportFile"
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: string
+          description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: string
+          description: "Business key for the identifier Pattern: ^[a-zA..."
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the...
+        detail:
+          type: string
+          description: The monetary or hours-based value of the...
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the...
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: identifier.desc
+    IdentifierCreate:
+      required:
+      - identifier_key
+      type: object
+      description: Identifier Create for Post
+      allOf:
+      - $ref: "#/components/schemas/Identifier"
+    IdentifierUpdate:
+      type: object
+      properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the...
+        context:
+          type: string
+          description: Context or domain of the identifier
+        detail:
+          type: string
+          description: The monetary or hours-based value of the...
+        value:
+          type: string
+          description: The monetary or hours-based value of the...
+      description: Identifier Update for Patch and Put
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: The unique key for the monetary value.
+        money_id:
+          type: string
+          description: The unique ID for the monetary value.
+        currency_code:
+          type: string
+          description: "ISO currency code, e.g., 'USD'."
+        display_value:
+          type: string
+          description: The locale-specific display format for t...
+        locale:
+          type: string
+          description: "The locale code (e.g., en-US, fr-FR)."
+        value:
+          type: string
+          description: The monetary value.
+      description: money.desc
     ProblemDetail:
       type: object
       properties:
@@ -2769,42 +2918,42 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    CashFlowProjectionWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    CashFlowProjectionResponse:
-      allOf:
-      - $ref: "#/components/schemas/CashFlowProjection"
-      - $ref: "#/components/schemas/CashFlowProjectionWorkflowMetadata"
+    UOMTimeTypes:
+      type: string
+      description: types of u o m times.
+      enum:
+      - NANOSECOND
+      - MICROSECOND
+      - MILLISECOND
+      - SECOND
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+      - DECADE
+      - CENTURY
+      - MILLENNIUM
+      - PERCENTAGE_OF_HOUR
+      - DURATION
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - CUSTOM
+      - OTHER
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

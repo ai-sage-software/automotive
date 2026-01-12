@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /lifecycle-events/KEY78M
+                example: /lifecycle-events/KEY78K
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78u
+        example: KEY78p
   /lifecycle-events/health:
     get:
       summary: Health Check
@@ -304,11 +304,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -529,7 +529,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #2644ede6 has been successfully cancelled."
+                    example: "Invoice #64f316fc has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -537,7 +537,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: cf931daa
+                    example: 8f97a18c
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -586,7 +586,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -630,13 +630,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -649,6 +656,163 @@ paths:
                 $ref: "#/components/schemas/Capabilities"
 components:
   schemas:
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: LifecycleEvent
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/LifecycleEvent"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      example: MAX_EXPORT_SIZE_EXCEEDED
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - RESTRICTION
+                      - FORMAT_INCOMPATIBILITY
+                      - PERMISSION_LOCK
+                      - SIZE_LIMIT
+                    target_field:
+                      type: string
+                      example: date_range
+                    limit_value:
+                      type: string
+                      example: "31"
+                    limit_unit:
+                      type: string
+                      example: days
+                    message:
+                      type: string
+                      example: The requested date range exceeds the 31-day limit for
+                        Parquet exports.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ErrorDetail:
       required:
       - category
@@ -710,6 +874,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: LifecycleEvent
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     LifecycleEvent:
       type: object
       properties:
@@ -777,6 +1019,10 @@ components:
       description: LifecycleEvent Create for Post
       allOf:
       - $ref: "#/components/schemas/LifecycleEvent"
+    LifecycleEventResponse:
+      allOf:
+      - $ref: "#/components/schemas/LifecycleEvent"
+      - $ref: "#/components/schemas/LifecycleEventWorkflowMetadata"
     LifecycleEventTypes:
       type: string
       description: types of lifecycle events.
@@ -842,123 +1088,23 @@ components:
         resource_types:
           $ref: "#/components/schemas/ResourceTypes"
       description: LifecycleEvent Update for Patch and Put
-    ResourceTypes:
-      type: string
-      description: types of resources.
-      enum:
-      - SYSTEM
-      - WORKFLOW
-      - ACTIVITY
-      - FUNCTION
-      - PROCESS
-      - INCIDENT
-      - PARTY
-      - CUSTOMER
-      - APPLICANT
-      - VENDOR
-      - DEALER_STAFF
-      - DRIVER
-      - ADDRESS
-      - BILL_ADDRESS
-      - BILL_CONTACT
-      - COMM_CHANNEL
-      - ACCOUNT
-      - VEHICLE
-      - TRADE_IN
-      - PRODUCT
-      - MANUFACTURER
-      - LEAD
-      - OPPORTUNITY
-      - DEAL
-      - FINANCE
-      - INVOICE
-      - LINEITEM
-      - EXPENSE
-      - DISCOUNT
-      - TAX
-      - FEE
-      - INCENTIVE
-      - DEALERSHIP
-      - APPOINTMENT
-      - OTHER
-    ExportFile:
+    LifecycleEventWorkflowMetadata:
       type: object
       properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
+        current_state:
           type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
+          description: The current lifecycle phase of this entity.
           enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
           type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
           items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: LifecycleEvent
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
+            $ref: "#/components/schemas/CommandOption"
     ProblemDetail:
       type: object
       properties:
@@ -1001,42 +1147,45 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    LifecycleEventWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    LifecycleEventResponse:
-      allOf:
-      - $ref: "#/components/schemas/LifecycleEvent"
-      - $ref: "#/components/schemas/LifecycleEventWorkflowMetadata"
+    ResourceTypes:
+      type: string
+      description: types of resources.
+      enum:
+      - SYSTEM
+      - WORKFLOW
+      - ACTIVITY
+      - FUNCTION
+      - PROCESS
+      - INCIDENT
+      - PARTY
+      - CUSTOMER
+      - APPLICANT
+      - VENDOR
+      - DEALER_STAFF
+      - DRIVER
+      - ADDRESS
+      - BILL_ADDRESS
+      - BILL_CONTACT
+      - COMM_CHANNEL
+      - ACCOUNT
+      - VEHICLE
+      - TRADE_IN
+      - PRODUCT
+      - MANUFACTURER
+      - LEAD
+      - OPPORTUNITY
+      - DEAL
+      - FINANCE
+      - INVOICE
+      - LINEITEM
+      - EXPENSE
+      - DISCOUNT
+      - TAX
+      - FEE
+      - INCENTIVE
+      - DEALERSHIP
+      - APPOINTMENT
+      - OTHER
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

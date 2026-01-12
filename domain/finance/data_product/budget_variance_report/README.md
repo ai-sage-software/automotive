@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **BudgetVarianceLineItem**, **BudgetVarianceReport**, **BudgetVarianceReportCriteria**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**, **VarianceDetails**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **BudgetVarianceLineItem**, **BudgetVarianceReport**, **BudgetVarianceReportCriteria**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -29,7 +29,6 @@ The API is structured around the domain **finance** and **BudgetVarianceReport**
     | **Identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | Manages Identifiers belonging to BudgetVarianceReports |
     | **AccountingPeriod** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | Manages AccountingPeriods belonging to BudgetVarianceReports |
     | **ControlAccountReference** | /budget-variance-reports/{budgetVarianceReportKey}/control-account-references | Manages ControlAccountReferences belonging to BudgetVarianceReports |
-    | **VarianceDetailse** | /budget-variance-reports/{budgetVarianceReportKey}/variance-detailses | Manages VarianceDetailses belonging to BudgetVarianceReports |
     | **BudgetVarianceReportCriteria** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria | Manages BudgetVarianceReportCriteria belonging to BudgetVarianceReports |
 
 
@@ -86,7 +85,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -106,7 +105,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **Money** : money.desc<br/>
 
 ---
 
@@ -506,56 +505,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /budget-variance-reports/{budgetVarianceReportKey}/variance-detailses
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses</span> <br/>
-        <span class="api-summary">Retrieve a list of VarianceDetails entities scoped by budgetVarianceReportKey. getVarianceDetailsByBudgetVarianceReportKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses</span> <br/>
-        <span class="api-summary">Create a new VarianceDetails entity. createVarianceDetails</span>
-    </span>
-</div>
-
-### /budget-variance-reports/{budgetVarianceReportKey}/variance-detailses/{varianceDetailsKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses/{varianceDetailsKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific VarianceDetails entity. getarianceDetailsById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses/{varianceDetailsKey}</span> <br/>
-        <span class="api-summary">Replace a VarianceDetails entity. replaceVarianceDetails</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses/{varianceDetailsKey}</span> <br/>
-        <span class="api-summary">Partially update a VarianceDetails entity. updateVarianceDetails</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-detailses/{varianceDetailsKey}</span> <br/>
-        <span class="api-summary">Delete a VarianceDetails entity deleteVarianceDetailsEntity</span>
-    </span>
-</div>
-
 ### /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -619,7 +568,6 @@ The following resources follow a consistent pattern under BudgetVarianceReportro
     | **identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | listIdentifierByBudgetVarianceReportKey | createIdentifier | getIdentifierByBudgetVarianceReportKey | updateIdentifierByBudgetVarianceReportKey | deleteIdentifierByBudgetVarianceReportKey |
     | **accounting-period** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | listAccountingPeriodByBudgetVarianceReportKey | createAccountingPeriod | getAccountingPeriodByBudgetVarianceReportKey | updateAccountingPeriodByBudgetVarianceReportKey | deleteAccountingPeriodByBudgetVarianceReportKey |
     | **control-account-reference** | /budget-variance-reports/{budgetVarianceReportKey}/control-account-references | listControlAccountReferenceByBudgetVarianceReportKey | createControlAccountReference | getControlAccountReferenceByBudgetVarianceReportKey | updateControlAccountReferenceByBudgetVarianceReportKey | deleteControlAccountReferenceByBudgetVarianceReportKey |
-    | **variance-detailse** | /budget-variance-reports/{budgetVarianceReportKey}/variance-detailses | listVarianceDetailsByBudgetVarianceReportKey | createVarianceDetails | getVarianceDetailsByBudgetVarianceReportKey | updateVarianceDetailsByBudgetVarianceReportKey | deleteVarianceDetailsByBudgetVarianceReportKey |
     | **budget-variance-report-criteria** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria | listBudgetVarianceReportCriteriaByBudgetVarianceReportKey | createBudgetVarianceReportCriteria | getBudgetVarianceReportCriteriaByBudgetVarianceReportKey | updateBudgetVarianceReportCriteriaByBudgetVarianceReportKey | deleteBudgetVarianceReportCriteriaByBudgetVarianceReportKey |
 
 ***Note on List Operations:***
