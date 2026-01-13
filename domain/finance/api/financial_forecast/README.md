@@ -93,7 +93,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -107,12 +107,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **FinancialEventTypes** : types of financial events.<br/>
-💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PriceTypes** : types of prices.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
 💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
@@ -121,8 +121,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
 
 ---

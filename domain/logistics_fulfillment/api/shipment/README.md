@@ -87,7 +87,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -114,9 +114,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
-✅ **UnitOfMeasure** : value price with unit of measure<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
 
 ---
 

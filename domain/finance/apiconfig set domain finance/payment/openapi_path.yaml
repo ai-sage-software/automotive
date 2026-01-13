@@ -1,0 +1,1145 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths:
+  /payments:
+    get:
+      tags:
+      - Payment
+      summary: Retrieve a list of Payment entities.
+      operationId: listPayment
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Payment entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Payment
+      summary: Create a new Payment entity.
+      operationId: createPayment
+      requestBody:
+        description: Payment data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentCreate"
+        required: true
+      responses:
+        "201":
+          description: Payment created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /payments/KEY78L
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /payments/{paymentKey}:
+    get:
+      tags:
+      - Payment
+      summary: Retrieve a specific Payment entity.
+      operationId: getPaymentById
+      responses:
+        "200":
+          description: The requested Payment entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Payment
+      summary: Replace a Payment entity.
+      operationId: replacePayment
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Payment"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Payment
+      summary: Delete a Payment entity
+      description: Marks the Payment entity as inactive or removes it entirely.
+      operationId: deletePaymentEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Payment
+      summary: Partially update a Payment entity.
+      operationId: updatePayment
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PaymentUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the specific Payment.
+      required: true
+      schema:
+        type: string
+        example: KEY78F
+  /payments/{paymentKey}/payment-transactions:
+    get:
+      tags:
+      - PaymentTransaction
+      summary: Retrieve a list of PaymentTransaction entities scoped by paymentKey.
+      operationId: listPaymentTransactionByPaymentKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PaymentTransaction entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentTransaction"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PaymentTransaction
+      summary: Create a new PaymentTransaction entity.
+      operationId: createPaymentTransaction
+      requestBody:
+        description: PaymentTransaction data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentTransactionCreate"
+        required: true
+      responses:
+        "201":
+          description: PaymentTransaction created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /payments/{paymentKey}/payment-transactions/{paymentTransactionKey}:
+    get:
+      tags:
+      - PaymentTransaction
+      summary: Retrieve a specific PaymentTransaction entity.
+      operationId: getPaymentTransactionById
+      responses:
+        "200":
+          description: The requested PaymentTransaction entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PaymentTransaction
+      summary: Replace a PaymentTransaction entity.
+      operationId: replacePaymentTransaction
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentTransaction"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PaymentTransaction
+      summary: Delete a PaymentTransaction entity
+      description: Marks the PaymentTransaction entity as inactive or removes it entirely.
+      operationId: deletePaymentTransactionEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PaymentTransaction
+      summary: Partially update a PaymentTransaction entity.
+      operationId: updatePaymentTransaction
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PaymentTransactionUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: paymentTransactionKey
+      in: path
+      description: The unique identifier for the specific PaymentTransaction.
+      required: true
+      schema:
+        type: string
+        example: KEY78FK
+  /payments/{paymentKey}/money:
+    get:
+      tags:
+      - Money
+      summary: Retrieve a list of Money entities scoped by paymentKey.
+      operationId: listMoneyByPaymentKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Money entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Money"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /payments/{paymentKey}/money/{moneyKey}:
+    get:
+      tags:
+      - Money
+      summary: Retrieve a specific Money entity.
+      operationId: getMoneyById
+      responses:
+        "200":
+          description: The requested Money entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Money"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: moneyKey
+      in: path
+      description: The unique identifier for the specific Money.
+      required: true
+      schema:
+        type: string
+        example: KEY78FKo
+  /payments/{paymentKey}/identifiers:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by paymentKey.
+      operationId: listIdentifierByPaymentKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Identifier entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
+      requestBody:
+        description: Identifier data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentifierCreate"
+        required: true
+      responses:
+        "201":
+          description: Identifier created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /payments/{paymentKey}/identifiers/{identifierKey}:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
+      responses:
+        "200":
+          description: The requested Identifier entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Identifier"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/IdentifierUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
+      required: true
+      schema:
+        type: string
+        example: KEY78FKod
+  /payments/{paymentKey}/payment-method-references:
+    get:
+      tags:
+      - PaymentMethodReference
+      summary: Retrieve a list of PaymentMethodReference entities scoped by paymentKey.
+      operationId: listPaymentMethodReferenceByPaymentKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PaymentMethodReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PaymentMethodReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PaymentMethodReference
+      summary: Create a new PaymentMethodReference entity.
+      operationId: createPaymentMethodReference
+      requestBody:
+        description: PaymentMethodReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentMethodReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: PaymentMethodReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentMethodReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}:
+    get:
+      tags:
+      - PaymentMethodReference
+      summary: Retrieve a specific PaymentMethodReference entity.
+      operationId: getPaymentMethodReferenceById
+      responses:
+        "200":
+          description: The requested PaymentMethodReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentMethodReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PaymentMethodReference
+      summary: Replace a PaymentMethodReference entity.
+      operationId: replacePaymentMethodReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentMethodReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentMethodReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PaymentMethodReference
+      summary: Delete a PaymentMethodReference entity
+      description: Marks the PaymentMethodReference entity as inactive or removes
+        it entirely.
+      operationId: deletePaymentMethodReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PaymentMethodReference
+      summary: Partially update a PaymentMethodReference entity.
+      operationId: updatePaymentMethodReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PaymentMethodReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentMethodReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: paymentKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: paymentMethodReferenceKey
+      in: path
+      description: The unique identifier for the specific PaymentMethodReference.
+      required: true
+      schema:
+        type: string
+        example: KEY78FKodk
+components:
+  schemas: {}

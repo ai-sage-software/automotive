@@ -82,7 +82,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -104,7 +104,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 
 ---
 

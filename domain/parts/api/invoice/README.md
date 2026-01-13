@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialEventReference**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -41,12 +41,11 @@ The API is structured around the domain **parts** and **Invoice** resource as th
     | **PaymentScheduleReference** | /invoices/{invoiceKey}/payment-schedule-references | Manages PaymentScheduleReferences belonging to Invoices |
     | **PricePlanReference** | /invoices/{invoiceKey}/price-plan-references | Manages PricePlanReferences belonging to Invoices |
     | **ControlAccountReference** | /invoices/{invoiceKey}/control-account-references | Manages ControlAccountReferences belonging to Invoices |
-    | **FinancialEventReference** | /invoices/{invoiceKey}/financial-event-references | Manages FinancialEventReferences belonging to Invoices |
     | **RewardReference** | /invoices/{invoiceKey}/reward-references | Manages RewardReferences belonging to Invoices |
     | **PaymentAuthorization** | /invoices/{invoiceKey}/payment-authorizations | Manages PaymentAuthorizations belonging to Invoices |
     | **Price** | /invoices/{invoiceKey}/prices | Manages Prices belonging to Invoices |
-    | **PaymentMethodReference** | /invoices/{invoiceKey}/payment-method-references | Manages PaymentMethodReferences belonging to Invoices |
     | **FinancialEvent** | /invoices/{invoiceKey}/financial-events | Manages FinancialEvents belonging to Invoices |
+    | **PaymentMethodReference** | /invoices/{invoiceKey}/payment-method-references | Manages PaymentMethodReferences belonging to Invoices |
     | **TextualDetail** | /invoices/{invoiceKey}/textual-details | Manages TextualDetails belonging to Invoices |
     | **FinancialSplit** | /invoices/{invoiceKey}/financial-splits | Manages FinancialSplits belonging to Invoices |
     | **FinancialTrack** | /invoices/{invoiceKey}/financial-tracks | Manages FinancialTracks belonging to Invoices |
@@ -105,7 +104,7 @@ They take the open-source code and host it at a URL like `https://api.yourcompan
 
 ## 🔒 Authentication & Authorization
 
-        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined here.*
+        *Note: Details on authentication (e.g., API Keys, OAuth 2.0) will be defined in the security_readme.md.*
 
     ---
 
@@ -122,7 +121,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
-💠 **FinancialSplitTypes** : types of financial splits.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **InvoiceStatusTypes** : types of invoice status.<br/>
 💠 **InvoiceTypes** : types of invoices.<br/>
@@ -137,6 +135,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PriceTypes** : types of prices.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
@@ -148,11 +147,11 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : Effective Period<br/>
-✅ **Money** : Represents a monetary value, including its currency, locale, and display format.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Range of time for the appointment including start/end times, recurring patterns, and directives.<br/>
-✅ **UnitOfMeasure** : value price with unit of measure<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
 
 ---
 
@@ -1088,56 +1087,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /invoices/{invoiceKey}/financial-event-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FinancialEventReference entities scoped by invoiceKey. getFinancialEventReferenceByInvoiceKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references</span> <br/>
-        <span class="api-summary">Create a new FinancialEventReference entity. createFinancialEventReference</span>
-    </span>
-</div>
-
-### /invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FinancialEventReference entity. getinancialEventReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FinancialEventReference entity. replaceFinancialEventReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialEventReference entity. updateFinancialEventReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/financial-event-references/{financialEventReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FinancialEventReference entity deleteFinancialEventReferenceEntity</span>
-    </span>
-</div>
-
 ### /invoices/{invoiceKey}/reward-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1288,56 +1237,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /invoices/{invoiceKey}/payment-method-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PaymentMethodReference entities scoped by invoiceKey. getPaymentMethodReferenceByInvoiceKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
-        <span class="api-summary">Create a new PaymentMethodReference entity. createPaymentMethodReference</span>
-    </span>
-</div>
-
-### /invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PaymentMethodReference entity. getaymentMethodReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PaymentMethodReference entity. replacePaymentMethodReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePaymentMethodReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PaymentMethodReference entity deletePaymentMethodReferenceEntity</span>
-    </span>
-</div>
-
 ### /invoices/{invoiceKey}/financial-events
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1385,6 +1284,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/financial-events/{financialEventKey}</span> <br/>
         <span class="api-summary">Delete a FinancialEvent entity deleteFinancialEventEntity</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/payment-method-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PaymentMethodReference entities scoped by invoiceKey. getPaymentMethodReferenceByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references</span> <br/>
+        <span class="api-summary">Create a new PaymentMethodReference entity. createPaymentMethodReference</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PaymentMethodReference entity. getaymentMethodReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PaymentMethodReference entity. replacePaymentMethodReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePaymentMethodReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PaymentMethodReference entity deletePaymentMethodReferenceEntity</span>
     </span>
 </div>
 
@@ -1531,12 +1480,11 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **payment-schedule-reference** | /invoices/{invoiceKey}/payment-schedule-references | listPaymentScheduleReferenceByInvoiceKey | createPaymentScheduleReference | getPaymentScheduleReferenceByInvoiceKey | updatePaymentScheduleReferenceByInvoiceKey | deletePaymentScheduleReferenceByInvoiceKey |
     | **price-plan-reference** | /invoices/{invoiceKey}/price-plan-references | listPricePlanReferenceByInvoiceKey | createPricePlanReference | getPricePlanReferenceByInvoiceKey | updatePricePlanReferenceByInvoiceKey | deletePricePlanReferenceByInvoiceKey |
     | **control-account-reference** | /invoices/{invoiceKey}/control-account-references | listControlAccountReferenceByInvoiceKey | createControlAccountReference | getControlAccountReferenceByInvoiceKey | updateControlAccountReferenceByInvoiceKey | deleteControlAccountReferenceByInvoiceKey |
-    | **financial-event-reference** | /invoices/{invoiceKey}/financial-event-references | listFinancialEventReferenceByInvoiceKey | createFinancialEventReference | getFinancialEventReferenceByInvoiceKey | updateFinancialEventReferenceByInvoiceKey | deleteFinancialEventReferenceByInvoiceKey |
     | **reward-reference** | /invoices/{invoiceKey}/reward-references | listRewardReferenceByInvoiceKey | createRewardReference | getRewardReferenceByInvoiceKey | updateRewardReferenceByInvoiceKey | deleteRewardReferenceByInvoiceKey |
     | **payment-authorization** | /invoices/{invoiceKey}/payment-authorizations | listPaymentAuthorizationByInvoiceKey | createPaymentAuthorization | getPaymentAuthorizationByInvoiceKey | updatePaymentAuthorizationByInvoiceKey | deletePaymentAuthorizationByInvoiceKey |
     | **price** | /invoices/{invoiceKey}/prices | listPriceByInvoiceKey | createPrice | getPriceByInvoiceKey | updatePriceByInvoiceKey | deletePriceByInvoiceKey |
-    | **payment-method-reference** | /invoices/{invoiceKey}/payment-method-references | listPaymentMethodReferenceByInvoiceKey | createPaymentMethodReference | getPaymentMethodReferenceByInvoiceKey | updatePaymentMethodReferenceByInvoiceKey | deletePaymentMethodReferenceByInvoiceKey |
     | **financial-event** | /invoices/{invoiceKey}/financial-events | listFinancialEventByInvoiceKey | createFinancialEvent | getFinancialEventByInvoiceKey | updateFinancialEventByInvoiceKey | deleteFinancialEventByInvoiceKey |
+    | **payment-method-reference** | /invoices/{invoiceKey}/payment-method-references | listPaymentMethodReferenceByInvoiceKey | createPaymentMethodReference | getPaymentMethodReferenceByInvoiceKey | updatePaymentMethodReferenceByInvoiceKey | deletePaymentMethodReferenceByInvoiceKey |
     | **textual-detail** | /invoices/{invoiceKey}/textual-details | listTextualDetailByInvoiceKey |  | getTextualDetailByInvoiceKey | updateTextualDetailByInvoiceKey | deleteTextualDetailByInvoiceKey |
     | **financial-split** | /invoices/{invoiceKey}/financial-splits | listFinancialSplitByInvoiceKey | createFinancialSplit | getFinancialSplitByInvoiceKey | updateFinancialSplitByInvoiceKey | deleteFinancialSplitByInvoiceKey |
     | **financial-track** | /invoices/{invoiceKey}/financial-tracks | listFinancialTrackByInvoiceKey | createFinancialTrack | getFinancialTrackByInvoiceKey | updateFinancialTrackByInvoiceKey | deleteFinancialTrackByInvoiceKey |

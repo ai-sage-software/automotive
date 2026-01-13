@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /geographic-boundaries/KEY78M
+                example: /geographic-boundaries/KEY78g
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78t
+        example: KEY78m
   /geographic-boundaries/health:
     get:
       summary: Health Check
@@ -304,11 +304,11 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: up
+                    example: UP
                     enum:
-                    - up
-                    - down
-                    - maintenance
+                    - UP
+                    - DOWN
+                    - MAINTENANCE
                   version:
                     type: string
                     description: The version of the ontology implemented by this service.
@@ -529,7 +529,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #fab40430 has been successfully cancelled."
+                    example: "Invoice #93354547 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -537,7 +537,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 3f9f0574
+                    example: aee84b3d
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -586,7 +586,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  commandId:
+                  command_id:
                     type: string
                     description: The unique identifier for the command being tracked
                     format: uuid
@@ -630,13 +630,20 @@ paths:
           items:
             type: string
             enum:
-            - commands
-            - exports
-            - constraints
+            - COMMANDS
+            - EXPORTS
+            - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -649,10 +656,204 @@ paths:
                 $ref: "#/components/schemas/Capabilities"
 components:
   schemas:
+    Capabilities:
+      type: object
+      properties:
+        aggregate:
+          type: string
+          example: GeographicBoundary
+        version:
+          type: string
+          example: 1.2.0
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                example: APPROVE_INVOICE
+              from_states:
+                type: array
+                example:
+                - PENDING_APPROVAL
+                items:
+                  type: string
+              to_state:
+                type: string
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
+              parameters_ref:
+                type: string
+                example: "#/components/schemas/GeographicBoundary"
+        available_exports:
+          type: array
+          items:
+            type: object
+            properties:
+              data_contract_key:
+                type: string
+                example: customer_contact_v1
+              description:
+                type: string
+                example: Optimized view containing only non-sensitive contact details.
+              supported_formats:
+                type: array
+                example:
+                - PARQUET
+                - CSV
+                items:
+                  type: string
+                  enum:
+                  - XML
+                  - JSON
+                  - AVRO
+                  - PARQUET
+                  - CSV
+              columns:
+                type: array
+                example:
+                - first_name
+                - last_name
+                - email
+                items:
+                  type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
+              constraints:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rule_id:
+                      type: string
+                      description: Unique identifier for the business rule
+                      example: IDENTITY_LOCK_STATE
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - SIZE_LIMIT
+                      - FORMAT_INCOMPATIBILITY
+                      - PATTERN_MISMATCH
+                      - PERMISSION_LOCK
+                      - MANDATORY_MISSING
+                      - STATE_TRANSITION_ERROR
+                      - IMMUTABILITY_VIOLATION
+                      - RELATIONAL_DEPENDENCY
+                      - CONFLICT_DETECTION
+                      - AGGREGATE_LIMIT
+                      - ORPHAN_PREVENTION
+                    target_fields:
+                      type: array
+                      description: The specific fields or attributes this constraint
+                        applies to
+                      example:
+                      - first_name
+                      - last_name
+                      - ssn
+                      items:
+                        type: string
+                    rule_context:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: Key-value pairs representing the 'facts' of the
+                        current state
+                      example:
+                        count: "45"
+                        limit: "0"
+                        item_type: Inventory
+                    rule_constraints:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: "Key-value pairs for simple UI-driven validation\
+                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
+                        \ checks."
+                      example:
+                        value: "31"
+                        unit: days
+                        min: "1"
+                    limit_rule:
+                      type: string
+                      description: A Prolog-based predicate defining the valid boundary
+                        for this constraint.
+                      example: "allow_export(Format, Days) :- Format == 'parquet',\
+                        \ Days =< 31; Format == 'csv', Days =< 90."
+                    message:
+                      type: string
+                      description: Human-readable explanation for UI/Logs
+                      example: Identity fields cannot be modified while in PENDING_APPROVAL
+                        state.
+                    severity:
+                      type: string
+                      enum:
+                      - ERROR
+                      - WARNING
+                    link:
+                      type: string
+                      description: Link to documentation regarding this rule
+                      format: uri
     Codes:
       type: array
       items:
         type: string
+    CommandOption:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The command name to send to the /commands endpoint
+          example: Approve
+        description:
+          type: string
+          description: Guidance for the agent on when to use this command
+          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
+        target_state:
+          type: string
+          description: The state the entity will transition to upon success
+          example: ACTIVE
     ErrorDetail:
       required:
       - category
@@ -714,6 +915,84 @@ components:
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
       description: Standardized error response for the entire API ...
+    ExportFile:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          description: Part number
+          format: int32
+        download_url:
+          type: string
+          format: uri
+        format:
+          type: string
+          default: PARQUET
+          enum:
+          - XML
+          - JSON
+          - AVRO
+          - PARQUET
+          - CSV
+        expires_at:
+          type: string
+          format: date-time
+        checksum_sha256:
+          type: string
+    ExportJob:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        progress_percentage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          format: int32
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExportFile"
+    ExportNotification:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - EXPORT_COMPLETED
+          - EXPORT_FAILED
+        occurred_at:
+          type: string
+          format: date-time
+        data:
+          type: object
+          properties:
+            job_id:
+              type: string
+            aggregate:
+              type: string
+              example: GeographicBoundary
+            data_product_id:
+              type: string
+            status:
+              type: string
+              enum:
+              - COMPLETED
+              - FAILED
+            error_message:
+              type: string
+              description: Present only if status is FAILED
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExportFile"
     GeographicBoundary:
       type: object
       properties:
@@ -782,6 +1061,10 @@ components:
       description: GeographicBoundary Create for Post
       allOf:
       - $ref: "#/components/schemas/GeographicBoundary"
+    GeographicBoundaryResponse:
+      allOf:
+      - $ref: "#/components/schemas/GeographicBoundary"
+      - $ref: "#/components/schemas/GeographicBoundaryWorkflowMetadata"
     GeographicBoundaryUpdate:
       type: object
       properties:
@@ -827,6 +1110,23 @@ components:
           type: string
           description: Detailed description of the geographic b...
       description: GeographicBoundary Update for Patch and Put
+    GeographicBoundaryWorkflowMetadata:
+      type: object
+      properties:
+        current_state:
+          type: string
+          description: The current lifecycle phase of this entity.
+          enum:
+          - CREATED
+          - ACTIVE
+          - DELETED
+          - ARCHIVED
+        allowed_commands:
+          type: array
+          description: Intents the agent can execute on this specific instance right
+            now.
+          items:
+            $ref: "#/components/schemas/CommandOption"
     LocationTypes:
       type: string
       description: types of locations.
@@ -853,6 +1153,48 @@ components:
       - GPS
       - WAREHOUSE
       - DISTRICT
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          example: https://api.yourdomain.com/errors/validation-failed
+        title:
+          type: string
+          example: Intent Validation Failed
+        status:
+          type: integer
+          format: int32
+          example: 422
+        detail:
+          type: string
+          example: The export request could not be processed due to business constraints.
+        instance:
+          type: string
+          format: uri
+          example: /money/exports
+        intent:
+          type: string
+          example: InitiateMoneyExport
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              message:
+                type: string
+                example: Export exceeds your monthly data tier limit.
+              path:
+                type: string
+                example: date_range.start
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
     UnitOfMeasureTypes:
       type: string
       description: types of unit of measures.
@@ -918,162 +1260,6 @@ components:
       - MINIMUM
       - MAXIMUM
       - OTHER
-    ExportFile:
-      type: object
-      properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-        download_url:
-          type: string
-          format: uri
-        format:
-          type: string
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-        expires_at:
-          type: string
-          format: date-time
-        checksum_sha256:
-          type: string
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          enum:
-          - export.completed
-          - export.failed
-        occurred_at:
-          type: string
-          format: date-time
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-            aggregate:
-              type: string
-              example: GeographicBoundary
-            data_product_id:
-              type: string
-            status:
-              type: string
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
-    ProblemDetail:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-          example: https://api.yourdomain.com/errors/validation-failed
-        title:
-          type: string
-          example: Intent Validation Failed
-        status:
-          type: integer
-          format: int32
-          example: 422
-        detail:
-          type: string
-          example: The export request could not be processed due to business constraints.
-        instance:
-          type: string
-          format: uri
-          example: /money/exports
-        intent:
-          type: string
-          example: InitiateMoneyExport
-        violations:
-          type: array
-          items:
-            type: object
-            properties:
-              rule:
-                type: string
-                example: INSUFFICIENT_FUNDS
-              message:
-                type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
-                type: string
-                example: date_range.start
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
-    GeographicBoundaryWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    GeographicBoundaryResponse:
-      allOf:
-      - $ref: "#/components/schemas/GeographicBoundary"
-      - $ref: "#/components/schemas/GeographicBoundaryWorkflowMetadata"
   responses:
     ForbiddenError:
       description: The authenticated user does not have the necess...

@@ -1,0 +1,4190 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: Platform Architecture Team
+    url: www.starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths:
+  /receipts:
+    get:
+      tags:
+      - Receipt
+      summary: Retrieve a list of Receipt entities.
+      operationId: listReceipt
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Receipt entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Receipt"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Receipt
+      summary: Create a new Receipt entity.
+      operationId: createReceipt
+      requestBody:
+        description: Receipt data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptCreate"
+        required: true
+      responses:
+        "201":
+          description: Receipt created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /receipts/KEY78x
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /receipts/{receiptKey}:
+    get:
+      tags:
+      - Receipt
+      summary: Retrieve a specific Receipt entity.
+      operationId: getReceiptById
+      responses:
+        "200":
+          description: The requested Receipt entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Receipt
+      summary: Replace a Receipt entity.
+      operationId: replaceReceipt
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Receipt"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Receipt
+      summary: Delete a Receipt entity
+      description: Marks the Receipt entity as inactive or removes it entirely.
+      operationId: deleteReceiptEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Receipt
+      summary: Partially update a Receipt entity.
+      operationId: updateReceipt
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/ReceiptUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the specific Receipt.
+      required: true
+      schema:
+        type: string
+        example: KEY787
+  /receipts/{receiptKey}/shipment-references:
+    get:
+      tags:
+      - ShipmentReference
+      summary: Retrieve a list of ShipmentReference entities scoped by receiptKey.
+      operationId: listShipmentReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of ShipmentReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ShipmentReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - ShipmentReference
+      summary: Create a new ShipmentReference entity.
+      operationId: createShipmentReference
+      requestBody:
+        description: ShipmentReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipmentReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: ShipmentReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/shipment-references/{shipmentReferenceKey}:
+    get:
+      tags:
+      - ShipmentReference
+      summary: Retrieve a specific ShipmentReference entity.
+      operationId: getShipmentReferenceById
+      responses:
+        "200":
+          description: The requested ShipmentReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - ShipmentReference
+      summary: Replace a ShipmentReference entity.
+      operationId: replaceShipmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipmentReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - ShipmentReference
+      summary: Delete a ShipmentReference entity
+      description: Marks the ShipmentReference entity as inactive or removes it entirely.
+      operationId: deleteShipmentReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - ShipmentReference
+      summary: Partially update a ShipmentReference entity.
+      operationId: updateShipmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/ShipmentReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: shipmentReferenceKey
+      in: path
+      description: The unique identifier for the specific ShipmentReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787T
+  /receipts/{receiptKey}/unit-of-measures:
+    get:
+      tags:
+      - UnitOfMeasure
+      summary: Retrieve a list of UnitOfMeasure entities scoped by receiptKey.
+      operationId: listUnitOfMeasureByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of UnitOfMeasure entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UnitOfMeasure"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/unit-of-measures/{unitOfMeasureKey}:
+    get:
+      tags:
+      - UnitOfMeasure
+      summary: Retrieve a specific UnitOfMeasure entity.
+      operationId: getUnitOfMeasureById
+      responses:
+        "200":
+          description: The requested UnitOfMeasure entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitOfMeasure"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: unitOfMeasureKey
+      in: path
+      description: The unique identifier for the specific UnitOfMeasure.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tk
+  /receipts/{receiptKey}/positions:
+    get:
+      tags:
+      - Position
+      summary: Retrieve a list of Position entities scoped by receiptKey.
+      operationId: listPositionByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Position entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Position"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Position
+      summary: Create a new Position entity.
+      operationId: createPosition
+      requestBody:
+        description: Position data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PositionCreate"
+        required: true
+      responses:
+        "201":
+          description: Position created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/positions/{positionKey}:
+    get:
+      tags:
+      - Position
+      summary: Retrieve a specific Position entity.
+      operationId: getPositionById
+      responses:
+        "200":
+          description: The requested Position entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Position
+      summary: Replace a Position entity.
+      operationId: replacePosition
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Position"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Position
+      summary: Delete a Position entity
+      description: Marks the Position entity as inactive or removes it entirely.
+      operationId: deletePositionEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Position
+      summary: Partially update a Position entity.
+      operationId: updatePosition
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PositionUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: positionKey
+      in: path
+      description: The unique identifier for the specific Position.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd
+  /receipts/{receiptKey}/time-slots:
+    get:
+      tags:
+      - TimeSlot
+      summary: Retrieve a list of TimeSlot entities scoped by receiptKey.
+      operationId: listTimeSlotByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of TimeSlot entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/time-slots/{timeSlotKey}:
+    get:
+      tags:
+      - TimeSlot
+      summary: Retrieve a specific TimeSlot entity.
+      operationId: getTimeSlotById
+      responses:
+        "200":
+          description: The requested TimeSlot entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSlot"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: timeSlotKey
+      in: path
+      description: The unique identifier for the specific TimeSlot.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7
+  /receipts/{receiptKey}/address-references:
+    get:
+      tags:
+      - AddressReference
+      summary: Retrieve a list of AddressReference entities scoped by receiptKey.
+      operationId: listAddressReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of AddressReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AddressReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - AddressReference
+      summary: Create a new AddressReference entity.
+      operationId: createAddressReference
+      requestBody:
+        description: AddressReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: AddressReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/address-references/{addressReferenceKey}:
+    get:
+      tags:
+      - AddressReference
+      summary: Retrieve a specific AddressReference entity.
+      operationId: getAddressReferenceById
+      responses:
+        "200":
+          description: The requested AddressReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - AddressReference
+      summary: Replace a AddressReference entity.
+      operationId: replaceAddressReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - AddressReference
+      summary: Delete a AddressReference entity
+      description: Marks the AddressReference entity as inactive or removes it entirely.
+      operationId: deleteAddressReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - AddressReference
+      summary: Partially update a AddressReference entity.
+      operationId: updateAddressReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/AddressReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: addressReferenceKey
+      in: path
+      description: The unique identifier for the specific AddressReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L
+  /receipts/{receiptKey}/party-references:
+    get:
+      tags:
+      - PartyReference
+      summary: Retrieve a list of PartyReference entities scoped by receiptKey.
+      operationId: listPartyReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartyReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartyReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartyReference
+      summary: Create a new PartyReference entity.
+      operationId: createPartyReference
+      requestBody:
+        description: PartyReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartyReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: PartyReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/party-references/{partyReferenceKey}:
+    get:
+      tags:
+      - PartyReference
+      summary: Retrieve a specific PartyReference entity.
+      operationId: getPartyReferenceById
+      responses:
+        "200":
+          description: The requested PartyReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartyReference
+      summary: Replace a PartyReference entity.
+      operationId: replacePartyReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartyReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartyReference
+      summary: Delete a PartyReference entity
+      description: Marks the PartyReference entity as inactive or removes it entirely.
+      operationId: deletePartyReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartyReference
+      summary: Partially update a PartyReference entity.
+      operationId: updatePartyReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartyReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partyReferenceKey
+      in: path
+      description: The unique identifier for the specific PartyReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L3
+  /receipts/{receiptKey}/staff-assignment-references:
+    get:
+      tags:
+      - StaffAssignmentReference
+      summary: Retrieve a list of StaffAssignmentReference entities scoped by receiptKey.
+      operationId: listStaffAssignmentReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of StaffAssignmentReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StaffAssignmentReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - StaffAssignmentReference
+      summary: Create a new StaffAssignmentReference entity.
+      operationId: createStaffAssignmentReference
+      requestBody:
+        description: StaffAssignmentReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StaffAssignmentReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: StaffAssignmentReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffAssignmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/staff-assignment-references/{staffAssignmentReferenceKey}:
+    get:
+      tags:
+      - StaffAssignmentReference
+      summary: Retrieve a specific StaffAssignmentReference entity.
+      operationId: getStaffAssignmentReferenceById
+      responses:
+        "200":
+          description: The requested StaffAssignmentReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffAssignmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - StaffAssignmentReference
+      summary: Replace a StaffAssignmentReference entity.
+      operationId: replaceStaffAssignmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StaffAssignmentReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffAssignmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - StaffAssignmentReference
+      summary: Delete a StaffAssignmentReference entity
+      description: Marks the StaffAssignmentReference entity as inactive or removes
+        it entirely.
+      operationId: deleteStaffAssignmentReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - StaffAssignmentReference
+      summary: Partially update a StaffAssignmentReference entity.
+      operationId: updateStaffAssignmentReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/StaffAssignmentReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffAssignmentReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: staffAssignmentReferenceKey
+      in: path
+      description: The unique identifier for the specific StaffAssignmentReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35
+  /receipts/{receiptKey}/shipment-events:
+    get:
+      tags:
+      - ShipmentEvent
+      summary: Retrieve a list of ShipmentEvent entities scoped by receiptKey.
+      operationId: listShipmentEventByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of ShipmentEvent entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ShipmentEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - ShipmentEvent
+      summary: Create a new ShipmentEvent entity.
+      operationId: createShipmentEvent
+      requestBody:
+        description: ShipmentEvent data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipmentEventCreate"
+        required: true
+      responses:
+        "201":
+          description: ShipmentEvent created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/shipment-events/{shipmentEventKey}:
+    get:
+      tags:
+      - ShipmentEvent
+      summary: Retrieve a specific ShipmentEvent entity.
+      operationId: getShipmentEventById
+      responses:
+        "200":
+          description: The requested ShipmentEvent entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - ShipmentEvent
+      summary: Replace a ShipmentEvent entity.
+      operationId: replaceShipmentEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipmentEvent"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - ShipmentEvent
+      summary: Delete a ShipmentEvent entity
+      description: Marks the ShipmentEvent entity as inactive or removes it entirely.
+      operationId: deleteShipmentEventEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - ShipmentEvent
+      summary: Partially update a ShipmentEvent entity.
+      operationId: updateShipmentEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/ShipmentEventUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: shipmentEventKey
+      in: path
+      description: The unique identifier for the specific ShipmentEvent.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U
+  /receipts/{receiptKey}/identifiers:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a list of Identifier entities scoped by receiptKey.
+      operationId: listIdentifierByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Identifier entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Identifier
+      summary: Create a new Identifier entity.
+      operationId: createIdentifier
+      requestBody:
+        description: Identifier data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IdentifierCreate"
+        required: true
+      responses:
+        "201":
+          description: Identifier created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/identifiers/{identifierKey}:
+    get:
+      tags:
+      - Identifier
+      summary: Retrieve a specific Identifier entity.
+      operationId: getIdentifierById
+      responses:
+        "200":
+          description: The requested Identifier entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Identifier
+      summary: Replace a Identifier entity.
+      operationId: replaceIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Identifier"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Identifier
+      summary: Delete a Identifier entity
+      description: Marks the Identifier entity as inactive or removes it entirely.
+      operationId: deleteIdentifierEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Identifier
+      summary: Partially update a Identifier entity.
+      operationId: updateIdentifier
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/IdentifierUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identifier"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: identifierKey
+      in: path
+      description: The unique identifier for the specific Identifier.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8
+  /receipts/{receiptKey}/prices:
+    get:
+      tags:
+      - Price
+      summary: Retrieve a list of Price entities scoped by receiptKey.
+      operationId: listPriceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of Price entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Price"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - Price
+      summary: Create a new Price entity.
+      operationId: createPrice
+      requestBody:
+        description: Price data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PriceCreate"
+        required: true
+      responses:
+        "201":
+          description: Price created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/prices/{priceKey}:
+    get:
+      tags:
+      - Price
+      summary: Retrieve a specific Price entity.
+      operationId: getPriceById
+      responses:
+        "200":
+          description: The requested Price entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - Price
+      summary: Replace a Price entity.
+      operationId: replacePrice
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Price"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - Price
+      summary: Delete a Price entity
+      description: Marks the Price entity as inactive or removes it entirely.
+      operationId: deletePriceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - Price
+      summary: Partially update a Price entity.
+      operationId: updatePrice
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PriceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: priceKey
+      in: path
+      description: The unique identifier for the specific Price.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8d
+  /receipts/{receiptKey}/purchase-order-references:
+    get:
+      tags:
+      - PurchaseOrderReference
+      summary: Retrieve a list of PurchaseOrderReference entities scoped by receiptKey.
+      operationId: listPurchaseOrderReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PurchaseOrderReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PurchaseOrderReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PurchaseOrderReference
+      summary: Create a new PurchaseOrderReference entity.
+      operationId: createPurchaseOrderReference
+      requestBody:
+        description: PurchaseOrderReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: PurchaseOrderReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/purchase-order-references/{purchaseOrderReferenceKey}:
+    get:
+      tags:
+      - PurchaseOrderReference
+      summary: Retrieve a specific PurchaseOrderReference entity.
+      operationId: getPurchaseOrderReferenceById
+      responses:
+        "200":
+          description: The requested PurchaseOrderReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PurchaseOrderReference
+      summary: Replace a PurchaseOrderReference entity.
+      operationId: replacePurchaseOrderReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PurchaseOrderReference
+      summary: Delete a PurchaseOrderReference entity
+      description: Marks the PurchaseOrderReference entity as inactive or removes
+        it entirely.
+      operationId: deletePurchaseOrderReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PurchaseOrderReference
+      summary: Partially update a PurchaseOrderReference entity.
+      operationId: updatePurchaseOrderReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: purchaseOrderReferenceKey
+      in: path
+      description: The unique identifier for the specific PurchaseOrderReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dn
+  /receipts/{receiptKey}/receipt-line-items:
+    get:
+      tags:
+      - ReceiptLineItem
+      summary: Retrieve a list of ReceiptLineItem entities scoped by receiptKey.
+      operationId: listReceiptLineItemByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of ReceiptLineItem entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReceiptLineItem"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - ReceiptLineItem
+      summary: Create a new ReceiptLineItem entity.
+      operationId: createReceiptLineItem
+      requestBody:
+        description: ReceiptLineItem data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptLineItemCreate"
+        required: true
+      responses:
+        "201":
+          description: ReceiptLineItem created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptLineItem"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/receipt-line-items/{receiptLineItemKey}:
+    get:
+      tags:
+      - ReceiptLineItem
+      summary: Retrieve a specific ReceiptLineItem entity.
+      operationId: getReceiptLineItemById
+      responses:
+        "200":
+          description: The requested ReceiptLineItem entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptLineItem"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - ReceiptLineItem
+      summary: Replace a ReceiptLineItem entity.
+      operationId: replaceReceiptLineItem
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptLineItem"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptLineItem"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - ReceiptLineItem
+      summary: Delete a ReceiptLineItem entity
+      description: Marks the ReceiptLineItem entity as inactive or removes it entirely.
+      operationId: deleteReceiptLineItemEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - ReceiptLineItem
+      summary: Partially update a ReceiptLineItem entity.
+      operationId: updateReceiptLineItem
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/ReceiptLineItemUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptLineItem"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: receiptLineItemKey
+      in: path
+      description: The unique identifier for the specific ReceiptLineItem.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp
+  /receipts/{receiptKey}/part-references:
+    get:
+      tags:
+      - PartReference
+      summary: Retrieve a list of PartReference entities scoped by receiptKey.
+      operationId: listPartReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of PartReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - PartReference
+      summary: Create a new PartReference entity.
+      operationId: createPartReference
+      requestBody:
+        description: PartReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: PartReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/part-references/{partReferenceKey}:
+    get:
+      tags:
+      - PartReference
+      summary: Retrieve a specific PartReference entity.
+      operationId: getPartReferenceById
+      responses:
+        "200":
+          description: The requested PartReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - PartReference
+      summary: Replace a PartReference entity.
+      operationId: replacePartReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - PartReference
+      summary: Delete a PartReference entity
+      description: Marks the PartReference entity as inactive or removes it entirely.
+      operationId: deletePartReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - PartReference
+      summary: Partially update a PartReference entity.
+      operationId: updatePartReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/PartReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: partReferenceKey
+      in: path
+      description: The unique identifier for the specific PartReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp2
+  /receipts/{receiptKey}/effective-periods:
+    get:
+      tags:
+      - EffectivePeriod
+      summary: Retrieve a list of EffectivePeriod entities scoped by receiptKey.
+      operationId: listEffectivePeriodByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of EffectivePeriod entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EffectivePeriod"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/effective-periods/{effectivePeriodKey}:
+    get:
+      tags:
+      - EffectivePeriod
+      summary: Retrieve a specific EffectivePeriod entity.
+      operationId: getEffectivePeriodById
+      responses:
+        "200":
+          description: The requested EffectivePeriod entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EffectivePeriod"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: effectivePeriodKey
+      in: path
+      description: The unique identifier for the specific EffectivePeriod.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp2P
+  /receipts/{receiptKey}/lifecycle-events:
+    get:
+      tags:
+      - LifecycleEvent
+      summary: Retrieve a list of LifecycleEvent entities scoped by receiptKey.
+      operationId: listLifecycleEventByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of LifecycleEvent entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LifecycleEvent"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - LifecycleEvent
+      summary: Create a new LifecycleEvent entity.
+      operationId: createLifecycleEvent
+      requestBody:
+        description: LifecycleEvent data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEventCreate"
+        required: true
+      responses:
+        "201":
+          description: LifecycleEvent created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/lifecycle-events/{lifecycleEventKey}:
+    get:
+      tags:
+      - LifecycleEvent
+      summary: Retrieve a specific LifecycleEvent entity.
+      operationId: getLifecycleEventById
+      responses:
+        "200":
+          description: The requested LifecycleEvent entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - LifecycleEvent
+      summary: Replace a LifecycleEvent entity.
+      operationId: replaceLifecycleEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEvent"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - LifecycleEvent
+      summary: Delete a LifecycleEvent entity
+      description: Marks the LifecycleEvent entity as inactive or removes it entirely.
+      operationId: deleteLifecycleEventEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - LifecycleEvent
+      summary: Partially update a LifecycleEvent entity.
+      operationId: updateLifecycleEvent
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/LifecycleEventUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifecycleEvent"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: lifecycleEventKey
+      in: path
+      description: The unique identifier for the specific LifecycleEvent.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp2Pd
+  /receipts/{receiptKey}/warehouse-references:
+    get:
+      tags:
+      - WarehouseReference
+      summary: Retrieve a list of WarehouseReference entities scoped by receiptKey.
+      operationId: listWarehouseReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of WarehouseReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WarehouseReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - WarehouseReference
+      summary: Create a new WarehouseReference entity.
+      operationId: createWarehouseReference
+      requestBody:
+        description: WarehouseReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: WarehouseReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/warehouse-references/{warehouseReferenceKey}:
+    get:
+      tags:
+      - WarehouseReference
+      summary: Retrieve a specific WarehouseReference entity.
+      operationId: getWarehouseReferenceById
+      responses:
+        "200":
+          description: The requested WarehouseReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - WarehouseReference
+      summary: Replace a WarehouseReference entity.
+      operationId: replaceWarehouseReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - WarehouseReference
+      summary: Delete a WarehouseReference entity
+      description: Marks the WarehouseReference entity as inactive or removes it entirely.
+      operationId: deleteWarehouseReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - WarehouseReference
+      summary: Partially update a WarehouseReference entity.
+      operationId: updateWarehouseReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/WarehouseReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: warehouseReferenceKey
+      in: path
+      description: The unique identifier for the specific WarehouseReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp2Pdi
+  /receipts/{receiptKey}/financial-track-references:
+    get:
+      tags:
+      - FinancialTrackReference
+      summary: Retrieve a list of FinancialTrackReference entities scoped by receiptKey.
+      operationId: listFinancialTrackReferenceByReceiptKey
+      parameters:
+      - name: sort
+        in: query
+        description: Sort Order of Result
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Filter Result
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of entities to return.
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 50
+      - name: cursor
+        in: query
+        description: starting point for next set of results
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A list of FinancialTrackReference entities.
+          content:
+            application/json:
+              schema:
+                required:
+                - data
+                - has_more
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FinancialTrackReference"
+                  next_cursor:
+                    type: string
+                    description: Opaque cursor for the next page. Null if no more
+                      results.
+                  has_more:
+                    type: boolean
+                    description: Whether additional results exist beyond this page.
+                  total_count:
+                    type: integer
+                    description: "Total entities matching the query (optional, may\
+                      \ be expensive)."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+      - FinancialTrackReference
+      summary: Create a new FinancialTrackReference entity.
+      operationId: createFinancialTrackReference
+      requestBody:
+        description: FinancialTrackReference data to create the new resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialTrackReferenceCreate"
+        required: true
+      responses:
+        "201":
+          description: FinancialTrackReference created successfully.
+          headers:
+            Location:
+              description: The URI of the newly created resource.
+              schema:
+                type: string
+                example: /part-search-results/PS-12345/bill-of-materials/BOM-001
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialTrackReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+  /receipts/{receiptKey}/financial-track-references/{financialTrackReferenceKey}:
+    get:
+      tags:
+      - FinancialTrackReference
+      summary: Retrieve a specific FinancialTrackReference entity.
+      operationId: getFinancialTrackReferenceById
+      responses:
+        "200":
+          description: The requested FinancialTrackReference entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialTrackReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    put:
+      tags:
+      - FinancialTrackReference
+      summary: Replace a FinancialTrackReference entity.
+      operationId: replaceFinancialTrackReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: The ETag of the resource to be replaced.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full entity data to replace the existing resource.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialTrackReference"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the replaced resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialTrackReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    delete:
+      tags:
+      - FinancialTrackReference
+      summary: Delete a FinancialTrackReference entity
+      description: Marks the FinancialTrackReference entity as inactive or removes
+        it entirely.
+      operationId: deleteFinancialTrackReferenceEntity
+      responses:
+        "204":
+          description: Entity successfully deleted (or deactivated).
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    patch:
+      tags:
+      - FinancialTrackReference
+      summary: Partially update a FinancialTrackReference entity.
+      operationId: updateFinancialTrackReference
+      parameters:
+      - name: If-Match
+        in: header
+        description: ETag of the resource being updated. update=succeed ETag matches
+          the current server state.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Included Fields to be updated will be modified.
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/FinancialTrackReferenceUpdate"
+        required: true
+      responses:
+        "200":
+          description: Entity updated successfully. Returns the updated entity.
+          headers:
+            ETag:
+              description: The new ETag of the updated resource.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialTrackReference"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+    parameters:
+    - name: receiptKey
+      in: path
+      description: The unique identifier for the parent resource.
+      required: true
+      schema:
+        type: string
+    - name: financialTrackReferenceKey
+      in: path
+      description: The unique identifier for the specific FinancialTrackReference.
+      required: true
+      schema:
+        type: string
+        example: KEY787Tkd7L35U8dnp2PdiE
+components:
+  schemas: {}
