@@ -115,14 +115,14 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
-💠 **DurationUOMTypes** : Undocumented Enum<br/>
+💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
 
 ---

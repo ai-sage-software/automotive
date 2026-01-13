@@ -136,16 +136,16 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **UOMLeadTimeTypes** : types of u o m lead times.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 💠 **UOMTimeTypes** : types of u o m times.<br/>
-💠 **DurationUOMTypes** : Undocumented Enum<br/>
-💠 **PartMasterSuperSessionTypes** : Undocumented Enum<br/>
+💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
+💠 **PartMasterSuperSessionTypes** : entity<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
+✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
 
 ---
 

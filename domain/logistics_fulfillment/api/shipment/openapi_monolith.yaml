@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /shipments/KEY78v
+                example: /shipments/KEY78n
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781
+        example: KEY78c
   /shipments/{shipmentKey}/invoice-references:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781B
+        example: KEY78ce
   /shipments/{shipmentKey}/party-references:
     get:
       tags:
@@ -831,7 +831,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN
+        example: KEY78cej
   /shipments/{shipmentKey}/shipment-events:
     get:
       tags:
@@ -1106,7 +1106,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2
+        example: KEY78cejB
   /shipments/{shipmentKey}/identifiers:
     get:
       tags:
@@ -1381,7 +1381,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2d
+        example: KEY78cejBR
   /shipments/{shipmentKey}/unit-of-measures:
     get:
       tags:
@@ -1498,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2dk
+        example: KEY78cejBRu
   /shipments/{shipmentKey}/positions:
     get:
       tags:
@@ -1773,7 +1773,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2dkG
+        example: KEY78cejBRuU
   /shipments/{shipmentKey}/effective-periods:
     get:
       tags:
@@ -1890,7 +1890,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2dkGl
+        example: KEY78cejBRuUv
   /shipments/{shipmentKey}/time-slots:
     get:
       tags:
@@ -2007,7 +2007,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2dkGlg
+        example: KEY78cejBRuUvw
   /shipments/{shipmentKey}/address-references:
     get:
       tags:
@@ -2282,7 +2282,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY781BN2dkGlgq
+        example: KEY78cejBRuUvwP
   /shipments/health:
     get:
       summary: Health Check
@@ -2530,7 +2530,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #3c3efc5d has been successfully cancelled."
+                    example: "Invoice #538f521a has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -2538,7 +2538,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 1e6204a7
+                    example: e4c048d5
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2722,7 +2722,7 @@ components:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-      description: address.reference.desc
+      description: Reference link to a stored address.
     AddressReferenceCreate:
       required:
       - address_reference_key
@@ -2941,28 +2941,65 @@ components:
                   properties:
                     rule_id:
                       type: string
-                      example: MAX_EXPORT_SIZE_EXCEEDED
+                      description: Unique identifier for the business rule
+                      example: IDENTITY_LOCK_STATE
                     constraint_type:
                       type: string
                       enum:
                       - RANGE_LIMIT
-                      - RESTRICTION
-                      - FORMAT_INCOMPATIBILITY
-                      - PERMISSION_LOCK
                       - SIZE_LIMIT
-                    target_field:
+                      - FORMAT_INCOMPATIBILITY
+                      - PATTERN_MISMATCH
+                      - PERMISSION_LOCK
+                      - MANDATORY_MISSING
+                      - STATE_TRANSITION_ERROR
+                      - IMMUTABILITY_VIOLATION
+                      - RELATIONAL_DEPENDENCY
+                      - CONFLICT_DETECTION
+                      - AGGREGATE_LIMIT
+                      - ORPHAN_PREVENTION
+                    target_fields:
+                      type: array
+                      description: The specific fields or attributes this constraint
+                        applies to
+                      example:
+                      - first_name
+                      - last_name
+                      - ssn
+                      items:
+                        type: string
+                    rule_context:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: Key-value pairs representing the 'facts' of the
+                        current state
+                      example:
+                        count: "45"
+                        limit: "0"
+                        item_type: Inventory
+                    rule_constraints:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: "Key-value pairs for simple UI-driven validation\
+                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
+                        \ checks."
+                      example:
+                        value: "31"
+                        unit: days
+                        min: "1"
+                    limit_rule:
                       type: string
-                      example: date_range
-                    limit_value:
-                      type: string
-                      example: "31"
-                    limit_unit:
-                      type: string
-                      example: days
+                      description: A Prolog-based predicate defining the valid boundary
+                        for this constraint.
+                      example: "allow_export(Format, Days) :- Format == 'parquet',\
+                        \ Days =< 31; Format == 'csv', Days =< 90."
                     message:
                       type: string
-                      example: The requested date range exceeds the 31-day limit for
-                        Parquet exports.
+                      description: Human-readable explanation for UI/Logs
+                      example: Identity fields cannot be modified while in PENDING_APPROVAL
+                        state.
                     severity:
                       type: string
                       enum:
@@ -3066,7 +3103,7 @@ components:
           description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: effective.period.desc
+      description: The date range during which this record is valid.
     ErrorDetail:
       required:
       - category
@@ -3235,7 +3272,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: Unique identification key for the record.
     IdentifierCreate:
       required:
       - identifier_key
@@ -3388,7 +3425,7 @@ components:
           format: date-time
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
-      description: party.reference.desc
+      description: Reference to an internal or external party/entity.
     PartyReferenceCreate:
       required:
       - party_reference_key
@@ -3581,7 +3618,7 @@ components:
           type: array
           items:
             type: string
-      description: position.desc
+      description: Job title or organizational position.
     PositionCreate:
       required:
       - position_key
@@ -3742,7 +3779,7 @@ components:
           $ref: "#/components/schemas/AddressReferences"
         shipment_events:
           $ref: "#/components/schemas/ShipmentEvents"
-      description: shipment.desc
+      description: The record of goods being transported.
     ShipmentCreate:
       required:
       - shipment_key
@@ -4006,7 +4043,7 @@ components:
           format: date
           items:
             type: string
-      description: time.slot.desc
+      description: Designated window of time for the activity.
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.
@@ -4081,7 +4118,7 @@ components:
           description: "Unit of Measure Value Pattern: ^[a-zA-Z0-9_.-]+..."
         uom_quantity_category_type:
           $ref: "#/components/schemas/UOMQuantityCategoryTypes"
-      description: unit.of.measure.desc
+      description: "Standard unit used for quantity (e.g., kg, lite..."
     UnitOfMeasures:
       type: array
       items:

@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /payroll-runs/KEY78u
+                example: /payroll-runs/KEY78a
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w
+        example: KEY78m
   /payroll-runs/{payrollRunKey}/identifiers:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8
+        example: KEY78mo
   /payroll-runs/{payrollRunKey}/addresses:
     get:
       tags:
@@ -831,7 +831,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8H
+        example: KEY78moM
   /payroll-runs/{payrollRunKey}/effective-periods:
     get:
       tags:
@@ -948,7 +948,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HI
+        example: KEY78moM1
   /payroll-runs/{payrollRunKey}/product-subjects:
     get:
       tags:
@@ -1223,7 +1223,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HIe
+        example: KEY78moM12
   /payroll-runs/{payrollRunKey}/payroll-payments:
     get:
       tags:
@@ -1498,7 +1498,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HIeJ
+        example: KEY78moM12G
   /payroll-runs/{payrollRunKey}/time-slots:
     get:
       tags:
@@ -1615,7 +1615,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HIeJX
+        example: KEY78moM12GR
   /payroll-runs/{payrollRunKey}/contact-methods:
     get:
       tags:
@@ -1890,7 +1890,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HIeJXN
+        example: KEY78moM12GRa
   /payroll-runs/{payrollRunKey}/communication-channels:
     get:
       tags:
@@ -2165,7 +2165,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w8HIeJXNs
+        example: KEY78moM12GRaE
   /payroll-runs/health:
     get:
       summary: Health Check
@@ -2413,7 +2413,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #8fe6b9be has been successfully cancelled."
+                    example: "Invoice #494d6a1b has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -2421,7 +2421,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 919d5d50
+                    example: 303b0c2b
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2517,10 +2517,17 @@ paths:
             - COMMANDS
             - EXPORTS
             - CONSTRAINTS
+      - name: role
+        in: query
+        description: Filter capabilities by the agent's current role(s)
+        schema:
+          type: string
+          example: ACCOUNTANT
       - name: state
         in: query
         description: Filter commands and constraints relevant only to a specific aggregate
           state
+        required: true
         schema:
           type: string
           example: ACTIVE
@@ -2662,7 +2669,7 @@ components:
           pattern: "^[a-z]{2}(-[A-Z]{2})?$"
           type: string
           description: Locale code associated with this address... Pat...
-      description: Address represents a physical or mailing locati...
+      description: Physical or mailing address details.
     AddressCreate:
       required:
       - address_key
@@ -2701,7 +2708,7 @@ components:
           $ref: "#/components/schemas/Codes"
         location_type:
           $ref: "#/components/schemas/LocationTypes"
-      description: External system address locale including region...
+      description: Regional or geographic locale for the address.
     AddressLocaleCreate:
       required:
       - address_locale_key
@@ -2761,8 +2768,6 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
-      - SOLD_BY
-      - SHIPPED_BY
       - OTHER
     AddressUpdate:
       type: object
@@ -2898,7 +2903,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Business key uniquely identifying the au... Pat...
-      description: Establish authorization level
+      description: General authorization or permission status.
     AuthorizationCreate:
       required:
       - authorization_key
@@ -2930,33 +2935,49 @@ components:
         version:
           type: string
           example: 1.2.0
-        commands:
+        current_state:
+          type: string
+          description: The state used to filter these capabilities
+          example: PENDING_APPROVAL
+        transitions:
           type: array
           items:
             type: object
             properties:
-              type:
+              action:
                 type: string
-                example: CancelInvoice
-              description:
-                type: string
-                example: Voids the invoice and releases held funds.
+                example: APPROVE_INVOICE
               from_states:
                 type: array
                 example:
-                - CREATED
-                - ACTIVE
+                - PENDING_APPROVAL
                 items:
                   type: string
               to_state:
                 type: string
-                example: DELETED
+                example: ISSUED
+              required_roles:
+                type: array
+                description: Roles authorized to trigger this transition
+                example:
+                - MANAGER
+                - FINANCE_VP
+                items:
+                  type: string
+              instructions:
+                type: array
+                description: Step-by-step checklist the agent must verify before execution
+                example:
+                - Verify credit limit is sufficient
+                - Confirm tax jurisdiction matches customer address
+                - Ensure currency matches original purchase order
+                items:
+                  type: string
               parameters_ref:
                 type: string
                 example: "#/components/schemas/PayrollRun"
         available_exports:
           type: array
-          description: List of pre-defined data projections available for bulk export
           items:
             type: object
             properties:
@@ -2987,6 +3008,28 @@ components:
                 - email
                 items:
                   type: string
+              retention_policy:
+                type: object
+                properties:
+                  retention_period:
+                    type: string
+                    description: ISO-8601 duration the file remains available for
+                      download
+                    example: P7D
+                  is_pii_sensitive:
+                    type: boolean
+                    description: Indicates if the export contains Personally Identifiable
+                      Information
+                    example: false
+                  access_tier:
+                    type: string
+                    description: The security clearance required for this contract
+                    example: INTERNAL
+                    enum:
+                    - PUBLIC
+                    - INTERNAL
+                    - RESTRICTED
+                    - CONFIDENTIAL
               constraints:
                 type: array
                 items:
@@ -2994,11 +3037,65 @@ components:
                   properties:
                     rule_id:
                       type: string
-                      example: MAX_EXPORT_SIZE_EXCEEDED
+                      description: Unique identifier for the business rule
+                      example: IDENTITY_LOCK_STATE
+                    constraint_type:
+                      type: string
+                      enum:
+                      - RANGE_LIMIT
+                      - SIZE_LIMIT
+                      - FORMAT_INCOMPATIBILITY
+                      - PATTERN_MISMATCH
+                      - PERMISSION_LOCK
+                      - MANDATORY_MISSING
+                      - STATE_TRANSITION_ERROR
+                      - IMMUTABILITY_VIOLATION
+                      - RELATIONAL_DEPENDENCY
+                      - CONFLICT_DETECTION
+                      - AGGREGATE_LIMIT
+                      - ORPHAN_PREVENTION
+                    target_fields:
+                      type: array
+                      description: The specific fields or attributes this constraint
+                        applies to
+                      example:
+                      - first_name
+                      - last_name
+                      - ssn
+                      items:
+                        type: string
+                    rule_context:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: Key-value pairs representing the 'facts' of the
+                        current state
+                      example:
+                        item_type: Inventory
+                        limit: "0"
+                        count: "45"
+                    rule_constraints:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: "Key-value pairs for simple UI-driven validation\
+                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
+                        \ checks."
+                      example:
+                        min: "1"
+                        unit: days
+                        value: "31"
+                    limit_rule:
+                      type: string
+                      description: A Prolog-based predicate defining the valid boundary
+                        for this constraint.
+                      example: "allow_export(Format, Days) :- Format == 'parquet',\
+                        \ Days =< 31; Format == 'csv', Days =< 90."
                     message:
                       type: string
-                      example: The requested date range exceeds the 31-day limit for
-                        Parquet exports.
+                      description: Human-readable explanation for UI/Logs
+                      example: Identity fields cannot be modified while in PENDING_APPROVAL
+                        state.
                     severity:
                       type: string
                       enum:
@@ -3062,7 +3159,7 @@ components:
             $ref: "#/components/schemas/TimeSlot"
         authorizations:
           $ref: "#/components/schemas/Authorizations"
-      description: "Represents a communication channel, such as an ..."
+      description: Communication Channel
     CommunicationChannelCreate:
       required:
       - communication_channel_key
@@ -3136,7 +3233,7 @@ components:
           $ref: "#/components/schemas/CommunicationChannels"
         addresses:
           $ref: "#/components/schemas/Addresses"
-      description: Contact Method details including communication ...
+      description: Contact Method
     ContactMethodCreate:
       required:
       - contact_method_key
@@ -3231,7 +3328,7 @@ components:
           description: Indicator if recurrence is enabled
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: Effective Period
+      description: The date range during which this record is valid.
     ErrorDetail:
       required:
       - category
@@ -3400,7 +3497,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: External system identifier
+      description: Unique identification key for the record.
     IdentifierCreate:
       required:
       - identifier_key
@@ -3517,7 +3614,7 @@ components:
           $ref: "#/components/schemas/ContactMethods"
         payment_execution_context_types:
           $ref: "#/components/schemas/PaymentExecutionContextTypes"
-      description: Represents a detailed schedule of payments.
+      description: payroll.payment.desc
     PayrollPaymentCreate:
       required:
       - payroll_payment_key
@@ -3607,7 +3704,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Identifier"
-      description: Represents a batch run of payroll processing fo...
+      description: payroll.run.desc
     PayrollRunCreate:
       required:
       - payroll_run_key
@@ -3690,10 +3787,14 @@ components:
       type: object
       properties:
         position_id:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Unique identifier for this position
           example: pos-001
         position_key:
+          maxLength: 64
+          minLength: 1
           type: string
           description: Business key for this position record
           example: POS-ATL-WEST
@@ -3714,6 +3815,8 @@ components:
           description: Bearing direction (compass)
           example: NW
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -3729,7 +3832,7 @@ components:
           type: array
           items:
             type: string
-      description: "position meta-data that includes postal code, a..."
+      description: Job title or organizational position.
     PositionCreate:
       required:
       - position_key
@@ -3758,6 +3861,8 @@ components:
           description: Latitude of the location
           example: "33.7490"
         postal_code:
+          maxLength: 16
+          minLength: 3
           type: string
           description: Postal code of the location
           example: "30303"
@@ -3836,7 +3941,7 @@ components:
             $ref: "#/components/schemas/Identifier"
         resource_type:
           $ref: "#/components/schemas/ResourceTypes"
-      description: Subject for this product
+      description: product.subject.desc
     ProductSubjectCreate:
       required:
       - product_subject_key
@@ -3913,7 +4018,8 @@ components:
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\\
+            d)?$"
           type: string
           description: "End time in HH:mm format. Pattern: ^([01]\\d|2[0..."
           format: date-time
@@ -3925,7 +4031,8 @@ components:
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          pattern: "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\\
+            d)?$"
           type: string
           description: "Start time in HH:mm format. Pattern: ^([01]\\d|2..."
           format: date-time
@@ -3952,7 +4059,7 @@ components:
           format: date
           items:
             type: string
-      description: Range of time for the appointment including sta...
+      description: Designated window of time for the activity.
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.

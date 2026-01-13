@@ -110,7 +110,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /warehouses/KEY78S
+                example: /warehouses/KEY78a
           content:
             application/json:
               schema:
@@ -281,7 +281,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78Q
+        example: KEY78Z
   /warehouses/{warehouseKey}/authorizations:
     get:
       tags:
@@ -556,7 +556,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78Qv
+        example: KEY78ZJ
   /warehouses/{warehouseKey}/identifiers:
     get:
       tags:
@@ -831,7 +831,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78QvQ
+        example: KEY78ZJE
   /warehouses/{warehouseKey}/addresses:
     get:
       tags:
@@ -1106,7 +1106,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78QvQL
+        example: KEY78ZJEN
   /warehouses/{warehouseKey}/positions:
     get:
       tags:
@@ -1381,7 +1381,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78QvQLO
+        example: KEY78ZJENu
   /warehouses/{warehouseKey}/address-locales:
     get:
       tags:
@@ -1656,7 +1656,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78QvQLOp
+        example: KEY78ZJENul
   /warehouses/health:
     get:
       summary: Health Check
@@ -1904,7 +1904,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #d4c3f185 has been successfully cancelled."
+                    example: "Invoice #3b174538 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1912,7 +1912,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 62f7846b
+                    example: 1c4e7a2f
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -2160,7 +2160,7 @@ components:
           pattern: "^[a-z]{2}(-[A-Z]{2})?$"
           type: string
           description: Locale code associated with this address... Pat...
-      description: address.desc
+      description: Physical or mailing address details.
     AddressCreate:
       required:
       - address_key
@@ -2199,7 +2199,7 @@ components:
           $ref: "#/components/schemas/Codes"
         location_type:
           $ref: "#/components/schemas/LocationTypes"
-      description: address.locale.desc
+      description: Regional or geographic locale for the address.
     AddressLocaleCreate:
       required:
       - address_locale_key
@@ -2394,7 +2394,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Business key uniquely identifying the au... Pat...
-      description: authorization.desc
+      description: General authorization or permission status.
     AuthorizationCreate:
       required:
       - authorization_key
@@ -2528,28 +2528,65 @@ components:
                   properties:
                     rule_id:
                       type: string
-                      example: MAX_EXPORT_SIZE_EXCEEDED
+                      description: Unique identifier for the business rule
+                      example: IDENTITY_LOCK_STATE
                     constraint_type:
                       type: string
                       enum:
                       - RANGE_LIMIT
-                      - RESTRICTION
-                      - FORMAT_INCOMPATIBILITY
-                      - PERMISSION_LOCK
                       - SIZE_LIMIT
-                    target_field:
+                      - FORMAT_INCOMPATIBILITY
+                      - PATTERN_MISMATCH
+                      - PERMISSION_LOCK
+                      - MANDATORY_MISSING
+                      - STATE_TRANSITION_ERROR
+                      - IMMUTABILITY_VIOLATION
+                      - RELATIONAL_DEPENDENCY
+                      - CONFLICT_DETECTION
+                      - AGGREGATE_LIMIT
+                      - ORPHAN_PREVENTION
+                    target_fields:
+                      type: array
+                      description: The specific fields or attributes this constraint
+                        applies to
+                      example:
+                      - first_name
+                      - last_name
+                      - ssn
+                      items:
+                        type: string
+                    rule_context:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: Key-value pairs representing the 'facts' of the
+                        current state
+                      example:
+                        count: "45"
+                        limit: "0"
+                        item_type: Inventory
+                    rule_constraints:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      description: "Key-value pairs for simple UI-driven validation\
+                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
+                        \ checks."
+                      example:
+                        value: "31"
+                        unit: days
+                        min: "1"
+                    limit_rule:
                       type: string
-                      example: date_range
-                    limit_value:
-                      type: string
-                      example: "31"
-                    limit_unit:
-                      type: string
-                      example: days
+                      description: A Prolog-based predicate defining the valid boundary
+                        for this constraint.
+                      example: "allow_export(Format, Days) :- Format == 'parquet',\
+                        \ Days =< 31; Format == 'csv', Days =< 90."
                     message:
                       type: string
-                      example: The requested date range exceeds the 31-day limit for
-                        Parquet exports.
+                      description: Human-readable explanation for UI/Logs
+                      example: Identity fields cannot be modified while in PENDING_APPROVAL
+                        state.
                     severity:
                       type: string
                       enum:
@@ -2746,7 +2783,7 @@ components:
           description: The monetary or hours-based value of the...
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: Unique identification key for the record.
     IdentifierCreate:
       required:
       - identifier_key
@@ -2851,7 +2888,7 @@ components:
           type: array
           items:
             type: string
-      description: position.desc
+      description: Job title or organizational position.
     PositionCreate:
       required:
       - position_key
@@ -2994,7 +3031,7 @@ components:
             type: string
         addresses:
           $ref: "#/components/schemas/Addresses"
-      description: warehouse.desc
+      description: The storage facility record.
     WarehouseCreate:
       required:
       - warehouse_key

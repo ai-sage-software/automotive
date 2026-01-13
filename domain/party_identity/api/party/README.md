@@ -146,22 +146,22 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **ValidationTypes** : types of validations.<br/>
-💠 **PriceTypes** : Undocumented Enum<br/>
-💠 **FinancialCategoryTypes** : Undocumented Enum<br/>
-💠 **ControlAccountTypes** : Undocumented Enum<br/>
-💠 **ControlAccountRoleTypes** : Undocumented Enum<br/>
-💠 **ControlAccountStatusTypes** : Undocumented Enum<br/>
-💠 **UnitOfMeasureTypes** : Undocumented Enum<br/>
+💠 **PriceTypes** : entity<br/>
+💠 **FinancialCategoryTypes** : Financial Category Types<br/>
+💠 **ControlAccountTypes** : entity<br/>
+💠 **ControlAccountRoleTypes** : Control Account Role.<br/>
+💠 **ControlAccountStatusTypes** : Defines the various states or statuses for a fi...<br/>
+💠 **UnitOfMeasureTypes** : Represents a comprehensive list of units of mea...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Link** : link.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Link** : Link<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 

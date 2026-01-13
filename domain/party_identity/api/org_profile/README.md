@@ -148,17 +148,17 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UnitOfMeasureTypes** : types of unit of measures.<br/>
 💠 **ValidationTypes** : types of validations.<br/>
-💠 **LocationTypes** : Undocumented Enum<br/>
+💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Link** : link.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Link** : Link<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 

@@ -140,18 +140,18 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ResourceTypes** : types of resources.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Undocumented Enum<br/>
-💠 **TimeslotDirectiveTypes** : Undocumented Enum<br/>
+💠 **DaysOfWeekTypes** : Status of the account<br/>
+💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
-✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
 
 ---
 

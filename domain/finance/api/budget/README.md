@@ -105,7 +105,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **Money** : money.desc<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 
 ---
 
