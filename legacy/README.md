@@ -7,7 +7,8 @@ The new STAR Domail Model is begin developed using the Domain Driven Design deve
 
 Under this "legacy" folder there is a "domain" sub-folder that contains the legacy API information. 
 * Service APIs that were converted from the STAR XML schema repository
-* STAR APis that were already published prior to the new STAR Domain Model architecture will be available soon. 
+* STAR APis that were already published prior to the new STAR Domain Model architecture will be available soon.
+* Common Components JSON scheams from STAR XML Common Components and Enums.
 
 -----
 
