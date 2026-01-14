@@ -225,7 +225,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}</span> <br/>
-        <span class="api-summary">Partially update a Budget entity. updateBudget</span>
+        <span class="api-summary">Partially update a Budget entity. updatePartialBudget</span>
     </span>
 </div>
 
@@ -293,7 +293,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeneralLedgerReference entity. updateGeneralLedgerReference</span>
+        <span class="api-summary">Partially update a GeneralLedgerReference entity. updatePartialGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -343,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -393,7 +393,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/budget-items/{budgetItemKey}</span> <br/>
-        <span class="api-summary">Partially update a BudgetItem entity. updateBudgetItem</span>
+        <span class="api-summary">Partially update a BudgetItem entity. updatePartialBudgetItem</span>
     </span>
 </div>
 
@@ -443,7 +443,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updatePartialAccountingPeriod</span>
     </span>
 </div>
 
@@ -493,7 +493,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 

@@ -224,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}</span> <br/>
-        <span class="api-summary">Partially update a Payment entity. updatePayment</span>
+        <span class="api-summary">Partially update a Payment entity. updatePartialPayment</span>
     </span>
 </div>
 
@@ -274,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-transactions/{paymentTransactionKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTransaction entity. updatePaymentTransaction</span>
+        <span class="api-summary">Partially update a PaymentTransaction entity. updatePartialPaymentTransaction</span>
     </span>
 </div>
 
@@ -342,7 +342,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -392,7 +392,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePaymentMethodReference</span>
+        <span class="api-summary">Partially update a PaymentMethodReference entity. updatePartialPaymentMethodReference</span>
     </span>
 </div>
 

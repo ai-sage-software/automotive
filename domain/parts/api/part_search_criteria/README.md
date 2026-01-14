@@ -252,7 +252,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSearchCriteria entity. updatePartSearchCriteria</span>
+        <span class="api-summary">Partially update a PartSearchCriteria entity. updatePartialPartSearchCriteria</span>
     </span>
 </div>
 
@@ -320,7 +320,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSpecification entity. updatePartSpecification</span>
+        <span class="api-summary">Partially update a PartSpecification entity. updatePartialPartSpecification</span>
     </span>
 </div>
 
@@ -388,7 +388,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advanced-search-criteria/{advancedSearchCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a AdvancedSearchCriteria entity. updateAdvancedSearchCriteria</span>
+        <span class="api-summary">Partially update a AdvancedSearchCriteria entity. updatePartialAdvancedSearchCriteria</span>
     </span>
 </div>
 
@@ -438,7 +438,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-price-criteria/{partPriceCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartPriceCriteria entity. updatePartPriceCriteria</span>
+        <span class="api-summary">Partially update a PartPriceCriteria entity. updatePartialPartPriceCriteria</span>
     </span>
 </div>
 
@@ -488,7 +488,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -538,7 +538,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName entity. updatePartName</span>
+        <span class="api-summary">Partially update a PartName entity. updatePartialPartName</span>
     </span>
 </div>
 
@@ -588,7 +588,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Partially update a SuperSession entity. updateSuperSession</span>
+        <span class="api-summary">Partially update a SuperSession entity. updatePartialSuperSession</span>
     </span>
 </div>
 
@@ -638,7 +638,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/advance-search-values/{advanceSearchValueKey}</span> <br/>
-        <span class="api-summary">Partially update a AdvanceSearchValue entity. updateAdvanceSearchValue</span>
+        <span class="api-summary">Partially update a AdvanceSearchValue entity. updatePartialAdvanceSearchValue</span>
     </span>
 </div>
 
@@ -688,7 +688,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartIdentifier entity. updatePartIdentifier</span>
+        <span class="api-summary">Partially update a PartIdentifier entity. updatePartialPartIdentifier</span>
     </span>
 </div>
 
@@ -756,7 +756,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-logistics-criteria/{partLogisticsCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLogisticsCriteria entity. updatePartLogisticsCriteria</span>
+        <span class="api-summary">Partially update a PartLogisticsCriteria entity. updatePartialPartLogisticsCriteria</span>
     </span>
 </div>
 
@@ -806,7 +806,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLifecycle entity. updatePartLifecycle</span>
+        <span class="api-summary">Partially update a PartLifecycle entity. updatePartialPartLifecycle</span>
     </span>
 </div>
 
@@ -856,7 +856,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-search-criteria/{partSearchCriteriaKey}/warehouse-references/{warehouseReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a WarehouseReference entity. updateWarehouseReference</span>
+        <span class="api-summary">Partially update a WarehouseReference entity. updatePartialWarehouseReference</span>
     </span>
 </div>
 

@@ -265,7 +265,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}</span> <br/>
-        <span class="api-summary">Partially update a PartMaster entity. updatePartMaster</span>
+        <span class="api-summary">Partially update a PartMaster entity. updatePartialPartMaster</span>
     </span>
 </div>
 
@@ -315,7 +315,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountReference entity. updateDiscountReference</span>
+        <span class="api-summary">Partially update a DiscountReference entity. updatePartialDiscountReference</span>
     </span>
 </div>
 
@@ -365,7 +365,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-master-profiles/{partMasterProfileKey}</span> <br/>
-        <span class="api-summary">Partially update a PartMasterProfile entity. updatePartMasterProfile</span>
+        <span class="api-summary">Partially update a PartMasterProfile entity. updatePartialPartMasterProfile</span>
     </span>
 </div>
 
@@ -415,7 +415,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-categories/{partCategoryKey}</span> <br/>
-        <span class="api-summary">Partially update a PartCategory entity. updatePartCategory</span>
+        <span class="api-summary">Partially update a PartCategory entity. updatePartialPartCategory</span>
     </span>
 </div>
 
@@ -465,7 +465,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialCategoryReference entity. updateFinancialCategoryReference</span>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updatePartialFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -515,7 +515,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference entity. updateFeeReference</span>
+        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
     </span>
 </div>
 
@@ -565,7 +565,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -615,7 +615,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName entity. updatePartName</span>
+        <span class="api-summary">Partially update a PartName entity. updatePartialPartName</span>
     </span>
 </div>
 
@@ -665,7 +665,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-identifiers/{partIdentifierKey}</span> <br/>
-        <span class="api-summary">Partially update a PartIdentifier entity. updatePartIdentifier</span>
+        <span class="api-summary">Partially update a PartIdentifier entity. updatePartialPartIdentifier</span>
     </span>
 </div>
 
@@ -715,7 +715,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-lifecycles/{partLifecycleKey}</span> <br/>
-        <span class="api-summary">Partially update a PartLifecycle entity. updatePartLifecycle</span>
+        <span class="api-summary">Partially update a PartLifecycle entity. updatePartialPartLifecycle</span>
     </span>
 </div>
 
@@ -765,7 +765,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditReference entity. updateCreditReference</span>
+        <span class="api-summary">Partially update a CreditReference entity. updatePartialCreditReference</span>
     </span>
 </div>
 
@@ -815,7 +815,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RebateReference entity. updateRebateReference</span>
+        <span class="api-summary">Partially update a RebateReference entity. updatePartialRebateReference</span>
     </span>
 </div>
 
@@ -883,7 +883,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxSplit entity. updateTaxSplit</span>
+        <span class="api-summary">Partially update a TaxSplit entity. updatePartialTaxSplit</span>
     </span>
 </div>
 
@@ -933,7 +933,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/price-plan-references/{pricePlanReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlanReference entity. updatePricePlanReference</span>
+        <span class="api-summary">Partially update a PricePlanReference entity. updatePartialPricePlanReference</span>
     </span>
 </div>
 
@@ -983,7 +983,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-specifications/{partSpecificationKey}</span> <br/>
-        <span class="api-summary">Partially update a PartSpecification entity. updatePartSpecification</span>
+        <span class="api-summary">Partially update a PartSpecification entity. updatePartialPartSpecification</span>
     </span>
 </div>
 
@@ -1033,7 +1033,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 
@@ -1083,7 +1083,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardReference entity. updateRewardReference</span>
+        <span class="api-summary">Partially update a RewardReference entity. updatePartialRewardReference</span>
     </span>
 </div>
 
@@ -1133,7 +1133,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-inventory-references/{partInventoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartInventoryReference entity. updatePartInventoryReference</span>
+        <span class="api-summary">Partially update a PartInventoryReference entity. updatePartialPartInventoryReference</span>
     </span>
 </div>
 
@@ -1183,7 +1183,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/lead-times/{leadTimeKey}</span> <br/>
-        <span class="api-summary">Partially update a LeadTime entity. updateLeadTime</span>
+        <span class="api-summary">Partially update a LeadTime entity. updatePartialLeadTime</span>
     </span>
 </div>
 
@@ -1233,7 +1233,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/super-sessions/{superSessionKey}</span> <br/>
-        <span class="api-summary">Partially update a SuperSession entity. updateSuperSession</span>
+        <span class="api-summary">Partially update a SuperSession entity. updatePartialSuperSession</span>
     </span>
 </div>
 
@@ -1283,7 +1283,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price entity. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePartialPrice</span>
     </span>
 </div>
 
@@ -1351,7 +1351,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-master-regulatories/{partMasterRegulatoryKey}</span> <br/>
-        <span class="api-summary">Partially update a PartMasterRegulatory entity. updatePartMasterRegulatory</span>
+        <span class="api-summary">Partially update a PartMasterRegulatory entity. updatePartialPartMasterRegulatory</span>
     </span>
 </div>
 
@@ -1401,7 +1401,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplit entity. updateFinancialSplit</span>
+        <span class="api-summary">Partially update a FinancialSplit entity. updatePartialFinancialSplit</span>
     </span>
 </div>
 

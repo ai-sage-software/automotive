@@ -224,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollCycle entity. updatePayrollCycle</span>
+        <span class="api-summary">Partially update a PayrollCycle entity. updatePartialPayrollCycle</span>
     </span>
 </div>
 
@@ -274,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 

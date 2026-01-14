@@ -220,7 +220,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount entity. updateControlAccount</span>
+        <span class="api-summary">Partially update a ControlAccount entity. updatePartialControlAccount</span>
     </span>
 </div>
 
@@ -270,7 +270,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/control-accounts/{controlAccountKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 

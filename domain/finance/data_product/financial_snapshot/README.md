@@ -221,7 +221,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshot entity. updateFinancialSnapshot</span>
+        <span class="api-summary">Partially update a FinancialSnapshot entity. updatePartialFinancialSnapshot</span>
     </span>
 </div>
 
@@ -271,7 +271,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-line-items/{financialSnapshotLineItemKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshotLineItem entity. updateFinancialSnapshotLineItem</span>
+        <span class="api-summary">Partially update a FinancialSnapshotLineItem entity. updatePartialFinancialSnapshotLineItem</span>
     </span>
 </div>
 
@@ -339,7 +339,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-snapshots/{financialSnapshotKey}/financial-snapshot-criteria/{financialSnapshotCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSnapshotCriteria entity. updateFinancialSnapshotCriteria</span>
+        <span class="api-summary">Partially update a FinancialSnapshotCriteria entity. updatePartialFinancialSnapshotCriteria</span>
     </span>
 </div>
 

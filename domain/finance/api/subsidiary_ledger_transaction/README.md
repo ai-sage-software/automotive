@@ -222,7 +222,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}</span> <br/>
-        <span class="api-summary">Partially update a SubsidiaryLedgerTransaction entity. updateSubsidiaryLedgerTransaction</span>
+        <span class="api-summary">Partially update a SubsidiaryLedgerTransaction entity. updatePartialSubsidiaryLedgerTransaction</span>
     </span>
 </div>
 
@@ -290,7 +290,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -340,7 +340,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/subsidiary-ledger-transactions/{subsidiaryLedgerTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 

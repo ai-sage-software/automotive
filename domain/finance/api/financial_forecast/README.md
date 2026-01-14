@@ -243,7 +243,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialForecast entity. updateFinancialForecast</span>
+        <span class="api-summary">Partially update a FinancialForecast entity. updatePartialFinancialForecast</span>
     </span>
 </div>
 
@@ -293,7 +293,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/rebate-references/{rebateReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RebateReference entity. updateRebateReference</span>
+        <span class="api-summary">Partially update a RebateReference entity. updatePartialRebateReference</span>
     </span>
 </div>
 
@@ -343,7 +343,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/tax-splits/{taxSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxSplit entity. updateTaxSplit</span>
+        <span class="api-summary">Partially update a TaxSplit entity. updatePartialTaxSplit</span>
     </span>
 </div>
 
@@ -393,7 +393,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/discount-references/{discountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountReference entity. updateDiscountReference</span>
+        <span class="api-summary">Partially update a DiscountReference entity. updatePartialDiscountReference</span>
     </span>
 </div>
 
@@ -443,7 +443,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 
@@ -493,7 +493,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/reward-references/{rewardReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardReference entity. updateRewardReference</span>
+        <span class="api-summary">Partially update a RewardReference entity. updatePartialRewardReference</span>
     </span>
 </div>
 
@@ -543,7 +543,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialCategoryReference entity. updateFinancialCategoryReference</span>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updatePartialFinancialCategoryReference</span>
     </span>
 </div>
 
@@ -611,7 +611,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference entity. updateFeeReference</span>
+        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
     </span>
 </div>
 
@@ -661,7 +661,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -711,7 +711,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price entity. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePartialPrice</span>
     </span>
 </div>
 
@@ -761,7 +761,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-events/{financialEventKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialEvent entity. updateFinancialEvent</span>
+        <span class="api-summary">Partially update a FinancialEvent entity. updatePartialFinancialEvent</span>
     </span>
 </div>
 
@@ -811,7 +811,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/credit-references/{creditReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditReference entity. updateCreditReference</span>
+        <span class="api-summary">Partially update a CreditReference entity. updatePartialCreditReference</span>
     </span>
 </div>
 
@@ -879,7 +879,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-tracks/{financialTrackKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialTrack entity. updateFinancialTrack</span>
+        <span class="api-summary">Partially update a FinancialTrack entity. updatePartialFinancialTrack</span>
     </span>
 </div>
 
@@ -929,7 +929,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/financial-forecasts/{financialForecastKey}/financial-splits/{financialSplitKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplit entity. updateFinancialSplit</span>
+        <span class="api-summary">Partially update a FinancialSplit entity. updatePartialFinancialSplit</span>
     </span>
 </div>
 

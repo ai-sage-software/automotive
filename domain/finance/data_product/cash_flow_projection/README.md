@@ -224,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowProjection entity. updateCashFlowProjection</span>
+        <span class="api-summary">Partially update a CashFlowProjection entity. updatePartialCashFlowProjection</span>
     </span>
 </div>
 
@@ -292,7 +292,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-scenarios/{cashFlowScenarioKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowScenario entity. updateCashFlowScenario</span>
+        <span class="api-summary">Partially update a CashFlowScenario entity. updatePartialCashFlowScenario</span>
     </span>
 </div>
 
@@ -342,7 +342,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -392,7 +392,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updatePartialAccountingPeriod</span>
     </span>
 </div>
 
@@ -442,7 +442,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-line-items/{cashFlowLineItemKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowLineItem entity. updateCashFlowLineItem</span>
+        <span class="api-summary">Partially update a CashFlowLineItem entity. updatePartialCashFlowLineItem</span>
     </span>
 </div>
 
@@ -492,7 +492,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/cash-flow-projections/{cashFlowProjectionKey}/cash-flow-projection-criteria/{cashFlowProjectionCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a CashFlowProjectionCriteria entity. updateCashFlowProjectionCriteria</span>
+        <span class="api-summary">Partially update a CashFlowProjectionCriteria entity. updatePartialCashFlowProjectionCriteria</span>
     </span>
 </div>
 

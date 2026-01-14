@@ -226,7 +226,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}</span> <br/>
-        <span class="api-summary">Partially update a JournalEntryTransaction entity. updateJournalEntryTransaction</span>
+        <span class="api-summary">Partially update a JournalEntryTransaction entity. updatePartialJournalEntryTransaction</span>
     </span>
 </div>
 
@@ -294,7 +294,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeneralLedgerReference entity. updateGeneralLedgerReference</span>
+        <span class="api-summary">Partially update a GeneralLedgerReference entity. updatePartialGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -344,7 +344,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -394,7 +394,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 
@@ -444,7 +444,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/journal-entries/{journalEntryKey}</span> <br/>
-        <span class="api-summary">Partially update a JournalEntry entity. updateJournalEntry</span>
+        <span class="api-summary">Partially update a JournalEntry entity. updatePartialJournalEntry</span>
     </span>
 </div>
 
@@ -494,7 +494,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/journal-entry-transactions/{journalEntryTransactionKey}/subsidiary-ledger-references/{subsidiaryLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a SubsidiaryLedgerReference entity. updateSubsidiaryLedgerReference</span>
+        <span class="api-summary">Partially update a SubsidiaryLedgerReference entity. updatePartialSubsidiaryLedgerReference</span>
     </span>
 </div>
 

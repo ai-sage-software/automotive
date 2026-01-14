@@ -236,7 +236,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Shipment entity. updateShipment</span>
+        <span class="api-summary">Partially update a Shipment entity. updatePartialShipment</span>
     </span>
 </div>
 
@@ -286,7 +286,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/invoice-references/{invoiceReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a InvoiceReference entity. updateInvoiceReference</span>
+        <span class="api-summary">Partially update a InvoiceReference entity. updatePartialInvoiceReference</span>
     </span>
 </div>
 
@@ -336,7 +336,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyReference entity. updatePartyReference</span>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
     </span>
 </div>
 
@@ -386,7 +386,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/shipment-events/{shipmentEventKey}</span> <br/>
-        <span class="api-summary">Partially update a ShipmentEvent entity. updateShipmentEvent</span>
+        <span class="api-summary">Partially update a ShipmentEvent entity. updatePartialShipmentEvent</span>
     </span>
 </div>
 
@@ -436,7 +436,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -504,7 +504,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position entity. updatePosition</span>
+        <span class="api-summary">Partially update a Position entity. updatePartialPosition</span>
     </span>
 </div>
 
@@ -590,7 +590,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/shipments/{shipmentKey}/address-references/{addressReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressReference entity. updateAddressReference</span>
+        <span class="api-summary">Partially update a AddressReference entity. updatePartialAddressReference</span>
     </span>
 </div>
 

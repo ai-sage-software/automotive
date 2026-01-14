@@ -223,7 +223,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}</span> <br/>
-        <span class="api-summary">Partially update a Warehouse entity. updateWarehouse</span>
+        <span class="api-summary">Partially update a Warehouse entity. updatePartialWarehouse</span>
     </span>
 </div>
 
@@ -273,7 +273,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updatePartialAuthorization</span>
     </span>
 </div>
 
@@ -323,7 +323,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -373,7 +373,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address entity. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updatePartialAddress</span>
     </span>
 </div>
 
@@ -423,7 +423,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position entity. updatePosition</span>
+        <span class="api-summary">Partially update a Position entity. updatePartialPosition</span>
     </span>
 </div>
 
@@ -473,7 +473,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/warehouses/{warehouseKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressLocale entity. updateAddressLocale</span>
+        <span class="api-summary">Partially update a AddressLocale entity. updatePartialAddressLocale</span>
     </span>
 </div>
 

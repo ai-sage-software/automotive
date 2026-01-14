@@ -278,7 +278,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}</span> <br/>
-        <span class="api-summary">Partially update a OrgProfile entity. updateOrgProfile</span>
+        <span class="api-summary">Partially update a OrgProfile entity. updatePartialOrgProfile</span>
     </span>
 </div>
 
@@ -328,7 +328,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payment-term-references/{paymentTermReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentTermReference entity. updatePaymentTermReference</span>
+        <span class="api-summary">Partially update a PaymentTermReference entity. updatePartialPaymentTermReference</span>
     </span>
 </div>
 
@@ -378,7 +378,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
-        <span class="api-summary">Partially update a Discount entity. updateDiscount</span>
+        <span class="api-summary">Partially update a Discount entity. updatePartialDiscount</span>
     </span>
 </div>
 
@@ -428,7 +428,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address entity. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updatePartialAddress</span>
     </span>
 </div>
 
@@ -478,7 +478,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/org-names/{orgNameKey}</span> <br/>
-        <span class="api-summary">Partially update a OrgName entity. updateOrgName</span>
+        <span class="api-summary">Partially update a OrgName entity. updatePartialOrgName</span>
     </span>
 </div>
 
@@ -528,7 +528,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/staff-members/{staffMemberKey}</span> <br/>
-        <span class="api-summary">Partially update a StaffMember entity. updateStaffMember</span>
+        <span class="api-summary">Partially update a StaffMember entity. updatePartialStaffMember</span>
     </span>
 </div>
 
@@ -578,7 +578,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyEvent entity. updatePrivacyEvent</span>
+        <span class="api-summary">Partially update a PrivacyEvent entity. updatePartialPrivacyEvent</span>
     </span>
 </div>
 
@@ -646,7 +646,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount entity. updateControlAccount</span>
+        <span class="api-summary">Partially update a ControlAccount entity. updatePartialControlAccount</span>
     </span>
 </div>
 
@@ -696,7 +696,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updatePartialAuthorization</span>
     </span>
 </div>
 
@@ -764,7 +764,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department entity. updateDepartment</span>
+        <span class="api-summary">Partially update a Department entity. updatePartialDepartment</span>
     </span>
 </div>
 
@@ -814,7 +814,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricNameValue entity. updateMetricNameValue</span>
+        <span class="api-summary">Partially update a MetricNameValue entity. updatePartialMetricNameValue</span>
     </span>
 </div>
 
@@ -864,7 +864,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -932,7 +932,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-policies/{discountPolicyKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountPolicy entity. updateDiscountPolicy</span>
+        <span class="api-summary">Partially update a DiscountPolicy entity. updatePartialDiscountPolicy</span>
     </span>
 </div>
 
@@ -982,7 +982,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
-        <span class="api-summary">Partially update a PrivacyItem entity. updatePrivacyItem</span>
+        <span class="api-summary">Partially update a PrivacyItem entity. updatePartialPrivacyItem</span>
     </span>
 </div>
 
@@ -1032,7 +1032,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName entity. updatePersonName</span>
+        <span class="api-summary">Partially update a PersonName entity. updatePartialPersonName</span>
     </span>
 </div>
 
@@ -1082,7 +1082,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/payroll-rates/{payrollRateKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollRate entity. updatePayrollRate</span>
+        <span class="api-summary">Partially update a PayrollRate entity. updatePartialPayrollRate</span>
     </span>
 </div>
 
@@ -1132,7 +1132,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 
@@ -1182,7 +1182,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/communication-channels/{communicationChannelKey}</span> <br/>
-        <span class="api-summary">Partially update a CommunicationChannel entity. updateCommunicationChannel</span>
+        <span class="api-summary">Partially update a CommunicationChannel entity. updatePartialCommunicationChannel</span>
     </span>
 </div>
 
@@ -1232,7 +1232,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
-        <span class="api-summary">Partially update a DiscountMetricValue entity. updateDiscountMetricValue</span>
+        <span class="api-summary">Partially update a DiscountMetricValue entity. updatePartialDiscountMetricValue</span>
     </span>
 </div>
 
@@ -1282,7 +1282,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price entity. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePartialPrice</span>
     </span>
 </div>
 
@@ -1350,7 +1350,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person entity. updatePerson</span>
+        <span class="api-summary">Partially update a Person entity. updatePartialPerson</span>
     </span>
 </div>
 

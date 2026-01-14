@@ -216,7 +216,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-events/{paymentEventKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentEvent entity. updatePaymentEvent</span>
+        <span class="api-summary">Partially update a PaymentEvent entity. updatePartialPaymentEvent</span>
     </span>
 </div>
 

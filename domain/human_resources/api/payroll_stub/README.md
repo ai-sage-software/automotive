@@ -233,7 +233,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollStub entity. updatePayrollStub</span>
+        <span class="api-summary">Partially update a PayrollStub entity. updatePartialPayrollStub</span>
     </span>
 </div>
 
@@ -283,7 +283,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/tax-reporting-contexts/{taxReportingContextKey}</span> <br/>
-        <span class="api-summary">Partially update a TaxReportingContext entity. updateTaxReportingContext</span>
+        <span class="api-summary">Partially update a TaxReportingContext entity. updatePartialTaxReportingContext</span>
     </span>
 </div>
 
@@ -351,7 +351,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -419,7 +419,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payroll-stubs/{payrollStubKey}/payroll-components/{payrollComponentKey}</span> <br/>
-        <span class="api-summary">Partially update a PayrollComponent entity. updatePayrollComponent</span>
+        <span class="api-summary">Partially update a PayrollComponent entity. updatePartialPayrollComponent</span>
     </span>
 </div>
 

@@ -237,7 +237,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}</span> <br/>
-        <span class="api-summary">Partially update a PaymentMethod entity. updatePaymentMethod</span>
+        <span class="api-summary">Partially update a PaymentMethod entity. updatePartialPaymentMethod</span>
     </span>
 </div>
 
@@ -287,7 +287,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/reward-payments/{rewardPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a RewardPayment entity. updateRewardPayment</span>
+        <span class="api-summary">Partially update a RewardPayment entity. updatePartialRewardPayment</span>
     </span>
 </div>
 
@@ -337,7 +337,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName entity. updatePersonName</span>
+        <span class="api-summary">Partially update a PersonName entity. updatePartialPersonName</span>
     </span>
 </div>
 
@@ -387,7 +387,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address entity. updateAddress</span>
+        <span class="api-summary">Partially update a Address entity. updatePartialAddress</span>
     </span>
 </div>
 
@@ -437,7 +437,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position entity. updatePosition</span>
+        <span class="api-summary">Partially update a Position entity. updatePartialPosition</span>
     </span>
 </div>
 
@@ -487,7 +487,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/cash-payments/{cashPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a CashPayment entity. updateCashPayment</span>
+        <span class="api-summary">Partially update a CashPayment entity. updatePartialCashPayment</span>
     </span>
 </div>
 
@@ -537,7 +537,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/bank-beneficiaries/{bankBeneficiaryKey}</span> <br/>
-        <span class="api-summary">Partially update a BankBeneficiary entity. updateBankBeneficiary</span>
+        <span class="api-summary">Partially update a BankBeneficiary entity. updatePartialBankBeneficiary</span>
     </span>
 </div>
 
@@ -587,7 +587,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/credit-cards/{creditCardKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditCard entity. updateCreditCard</span>
+        <span class="api-summary">Partially update a CreditCard entity. updatePartialCreditCard</span>
     </span>
 </div>
 
@@ -637,7 +637,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressLocale entity. updateAddressLocale</span>
+        <span class="api-summary">Partially update a AddressLocale entity. updatePartialAddressLocale</span>
     </span>
 </div>
 
@@ -687,7 +687,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/bank-intermediaries/{bankIntermediaryKey}</span> <br/>
-        <span class="api-summary">Partially update a BankIntermediary entity. updateBankIntermediary</span>
+        <span class="api-summary">Partially update a BankIntermediary entity. updatePartialBankIntermediary</span>
     </span>
 </div>
 
@@ -737,7 +737,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/authorizations/{authorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a Authorization entity. updateAuthorization</span>
+        <span class="api-summary">Partially update a Authorization entity. updatePartialAuthorization</span>
     </span>
 </div>
 
@@ -787,7 +787,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -837,7 +837,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/check-payments/{checkPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a CheckPayment entity. updateCheckPayment</span>
+        <span class="api-summary">Partially update a CheckPayment entity. updatePartialCheckPayment</span>
     </span>
 </div>
 
@@ -887,7 +887,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/electronic-payments/{electronicPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a ElectronicPayment entity. updateElectronicPayment</span>
+        <span class="api-summary">Partially update a ElectronicPayment entity. updatePartialElectronicPayment</span>
     </span>
 </div>
 
@@ -937,7 +937,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/platform-payments/{platformPaymentKey}</span> <br/>
-        <span class="api-summary">Partially update a PlatformPayment entity. updatePlatformPayment</span>
+        <span class="api-summary">Partially update a PlatformPayment entity. updatePartialPlatformPayment</span>
     </span>
 </div>
 

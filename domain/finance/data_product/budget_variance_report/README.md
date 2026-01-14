@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **BudgetVarianceLineItem**, **BudgetVarianceReport**, **BudgetVarianceReportCriteria**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **BudgetVarianceLineItem**, **BudgetVarianceReport**, **BudgetVarianceReportCriteria**, **ControlAccountReference**, **GeneralLedgerReference**, **Identifier**, **VarianceDetail**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -27,6 +27,7 @@ The API is structured around the domain **finance** and **BudgetVarianceReport**
     | **Money** | /budget-variance-reports/{budgetVarianceReportKey}/money | Manages Money belonging to BudgetVarianceReports |
     | **GeneralLedgerReference** | /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references | Manages GeneralLedgerReferences belonging to BudgetVarianceReports |
     | **Identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | Manages Identifiers belonging to BudgetVarianceReports |
+    | **VarianceDetail** | /budget-variance-reports/{budgetVarianceReportKey}/variance-details | Manages VarianceDetails belonging to BudgetVarianceReports |
     | **AccountingPeriod** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | Manages AccountingPeriods belonging to BudgetVarianceReports |
     | **ControlAccountReference** | /budget-variance-reports/{budgetVarianceReportKey}/control-account-references | Manages ControlAccountReferences belonging to BudgetVarianceReports |
     | **BudgetVarianceReportCriteria** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria | Manages BudgetVarianceReportCriteria belonging to BudgetVarianceReports |
@@ -225,7 +226,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}</span> <br/>
-        <span class="api-summary">Partially update a BudgetVarianceReport entity. updateBudgetVarianceReport</span>
+        <span class="api-summary">Partially update a BudgetVarianceReport entity. updatePartialBudgetVarianceReport</span>
     </span>
 </div>
 
@@ -275,7 +276,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/budget-variance-line-items/{budgetVarianceLineItemKey}</span> <br/>
-        <span class="api-summary">Partially update a BudgetVarianceLineItem entity. updateBudgetVarianceLineItem</span>
+        <span class="api-summary">Partially update a BudgetVarianceLineItem entity. updatePartialBudgetVarianceLineItem</span>
     </span>
 </div>
 
@@ -343,7 +344,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references/{generalLedgerReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeneralLedgerReference entity. updateGeneralLedgerReference</span>
+        <span class="api-summary">Partially update a GeneralLedgerReference entity. updatePartialGeneralLedgerReference</span>
     </span>
 </div>
 
@@ -393,7 +394,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -402,6 +403,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
+    </span>
+</div>
+
+### /budget-variance-reports/{budgetVarianceReportKey}/variance-details
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details</span> <br/>
+        <span class="api-summary">Retrieve a list of VarianceDetail entities scoped by budgetVarianceReportKey. getVarianceDetailByBudgetVarianceReportKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details</span> <br/>
+        <span class="api-summary">Create a new VarianceDetail entity. createVarianceDetail</span>
+    </span>
+</div>
+
+### /budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific VarianceDetail entity. getarianceDetailById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailKey}</span> <br/>
+        <span class="api-summary">Replace a VarianceDetail entity. replaceVarianceDetail</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailKey}</span> <br/>
+        <span class="api-summary">Partially update a VarianceDetail entity. updatePartialVarianceDetail</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/variance-details/{varianceDetailKey}</span> <br/>
+        <span class="api-summary">Delete a VarianceDetail entity deleteVarianceDetailEntity</span>
     </span>
 </div>
 
@@ -443,7 +494,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod entity. updateAccountingPeriod</span>
+        <span class="api-summary">Partially update a AccountingPeriod entity. updatePartialAccountingPeriod</span>
     </span>
 </div>
 
@@ -493,7 +544,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccountReference entity. updateControlAccountReference</span>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
     </span>
 </div>
 
@@ -543,7 +594,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria/{budgetVarianceReportCriteriaKey}</span> <br/>
-        <span class="api-summary">Partially update a BudgetVarianceReportCriteria entity. updateBudgetVarianceReportCriteria</span>
+        <span class="api-summary">Partially update a BudgetVarianceReportCriteria entity. updatePartialBudgetVarianceReportCriteria</span>
     </span>
 </div>
 
@@ -566,6 +617,7 @@ The following resources follow a consistent pattern under BudgetVarianceReportro
     | **money** | /budget-variance-reports/{budgetVarianceReportKey}/money | listMoneyByBudgetVarianceReportKey |  | getMoneyByBudgetVarianceReportKey | updateMoneyByBudgetVarianceReportKey | deleteMoneyByBudgetVarianceReportKey |
     | **general-ledger-reference** | /budget-variance-reports/{budgetVarianceReportKey}/general-ledger-references | listGeneralLedgerReferenceByBudgetVarianceReportKey | createGeneralLedgerReference | getGeneralLedgerReferenceByBudgetVarianceReportKey | updateGeneralLedgerReferenceByBudgetVarianceReportKey | deleteGeneralLedgerReferenceByBudgetVarianceReportKey |
     | **identifier** | /budget-variance-reports/{budgetVarianceReportKey}/identifiers | listIdentifierByBudgetVarianceReportKey | createIdentifier | getIdentifierByBudgetVarianceReportKey | updateIdentifierByBudgetVarianceReportKey | deleteIdentifierByBudgetVarianceReportKey |
+    | **variance-detail** | /budget-variance-reports/{budgetVarianceReportKey}/variance-details | listVarianceDetailByBudgetVarianceReportKey | createVarianceDetail | getVarianceDetailByBudgetVarianceReportKey | updateVarianceDetailByBudgetVarianceReportKey | deleteVarianceDetailByBudgetVarianceReportKey |
     | **accounting-period** | /budget-variance-reports/{budgetVarianceReportKey}/accounting-periods | listAccountingPeriodByBudgetVarianceReportKey | createAccountingPeriod | getAccountingPeriodByBudgetVarianceReportKey | updateAccountingPeriodByBudgetVarianceReportKey | deleteAccountingPeriodByBudgetVarianceReportKey |
     | **control-account-reference** | /budget-variance-reports/{budgetVarianceReportKey}/control-account-references | listControlAccountReferenceByBudgetVarianceReportKey | createControlAccountReference | getControlAccountReferenceByBudgetVarianceReportKey | updateControlAccountReferenceByBudgetVarianceReportKey | deleteControlAccountReferenceByBudgetVarianceReportKey |
     | **budget-variance-report-criteria** | /budget-variance-reports/{budgetVarianceReportKey}/budget-variance-report-criteria | listBudgetVarianceReportCriteriaByBudgetVarianceReportKey | createBudgetVarianceReportCriteria | getBudgetVarianceReportCriteriaByBudgetVarianceReportKey | updateBudgetVarianceReportCriteriaByBudgetVarianceReportKey | deleteBudgetVarianceReportCriteriaByBudgetVarianceReportKey |

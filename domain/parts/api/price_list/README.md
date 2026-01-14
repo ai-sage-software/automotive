@@ -231,7 +231,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceList entity. updatePriceList</span>
+        <span class="api-summary">Partially update a PriceList entity. updatePartialPriceList</span>
     </span>
 </div>
 
@@ -281,7 +281,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -331,7 +331,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Partially update a Price entity. updatePrice</span>
+        <span class="api-summary">Partially update a Price entity. updatePartialPrice</span>
     </span>
 </div>
 
@@ -381,7 +381,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceSensitivity entity. updatePriceSensitivity</span>
+        <span class="api-summary">Partially update a PriceSensitivity entity. updatePartialPriceSensitivity</span>
     </span>
 </div>
 
@@ -449,7 +449,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-lists/{priceListKey}/lifecycle-events/{lifecycleEventKey}</span> <br/>
-        <span class="api-summary">Partially update a LifecycleEvent entity. updateLifecycleEvent</span>
+        <span class="api-summary">Partially update a LifecycleEvent entity. updatePartialLifecycleEvent</span>
     </span>
 </div>
 

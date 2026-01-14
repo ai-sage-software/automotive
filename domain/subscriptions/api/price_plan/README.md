@@ -224,7 +224,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}</span> <br/>
-        <span class="api-summary">Partially update a PricePlan entity. updatePricePlan</span>
+        <span class="api-summary">Partially update a PricePlan entity. updatePartialPricePlan</span>
     </span>
 </div>
 
@@ -274,7 +274,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/product-schedule-references/{productScheduleReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a ProductScheduleReference entity. updateProductScheduleReference</span>
+        <span class="api-summary">Partially update a ProductScheduleReference entity. updatePartialProductScheduleReference</span>
     </span>
 </div>
 
@@ -324,7 +324,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updateIdentifier</span>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
@@ -374,7 +374,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updateGeographicBoundaryReference</span>
+        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updatePartialGeographicBoundaryReference</span>
     </span>
 </div>
 
@@ -424,7 +424,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/price-sensitivities/{priceSensitivityKey}</span> <br/>
-        <span class="api-summary">Partially update a PriceSensitivity entity. updatePriceSensitivity</span>
+        <span class="api-summary">Partially update a PriceSensitivity entity. updatePartialPriceSensitivity</span>
     </span>
 </div>
 
@@ -474,7 +474,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/price-plans/{pricePlanKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FinancialSplitReference entity. updateFinancialSplitReference</span>
+        <span class="api-summary">Partially update a FinancialSplitReference entity. updatePartialFinancialSplitReference</span>
     </span>
 </div>
 

@@ -217,7 +217,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Partially update a GeographicBoundary entity. updateGeographicBoundary</span>
+        <span class="api-summary">Partially update a GeographicBoundary entity. updatePartialGeographicBoundary</span>
     </span>
 </div>
 
