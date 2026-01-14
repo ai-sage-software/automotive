@@ -19,6 +19,13 @@ security:
   - standard:read
 - member-api-key: []
 - {}
+tags:
+- name: Identifier
+  description: Operations related to Identifier
+- name: NotificationReference
+  description: Operations related to NotificationReference
+- name: Default
+  description: Operations related to Default
 paths:
   /notification-references:
     get:
@@ -114,7 +121,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /notification-references/KEY78g
+                example: /notification-references/KEY78b
           content:
             application/json:
               schema:
@@ -136,6 +143,7 @@ paths:
       tags:
       - NotificationReference
       summary: Retrieve a specific NotificationReference entity.
+      description: "Standard GET operation for /notification-references/{notificationReferenceKey}"
       operationId: getNotificationReferenceById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -287,7 +295,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78w
+        example: KEY78M
   /notification-references/{notificationReferenceKey}/identifiers:
     get:
       tags:
@@ -411,6 +419,7 @@ paths:
       tags:
       - Identifier
       summary: Retrieve a specific Identifier entity.
+      description: "Standard GET operation for /notification-references/{notificationReferenceKey}/identifiers/{identifierKey}"
       operationId: getIdentifierById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -568,11 +577,14 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78wy
+        example: KEY78ML
   /notification-references/health:
     get:
+      tags:
+      - Default
       summary: Health Check
       description: Public endpoint to verify service availability.
+      operationId: get_notification-references_health
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
       responses:
@@ -605,11 +617,22 @@ paths:
                     description: Server time in ISO-8601 format.
                     format: date-time
                     example: 2025-12-21T23:00:00Z
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       security:
       - {}
   /notification-references/batch:
     post:
+      tags:
+      - Default
       summary: Bulk create notification-references
+      description: Standard POST operation for /notification-references/batch
       operationId: createNotificationReferenceBatch
       requestBody:
         content:
@@ -644,9 +667,23 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
   /notification-references/exports:
     post:
+      tags:
+      - Default
       summary: Initiate a bulk NotificationReference export
+      description: Standard POST operation for /notification-references/exports
+      operationId: post_notification-references_exports
       parameters:
       - name: Idempotency-Key
         in: header
@@ -663,13 +700,13 @@ paths:
               properties:
                 format:
                   type: string
-                  default: PARQUET
                   enum:
                   - XML
                   - JSON
                   - AVRO
                   - PARQUET
                   - CSV
+                  default: PARQUET
                 date_range:
                   type: object
                   properties:
@@ -686,11 +723,11 @@ paths:
                   example: contact_details_only
                 compression:
                   type: string
-                  default: SNAPPY
                   enum:
                   - SNAPPY
                   - GZIP
                   - LZO
+                  default: SNAPPY
                 destination:
                   type: object
                   properties:
@@ -729,6 +766,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       callbacks:
         onExportCompleted:
           '{$request.body#/notification/webhook_url}':
@@ -745,7 +790,11 @@ paths:
                   description: Webhook received
   /notification-references/exports/{exportId}:
     get:
+      tags:
+      - Default
       summary: Get export status
+      description: "Standard GET operation for /notification-references/exports/{exportId}"
+      operationId: get_notification-references_exports_exportId
       parameters:
       - name: exportId
         in: path
@@ -759,8 +808,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExportJob"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /notification-references/{notificationReferenceKey}/commands:
     post:
+      tags:
+      - Default
       summary: Execute a business workflow on NotificationReference
       description: Single entry point for all NotificationReference state-changing
         intents.
@@ -817,7 +876,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #bfcd86b3 has been successfully cancelled."
+                    example: "Invoice #1e107831 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -825,7 +884,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 312b114f
+                    example: 460d22d4
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -850,6 +909,8 @@ paths:
           $ref: "#/components/responses/ServerError"
   /notification-references/{notificationReferenceKey}/commands/{commandId}:
     get:
+      tags:
+      - Default
       summary: Poll NotificationReference command status
       description: Check the progress or result of a previously submitted command.
       operationId: getNotificationReferenceCommandStatus
@@ -906,9 +967,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /notification-references/capabilities:
     get:
+      tags:
+      - Default
       summary: Discover NotificationReference Capabilities
+      description: Standard GET operation for /notification-references/capabilities
       operationId: getNotificationReferenceCapabilities
       parameters:
       - name: include
@@ -943,6 +1015,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Capabilities"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
 components:
   schemas:
     Capabilities:
@@ -1090,8 +1170,8 @@ components:
                       description: Key-value pairs representing the 'facts' of the
                         current state
                       example:
-                        limit: "0"
                         count: "45"
+                        limit: "0"
                         item_type: Inventory
                     rule_constraints:
                       type: object
@@ -1102,8 +1182,8 @@ components:
                         \ checks."
                       example:
                         value: "31"
-                        min: "1"
                         unit: days
+                        min: "1"
                     limit_rule:
                       type: string
                       description: A Prolog-based predicate defining the valid boundary
@@ -1179,6 +1259,7 @@ components:
         trace_id:
           type: string
           description: "A unique identifier for this specific request, ..."
+          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
@@ -1222,13 +1303,13 @@ components:
           format: uri
         format:
           type: string
-          default: PARQUET
           enum:
           - XML
           - JSON
           - AVRO
           - PARQUET
           - CSV
+          default: PARQUET
         expires_at:
           type: string
           format: date-time
@@ -1239,6 +1320,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         status:
           type: string
           enum:
@@ -1298,12 +1380,14 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+          readOnly: true
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -1316,6 +1400,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: Unique identification key for the record.
@@ -1334,6 +1419,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -1353,6 +1439,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Unique identifier value for the referenc... Pat...
+          readOnly: true
         notification_reference_key:
           maxLength: 50
           minLength: 5

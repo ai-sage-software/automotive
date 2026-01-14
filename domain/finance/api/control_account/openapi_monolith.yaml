@@ -19,6 +19,13 @@ security:
   - standard:read
 - member-api-key: []
 - {}
+tags:
+- name: Identifier
+  description: Operations related to Identifier
+- name: ControlAccount
+  description: Operations related to ControlAccount
+- name: Default
+  description: Operations related to Default
 paths:
   /control-accounts:
     get:
@@ -114,7 +121,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /control-accounts/KEY78a
+                example: /control-accounts/KEY784
           content:
             application/json:
               schema:
@@ -136,6 +143,7 @@ paths:
       tags:
       - ControlAccount
       summary: Retrieve a specific ControlAccount entity.
+      description: "Standard GET operation for /control-accounts/{controlAccountKey}"
       operationId: getControlAccountById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -287,7 +295,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78y
+        example: KEY78O
   /control-accounts/{controlAccountKey}/identifiers:
     get:
       tags:
@@ -411,6 +419,7 @@ paths:
       tags:
       - Identifier
       summary: Retrieve a specific Identifier entity.
+      description: "Standard GET operation for /control-accounts/{controlAccountKey}/identifiers/{identifierKey}"
       operationId: getIdentifierById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -568,11 +577,14 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78yZ
+        example: KEY78O2
   /control-accounts/health:
     get:
+      tags:
+      - Default
       summary: Health Check
       description: Public endpoint to verify service availability.
+      operationId: get_control-accounts_health
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
       responses:
@@ -605,11 +617,22 @@ paths:
                     description: Server time in ISO-8601 format.
                     format: date-time
                     example: 2025-12-21T23:00:00Z
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       security:
       - {}
   /control-accounts/batch:
     post:
+      tags:
+      - Default
       summary: Bulk create control-accounts
+      description: Standard POST operation for /control-accounts/batch
       operationId: createControlAccountBatch
       requestBody:
         content:
@@ -644,9 +667,23 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
   /control-accounts/exports:
     post:
+      tags:
+      - Default
       summary: Initiate a bulk ControlAccount export
+      description: Standard POST operation for /control-accounts/exports
+      operationId: post_control-accounts_exports
       parameters:
       - name: Idempotency-Key
         in: header
@@ -663,13 +700,13 @@ paths:
               properties:
                 format:
                   type: string
-                  default: PARQUET
                   enum:
                   - XML
                   - JSON
                   - AVRO
                   - PARQUET
                   - CSV
+                  default: PARQUET
                 date_range:
                   type: object
                   properties:
@@ -686,11 +723,11 @@ paths:
                   example: contact_details_only
                 compression:
                   type: string
-                  default: SNAPPY
                   enum:
                   - SNAPPY
                   - GZIP
                   - LZO
+                  default: SNAPPY
                 destination:
                   type: object
                   properties:
@@ -729,6 +766,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       callbacks:
         onExportCompleted:
           '{$request.body#/notification/webhook_url}':
@@ -745,7 +790,11 @@ paths:
                   description: Webhook received
   /control-accounts/exports/{exportId}:
     get:
+      tags:
+      - Default
       summary: Get export status
+      description: "Standard GET operation for /control-accounts/exports/{exportId}"
+      operationId: get_control-accounts_exports_exportId
       parameters:
       - name: exportId
         in: path
@@ -759,8 +808,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExportJob"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /control-accounts/{controlAccountKey}/commands:
     post:
+      tags:
+      - Default
       summary: Execute a business workflow on ControlAccount
       description: Single entry point for all ControlAccount state-changing intents.
       operationId: executeControlAccountCommand
@@ -816,7 +875,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #93289642 has been successfully cancelled."
+                    example: "Invoice #d60a8e5e has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -824,7 +883,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: b575c393
+                    example: 5ae26359
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -849,6 +908,8 @@ paths:
           $ref: "#/components/responses/ServerError"
   /control-accounts/{controlAccountKey}/commands/{commandId}:
     get:
+      tags:
+      - Default
       summary: Poll ControlAccount command status
       description: Check the progress or result of a previously submitted command.
       operationId: getControlAccountCommandStatus
@@ -905,9 +966,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /control-accounts/capabilities:
     get:
+      tags:
+      - Default
       summary: Discover ControlAccount Capabilities
+      description: Standard GET operation for /control-accounts/capabilities
       operationId: getControlAccountCapabilities
       parameters:
       - name: include
@@ -942,6 +1014,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Capabilities"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
 components:
   schemas:
     Capabilities:
@@ -1089,8 +1169,8 @@ components:
                       description: Key-value pairs representing the 'facts' of the
                         current state
                       example:
-                        limit: "0"
                         count: "45"
+                        limit: "0"
                         item_type: Inventory
                     rule_constraints:
                       type: object
@@ -1101,8 +1181,8 @@ components:
                         \ checks."
                       example:
                         value: "31"
-                        min: "1"
                         unit: days
+                        min: "1"
                     limit_rule:
                       type: string
                       description: A Prolog-based predicate defining the valid boundary
@@ -1159,6 +1239,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Unique identifier for the control accoun... Pat...
+          readOnly: true
         control_account_key:
           maximum: 100
           minimum: 0
@@ -1176,9 +1257,11 @@ components:
         control_type_id:
           type: string
           description: Identifier for the control type of the a...
+          readOnly: true
         bank_account_id:
           type: string
           description: Associated bank account identifier.
+          readOnly: true
         is_counted:
           type: boolean
           description: Indicates if the account is a counted ac...
@@ -1344,6 +1427,7 @@ components:
         trace_id:
           type: string
           description: "A unique identifier for this specific request, ..."
+          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
@@ -1381,13 +1465,13 @@ components:
           format: uri
         format:
           type: string
-          default: PARQUET
           enum:
           - XML
           - JSON
           - AVRO
           - PARQUET
           - CSV
+          default: PARQUET
         expires_at:
           type: string
           format: date-time
@@ -1398,6 +1482,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         status:
           type: string
           enum:
@@ -1474,12 +1559,14 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+          readOnly: true
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -1492,6 +1579,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: Unique identification key for the record.
@@ -1510,6 +1598,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier

@@ -19,6 +19,13 @@ security:
   - standard:read
 - member-api-key: []
 - {}
+tags:
+- name: Identifier
+  description: Operations related to Identifier
+- name: AccountingPeriod
+  description: Operations related to AccountingPeriod
+- name: Default
+  description: Operations related to Default
 paths:
   /accounting-periods:
     get:
@@ -114,7 +121,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /accounting-periods/KEY78H
+                example: /accounting-periods/KEY78E
           content:
             application/json:
               schema:
@@ -136,6 +143,7 @@ paths:
       tags:
       - AccountingPeriod
       summary: Retrieve a specific AccountingPeriod entity.
+      description: "Standard GET operation for /accounting-periods/{accountingPeriodKey}"
       operationId: getAccountingPeriodById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -287,7 +295,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78t
+        example: KEY78g
   /accounting-periods/{accountingPeriodKey}/identifiers:
     get:
       tags:
@@ -411,6 +419,7 @@ paths:
       tags:
       - Identifier
       summary: Retrieve a specific Identifier entity.
+      description: "Standard GET operation for /accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}"
       operationId: getIdentifierById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -568,11 +577,14 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78tW
+        example: KEY78gW
   /accounting-periods/health:
     get:
+      tags:
+      - Default
       summary: Health Check
       description: Public endpoint to verify service availability.
+      operationId: get_accounting-periods_health
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
       responses:
@@ -605,11 +617,22 @@ paths:
                     description: Server time in ISO-8601 format.
                     format: date-time
                     example: 2025-12-21T23:00:00Z
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       security:
       - {}
   /accounting-periods/batch:
     post:
+      tags:
+      - Default
       summary: Bulk create accounting-periods
+      description: Standard POST operation for /accounting-periods/batch
       operationId: createAccountingPeriodBatch
       requestBody:
         content:
@@ -644,9 +667,23 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
   /accounting-periods/exports:
     post:
+      tags:
+      - Default
       summary: Initiate a bulk AccountingPeriod export
+      description: Standard POST operation for /accounting-periods/exports
+      operationId: post_accounting-periods_exports
       parameters:
       - name: Idempotency-Key
         in: header
@@ -663,13 +700,13 @@ paths:
               properties:
                 format:
                   type: string
-                  default: PARQUET
                   enum:
                   - XML
                   - JSON
                   - AVRO
                   - PARQUET
                   - CSV
+                  default: PARQUET
                 date_range:
                   type: object
                   properties:
@@ -686,11 +723,11 @@ paths:
                   example: contact_details_only
                 compression:
                   type: string
-                  default: SNAPPY
                   enum:
                   - SNAPPY
                   - GZIP
                   - LZO
+                  default: SNAPPY
                 destination:
                   type: object
                   properties:
@@ -729,6 +766,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       callbacks:
         onExportCompleted:
           '{$request.body#/notification/webhook_url}':
@@ -745,7 +790,11 @@ paths:
                   description: Webhook received
   /accounting-periods/exports/{exportId}:
     get:
+      tags:
+      - Default
       summary: Get export status
+      description: "Standard GET operation for /accounting-periods/exports/{exportId}"
+      operationId: get_accounting-periods_exports_exportId
       parameters:
       - name: exportId
         in: path
@@ -759,8 +808,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExportJob"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /accounting-periods/{accountingPeriodKey}/commands:
     post:
+      tags:
+      - Default
       summary: Execute a business workflow on AccountingPeriod
       description: Single entry point for all AccountingPeriod state-changing intents.
       operationId: executeAccountingPeriodCommand
@@ -816,7 +875,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #895eaca4 has been successfully cancelled."
+                    example: "Invoice #65bb3755 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -824,7 +883,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 64081cba
+                    example: fd6ac03f
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -849,6 +908,8 @@ paths:
           $ref: "#/components/responses/ServerError"
   /accounting-periods/{accountingPeriodKey}/commands/{commandId}:
     get:
+      tags:
+      - Default
       summary: Poll AccountingPeriod command status
       description: Check the progress or result of a previously submitted command.
       operationId: getAccountingPeriodCommandStatus
@@ -905,9 +966,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /accounting-periods/capabilities:
     get:
+      tags:
+      - Default
       summary: Discover AccountingPeriod Capabilities
+      description: Standard GET operation for /accounting-periods/capabilities
       operationId: getAccountingPeriodCapabilities
       parameters:
       - name: include
@@ -942,6 +1014,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Capabilities"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
 components:
   schemas:
     AccountingPeriod:
@@ -957,6 +1037,7 @@ components:
           pattern: "^[0-9]{6}$"
           type: string
           description: Business key for the accounting period (... Pat...
+          readOnly: true
         accounting_period_key:
           pattern: "^[0-9]{6}$"
           type: string
@@ -1192,8 +1273,8 @@ components:
                       description: Key-value pairs representing the 'facts' of the
                         current state
                       example:
-                        limit: "0"
                         count: "45"
+                        limit: "0"
                         item_type: Inventory
                     rule_constraints:
                       type: object
@@ -1204,8 +1285,8 @@ components:
                         \ checks."
                       example:
                         value: "31"
-                        min: "1"
                         unit: days
+                        min: "1"
                     limit_rule:
                       type: string
                       description: A Prolog-based predicate defining the valid boundary
@@ -1281,6 +1362,7 @@ components:
         trace_id:
           type: string
           description: "A unique identifier for this specific request, ..."
+          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
@@ -1318,13 +1400,13 @@ components:
           format: uri
         format:
           type: string
-          default: PARQUET
           enum:
           - XML
           - JSON
           - AVRO
           - PARQUET
           - CSV
+          default: PARQUET
         expires_at:
           type: string
           format: date-time
@@ -1335,6 +1417,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         status:
           type: string
           enum:
@@ -1394,12 +1477,14 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+          readOnly: true
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -1412,6 +1497,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: Unique identification key for the record.
@@ -1430,6 +1516,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier

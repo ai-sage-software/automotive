@@ -19,6 +19,19 @@ security:
   - standard:read
 - member-api-key: []
 - {}
+tags:
+- name: PaymentTransaction
+  description: Operations related to PaymentTransaction
+- name: Money
+  description: Operations related to Money
+- name: Payment
+  description: Operations related to Payment
+- name: Identifier
+  description: Operations related to Identifier
+- name: PaymentMethodReference
+  description: Operations related to PaymentMethodReference
+- name: Default
+  description: Operations related to Default
 paths:
   /payments:
     get:
@@ -114,7 +127,7 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /payments/KEY78k
+                example: /payments/KEY787
           content:
             application/json:
               schema:
@@ -136,6 +149,7 @@ paths:
       tags:
       - Payment
       summary: Retrieve a specific Payment entity.
+      description: "Standard GET operation for /payments/{paymentKey}"
       operationId: getPaymentById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -287,7 +301,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78r
+        example: KEY78V
   /payments/{paymentKey}/payment-transactions:
     get:
       tags:
@@ -411,6 +425,7 @@ paths:
       tags:
       - PaymentTransaction
       summary: Retrieve a specific PaymentTransaction entity.
+      description: "Standard GET operation for /payments/{paymentKey}/payment-transactions/{paymentTransactionKey}"
       operationId: getPaymentTransactionById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -568,7 +583,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78ry
+        example: KEY78Vf
   /payments/{paymentKey}/money:
     get:
       tags:
@@ -652,6 +667,7 @@ paths:
       tags:
       - Money
       summary: Retrieve a specific Money entity.
+      description: "Standard GET operation for /payments/{paymentKey}/money/{moneyKey}"
       operationId: getMoneyById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -688,7 +704,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78ry7
+        example: KEY78VfX
   /payments/{paymentKey}/identifiers:
     get:
       tags:
@@ -812,6 +828,7 @@ paths:
       tags:
       - Identifier
       summary: Retrieve a specific Identifier entity.
+      description: "Standard GET operation for /payments/{paymentKey}/identifiers/{identifierKey}"
       operationId: getIdentifierById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -969,7 +986,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78ry7i
+        example: KEY78VfXI
   /payments/{paymentKey}/payment-method-references:
     get:
       tags:
@@ -1093,6 +1110,7 @@ paths:
       tags:
       - PaymentMethodReference
       summary: Retrieve a specific PaymentMethodReference entity.
+      description: "Standard GET operation for /payments/{paymentKey}/payment-method-references/{paymentMethodReferenceKey}"
       operationId: getPaymentMethodReferenceById
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
@@ -1250,11 +1268,14 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78ry7iM
+        example: KEY78VfXIH
   /payments/health:
     get:
+      tags:
+      - Default
       summary: Health Check
       description: Public endpoint to verify service availability.
+      operationId: get_payments_health
       parameters:
       - $ref: "#/components/parameters/StandardsVersionHeader"
       responses:
@@ -1287,11 +1308,22 @@ paths:
                     description: Server time in ISO-8601 format.
                     format: date-time
                     example: 2025-12-21T23:00:00Z
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       security:
       - {}
   /payments/batch:
     post:
+      tags:
+      - Default
       summary: Bulk create payments
+      description: Standard POST operation for /payments/batch
       operationId: createPaymentBatch
       requestBody:
         content:
@@ -1326,9 +1358,23 @@ paths:
                           format: int32
                         error:
                           $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
   /payments/exports:
     post:
+      tags:
+      - Default
       summary: Initiate a bulk Payment export
+      description: Standard POST operation for /payments/exports
+      operationId: post_payments_exports
       parameters:
       - name: Idempotency-Key
         in: header
@@ -1345,13 +1391,13 @@ paths:
               properties:
                 format:
                   type: string
-                  default: PARQUET
                   enum:
                   - XML
                   - JSON
                   - AVRO
                   - PARQUET
                   - CSV
+                  default: PARQUET
                 date_range:
                   type: object
                   properties:
@@ -1368,11 +1414,11 @@ paths:
                   example: contact_details_only
                 compression:
                   type: string
-                  default: SNAPPY
                   enum:
                   - SNAPPY
                   - GZIP
                   - LZO
+                  default: SNAPPY
                 destination:
                   type: object
                   properties:
@@ -1411,6 +1457,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
       callbacks:
         onExportCompleted:
           '{$request.body#/notification/webhook_url}':
@@ -1427,7 +1481,11 @@ paths:
                   description: Webhook received
   /payments/exports/{exportId}:
     get:
+      tags:
+      - Default
       summary: Get export status
+      description: "Standard GET operation for /payments/exports/{exportId}"
+      operationId: get_payments_exports_exportId
       parameters:
       - name: exportId
         in: path
@@ -1441,8 +1499,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExportJob"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /payments/{paymentKey}/commands:
     post:
+      tags:
+      - Default
       summary: Execute a business workflow on Payment
       description: Single entry point for all Payment state-changing intents.
       operationId: executePaymentCommand
@@ -1498,7 +1566,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #5c589ec7 has been successfully cancelled."
+                    example: "Invoice #b29f74d9 has been successfully cancelled."
                   commandId:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -1506,7 +1574,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: ae1b22db
+                    example: 02306e67
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1531,6 +1599,8 @@ paths:
           $ref: "#/components/responses/ServerError"
   /payments/{paymentKey}/commands/{commandId}:
     get:
+      tags:
+      - Default
       summary: Poll Payment command status
       description: Check the progress or result of a previously submitted command.
       operationId: getPaymentCommandStatus
@@ -1587,9 +1657,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ErrorDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
   /payments/capabilities:
     get:
+      tags:
+      - Default
       summary: Discover Payment Capabilities
+      description: Standard GET operation for /payments/capabilities
       operationId: getPaymentCapabilities
       parameters:
       - name: include
@@ -1624,6 +1705,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Capabilities"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/ServerError"
 components:
   schemas:
     Capabilities:
@@ -1771,8 +1860,8 @@ components:
                       description: Key-value pairs representing the 'facts' of the
                         current state
                       example:
-                        limit: "0"
                         count: "45"
+                        limit: "0"
                         item_type: Inventory
                     rule_constraints:
                       type: object
@@ -1783,8 +1872,8 @@ components:
                         \ checks."
                       example:
                         value: "31"
-                        min: "1"
                         unit: days
+                        min: "1"
                     limit_rule:
                       type: string
                       description: A Prolog-based predicate defining the valid boundary
@@ -1860,6 +1949,7 @@ components:
         trace_id:
           type: string
           description: "A unique identifier for this specific request, ..."
+          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
@@ -1897,13 +1987,13 @@ components:
           format: uri
         format:
           type: string
-          default: PARQUET
           enum:
           - XML
           - JSON
           - AVRO
           - PARQUET
           - CSV
+          default: PARQUET
         expires_at:
           type: string
           format: date-time
@@ -1914,6 +2004,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         status:
           type: string
           enum:
@@ -1973,12 +2064,14 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Unique identifier value Pattern: ^[a-zA-Z0-9_]+..."
+          readOnly: true
         identifier_key:
           maxLength: 50
           minLength: 5
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: "Business key for the identifier Pattern: ^[a-zA..."
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -1991,6 +2084,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: Unique identification key for the record.
@@ -2009,6 +2103,7 @@ components:
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
+          readOnly: true
         context:
           type: string
           description: Context or domain of the identifier
@@ -2028,6 +2123,7 @@ components:
         money_id:
           type: string
           description: The unique ID for the monetary value.
+          readOnly: true
         currency_code:
           type: string
           description: "ISO currency code, e.g., 'USD'."
@@ -2050,6 +2146,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Unique identifier value for the referenc... Pat...
+          readOnly: true
         payment_key:
           maxLength: 50
           minLength: 5
@@ -2112,6 +2209,7 @@ components:
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Unique identifier value for the referenc... Pat...
+          readOnly: true
         payment_method_reference_key:
           maxLength: 50
           minLength: 5
@@ -2242,6 +2340,7 @@ components:
         payment_amount_id:
           type: string
           description: A unique key for the payment amount.
+          readOnly: true
         payment_amount_type:
           $ref: "#/components/schemas/PaymentAmountTypes"
         payment_method_reference:
