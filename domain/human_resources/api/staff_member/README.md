@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **DailyHour**, **Department**, **Identifier**, **MetricNameValue**, **PayrollRate**, **Person**, **PersonName**, **Position**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Authorization**, **CommunicationChannel**, **DepartmentReference**, **Identifier**, **PartyReference**, **PayrollRate**, **PersonReference**, **PrivacyEvent**, **PrivacyItem**, **StaffAffinity**, **StaffCertification**, **StaffMember**, **StaffSkill**, **Team**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,24 +23,23 @@ The API is structured around the domain **human_resources** and **StaffMember** 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **StaffMember** | /staff-members | Manages StaffMembers |
-    | **PersonName** | /staff-members/{staffMemberKey}/person-names | Manages PersonNames belonging to StaffMembers |
+    | **StaffSkill** | /staff-members/{staffMemberKey}/staff-skills | Manages StaffSkills belonging to StaffMembers |
     | **PayrollRate** | /staff-members/{staffMemberKey}/payroll-rates | Manages PayrollRates belonging to StaffMembers |
-    | **Addresse** | /staff-members/{staffMemberKey}/addresses | Manages Addresses belonging to StaffMembers |
-    | **Position** | /staff-members/{staffMemberKey}/positions | Manages Positions belonging to StaffMembers |
-    | **PrivacyEvent** | /staff-members/{staffMemberKey}/privacy-events | Manages PrivacyEvents belonging to StaffMembers |
+    | **PersonReference** | /staff-members/{staffMemberKey}/person-references | Manages PersonReferences belonging to StaffMembers |
     | **TimeSlot** | /staff-members/{staffMemberKey}/time-slots | Manages TimeSlots belonging to StaffMembers |
-    | **ControlAccount** | /staff-members/{staffMemberKey}/control-accounts | Manages ControlAccounts belonging to StaffMembers |
+    | **PrivacyEvent** | /staff-members/{staffMemberKey}/privacy-events | Manages PrivacyEvents belonging to StaffMembers |
+    | **DepartmentReference** | /staff-members/{staffMemberKey}/department-references | Manages DepartmentReferences belonging to StaffMembers |
     | **CommunicationChannel** | /staff-members/{staffMemberKey}/communication-channels | Manages CommunicationChannels belonging to StaffMembers |
-    | **AddressLocale** | /staff-members/{staffMemberKey}/address-locales | Manages AddressLocales belonging to StaffMembers |
     | **Authorization** | /staff-members/{staffMemberKey}/authorizations | Manages Authorizations belonging to StaffMembers |
+    | **PartyReference** | /staff-members/{staffMemberKey}/party-references | Manages PartyReferences belonging to StaffMembers |
     | **Money** | /staff-members/{staffMemberKey}/money | Manages Money belonging to StaffMembers |
-    | **Department** | /staff-members/{staffMemberKey}/departments | Manages Departments belonging to StaffMembers |
-    | **MetricNameValue** | /staff-members/{staffMemberKey}/metric-name-values | Manages MetricNameValues belonging to StaffMembers |
+    | **StaffAffinitie** | /staff-members/{staffMemberKey}/staff-affinities | Manages StaffAffinities belonging to StaffMembers |
     | **Identifier** | /staff-members/{staffMemberKey}/identifiers | Manages Identifiers belonging to StaffMembers |
+    | **StaffCertification** | /staff-members/{staffMemberKey}/staff-certifications | Manages StaffCertifications belonging to StaffMembers |
     | **EffectivePeriod** | /staff-members/{staffMemberKey}/effective-periods | Manages EffectivePeriods belonging to StaffMembers |
+    | **Team** | /staff-members/{staffMemberKey}/teams | Manages Teams belonging to StaffMembers |
     | **PrivacyItem** | /staff-members/{staffMemberKey}/privacy-items | Manages PrivacyItems belonging to StaffMembers |
     | **TextualDetail** | /staff-members/{staffMemberKey}/textual-details | Manages TextualDetails belonging to StaffMembers |
-    | **People** | /staff-members/{staffMemberKey}/people | Manages People belonging to StaffMembers |
 
 
 ---
@@ -109,26 +108,18 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **AddressTypes** : types of address.<br/>
 💠 **CommunicationChannelTypes** : types of communication channels.<br/>
-💠 **ControlAccountRoleTypes** : types of control account roles.<br/>
-💠 **ControlAccountStatusTypes** : types of control account status.<br/>
-💠 **ControlAccountTypes** : types of control accounts.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DepartmentTypes** : types of departments.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
-💠 **FinancialCategoryTypes** : types of financial categorys.<br/>
-💠 **GenderTypes** : types of genders.<br/>
-💠 **LocationTypes** : types of locations.<br/>
-💠 **MaritalStatusTypes** : types of marital status.<br/>
-💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
-💠 **PartyTypes** : types of partys.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **PrivacyContextTypes** : types of privacy contexts.<br/>
 💠 **PrivacyLegalBasisTypes** : types of privacy legal basis.<br/>
 💠 **PrivacyStateTypes** : types of privacy states.<br/>
 💠 **PrivacyTypes** : types of privacys.<br/>
 💠 **RoleTypes** : types of roles.<br/>
+💠 **SkillCategoryTypes** : types of skill categorys.<br/>
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
@@ -136,11 +127,10 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **Link** : Link<br/>
-✅ **Money** : Monetary value and currency information.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 
@@ -272,53 +262,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/person-names
+### /staff-members/{staffMemberKey}/staff-skills
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PersonName entities scoped by staffMemberKey. getPersonNameByStaffMemberKey</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffSkill entities scoped by staffMemberKey. getStaffSkillByStaffMemberKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names</span> <br/>
-        <span class="api-summary">Create a new PersonName entity. createPersonName</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills</span> <br/>
+        <span class="api-summary">Create a new StaffSkill entity. createStaffSkill</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/person-names/{personNameKey}
+### /staff-members/{staffMemberKey}/staff-skills/{staffSkillKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PersonName entity. getersonNameById</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffSkill entity. gettaffSkillById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Replace a PersonName entity. replacePersonName</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Replace a StaffSkill entity. replaceStaffSkill</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName entity. updatePartialPersonName</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffSkill entity. updatePartialStaffSkill</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Delete a PersonName entity deletePersonNameEntity</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Delete a StaffSkill entity deleteStaffSkillEntity</span>
     </span>
 </div>
 
@@ -372,103 +362,71 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/addresses
+### /staff-members/{staffMemberKey}/person-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address entities scoped by staffMemberKey. getAddressByStaffMemberKey</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PersonReference entities scoped by staffMemberKey. getPersonReferenceByStaffMemberKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address entity. createAddress</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references</span> <br/>
+        <span class="api-summary">Create a new PersonReference entity. createPersonReference</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/addresses/{addressKey}
+### /staff-members/{staffMemberKey}/person-references/{personReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PersonReference entity. getersonReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address entity. replaceAddress</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PersonReference entity. replacePersonReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address entity. updatePartialAddress</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PersonReference entity. updatePartialPersonReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PersonReference entity deletePersonReferenceEntity</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/positions
+### /staff-members/{staffMemberKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions</span> <br/>
-        <span class="api-summary">Retrieve a list of Position entities scoped by staffMemberKey. getPositionByStaffMemberKey</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by staffMemberKey. getTimeSlotByStaffMemberKey</span>
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions</span> <br/>
-        <span class="api-summary">Create a new Position entity. createPosition</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/positions/{positionKey}
+### /staff-members/{staffMemberKey}/time-slots/{timeSlotKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Position entity. getositionById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Replace a Position entity. replacePosition</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Partially update a Position entity. updatePartialPosition</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/positions/{positionKey}</span> <br/>
-        <span class="api-summary">Delete a Position entity deletePositionEntity</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -522,71 +480,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/time-slots
+### /staff-members/{staffMemberKey}/department-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by staffMemberKey. getTimeSlotByStaffMemberKey</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/control-accounts
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccount entities scoped by staffMemberKey. getControlAccountByStaffMemberKey</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references</span> <br/>
+        <span class="api-summary">Retrieve a list of DepartmentReference entities scoped by staffMemberKey. getDepartmentReferenceByStaffMemberKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts</span> <br/>
-        <span class="api-summary">Create a new ControlAccount entity. createControlAccount</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references</span> <br/>
+        <span class="api-summary">Create a new DepartmentReference entity. createDepartmentReference</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/control-accounts/{controlAccountKey}
+### /staff-members/{staffMemberKey}/department-references/{departmentReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccount entity. getontrolAccountById</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DepartmentReference entity. getepartmentReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccount entity. replaceControlAccount</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a DepartmentReference entity. replaceDepartmentReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount entity. updatePartialControlAccount</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a DepartmentReference entity. updatePartialDepartmentReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccount entity deleteControlAccountEntity</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a DepartmentReference entity deleteDepartmentReferenceEntity</span>
     </span>
 </div>
 
@@ -640,56 +580,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/address-locales
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales</span> <br/>
-        <span class="api-summary">Retrieve a list of AddressLocale entities scoped by staffMemberKey. getAddressLocaleByStaffMemberKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales</span> <br/>
-        <span class="api-summary">Create a new AddressLocale entity. createAddressLocale</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AddressLocale entity. getddressLocaleById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Replace a AddressLocale entity. replaceAddressLocale</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Partially update a AddressLocale entity. updatePartialAddressLocale</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/address-locales/{addressLocaleKey}</span> <br/>
-        <span class="api-summary">Delete a AddressLocale entity deleteAddressLocaleEntity</span>
-    </span>
-</div>
-
 ### /staff-members/{staffMemberKey}/authorizations
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -740,6 +630,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /staff-members/{staffMemberKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by staffMemberKey. getPartyReferenceByStaffMemberKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /staff-members/{staffMemberKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -758,103 +698,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/departments
+### /staff-members/{staffMemberKey}/staff-affinities
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments</span> <br/>
-        <span class="api-summary">Retrieve a list of Department entities scoped by staffMemberKey. getDepartmentByStaffMemberKey</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffAffinity entities scoped by staffMemberKey. getStaffAffinityByStaffMemberKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments</span> <br/>
-        <span class="api-summary">Create a new Department entity. createDepartment</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities</span> <br/>
+        <span class="api-summary">Create a new StaffAffinity entity. createStaffAffinity</span>
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/departments/{departmentKey}
+### /staff-members/{staffMemberKey}/staff-affinities/{staffAffinityKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Department entity. getepartmentById</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffAffinity entity. gettaffAffinityById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Replace a Department entity. replaceDepartment</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Replace a StaffAffinity entity. replaceStaffAffinity</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department entity. updatePartialDepartment</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffAffinity entity. updatePartialStaffAffinity</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Delete a Department entity deleteDepartmentEntity</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/metric-name-values
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Retrieve a list of MetricNameValue entities scoped by staffMemberKey. getMetricNameValueByStaffMemberKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Create a new MetricNameValue entity. createMetricNameValue</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/metric-name-values/{metricNameValueKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific MetricNameValue entity. getetricNameValueById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Replace a MetricNameValue entity. replaceMetricNameValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricNameValue entity. updatePartialMetricNameValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Delete a MetricNameValue entity deleteMetricNameValueEntity</span>
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Delete a StaffAffinity entity deleteStaffAffinityEntity</span>
     </span>
 </div>
 
@@ -908,6 +798,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /staff-members/{staffMemberKey}/staff-certifications
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffCertification entities scoped by staffMemberKey. getStaffCertificationByStaffMemberKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications</span> <br/>
+        <span class="api-summary">Create a new StaffCertification entity. createStaffCertification</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/staff-certifications/{staffCertificationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffCertification entity. gettaffCertificationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Replace a StaffCertification entity. replaceStaffCertification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffCertification entity. updatePartialStaffCertification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Delete a StaffCertification entity deleteStaffCertificationEntity</span>
+    </span>
+</div>
+
 ### /staff-members/{staffMemberKey}/effective-periods
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -923,6 +863,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/staff-members/{staffMemberKey}/effective-periods/{effectivePeriodKey}</span> <br/>
         <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/teams
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams</span> <br/>
+        <span class="api-summary">Retrieve a list of Team entities scoped by staffMemberKey. getTeamByStaffMemberKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams</span> <br/>
+        <span class="api-summary">Create a new Team entity. createTeam</span>
+    </span>
+</div>
+
+### /staff-members/{staffMemberKey}/teams/{teamKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Team entity. geteamById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Replace a Team entity. replaceTeam</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Partially update a Team entity. updatePartialTeam</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/staff-members/{staffMemberKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Delete a Team entity deleteTeamEntity</span>
     </span>
 </div>
 
@@ -994,56 +984,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /staff-members/{staffMemberKey}/people
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people</span> <br/>
-        <span class="api-summary">Retrieve a list of Person entities scoped by staffMemberKey. getPersonByStaffMemberKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people</span> <br/>
-        <span class="api-summary">Create a new Person entity. createPerson</span>
-    </span>
-</div>
-
-### /staff-members/{staffMemberKey}/people/{personKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Person entity. getersonById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Replace a Person entity. replacePerson</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person entity. updatePartialPerson</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/staff-members/{staffMemberKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Delete a Person entity deletePersonEntity</span>
-    </span>
-</div>
-
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under StaffMemberroot with key {StaffMemberKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -1051,24 +991,23 @@ The following resources follow a consistent pattern under StaffMemberroot with k
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **staff-member** | /staff-members | listStaffMember | createStaffMember | getStaffMember | updateStaffMember | deleteStaffMember |
-    | **person-name** | /staff-members/{staffMemberKey}/person-names | listPersonNameByStaffMemberKey | createPersonName | getPersonNameByStaffMemberKey | updatePersonNameByStaffMemberKey | deletePersonNameByStaffMemberKey |
+    | **staff-skill** | /staff-members/{staffMemberKey}/staff-skills | listStaffSkillByStaffMemberKey | createStaffSkill | getStaffSkillByStaffMemberKey | updateStaffSkillByStaffMemberKey | deleteStaffSkillByStaffMemberKey |
     | **payroll-rate** | /staff-members/{staffMemberKey}/payroll-rates | listPayrollRateByStaffMemberKey | createPayrollRate | getPayrollRateByStaffMemberKey | updatePayrollRateByStaffMemberKey | deletePayrollRateByStaffMemberKey |
-    | **addresse** | /staff-members/{staffMemberKey}/addresses | listAddressByStaffMemberKey | createAddress | getAddressByStaffMemberKey | updateAddressByStaffMemberKey | deleteAddressByStaffMemberKey |
-    | **position** | /staff-members/{staffMemberKey}/positions | listPositionByStaffMemberKey | createPosition | getPositionByStaffMemberKey | updatePositionByStaffMemberKey | deletePositionByStaffMemberKey |
-    | **privacy-event** | /staff-members/{staffMemberKey}/privacy-events | listPrivacyEventByStaffMemberKey | createPrivacyEvent | getPrivacyEventByStaffMemberKey | updatePrivacyEventByStaffMemberKey | deletePrivacyEventByStaffMemberKey |
+    | **person-reference** | /staff-members/{staffMemberKey}/person-references | listPersonReferenceByStaffMemberKey | createPersonReference | getPersonReferenceByStaffMemberKey | updatePersonReferenceByStaffMemberKey | deletePersonReferenceByStaffMemberKey |
     | **time-slot** | /staff-members/{staffMemberKey}/time-slots | listTimeSlotByStaffMemberKey |  | getTimeSlotByStaffMemberKey | updateTimeSlotByStaffMemberKey | deleteTimeSlotByStaffMemberKey |
-    | **control-account** | /staff-members/{staffMemberKey}/control-accounts | listControlAccountByStaffMemberKey | createControlAccount | getControlAccountByStaffMemberKey | updateControlAccountByStaffMemberKey | deleteControlAccountByStaffMemberKey |
+    | **privacy-event** | /staff-members/{staffMemberKey}/privacy-events | listPrivacyEventByStaffMemberKey | createPrivacyEvent | getPrivacyEventByStaffMemberKey | updatePrivacyEventByStaffMemberKey | deletePrivacyEventByStaffMemberKey |
+    | **department-reference** | /staff-members/{staffMemberKey}/department-references | listDepartmentReferenceByStaffMemberKey | createDepartmentReference | getDepartmentReferenceByStaffMemberKey | updateDepartmentReferenceByStaffMemberKey | deleteDepartmentReferenceByStaffMemberKey |
     | **communication-channel** | /staff-members/{staffMemberKey}/communication-channels | listCommunicationChannelByStaffMemberKey | createCommunicationChannel | getCommunicationChannelByStaffMemberKey | updateCommunicationChannelByStaffMemberKey | deleteCommunicationChannelByStaffMemberKey |
-    | **address-locale** | /staff-members/{staffMemberKey}/address-locales | listAddressLocaleByStaffMemberKey | createAddressLocale | getAddressLocaleByStaffMemberKey | updateAddressLocaleByStaffMemberKey | deleteAddressLocaleByStaffMemberKey |
     | **authorization** | /staff-members/{staffMemberKey}/authorizations | listAuthorizationByStaffMemberKey | createAuthorization | getAuthorizationByStaffMemberKey | updateAuthorizationByStaffMemberKey | deleteAuthorizationByStaffMemberKey |
+    | **party-reference** | /staff-members/{staffMemberKey}/party-references | listPartyReferenceByStaffMemberKey | createPartyReference | getPartyReferenceByStaffMemberKey | updatePartyReferenceByStaffMemberKey | deletePartyReferenceByStaffMemberKey |
     | **money** | /staff-members/{staffMemberKey}/money | listMoneyByStaffMemberKey |  | getMoneyByStaffMemberKey | updateMoneyByStaffMemberKey | deleteMoneyByStaffMemberKey |
-    | **department** | /staff-members/{staffMemberKey}/departments | listDepartmentByStaffMemberKey | createDepartment | getDepartmentByStaffMemberKey | updateDepartmentByStaffMemberKey | deleteDepartmentByStaffMemberKey |
-    | **metric-name-value** | /staff-members/{staffMemberKey}/metric-name-values | listMetricNameValueByStaffMemberKey | createMetricNameValue | getMetricNameValueByStaffMemberKey | updateMetricNameValueByStaffMemberKey | deleteMetricNameValueByStaffMemberKey |
+    | **staff-affinitie** | /staff-members/{staffMemberKey}/staff-affinities | listStaffAffinityByStaffMemberKey | createStaffAffinity | getStaffAffinityByStaffMemberKey | updateStaffAffinityByStaffMemberKey | deleteStaffAffinityByStaffMemberKey |
     | **identifier** | /staff-members/{staffMemberKey}/identifiers | listIdentifierByStaffMemberKey | createIdentifier | getIdentifierByStaffMemberKey | updateIdentifierByStaffMemberKey | deleteIdentifierByStaffMemberKey |
+    | **staff-certification** | /staff-members/{staffMemberKey}/staff-certifications | listStaffCertificationByStaffMemberKey | createStaffCertification | getStaffCertificationByStaffMemberKey | updateStaffCertificationByStaffMemberKey | deleteStaffCertificationByStaffMemberKey |
     | **effective-period** | /staff-members/{staffMemberKey}/effective-periods | listEffectivePeriodByStaffMemberKey |  | getEffectivePeriodByStaffMemberKey | updateEffectivePeriodByStaffMemberKey | deleteEffectivePeriodByStaffMemberKey |
+    | **team** | /staff-members/{staffMemberKey}/teams | listTeamByStaffMemberKey | createTeam | getTeamByStaffMemberKey | updateTeamByStaffMemberKey | deleteTeamByStaffMemberKey |
     | **privacy-item** | /staff-members/{staffMemberKey}/privacy-items | listPrivacyItemByStaffMemberKey | createPrivacyItem | getPrivacyItemByStaffMemberKey | updatePrivacyItemByStaffMemberKey | deletePrivacyItemByStaffMemberKey |
     | **textual-detail** | /staff-members/{staffMemberKey}/textual-details | listTextualDetailByStaffMemberKey |  | getTextualDetailByStaffMemberKey | updateTextualDetailByStaffMemberKey | deleteTextualDetailByStaffMemberKey |
-    | **people** | /staff-members/{staffMemberKey}/people | listPersonByStaffMemberKey | createPerson | getPersonByStaffMemberKey | updatePersonByStaffMemberKey | deletePersonByStaffMemberKey |
 
 ***Note on List Operations:***
 

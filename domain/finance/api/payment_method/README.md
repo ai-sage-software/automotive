@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **BankBeneficiary**, **BankIntermediary**, **CashPayment**, **CheckPayment**, **CreditCard**, **ElectronicPayment**, **Identifier**, **PaymentMethod**, **PersonName**, **PlatformPayment**, **Position**, **RewardPayment**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **BankBeneficiary**, **BankIntermediary**, **CashPayment**, **CheckPayment**, **CreditCard**, **ElectronicPayment**, **Identifier**, **PaymentMethod**, **PlatformPayment**, **Position**, **RewardPayment**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -118,6 +118,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **PersonName** : person.name.desc<br/>
 
 ---
 
@@ -308,44 +309,12 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/person-names</span> <br/>
-        <span class="api-summary">Create a new PersonName entity. createPersonName</span>
-    </span>
-</div>
-
 ### /payment-methods/{paymentMethodKey}/person-names/{personNameKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/payment-methods/{paymentMethodKey}/person-names/{personNameKey}</span> <br/>
         <span class="api-summary">Retrieve a specific PersonName entity. getersonNameById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Replace a PersonName entity. replacePersonName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName entity. updatePartialPersonName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/payment-methods/{paymentMethodKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Delete a PersonName entity deletePersonNameEntity</span>
     </span>
 </div>
 
@@ -957,7 +926,7 @@ The following resources follow a consistent pattern under PaymentMethodroot with
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **payment-method** | /payment-methods | listPaymentMethod | createPaymentMethod | getPaymentMethod | updatePaymentMethod | deletePaymentMethod |
     | **reward-payment** | /payment-methods/{paymentMethodKey}/reward-payments | listRewardPaymentByPaymentMethodKey | createRewardPayment | getRewardPaymentByPaymentMethodKey | updateRewardPaymentByPaymentMethodKey | deleteRewardPaymentByPaymentMethodKey |
-    | **person-name** | /payment-methods/{paymentMethodKey}/person-names | listPersonNameByPaymentMethodKey | createPersonName | getPersonNameByPaymentMethodKey | updatePersonNameByPaymentMethodKey | deletePersonNameByPaymentMethodKey |
+    | **person-name** | /payment-methods/{paymentMethodKey}/person-names | listPersonNameByPaymentMethodKey |  | getPersonNameByPaymentMethodKey | updatePersonNameByPaymentMethodKey | deletePersonNameByPaymentMethodKey |
     | **addresse** | /payment-methods/{paymentMethodKey}/addresses | listAddressByPaymentMethodKey | createAddress | getAddressByPaymentMethodKey | updateAddressByPaymentMethodKey | deleteAddressByPaymentMethodKey |
     | **position** | /payment-methods/{paymentMethodKey}/positions | listPositionByPaymentMethodKey | createPosition | getPositionByPaymentMethodKey | updatePositionByPaymentMethodKey | deletePositionByPaymentMethodKey |
     | **cash-payment** | /payment-methods/{paymentMethodKey}/cash-payments | listCashPaymentByPaymentMethodKey | createCashPayment | getCashPaymentByPaymentMethodKey | updateCashPaymentByPaymentMethodKey | deleteCashPaymentByPaymentMethodKey |

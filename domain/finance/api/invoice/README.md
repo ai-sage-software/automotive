@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialSplitReference**, **FinancialTrack**, **GeographicBoundaryReference**, **Identifier**, **Invoice**, **InvoiceItem**, **PartReference**, **PartyReference**, **PaymentAuthorization**, **PaymentMethodReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **ShipmentReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -29,9 +29,11 @@ The API is structured around the domain **finance** and **Invoice** resource as 
     | **AddressReference** | /invoices/{invoiceKey}/address-references | Manages AddressReferences belonging to Invoices |
     | **FinancialCategoryReference** | /invoices/{invoiceKey}/financial-category-references | Manages FinancialCategoryReferences belonging to Invoices |
     | **FeeReference** | /invoices/{invoiceKey}/fee-references | Manages FeeReferences belonging to Invoices |
+    | **PartyReference** | /invoices/{invoiceKey}/party-references | Manages PartyReferences belonging to Invoices |
     | **Money** | /invoices/{invoiceKey}/money | Manages Money belonging to Invoices |
     | **Identifier** | /invoices/{invoiceKey}/identifiers | Manages Identifiers belonging to Invoices |
     | **PartReference** | /invoices/{invoiceKey}/part-references | Manages PartReferences belonging to Invoices |
+    | **GeographicBoundaryReference** | /invoices/{invoiceKey}/geographic-boundary-references | Manages GeographicBoundaryReferences belonging to Invoices |
     | **EffectivePeriod** | /invoices/{invoiceKey}/effective-periods | Manages EffectivePeriods belonging to Invoices |
     | **CreditReference** | /invoices/{invoiceKey}/credit-references | Manages CreditReferences belonging to Invoices |
     | **RebateReference** | /invoices/{invoiceKey}/rebate-references | Manages RebateReferences belonging to Invoices |
@@ -46,6 +48,7 @@ The API is structured around the domain **finance** and **Invoice** resource as 
     | **Price** | /invoices/{invoiceKey}/prices | Manages Prices belonging to Invoices |
     | **FinancialEvent** | /invoices/{invoiceKey}/financial-events | Manages FinancialEvents belonging to Invoices |
     | **PaymentMethodReference** | /invoices/{invoiceKey}/payment-method-references | Manages PaymentMethodReferences belonging to Invoices |
+    | **FinancialSplitReference** | /invoices/{invoiceKey}/financial-split-references | Manages FinancialSplitReferences belonging to Invoices |
     | **TextualDetail** | /invoices/{invoiceKey}/textual-details | Manages TextualDetails belonging to Invoices |
     | **FinancialSplit** | /invoices/{invoiceKey}/financial-splits | Manages FinancialSplits belonging to Invoices |
     | **FinancialTrack** | /invoices/{invoiceKey}/financial-tracks | Manages FinancialTracks belonging to Invoices |
@@ -130,6 +133,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **OrderTypes** : types of orders.<br/>
 💠 **PartConditionGradeTypes** : types of part condition grades.<br/>
 💠 **PartInvoiceStatusTypes** : types of part invoice status.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentStatusTypes** : types of payment status.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
@@ -147,11 +152,11 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **Money** : Monetary value and currency information.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
-✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 
@@ -583,6 +588,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /invoices/{invoiceKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by invoiceKey. getPartyReferenceByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /invoices/{invoiceKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -698,6 +753,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/invoices/{invoiceKey}/part-references/{partReferenceKey}</span> <br/>
         <span class="api-summary">Delete a PartReference entity deletePartReferenceEntity</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/geographic-boundary-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Retrieve a list of GeographicBoundaryReference entities scoped by invoiceKey. getGeographicBoundaryReferenceByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Create a new GeographicBoundaryReference entity. createGeographicBoundaryReference</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific GeographicBoundaryReference entity. geteographicBoundaryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a GeographicBoundaryReference entity. replaceGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updatePartialGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a GeographicBoundaryReference entity deleteGeographicBoundaryReferenceEntity</span>
     </span>
 </div>
 
@@ -1337,6 +1442,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /invoices/{invoiceKey}/financial-split-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSplitReference entities scoped by invoiceKey. getFinancialSplitReferenceByInvoiceKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Create a new FinancialSplitReference entity. createFinancialSplitReference</span>
+    </span>
+</div>
+
+### /invoices/{invoiceKey}/financial-split-references/{financialSplitReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSplitReference entity. getinancialSplitReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSplitReference entity. replaceFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSplitReference entity. updatePartialFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/invoices/{invoiceKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSplitReference entity deleteFinancialSplitReferenceEntity</span>
+    </span>
+</div>
+
 ### /invoices/{invoiceKey}/textual-details
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1468,9 +1623,11 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **address-reference** | /invoices/{invoiceKey}/address-references | listAddressReferenceByInvoiceKey | createAddressReference | getAddressReferenceByInvoiceKey | updateAddressReferenceByInvoiceKey | deleteAddressReferenceByInvoiceKey |
     | **financial-category-reference** | /invoices/{invoiceKey}/financial-category-references | listFinancialCategoryReferenceByInvoiceKey | createFinancialCategoryReference | getFinancialCategoryReferenceByInvoiceKey | updateFinancialCategoryReferenceByInvoiceKey | deleteFinancialCategoryReferenceByInvoiceKey |
     | **fee-reference** | /invoices/{invoiceKey}/fee-references | listFeeReferenceByInvoiceKey | createFeeReference | getFeeReferenceByInvoiceKey | updateFeeReferenceByInvoiceKey | deleteFeeReferenceByInvoiceKey |
+    | **party-reference** | /invoices/{invoiceKey}/party-references | listPartyReferenceByInvoiceKey | createPartyReference | getPartyReferenceByInvoiceKey | updatePartyReferenceByInvoiceKey | deletePartyReferenceByInvoiceKey |
     | **money** | /invoices/{invoiceKey}/money | listMoneyByInvoiceKey |  | getMoneyByInvoiceKey | updateMoneyByInvoiceKey | deleteMoneyByInvoiceKey |
     | **identifier** | /invoices/{invoiceKey}/identifiers | listIdentifierByInvoiceKey | createIdentifier | getIdentifierByInvoiceKey | updateIdentifierByInvoiceKey | deleteIdentifierByInvoiceKey |
     | **part-reference** | /invoices/{invoiceKey}/part-references | listPartReferenceByInvoiceKey | createPartReference | getPartReferenceByInvoiceKey | updatePartReferenceByInvoiceKey | deletePartReferenceByInvoiceKey |
+    | **geographic-boundary-reference** | /invoices/{invoiceKey}/geographic-boundary-references | listGeographicBoundaryReferenceByInvoiceKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByInvoiceKey | updateGeographicBoundaryReferenceByInvoiceKey | deleteGeographicBoundaryReferenceByInvoiceKey |
     | **effective-period** | /invoices/{invoiceKey}/effective-periods | listEffectivePeriodByInvoiceKey |  | getEffectivePeriodByInvoiceKey | updateEffectivePeriodByInvoiceKey | deleteEffectivePeriodByInvoiceKey |
     | **credit-reference** | /invoices/{invoiceKey}/credit-references | listCreditReferenceByInvoiceKey | createCreditReference | getCreditReferenceByInvoiceKey | updateCreditReferenceByInvoiceKey | deleteCreditReferenceByInvoiceKey |
     | **rebate-reference** | /invoices/{invoiceKey}/rebate-references | listRebateReferenceByInvoiceKey | createRebateReference | getRebateReferenceByInvoiceKey | updateRebateReferenceByInvoiceKey | deleteRebateReferenceByInvoiceKey |
@@ -1485,6 +1642,7 @@ The following resources follow a consistent pattern under Invoiceroot with key {
     | **price** | /invoices/{invoiceKey}/prices | listPriceByInvoiceKey | createPrice | getPriceByInvoiceKey | updatePriceByInvoiceKey | deletePriceByInvoiceKey |
     | **financial-event** | /invoices/{invoiceKey}/financial-events | listFinancialEventByInvoiceKey | createFinancialEvent | getFinancialEventByInvoiceKey | updateFinancialEventByInvoiceKey | deleteFinancialEventByInvoiceKey |
     | **payment-method-reference** | /invoices/{invoiceKey}/payment-method-references | listPaymentMethodReferenceByInvoiceKey | createPaymentMethodReference | getPaymentMethodReferenceByInvoiceKey | updatePaymentMethodReferenceByInvoiceKey | deletePaymentMethodReferenceByInvoiceKey |
+    | **financial-split-reference** | /invoices/{invoiceKey}/financial-split-references | listFinancialSplitReferenceByInvoiceKey | createFinancialSplitReference | getFinancialSplitReferenceByInvoiceKey | updateFinancialSplitReferenceByInvoiceKey | deleteFinancialSplitReferenceByInvoiceKey |
     | **textual-detail** | /invoices/{invoiceKey}/textual-details | listTextualDetailByInvoiceKey |  | getTextualDetailByInvoiceKey | updateTextualDetailByInvoiceKey | deleteTextualDetailByInvoiceKey |
     | **financial-split** | /invoices/{invoiceKey}/financial-splits | listFinancialSplitByInvoiceKey | createFinancialSplit | getFinancialSplitByInvoiceKey | updateFinancialSplitByInvoiceKey | deleteFinancialSplitByInvoiceKey |
     | **financial-track** | /invoices/{invoiceKey}/financial-tracks | listFinancialTrackByInvoiceKey | createFinancialTrack | getFinancialTrackByInvoiceKey | updateFinancialTrackByInvoiceKey | deleteFinancialTrackByInvoiceKey |

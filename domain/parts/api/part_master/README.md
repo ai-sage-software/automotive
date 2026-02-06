@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **Identifier**, **LeadTime**, **PartCategory**, **PartIdentifier**, **PartInventoryReference**, **PartLifecycle**, **PartMaster**, **PartMasterProfile**, **PartMasterRegulatory**, **PartName**, **PartSpecification**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SuperSession**, **TaxSplit**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Identifier**, **LeadTime**, **PartCategory**, **PartIdentifier**, **PartInventoryReference**, **PartLifecycle**, **PartMaster**, **PartMasterProfile**, **PartMasterRegulatory**, **PartName**, **PartSpecification**, **PartyReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SuperSession**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -28,8 +28,10 @@ The API is structured around the domain **parts** and **PartMaster** resource as
     | **PartCategorie** | /part-masters/{partMasterKey}/part-categories | Manages PartCategories belonging to PartMasters |
     | **FinancialCategoryReference** | /part-masters/{partMasterKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartMasters |
     | **FeeReference** | /part-masters/{partMasterKey}/fee-references | Manages FeeReferences belonging to PartMasters |
+    | **PartyReference** | /part-masters/{partMasterKey}/party-references | Manages PartyReferences belonging to PartMasters |
     | **Identifier** | /part-masters/{partMasterKey}/identifiers | Manages Identifiers belonging to PartMasters |
     | **PartName** | /part-masters/{partMasterKey}/part-names | Manages PartNames belonging to PartMasters |
+    | **GeographicBoundaryReference** | /part-masters/{partMasterKey}/geographic-boundary-references | Manages GeographicBoundaryReferences belonging to PartMasters |
     | **PartIdentifier** | /part-masters/{partMasterKey}/part-identifiers | Manages PartIdentifiers belonging to PartMasters |
     | **PartLifecycle** | /part-masters/{partMasterKey}/part-lifecycles | Manages PartLifecycles belonging to PartMasters |
     | **CreditReference** | /part-masters/{partMasterKey}/credit-references | Manages CreditReferences belonging to PartMasters |
@@ -45,6 +47,7 @@ The API is structured around the domain **parts** and **PartMaster** resource as
     | **SuperSession** | /part-masters/{partMasterKey}/super-sessions | Manages SuperSessions belonging to PartMasters |
     | **Price** | /part-masters/{partMasterKey}/prices | Manages Prices belonging to PartMasters |
     | **TextualDetail** | /part-masters/{partMasterKey}/textual-details | Manages TextualDetails belonging to PartMasters |
+    | **FinancialSplitReference** | /part-masters/{partMasterKey}/financial-split-references | Manages FinancialSplitReferences belonging to PartMasters |
     | **PartMasterRegulatorie** | /part-masters/{partMasterKey}/part-master-regulatories | Manages PartMasterRegulatories belonging to PartMasters |
     | **FinancialSplit** | /part-masters/{partMasterKey}/financial-splits | Manages FinancialSplits belonging to PartMasters |
 
@@ -126,6 +129,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartOrderConfigTypes** : types of part order configs.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductConsumptionTypes** : types of product consumptions.<br/>
 💠 **ProductPackageTypes** : types of product packages.<br/>
@@ -143,9 +148,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 
@@ -527,6 +532,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-masters/{partMasterKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by partMasterKey. getPartyReferenceByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /part-masters/{partMasterKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -624,6 +679,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-masters/{partMasterKey}/part-names/{partNameKey}</span> <br/>
         <span class="api-summary">Delete a PartName entity deletePartNameEntity</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/geographic-boundary-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Retrieve a list of GeographicBoundaryReference entities scoped by partMasterKey. getGeographicBoundaryReferenceByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Create a new GeographicBoundaryReference entity. createGeographicBoundaryReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific GeographicBoundaryReference entity. geteographicBoundaryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a GeographicBoundaryReference entity. replaceGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updatePartialGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a GeographicBoundaryReference entity deleteGeographicBoundaryReferenceEntity</span>
     </span>
 </div>
 
@@ -1313,6 +1418,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-masters/{partMasterKey}/financial-split-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSplitReference entities scoped by partMasterKey. getFinancialSplitReferenceByPartMasterKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Create a new FinancialSplitReference entity. createFinancialSplitReference</span>
+    </span>
+</div>
+
+### /part-masters/{partMasterKey}/financial-split-references/{financialSplitReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSplitReference entity. getinancialSplitReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSplitReference entity. replaceFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSplitReference entity. updatePartialFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-masters/{partMasterKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSplitReference entity deleteFinancialSplitReferenceEntity</span>
+    </span>
+</div>
+
 ### /part-masters/{partMasterKey}/part-master-regulatories
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1425,8 +1580,10 @@ The following resources follow a consistent pattern under PartMasterroot with ke
     | **part-categorie** | /part-masters/{partMasterKey}/part-categories | listPartCategoryByPartMasterKey | createPartCategory | getPartCategoryByPartMasterKey | updatePartCategoryByPartMasterKey | deletePartCategoryByPartMasterKey |
     | **financial-category-reference** | /part-masters/{partMasterKey}/financial-category-references | listFinancialCategoryReferenceByPartMasterKey | createFinancialCategoryReference | getFinancialCategoryReferenceByPartMasterKey | updateFinancialCategoryReferenceByPartMasterKey | deleteFinancialCategoryReferenceByPartMasterKey |
     | **fee-reference** | /part-masters/{partMasterKey}/fee-references | listFeeReferenceByPartMasterKey | createFeeReference | getFeeReferenceByPartMasterKey | updateFeeReferenceByPartMasterKey | deleteFeeReferenceByPartMasterKey |
+    | **party-reference** | /part-masters/{partMasterKey}/party-references | listPartyReferenceByPartMasterKey | createPartyReference | getPartyReferenceByPartMasterKey | updatePartyReferenceByPartMasterKey | deletePartyReferenceByPartMasterKey |
     | **identifier** | /part-masters/{partMasterKey}/identifiers | listIdentifierByPartMasterKey | createIdentifier | getIdentifierByPartMasterKey | updateIdentifierByPartMasterKey | deleteIdentifierByPartMasterKey |
     | **part-name** | /part-masters/{partMasterKey}/part-names | listPartNameByPartMasterKey | createPartName | getPartNameByPartMasterKey | updatePartNameByPartMasterKey | deletePartNameByPartMasterKey |
+    | **geographic-boundary-reference** | /part-masters/{partMasterKey}/geographic-boundary-references | listGeographicBoundaryReferenceByPartMasterKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByPartMasterKey | updateGeographicBoundaryReferenceByPartMasterKey | deleteGeographicBoundaryReferenceByPartMasterKey |
     | **part-identifier** | /part-masters/{partMasterKey}/part-identifiers | listPartIdentifierByPartMasterKey | createPartIdentifier | getPartIdentifierByPartMasterKey | updatePartIdentifierByPartMasterKey | deletePartIdentifierByPartMasterKey |
     | **part-lifecycle** | /part-masters/{partMasterKey}/part-lifecycles | listPartLifecycleByPartMasterKey | createPartLifecycle | getPartLifecycleByPartMasterKey | updatePartLifecycleByPartMasterKey | deletePartLifecycleByPartMasterKey |
     | **credit-reference** | /part-masters/{partMasterKey}/credit-references | listCreditReferenceByPartMasterKey | createCreditReference | getCreditReferenceByPartMasterKey | updateCreditReferenceByPartMasterKey | deleteCreditReferenceByPartMasterKey |
@@ -1442,6 +1599,7 @@ The following resources follow a consistent pattern under PartMasterroot with ke
     | **super-session** | /part-masters/{partMasterKey}/super-sessions | listSuperSessionByPartMasterKey | createSuperSession | getSuperSessionByPartMasterKey | updateSuperSessionByPartMasterKey | deleteSuperSessionByPartMasterKey |
     | **price** | /part-masters/{partMasterKey}/prices | listPriceByPartMasterKey | createPrice | getPriceByPartMasterKey | updatePriceByPartMasterKey | deletePriceByPartMasterKey |
     | **textual-detail** | /part-masters/{partMasterKey}/textual-details | listTextualDetailByPartMasterKey |  | getTextualDetailByPartMasterKey | updateTextualDetailByPartMasterKey | deleteTextualDetailByPartMasterKey |
+    | **financial-split-reference** | /part-masters/{partMasterKey}/financial-split-references | listFinancialSplitReferenceByPartMasterKey | createFinancialSplitReference | getFinancialSplitReferenceByPartMasterKey | updateFinancialSplitReferenceByPartMasterKey | deleteFinancialSplitReferenceByPartMasterKey |
     | **part-master-regulatorie** | /part-masters/{partMasterKey}/part-master-regulatories | listPartMasterRegulatoryByPartMasterKey | createPartMasterRegulatory | getPartMasterRegulatoryByPartMasterKey | updatePartMasterRegulatoryByPartMasterKey | deletePartMasterRegulatoryByPartMasterKey |
     | **financial-split** | /part-masters/{partMasterKey}/financial-splits | listFinancialSplitByPartMasterKey | createFinancialSplit | getFinancialSplitByPartMasterKey | updateFinancialSplitByPartMasterKey | deleteFinancialSplitByPartMasterKey |
 

@@ -27,7 +27,9 @@ The API is structured around the domain **subscriptions** and **PricePlan** reso
     | **Identifier** | /price-plans/{pricePlanKey}/identifiers | Manages Identifiers belonging to PricePlans |
     | **GeographicBoundaryReference** | /price-plans/{pricePlanKey}/geographic-boundary-references | Manages GeographicBoundaryReferences belonging to PricePlans |
     | **PriceSensitivitie** | /price-plans/{pricePlanKey}/price-sensitivities | Manages PriceSensitivities belonging to PricePlans |
+    | **EffectivePeriod** | /price-plans/{pricePlanKey}/effective-periods | Manages EffectivePeriods belonging to PricePlans |
     | **FinancialSplitReference** | /price-plans/{pricePlanKey}/financial-split-references | Manages FinancialSplitReferences belonging to PricePlans |
+    | **TimeSlot** | /price-plans/{pricePlanKey}/time-slots | Manages TimeSlots belonging to PricePlans |
 
 
 ---
@@ -96,15 +98,20 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
+💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **PriceClassTypes** : types of price class.<br/>
 💠 **PriceSensitivityTypes** : types of price sensitivitys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 
 ## ✅ Entities
 
 ---
 
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 
@@ -436,6 +443,24 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /price-plans/{pricePlanKey}/effective-periods
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/effective-periods</span> <br/>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by pricePlanKey. getEffectivePeriodByPricePlanKey</span>
+    </span>
+</div>
+
+### /price-plans/{pricePlanKey}/effective-periods/{effectivePeriodKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
+    </span>
+</div>
+
 ### /price-plans/{pricePlanKey}/financial-split-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -486,6 +511,24 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /price-plans/{pricePlanKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by pricePlanKey. getTimeSlotByPricePlanKey</span>
+    </span>
+</div>
+
+### /price-plans/{pricePlanKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-plans/{pricePlanKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+    </span>
+</div>
+
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under PricePlanroot with key {PricePlanKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -497,7 +540,9 @@ The following resources follow a consistent pattern under PricePlanroot with key
     | **identifier** | /price-plans/{pricePlanKey}/identifiers | listIdentifierByPricePlanKey | createIdentifier | getIdentifierByPricePlanKey | updateIdentifierByPricePlanKey | deleteIdentifierByPricePlanKey |
     | **geographic-boundary-reference** | /price-plans/{pricePlanKey}/geographic-boundary-references | listGeographicBoundaryReferenceByPricePlanKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByPricePlanKey | updateGeographicBoundaryReferenceByPricePlanKey | deleteGeographicBoundaryReferenceByPricePlanKey |
     | **price-sensitivitie** | /price-plans/{pricePlanKey}/price-sensitivities | listPriceSensitivityByPricePlanKey | createPriceSensitivity | getPriceSensitivityByPricePlanKey | updatePriceSensitivityByPricePlanKey | deletePriceSensitivityByPricePlanKey |
+    | **effective-period** | /price-plans/{pricePlanKey}/effective-periods | listEffectivePeriodByPricePlanKey |  | getEffectivePeriodByPricePlanKey | updateEffectivePeriodByPricePlanKey | deleteEffectivePeriodByPricePlanKey |
     | **financial-split-reference** | /price-plans/{pricePlanKey}/financial-split-references | listFinancialSplitReferenceByPricePlanKey | createFinancialSplitReference | getFinancialSplitReferenceByPricePlanKey | updateFinancialSplitReferenceByPricePlanKey | deleteFinancialSplitReferenceByPricePlanKey |
+    | **time-slot** | /price-plans/{pricePlanKey}/time-slots | listTimeSlotByPricePlanKey |  | getTimeSlotByPricePlanKey | updateTimeSlotByPricePlanKey | deleteTimeSlotByPricePlanKey |
 
 ***Note on List Operations:***
 

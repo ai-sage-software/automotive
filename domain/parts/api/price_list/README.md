@@ -100,6 +100,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **LifecycleEventTypes** : types of lifecycle events.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PriceClassTypes** : types of price class.<br/>
 💠 **PriceSensitivityTypes** : types of price sensitivitys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
@@ -110,8 +111,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 

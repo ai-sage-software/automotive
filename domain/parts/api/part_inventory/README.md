@@ -104,6 +104,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **InventoryStatusTypes** : types of inventory status.<br/>
 💠 **PartInventoryMetricTypes** : types of part inventory metrics.<br/>
 💠 **PartInventoryOrderTypes** : types of part inventory orders.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
@@ -112,8 +113,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 

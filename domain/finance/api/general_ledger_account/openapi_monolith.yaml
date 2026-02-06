@@ -82,7 +82,7 @@ paths:
                   has_more:
                     type: boolean
                     description: Whether additional results exist beyond this page.
-                    example: false
+                    example: true
                   total_count:
                     type: integer
                     description: "Total entities matching the query (optional, may\
@@ -120,14 +120,13 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /general-ledger-accounts/KEY78U
+                example: /general-ledger-accounts/KEY78t
             Link:
               description: HATEOAS link to discover state-aware transitions and business
                 constraints.
               schema:
                 type: string
-                example: "</general-ledger-accounts/capabilities{?state,role}>; rel=\"\
-                  capabilities\""
+                example: "</capabilities{?state,role}>; rel=\"capabilities\""
           content:
             application/json:
               schema:
@@ -301,7 +300,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78u
+        example: KEY78v
   /general-ledger-accounts/{generalLedgerAccountKey}/identifiers:
     get:
       tags:
@@ -359,7 +358,7 @@ paths:
                   has_more:
                     type: boolean
                     description: Whether additional results exist beyond this page.
-                    example: true
+                    example: false
                   total_count:
                     type: integer
                     description: "Total entities matching the query (optional, may\
@@ -397,14 +396,13 @@ paths:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: "/general-ledger-accounts{generalLedgerAccountKey}identifiers/KEY78U4"
+                example: "/general-ledger-accounts{generalLedgerAccountKey}identifiers/KEY78tN"
             Link:
               description: HATEOAS link to discover state-aware transitions and business
                 constraints.
               schema:
                 type: string
-                example: "</general-ledger-accounts/{generalLedgerAccountKey}/identifiers/capabilities{?state,role}>;\
-                  \ rel=\"capabilities\""
+                example: "</capabilities{?state,role}>; rel=\"capabilities\""
           content:
             application/json:
               schema:
@@ -591,7 +589,7 @@ paths:
       required: true
       schema:
         type: string
-        example: KEY78uz
+        example: KEY78vi
   /general-ledger-accounts/health:
     get:
       tags:
@@ -668,13 +666,12 @@ paths:
                 constraints.
               schema:
                 type: string
-                example: "</general-ledger-accounts/batch/capabilities{?state,role}>;\
-                  \ rel=\"capabilities\""
+                example: "</capabilities{?state,role}>; rel=\"capabilities\""
             Location:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /general-ledger-accounts/batch/688144414570143285
+                example: /general-ledger-accounts/batch/1423788258876476972
           content:
             application/json:
               schema:
@@ -727,7 +724,7 @@ paths:
               properties:
                 format:
                   type: string
-                  example: ' ec922512'
+                  example: ' 0dc30409'
                   default: PARQUET
                   enum:
                   - XML
@@ -735,6 +732,7 @@ paths:
                   - AVRO
                   - PARQUET
                   - CSV
+                  - TOON
                 date_range:
                   type: object
                   properties:
@@ -753,12 +751,23 @@ paths:
                   example: contact_details_only
                 compression:
                   type: string
-                  example: GZIP
-                  default: SNAPPY
+                  description: "The compression algorithm to apply. ZSTD is recommended\
+                    \ for \nbalancing high compression ratios with blazing decompression\
+                    \ speeds."
+                  example: ZSTD
+                  default: ZSTD
                   enum:
                   - SNAPPY
                   - GZIP
                   - LZO
+                  - ZSTD
+                compression_level:
+                  maximum: 22
+                  minimum: 1
+                  type: string
+                  description: "Tunable intensity for ZSTD. Use lower levels (1-3)\
+                    \ for speed, higher levels (19+) for expensive bandwidth scenarios."
+                  default: "3"
                 destination:
                   type: object
                   properties:
@@ -789,21 +798,88 @@ paths:
                   default: false
               example: PARQUET
       responses:
-        "202":
-          description: Export job created/accepted
+        "200":
+          description: "Dry run results: validation and cost estimation metadata."
           headers:
             Link:
               description: HATEOAS link to discover state-aware transitions and business
                 constraints.
               schema:
                 type: string
-                example: "</general-ledger-accounts/exports/capabilities{?state,role}>;\
-                  \ rel=\"capabilities\""
+                example: "</capabilities{?state,role}>; rel=\"capabilities\""
             Location:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: /general-ledger-accounts/exports/4563110096196543044
+                example: /general-ledger-accounts/exports/9077235148097830103
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: VALIDATED
+                  estimated_metrics:
+                    type: object
+                    properties:
+                      record_count:
+                        type: integer
+                        format: int32
+                        example: 1250000
+                      estimated_uncompressed_gb:
+                        type: number
+                        example: 4.2
+                      estimated_compressed_gb:
+                        type: number
+                        description: "Prediction based on the chosen compression (e.g.,\
+                          \ ZSTD)"
+                        example: 0.85
+                      estimated_processing_time_ms:
+                        type: integer
+                        format: int32
+                        example: 45000
+                    description: Predicted impact of the export job
+                  validation_results:
+                    type: object
+                    properties:
+                      is_executable:
+                        type: boolean
+                        example: true
+                      warnings:
+                        type: array
+                        example:
+                        - "Large export detected: ensure destination storage exceeds\
+                          \ 1GB"
+                        items:
+                          type: string
+                      violations:
+                        type: array
+                        description: Business rule or data contract violations
+                        items:
+                          $ref: "#/components/schemas/ProblemDetail"
+                  suggested_optimizations:
+                    type: array
+                    description: Feedback for the agent to improve request efficiency
+                    items:
+                      type: string
+                      example: Switch to PARQUET for 30% faster processing of this
+                        specific data contract
+                description: "Metadata returned when dry_run is true, allowing agentic\
+                  \ pre-flight reasoning."
+        "202":
+          description: Export job successfully created and accepted.
+          headers:
+            Link:
+              description: HATEOAS link to discover state-aware transitions.
+              schema:
+                type: string
+                example: "</exports/capabilities{?state,role}>; rel=\"capabilities\""
+            Location:
+              description: The URI of the newly created export resource.
+              schema:
+                type: string
+                example: /accounting-periods/exports/2379845498403762952
         "409":
           description: "Conflict: Job with this Idempotency-Key already exists"
         "422":
@@ -928,13 +1004,12 @@ paths:
                 constraints.
               schema:
                 type: string
-                example: "</general-ledger-accounts/{generalLedgerAccountKey}/commands/capabilities{?state,role}>;\
-                  \ rel=\"capabilities\""
+                example: "</capabilities{?state,role}>; rel=\"capabilities\""
             Location:
               description: The URI of the newly created resource.
               schema:
                 type: string
-                example: "/general-ledger-accounts/{generalLedgerAccountKey}/commands/741324474097695499"
+                example: "/general-ledger-accounts/{generalLedgerAccountKey}/commands/8903220615411509478"
           content:
             application/json:
               schema:
@@ -956,7 +1031,7 @@ paths:
                   message:
                     type: string
                     description: A human-readable summary or error detail
-                    example: "Invoice #ad691c84 has been successfully cancelled."
+                    example: "Invoice #075e3753 has been successfully cancelled."
                   command_id:
                     type: string
                     description: The tracking ID for this specific command execution
@@ -964,7 +1039,7 @@ paths:
                   code:
                     type: string
                     description: detailed code for workflow business processing
-                    example: 831352c0
+                    example: ab0b95db
                   retry_after:
                     type: string
                     description: "For PENDING or PROCESSING statuses, retry_after\
@@ -1102,72 +1177,6 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-  /general-ledger-accounts/documentation:
-    post:
-      tags:
-      - Default
-      summary: Execute a knowledge request on GeneralLedgerAccount
-      description: Single entry point for all GeneralLedgerAccount knowledge request
-      operationId: getGeneralLedgerAccountDocuments
-      parameters:
-      - name: generalLedgerAccountKey
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Command intent and parameters
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: "The intent of the document request (e.g., RescheduleSlot,\
-                    \ CancelInvoice)"
-                workflow_state:
-                  type: string
-                  description: "The intent of the command (e.g., PROCESS, CLASS)"
-                  enum:
-                  - PROCESS
-                  - CLASS
-                context:
-                  type: object
-                  additionalProperties: true
-                  description: The payload required for this specific command type
-                data:
-                  $ref: "#/components/schemas/GeneralLedgerAccount"
-      responses:
-        "200":
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</general-ledger-accounts/documentation/capabilities{?state,role}>;\
-                  \ rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /general-ledger-accounts/documentation/7841070527096062060
-          $ref: "#/components/responses/GeneralLedgerAccountDocumentation"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
         "500":
           $ref: "#/components/responses/ServerError"
 components:
@@ -1343,9 +1352,9 @@ components:
                       description: Key-value pairs representing the 'facts' of the
                         current state
                       example:
-                        limit: "0"
-                        item_type: Inventory
                         count: "45"
+                        item_type: Inventory
+                        limit: "0"
                     rule_constraints:
                       type: object
                       additionalProperties:
@@ -1354,15 +1363,32 @@ components:
                         \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
                         \ checks."
                       example:
-                        unit: days
-                        min: "1"
                         value: "31"
+                        min: "1"
+                        unit: days
                     limit_rule:
                       type: string
                       description: A Prolog-based predicate defining the valid boundary
                         for this constraint.
                       example: "allow_export(Format, Days) :- Format == 'parquet',\
                         \ Days =< 31; Format == 'csv', Days =< 90."
+                    estimated_size:
+                      type: string
+                      description: approximate size of
+                      example: 10gig
+                    estimated_time_min:
+                      type: string
+                      description: approximate amount of minutes to run
+                      example: "12.3"
+                    complexity:
+                      type: string
+                      description: complexity score 1-100
+                      example: "34"
+                    mitigation_hint:
+                      type: string
+                      description: Conflict Resolution Hints
+                      example: "To resolve this PERMISSION_LOCK, you must first call\
+                        \ the /unlock endpoint."
                     message:
                       type: string
                       description: Human-readable explanation for UI/Logs
@@ -1477,7 +1503,7 @@ components:
           example: https://api.example.com
         format:
           type: string
-          example: ' ec922512'
+          example: ' 0dc30409'
           default: PARQUET
           enum:
           - XML
@@ -1485,23 +1511,24 @@ components:
           - AVRO
           - PARQUET
           - CSV
+          - TOON
         expires_at:
           type: string
           format: date-time
           example: 2026-01-14T12:00:00Z
         checksum_sha256:
           type: string
-          example: ' be8a7a39'
+          example: ' 0c51c9ec'
     ExportJob:
       type: object
       properties:
         id:
           type: string
           readOnly: true
-          example: ' e3322194'
+          example: ' 46886547'
         status:
           type: string
-          example: ' 776abbb0'
+          example: ' 14d938eb'
           enum:
           - PENDING
           - PROCESSING
@@ -1536,7 +1563,7 @@ components:
             job_id:
               type: string
               readOnly: true
-              example: 4ada0b44
+              example: c0da2e19
             aggregate:
               type: string
               example: GeneralLedgerAccount
@@ -1580,33 +1607,33 @@ components:
           type: string
           description: Unique identifier for the control accoun...
           readOnly: true
-          example: ' 72052b08'
+          example: ' d8bd85b0'
         general_ledger_account_key:
           type: string
           description: Master record for a General Ledger Accou...
-          example: ' 2c8792cc'
+          example: ' 0fd7d094'
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         general_ledger_account_desc:
           type: string
           description: Description of the control account.
-          example: ' 9c44eaa9'
+          example: ' 01487146'
         general_ledger_account_name:
           type: string
           description: Display name of the control account.
-          example: ' a27c9dc7'
+          example: ' a52b8e29'
         general_ledger_account_type:
           $ref: "#/components/schemas/GeneralLedgerAccountTypes"
         control_type_id:
           type: string
           description: Identifier for the control type of the a...
           readOnly: true
-          example: ' 8561d904'
+          example: ' 0dccdddc'
         bank_account_id:
           type: string
           description: Associated bank account identifier.
           readOnly: true
-          example: ' 9bf36c50'
+          example: ' 54fd3858'
         is_counted:
           type: boolean
           description: Indicates if the account is a counted ac...
@@ -1614,10 +1641,10 @@ components:
         prefix:
           type: string
           description: The prefix of the account number.
-          example: ' 97d75180'
+          example: ' e006084f'
         financial_category_type:
           $ref: "#/components/schemas/FinancialCategoryTypes"
-      description: Specific account within the General Ledger.
+      description: general.ledger.account.desc
     GeneralLedgerAccountCreate:
       required:
       - general_ledger_account_key
@@ -1675,7 +1702,7 @@ components:
         general_ledger_account_desc:
           type: string
           description: Description of the control account.
-          example: ' 9c44eaa9'
+          example: ' 01487146'
         general_ledger_account_type:
           $ref: "#/components/schemas/GeneralLedgerAccountTypes"
         identifiers:
@@ -1683,11 +1710,11 @@ components:
         prefix:
           type: string
           description: The prefix of the account number.
-          example: ' 97d75180'
+          example: ' e006084f'
         general_ledger_account_name:
           type: string
           description: Display name of the control account.
-          example: ' a27c9dc7'
+          example: ' a52b8e29'
         is_counted:
           type: boolean
           description: Indicates if the account is a counted ac...
@@ -1701,7 +1728,7 @@ components:
         current_state:
           type: string
           description: The current lifecycle phase of this entity.
-          example: ' a937c23e'
+          example: ' fc10ecb3'
           enum:
           - CREATED
           - ACTIVE
@@ -1722,34 +1749,34 @@ components:
           type: string
           description: Unique identifier value
           readOnly: true
-          example: ' ea77d4a3'
+          example: ' 8a08297c'
         identifier_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Business key for the identifier
           readOnly: true
-          example: ' 41130c44'
+          example: ' 2f97ae1b'
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 99027abd'
+          example: ' b1d8055e'
         value:
           type: string
           description: The monetary or hours-based value of the...
-          example: ' e3cb7a0b'
+          example: ' 8da00e59'
         detail:
           type: string
           description: The monetary or hours-based value of the...
-          example: ' 3e6eef61'
+          example: ' fd5df102'
         identifier_type:
           type: string
           description: The monetary or hours-based value of the...
           readOnly: true
-          example: ' fcbf8323'
+          example: ' 7d520d8c'
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: Unique identification key for the record.
+      description: identifier.desc
     IdentifierCreate:
       required:
       - identifier_key
@@ -1766,19 +1793,19 @@ components:
           type: string
           description: The monetary or hours-based value of the...
           readOnly: true
-          example: ' fcbf8323'
+          example: ' 7d520d8c'
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 99027abd'
+          example: ' b1d8055e'
         detail:
           type: string
           description: The monetary or hours-based value of the...
-          example: ' 3e6eef61'
+          example: ' fd5df102'
         value:
           type: string
           description: The monetary or hours-based value of the...
-          example: ' e3cb7a0b'
+          example: ' 8da00e59'
       description: Identifier Update for Patch and Put
     Identifiers:
       type: array
@@ -1827,12 +1854,6 @@ components:
                 additionalProperties:
                   type: string
   responses:
-    GeneralLedgerAccountDocumentation:
-      description: Commands processing complete
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralLedgerAccountDocumentation"
     ForbiddenError:
       description: The authenticated user does not have the necess...
       content:

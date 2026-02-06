@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyReference**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **WarehouseReference**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **FinancialTrackReference**, **Identifier**, **LifecycleEvent**, **PartReference**, **PartyReference**, **Position**, **Price**, **PurchaseOrderReference**, **Receipt**, **ReceiptLineItem**, **ShipmentEvent**, **ShipmentReference**, **StaffAssignmentReference**, **StaffSkill**, **WarehouseReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,6 +23,7 @@ The API is structured around the domain **finance** and **Receipt** resource as 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **Receipt** | /receipts | Manages Receipts |
+    | **StaffSkill** | /receipts/{receiptKey}/staff-skills | Manages StaffSkills belonging to Receipts |
     | **ShipmentReference** | /receipts/{receiptKey}/shipment-references | Manages ShipmentReferences belonging to Receipts |
     | **UnitOfMeasure** | /receipts/{receiptKey}/unit-of-measures | Manages UnitOfMeasures belonging to Receipts |
     | **Position** | /receipts/{receiptKey}/positions | Manages Positions belonging to Receipts |
@@ -114,11 +115,15 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **LifecycleEventTypes** : types of lifecycle events.<br/>
 💠 **OrderTypes** : types of orders.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ReceiptStatusTypes** : types of receipt status.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
+💠 **RoleTypes** : types of roles.<br/>
+💠 **ServiceJobTypes** : types of service jobs.<br/>
 💠 **ShipmentStateTypes** : types of shipment states.<br/>
+💠 **SkillCategoryTypes** : types of skill categorys.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
 
@@ -126,9 +131,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
-✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 
@@ -257,6 +262,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/receipts/{receiptKey}</span> <br/>
         <span class="api-summary">Delete a Receipt entity deleteReceiptEntity</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/staff-skills
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffSkill entities scoped by receiptKey. getStaffSkillByReceiptKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills</span> <br/>
+        <span class="api-summary">Create a new StaffSkill entity. createStaffSkill</span>
+    </span>
+</div>
+
+### /receipts/{receiptKey}/staff-skills/{staffSkillKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffSkill entity. gettaffSkillById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Replace a StaffSkill entity. replaceStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffSkill entity. updatePartialStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/receipts/{receiptKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Delete a StaffSkill entity deleteStaffSkillEntity</span>
     </span>
 </div>
 
@@ -1021,6 +1076,7 @@ The following resources follow a consistent pattern under Receiptroot with key {
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **receipt** | /receipts | listReceipt | createReceipt | getReceipt | updateReceipt | deleteReceipt |
+    | **staff-skill** | /receipts/{receiptKey}/staff-skills | listStaffSkillByReceiptKey | createStaffSkill | getStaffSkillByReceiptKey | updateStaffSkillByReceiptKey | deleteStaffSkillByReceiptKey |
     | **shipment-reference** | /receipts/{receiptKey}/shipment-references | listShipmentReferenceByReceiptKey | createShipmentReference | getShipmentReferenceByReceiptKey | updateShipmentReferenceByReceiptKey | deleteShipmentReferenceByReceiptKey |
     | **unit-of-measure** | /receipts/{receiptKey}/unit-of-measures | listUnitOfMeasureByReceiptKey |  | getUnitOfMeasureByReceiptKey | updateUnitOfMeasureByReceiptKey | deleteUnitOfMeasureByReceiptKey |
     | **position** | /receipts/{receiptKey}/positions | listPositionByReceiptKey | createPosition | getPositionByReceiptKey | updatePositionByReceiptKey | deletePositionByReceiptKey |

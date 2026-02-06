@@ -130,9 +130,9 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
-✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 

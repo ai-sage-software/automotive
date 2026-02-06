@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialForecast**, **FinancialSplit**, **FinancialTrack**, **Identifier**, **PartyReference**, **Price**, **RebateReference**, **RewardReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -31,6 +31,7 @@ The API is structured around the domain **finance** and **FinancialForecast** re
     | **FinancialCategoryReference** | /financial-forecasts/{financialForecastKey}/financial-category-references | Manages FinancialCategoryReferences belonging to FinancialForecasts |
     | **Money** | /financial-forecasts/{financialForecastKey}/money | Manages Money belonging to FinancialForecasts |
     | **FeeReference** | /financial-forecasts/{financialForecastKey}/fee-references | Manages FeeReferences belonging to FinancialForecasts |
+    | **PartyReference** | /financial-forecasts/{financialForecastKey}/party-references | Manages PartyReferences belonging to FinancialForecasts |
     | **Identifier** | /financial-forecasts/{financialForecastKey}/identifiers | Manages Identifiers belonging to FinancialForecasts |
     | **Price** | /financial-forecasts/{financialForecastKey}/prices | Manages Prices belonging to FinancialForecasts |
     | **FinancialEvent** | /financial-forecasts/{financialForecastKey}/financial-events | Manages FinancialEvents belonging to FinancialForecasts |
@@ -109,6 +110,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **FinancialEventTypes** : types of financial events.<br/>
 💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LedgerActionTypes** : types of ledger actions.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PriceTypes** : types of prices.<br/>
@@ -121,8 +124,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **Money** : Monetary value and currency information.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
 
 ---
@@ -623,6 +626,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /financial-forecasts/{financialForecastKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by financialForecastKey. getPartyReferenceByFinancialForecastKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /financial-forecasts/{financialForecastKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/financial-forecasts/{financialForecastKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /financial-forecasts/{financialForecastKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -956,6 +1009,7 @@ The following resources follow a consistent pattern under FinancialForecastroot 
     | **financial-category-reference** | /financial-forecasts/{financialForecastKey}/financial-category-references | listFinancialCategoryReferenceByFinancialForecastKey | createFinancialCategoryReference | getFinancialCategoryReferenceByFinancialForecastKey | updateFinancialCategoryReferenceByFinancialForecastKey | deleteFinancialCategoryReferenceByFinancialForecastKey |
     | **money** | /financial-forecasts/{financialForecastKey}/money | listMoneyByFinancialForecastKey |  | getMoneyByFinancialForecastKey | updateMoneyByFinancialForecastKey | deleteMoneyByFinancialForecastKey |
     | **fee-reference** | /financial-forecasts/{financialForecastKey}/fee-references | listFeeReferenceByFinancialForecastKey | createFeeReference | getFeeReferenceByFinancialForecastKey | updateFeeReferenceByFinancialForecastKey | deleteFeeReferenceByFinancialForecastKey |
+    | **party-reference** | /financial-forecasts/{financialForecastKey}/party-references | listPartyReferenceByFinancialForecastKey | createPartyReference | getPartyReferenceByFinancialForecastKey | updatePartyReferenceByFinancialForecastKey | deletePartyReferenceByFinancialForecastKey |
     | **identifier** | /financial-forecasts/{financialForecastKey}/identifiers | listIdentifierByFinancialForecastKey | createIdentifier | getIdentifierByFinancialForecastKey | updateIdentifierByFinancialForecastKey | deleteIdentifierByFinancialForecastKey |
     | **price** | /financial-forecasts/{financialForecastKey}/prices | listPriceByFinancialForecastKey | createPrice | getPriceByFinancialForecastKey | updatePriceByFinancialForecastKey | deletePriceByFinancialForecastKey |
     | **financial-event** | /financial-forecasts/{financialForecastKey}/financial-events | listFinancialEventByFinancialForecastKey | createFinancialEvent | getFinancialEventByFinancialForecastKey | updateFinancialEventByFinancialForecastKey | deleteFinancialEventByFinancialForecastKey |

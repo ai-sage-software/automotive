@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialTrackReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **TaxSplit**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **CustomerOrderReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialEvent**, **FinancialSplit**, **FinancialSplitReference**, **FinancialTrackReference**, **GeographicBoundaryReference**, **Identifier**, **LenderReference**, **PartOrder**, **PartOrderItem**, **PartReference**, **PartyReference**, **PaymentScheduleReference**, **PaymentTermReference**, **Price**, **PricePlanReference**, **RebateReference**, **RewardReference**, **SalesProfileReference**, **ShipmentReference**, **StaffAssignmentReference**, **StaffSkill**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,15 +23,19 @@ The API is structured around the domain **parts** and **PartOrder** resource as 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **PartOrder** | /part-orders | Manages PartOrders |
+    | **StaffSkill** | /part-orders/{partOrderKey}/staff-skills | Manages StaffSkills belonging to PartOrders |
     | **PaymentTermReference** | /part-orders/{partOrderKey}/payment-term-references | Manages PaymentTermReferences belonging to PartOrders |
     | **DiscountReference** | /part-orders/{partOrderKey}/discount-references | Manages DiscountReferences belonging to PartOrders |
+    | **TimeSlot** | /part-orders/{partOrderKey}/time-slots | Manages TimeSlots belonging to PartOrders |
     | **AddressReference** | /part-orders/{partOrderKey}/address-references | Manages AddressReferences belonging to PartOrders |
     | **FinancialCategoryReference** | /part-orders/{partOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PartOrders |
     | **StaffAssignmentReference** | /part-orders/{partOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to PartOrders |
     | **FeeReference** | /part-orders/{partOrderKey}/fee-references | Manages FeeReferences belonging to PartOrders |
+    | **PartyReference** | /part-orders/{partOrderKey}/party-references | Manages PartyReferences belonging to PartOrders |
     | **Money** | /part-orders/{partOrderKey}/money | Manages Money belonging to PartOrders |
     | **Identifier** | /part-orders/{partOrderKey}/identifiers | Manages Identifiers belonging to PartOrders |
     | **PartReference** | /part-orders/{partOrderKey}/part-references | Manages PartReferences belonging to PartOrders |
+    | **GeographicBoundaryReference** | /part-orders/{partOrderKey}/geographic-boundary-references | Manages GeographicBoundaryReferences belonging to PartOrders |
     | **EffectivePeriod** | /part-orders/{partOrderKey}/effective-periods | Manages EffectivePeriods belonging to PartOrders |
     | **PartOrderItem** | /part-orders/{partOrderKey}/part-order-items | Manages PartOrderItems belonging to PartOrders |
     | **CreditReference** | /part-orders/{partOrderKey}/credit-references | Manages CreditReferences belonging to PartOrders |
@@ -47,6 +51,7 @@ The API is structured around the domain **parts** and **PartOrder** resource as 
     | **CustomerOrderReference** | /part-orders/{partOrderKey}/customer-order-references | Manages CustomerOrderReferences belonging to PartOrders |
     | **Price** | /part-orders/{partOrderKey}/prices | Manages Prices belonging to PartOrders |
     | **FinancialEvent** | /part-orders/{partOrderKey}/financial-events | Manages FinancialEvents belonging to PartOrders |
+    | **FinancialSplitReference** | /part-orders/{partOrderKey}/financial-split-references | Manages FinancialSplitReferences belonging to PartOrders |
     | **TextualDetail** | /part-orders/{partOrderKey}/textual-details | Manages TextualDetails belonging to PartOrders |
     | **LenderReference** | /part-orders/{partOrderKey}/lender-references | Manages LenderReferences belonging to PartOrders |
     | **FinancialTrackReference** | /part-orders/{partOrderKey}/financial-track-references | Manages FinancialTrackReferences belonging to PartOrders |
@@ -120,6 +125,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ---
 
 💠 **AddressTypes** : types of address.<br/>
+💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **ExitConsiderationTypes** : types of exit considerations.<br/>
 💠 **FinancialEventTypes** : types of financial events.<br/>
@@ -128,6 +134,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **OrderTypes** : types of orders.<br/>
 💠 **PartInvoiceStatusTypes** : types of part invoice status.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentMethodTypes** : types of payment methods.<br/>
 💠 **PaymentTransactionStatusTypes** : types of payment transaction status.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
@@ -135,21 +143,23 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **ProductTypes** : types of products.<br/>
 💠 **ResourceTypes** : types of resources.<br/>
+💠 **RoleTypes** : types of roles.<br/>
 💠 **SalesPipelineStageTypes** : types of sales pipeline stages.<br/>
+💠 **ServiceJobTypes** : types of service jobs.<br/>
+💠 **SkillCategoryTypes** : types of skill categorys.<br/>
 💠 **TaxTypes** : types of taxs.<br/>
+💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UOMQuantityCategoryTypes** : types of u o m quantity categorys.<br/>
-💠 **DaysOfWeekTypes** : Status of the account<br/>
-💠 **TimeslotDirectiveTypes** : Represents the directive for a timeslot.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **Money** : Monetary value and currency information.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
-✅ **UnitOfMeasure** : Standard unit used for quantity (e.g., kg, liters, units).<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
+✅ **UnitOfMeasure** : unit.of.measure.desc<br/>
 
 ---
 
@@ -281,6 +291,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-orders/{partOrderKey}/staff-skills
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffSkill entities scoped by partOrderKey. getStaffSkillByPartOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills</span> <br/>
+        <span class="api-summary">Create a new StaffSkill entity. createStaffSkill</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/staff-skills/{staffSkillKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffSkill entity. gettaffSkillById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Replace a StaffSkill entity. replaceStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffSkill entity. updatePartialStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Delete a StaffSkill entity deleteStaffSkillEntity</span>
+    </span>
+</div>
+
 ### /part-orders/{partOrderKey}/payment-term-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -378,6 +438,24 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by partOrderKey. getTimeSlotByPartOrderKey</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -581,6 +659,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-orders/{partOrderKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by partOrderKey. getPartyReferenceByPartOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /part-orders/{partOrderKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -696,6 +824,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/part-orders/{partOrderKey}/part-references/{partReferenceKey}</span> <br/>
         <span class="api-summary">Delete a PartReference entity deletePartReferenceEntity</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/geographic-boundary-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Retrieve a list of GeographicBoundaryReference entities scoped by partOrderKey. getGeographicBoundaryReferenceByPartOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references</span> <br/>
+        <span class="api-summary">Create a new GeographicBoundaryReference entity. createGeographicBoundaryReference</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific GeographicBoundaryReference entity. geteographicBoundaryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a GeographicBoundaryReference entity. replaceGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a GeographicBoundaryReference entity. updatePartialGeographicBoundaryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/geographic-boundary-references/{geographicBoundaryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a GeographicBoundaryReference entity deleteGeographicBoundaryReferenceEntity</span>
     </span>
 </div>
 
@@ -1385,6 +1563,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /part-orders/{partOrderKey}/financial-split-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSplitReference entities scoped by partOrderKey. getFinancialSplitReferenceByPartOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references</span> <br/>
+        <span class="api-summary">Create a new FinancialSplitReference entity. createFinancialSplitReference</span>
+    </span>
+</div>
+
+### /part-orders/{partOrderKey}/financial-split-references/{financialSplitReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSplitReference entity. getinancialSplitReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSplitReference entity. replaceFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSplitReference entity. updatePartialFinancialSplitReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/part-orders/{partOrderKey}/financial-split-references/{financialSplitReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSplitReference entity deleteFinancialSplitReferenceEntity</span>
+    </span>
+</div>
+
 ### /part-orders/{partOrderKey}/textual-details
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1560,15 +1788,19 @@ The following resources follow a consistent pattern under PartOrderroot with key
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **part-order** | /part-orders | listPartOrder | createPartOrder | getPartOrder | updatePartOrder | deletePartOrder |
+    | **staff-skill** | /part-orders/{partOrderKey}/staff-skills | listStaffSkillByPartOrderKey | createStaffSkill | getStaffSkillByPartOrderKey | updateStaffSkillByPartOrderKey | deleteStaffSkillByPartOrderKey |
     | **payment-term-reference** | /part-orders/{partOrderKey}/payment-term-references | listPaymentTermReferenceByPartOrderKey | createPaymentTermReference | getPaymentTermReferenceByPartOrderKey | updatePaymentTermReferenceByPartOrderKey | deletePaymentTermReferenceByPartOrderKey |
     | **discount-reference** | /part-orders/{partOrderKey}/discount-references | listDiscountReferenceByPartOrderKey | createDiscountReference | getDiscountReferenceByPartOrderKey | updateDiscountReferenceByPartOrderKey | deleteDiscountReferenceByPartOrderKey |
+    | **time-slot** | /part-orders/{partOrderKey}/time-slots | listTimeSlotByPartOrderKey |  | getTimeSlotByPartOrderKey | updateTimeSlotByPartOrderKey | deleteTimeSlotByPartOrderKey |
     | **address-reference** | /part-orders/{partOrderKey}/address-references | listAddressReferenceByPartOrderKey | createAddressReference | getAddressReferenceByPartOrderKey | updateAddressReferenceByPartOrderKey | deleteAddressReferenceByPartOrderKey |
     | **financial-category-reference** | /part-orders/{partOrderKey}/financial-category-references | listFinancialCategoryReferenceByPartOrderKey | createFinancialCategoryReference | getFinancialCategoryReferenceByPartOrderKey | updateFinancialCategoryReferenceByPartOrderKey | deleteFinancialCategoryReferenceByPartOrderKey |
     | **staff-assignment-reference** | /part-orders/{partOrderKey}/staff-assignment-references | listStaffAssignmentReferenceByPartOrderKey | createStaffAssignmentReference | getStaffAssignmentReferenceByPartOrderKey | updateStaffAssignmentReferenceByPartOrderKey | deleteStaffAssignmentReferenceByPartOrderKey |
     | **fee-reference** | /part-orders/{partOrderKey}/fee-references | listFeeReferenceByPartOrderKey | createFeeReference | getFeeReferenceByPartOrderKey | updateFeeReferenceByPartOrderKey | deleteFeeReferenceByPartOrderKey |
+    | **party-reference** | /part-orders/{partOrderKey}/party-references | listPartyReferenceByPartOrderKey | createPartyReference | getPartyReferenceByPartOrderKey | updatePartyReferenceByPartOrderKey | deletePartyReferenceByPartOrderKey |
     | **money** | /part-orders/{partOrderKey}/money | listMoneyByPartOrderKey |  | getMoneyByPartOrderKey | updateMoneyByPartOrderKey | deleteMoneyByPartOrderKey |
     | **identifier** | /part-orders/{partOrderKey}/identifiers | listIdentifierByPartOrderKey | createIdentifier | getIdentifierByPartOrderKey | updateIdentifierByPartOrderKey | deleteIdentifierByPartOrderKey |
     | **part-reference** | /part-orders/{partOrderKey}/part-references | listPartReferenceByPartOrderKey | createPartReference | getPartReferenceByPartOrderKey | updatePartReferenceByPartOrderKey | deletePartReferenceByPartOrderKey |
+    | **geographic-boundary-reference** | /part-orders/{partOrderKey}/geographic-boundary-references | listGeographicBoundaryReferenceByPartOrderKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByPartOrderKey | updateGeographicBoundaryReferenceByPartOrderKey | deleteGeographicBoundaryReferenceByPartOrderKey |
     | **effective-period** | /part-orders/{partOrderKey}/effective-periods | listEffectivePeriodByPartOrderKey |  | getEffectivePeriodByPartOrderKey | updateEffectivePeriodByPartOrderKey | deleteEffectivePeriodByPartOrderKey |
     | **part-order-item** | /part-orders/{partOrderKey}/part-order-items | listPartOrderItemByPartOrderKey | createPartOrderItem | getPartOrderItemByPartOrderKey | updatePartOrderItemByPartOrderKey | deletePartOrderItemByPartOrderKey |
     | **credit-reference** | /part-orders/{partOrderKey}/credit-references | listCreditReferenceByPartOrderKey | createCreditReference | getCreditReferenceByPartOrderKey | updateCreditReferenceByPartOrderKey | deleteCreditReferenceByPartOrderKey |
@@ -1584,6 +1816,7 @@ The following resources follow a consistent pattern under PartOrderroot with key
     | **customer-order-reference** | /part-orders/{partOrderKey}/customer-order-references | listCustomerOrderReferenceByPartOrderKey | createCustomerOrderReference | getCustomerOrderReferenceByPartOrderKey | updateCustomerOrderReferenceByPartOrderKey | deleteCustomerOrderReferenceByPartOrderKey |
     | **price** | /part-orders/{partOrderKey}/prices | listPriceByPartOrderKey | createPrice | getPriceByPartOrderKey | updatePriceByPartOrderKey | deletePriceByPartOrderKey |
     | **financial-event** | /part-orders/{partOrderKey}/financial-events | listFinancialEventByPartOrderKey | createFinancialEvent | getFinancialEventByPartOrderKey | updateFinancialEventByPartOrderKey | deleteFinancialEventByPartOrderKey |
+    | **financial-split-reference** | /part-orders/{partOrderKey}/financial-split-references | listFinancialSplitReferenceByPartOrderKey | createFinancialSplitReference | getFinancialSplitReferenceByPartOrderKey | updateFinancialSplitReferenceByPartOrderKey | deleteFinancialSplitReferenceByPartOrderKey |
     | **textual-detail** | /part-orders/{partOrderKey}/textual-details | listTextualDetailByPartOrderKey |  | getTextualDetailByPartOrderKey | updateTextualDetailByPartOrderKey | deleteTextualDetailByPartOrderKey |
     | **lender-reference** | /part-orders/{partOrderKey}/lender-references | listLenderReferenceByPartOrderKey | createLenderReference | getLenderReferenceByPartOrderKey | updateLenderReferenceByPartOrderKey | deleteLenderReferenceByPartOrderKey |
     | **financial-track-reference** | /part-orders/{partOrderKey}/financial-track-references | listFinancialTrackReferenceByPartOrderKey | createFinancialTrackReference | getFinancialTrackReferenceByPartOrderKey | updateFinancialTrackReferenceByPartOrderKey | deleteFinancialTrackReferenceByPartOrderKey |

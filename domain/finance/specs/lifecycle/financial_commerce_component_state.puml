@@ -1,0 +1,53 @@
+@startuml
+title Financial Flow Status Lifecycle
+
+state "Initiation" as Init {
+    [*] --> DRAFT
+    DRAFT --> INITIATING
+    INITIATING --> ACTIVE
+}
+
+state "Hold & Validation" as Hold {
+    ACTIVE --> PENDING_APPROVAL
+    PENDING_APPROVAL --> SALES_HOLD : Issue with Sales
+    PENDING_APPROVAL --> PAYMENT_HOLD : Payment Issue
+    PENDING_APPROVAL --> FINANCE_HOLD : Finance Issue
+    PENDING_APPROVAL --> CUSTOMER_HOLD : Waiting for Customer
+
+    HOLD_RETURN --> PENDING_APPROVAL : Resolved
+
+    ACTIVE --> INVALID : Logic/Data Error
+    ACTIVE --> NOT_ELIGIBLE : Rules Not Met
+    ACTIVE --> AUTHENTICATION_REQUIRED : Identity Check
+}
+
+state "Decision" as Decision {
+    PENDING_APPROVAL --> APPROVED
+    PENDING_APPROVAL --> REJECTED
+    PENDING_APPROVAL --> DECLINED
+    PENDING_APPROVAL --> COMBINATION_DISALLOWED : Conflict Found
+}
+
+state "Execution" as Execution {
+    APPROVED --> POSTED : Entry Created
+    POSTED --> APPLIED : Rebate/Credit Applied
+    APPLIED --> COMPLETE : Success
+}
+
+state "Terminal / Failure" as Terminal {
+    COMPLETE --> REFUNDED : Transaction Reversed
+    ACTIVE --> FAILED : System Error
+    ACTIVE --> CANCELLED : Manual Stop
+    ACTIVE --> ABANDON : Timed Out/Incomplete
+    ACTIVE --> EXPIRED : Offer Expired
+
+    ALREADY_APPLIED : Terminal (Duplicate)
+    INACTIVE : Terminal (No longer valid)
+}
+
+' Layout helpers
+SALES_HOLD -[hidden]down-> PAYMENT_HOLD
+APPROVED -[hidden]down-> REJECTED
+
+footer FinancialFlowStatusTypes Enum Mapping (v0.1)
+@enduml

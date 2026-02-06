@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Address**, **AddressLocale**, **Authorization**, **CommunicationChannel**, **ControlAccount**, **ControlAccountReference**, **DailyHour**, **Department**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **MetricNameValue**, **OrgName**, **OrgProfile**, **PaymentTermReference**, **PayrollRate**, **Person**, **PersonName**, **Position**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffMember**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Authorization**, **CommunicationChannel**, **ControlAccountReference**, **DepartmentReference**, **Discount**, **DiscountMetricValue**, **DiscountPolicy**, **Identifier**, **OrgName**, **OrgProfile**, **PartyReference**, **PaymentTermReference**, **PayrollRate**, **PersonReference**, **Price**, **PrivacyEvent**, **PrivacyItem**, **StaffAffinity**, **StaffCertification**, **StaffMember**, **StaffSkill**, **Team**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,30 +23,31 @@ The API is structured around the domain **party_identity** and **OrgProfile** re
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **OrgProfile** | /org-profiles | Manages OrgProfiles |
+    | **StaffSkill** | /org-profiles/{orgProfileKey}/staff-skills | Manages StaffSkills belonging to OrgProfiles |
     | **PaymentTermReference** | /org-profiles/{orgProfileKey}/payment-term-references | Manages PaymentTermReferences belonging to OrgProfiles |
     | **Discount** | /org-profiles/{orgProfileKey}/discounts | Manages Discounts belonging to OrgProfiles |
-    | **Addresse** | /org-profiles/{orgProfileKey}/addresses | Manages Addresses belonging to OrgProfiles |
     | **OrgName** | /org-profiles/{orgProfileKey}/org-names | Manages OrgNames belonging to OrgProfiles |
     | **StaffMember** | /org-profiles/{orgProfileKey}/staff-members | Manages StaffMembers belonging to OrgProfiles |
-    | **PrivacyEvent** | /org-profiles/{orgProfileKey}/privacy-events | Manages PrivacyEvents belonging to OrgProfiles |
     | **TimeSlot** | /org-profiles/{orgProfileKey}/time-slots | Manages TimeSlots belonging to OrgProfiles |
-    | **ControlAccount** | /org-profiles/{orgProfileKey}/control-accounts | Manages ControlAccounts belonging to OrgProfiles |
+    | **PrivacyEvent** | /org-profiles/{orgProfileKey}/privacy-events | Manages PrivacyEvents belonging to OrgProfiles |
     | **Authorization** | /org-profiles/{orgProfileKey}/authorizations | Manages Authorizations belonging to OrgProfiles |
+    | **PartyReference** | /org-profiles/{orgProfileKey}/party-references | Manages PartyReferences belonging to OrgProfiles |
     | **Money** | /org-profiles/{orgProfileKey}/money | Manages Money belonging to OrgProfiles |
-    | **Department** | /org-profiles/{orgProfileKey}/departments | Manages Departments belonging to OrgProfiles |
-    | **MetricNameValue** | /org-profiles/{orgProfileKey}/metric-name-values | Manages MetricNameValues belonging to OrgProfiles |
+    | **StaffAffinitie** | /org-profiles/{orgProfileKey}/staff-affinities | Manages StaffAffinities belonging to OrgProfiles |
     | **Identifier** | /org-profiles/{orgProfileKey}/identifiers | Manages Identifiers belonging to OrgProfiles |
+    | **StaffCertification** | /org-profiles/{orgProfileKey}/staff-certifications | Manages StaffCertifications belonging to OrgProfiles |
     | **EffectivePeriod** | /org-profiles/{orgProfileKey}/effective-periods | Manages EffectivePeriods belonging to OrgProfiles |
     | **DiscountPolicie** | /org-profiles/{orgProfileKey}/discount-policies | Manages DiscountPolicies belonging to OrgProfiles |
+    | **Team** | /org-profiles/{orgProfileKey}/teams | Manages Teams belonging to OrgProfiles |
     | **PrivacyItem** | /org-profiles/{orgProfileKey}/privacy-items | Manages PrivacyItems belonging to OrgProfiles |
-    | **PersonName** | /org-profiles/{orgProfileKey}/person-names | Manages PersonNames belonging to OrgProfiles |
     | **PayrollRate** | /org-profiles/{orgProfileKey}/payroll-rates | Manages PayrollRates belonging to OrgProfiles |
     | **ControlAccountReference** | /org-profiles/{orgProfileKey}/control-account-references | Manages ControlAccountReferences belonging to OrgProfiles |
+    | **PersonReference** | /org-profiles/{orgProfileKey}/person-references | Manages PersonReferences belonging to OrgProfiles |
+    | **DepartmentReference** | /org-profiles/{orgProfileKey}/department-references | Manages DepartmentReferences belonging to OrgProfiles |
     | **CommunicationChannel** | /org-profiles/{orgProfileKey}/communication-channels | Manages CommunicationChannels belonging to OrgProfiles |
     | **DiscountMetricValue** | /org-profiles/{orgProfileKey}/discount-metric-values | Manages DiscountMetricValues belonging to OrgProfiles |
     | **Price** | /org-profiles/{orgProfileKey}/prices | Manages Prices belonging to OrgProfiles |
     | **TextualDetail** | /org-profiles/{orgProfileKey}/textual-details | Manages TextualDetails belonging to OrgProfiles |
-    | **People** | /org-profiles/{orgProfileKey}/people | Manages People belonging to OrgProfiles |
 
 
 ---
@@ -115,25 +116,18 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **AddressTypes** : types of address.<br/>
 💠 **BusinessTypes** : types of business.<br/>
 💠 **CommunicationChannelTypes** : types of communication channels.<br/>
-💠 **ControlAccountRoleTypes** : types of control account roles.<br/>
-💠 **ControlAccountStatusTypes** : types of control account status.<br/>
-💠 **ControlAccountTypes** : types of control accounts.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DepartmentTypes** : types of departments.<br/>
 💠 **DiscountTypes** : types of discounts.<br/>
 💠 **DueOnTypes** : types of due ons.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
-💠 **FinancialCategoryTypes** : types of financial categorys.<br/>
-💠 **GenderTypes** : types of genders.<br/>
-💠 **MaritalStatusTypes** : types of marital status.<br/>
-💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
 💠 **OperatingStatusTypes** : types of operating status.<br/>
 💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **PartIdentifierTypes** : types of part identifiers.<br/>
-💠 **PartyTypes** : types of partys.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
+💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PayrollCycleFrequencyTypes** : types of payroll cycle frequencys.<br/>
 💠 **PriceTypes** : types of prices.<br/>
@@ -144,21 +138,20 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ProductStateTypes** : types of product states.<br/>
 💠 **ProductViewTypes** : types of product views.<br/>
 💠 **RoleTypes** : types of roles.<br/>
+💠 **SkillCategoryTypes** : types of skill categorys.<br/>
 💠 **StaffPayTypes** : types of staff pays.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **UnitOfMeasureTypes** : types of unit of measures.<br/>
 💠 **ValidationTypes** : types of validations.<br/>
-💠 **LocationTypes** : Defines various types of geographical or logist...<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
-✅ **Link** : Link<br/>
-✅ **Money** : Monetary value and currency information.<br/>
+✅ **EffectivePeriod** : effective.period.desc<br/>
+✅ **Money** : money.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : Designated window of time for the activity.<br/>
+✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 
@@ -290,6 +283,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /org-profiles/{orgProfileKey}/staff-skills
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffSkill entities scoped by orgProfileKey. getStaffSkillByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills</span> <br/>
+        <span class="api-summary">Create a new StaffSkill entity. createStaffSkill</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/staff-skills/{staffSkillKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffSkill entity. gettaffSkillById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Replace a StaffSkill entity. replaceStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffSkill entity. updatePartialStaffSkill</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-skills/{staffSkillKey}</span> <br/>
+        <span class="api-summary">Delete a StaffSkill entity deleteStaffSkillEntity</span>
+    </span>
+</div>
+
 ### /org-profiles/{orgProfileKey}/payment-term-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -387,56 +430,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/discounts/{discountKey}</span> <br/>
         <span class="api-summary">Delete a Discount entity deleteDiscountEntity</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/addresses
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses</span> <br/>
-        <span class="api-summary">Retrieve a list of Address entities scoped by orgProfileKey. getAddressByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses</span> <br/>
-        <span class="api-summary">Create a new Address entity. createAddress</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/addresses/{addressKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Address entity. getddressById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Replace a Address entity. replaceAddress</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Partially update a Address entity. updatePartialAddress</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/addresses/{addressKey}</span> <br/>
-        <span class="api-summary">Delete a Address entity deleteAddressEntity</span>
     </span>
 </div>
 
@@ -540,6 +533,24 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /org-profiles/{orgProfileKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by orgProfileKey. getTimeSlotByOrgProfileKey</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+    </span>
+</div>
+
 ### /org-profiles/{orgProfileKey}/privacy-events
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -587,74 +598,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-events/{privacyEventKey}</span> <br/>
         <span class="api-summary">Delete a PrivacyEvent entity deletePrivacyEventEntity</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by orgProfileKey. getTimeSlotByOrgProfileKey</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/control-accounts
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts</span> <br/>
-        <span class="api-summary">Retrieve a list of ControlAccount entities scoped by orgProfileKey. getControlAccountByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts</span> <br/>
-        <span class="api-summary">Create a new ControlAccount entity. createControlAccount</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific ControlAccount entity. getontrolAccountById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Replace a ControlAccount entity. replaceControlAccount</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Partially update a ControlAccount entity. updatePartialControlAccount</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/control-accounts/{controlAccountKey}</span> <br/>
-        <span class="api-summary">Delete a ControlAccount entity deleteControlAccountEntity</span>
     </span>
 </div>
 
@@ -708,6 +651,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /org-profiles/{orgProfileKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by orgProfileKey. getPartyReferenceByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /org-profiles/{orgProfileKey}/money
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -726,103 +719,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/departments
+### /org-profiles/{orgProfileKey}/staff-affinities
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments</span> <br/>
-        <span class="api-summary">Retrieve a list of Department entities scoped by orgProfileKey. getDepartmentByOrgProfileKey</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffAffinity entities scoped by orgProfileKey. getStaffAffinityByOrgProfileKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments</span> <br/>
-        <span class="api-summary">Create a new Department entity. createDepartment</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities</span> <br/>
+        <span class="api-summary">Create a new StaffAffinity entity. createStaffAffinity</span>
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/departments/{departmentKey}
+### /org-profiles/{orgProfileKey}/staff-affinities/{staffAffinityKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Department entity. getepartmentById</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffAffinity entity. gettaffAffinityById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Replace a Department entity. replaceDepartment</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Replace a StaffAffinity entity. replaceStaffAffinity</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Partially update a Department entity. updatePartialDepartment</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffAffinity entity. updatePartialStaffAffinity</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/departments/{departmentKey}</span> <br/>
-        <span class="api-summary">Delete a Department entity deleteDepartmentEntity</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/metric-name-values
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Retrieve a list of MetricNameValue entities scoped by orgProfileKey. getMetricNameValueByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values</span> <br/>
-        <span class="api-summary">Create a new MetricNameValue entity. createMetricNameValue</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific MetricNameValue entity. getetricNameValueById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Replace a MetricNameValue entity. replaceMetricNameValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricNameValue entity. updatePartialMetricNameValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/metric-name-values/{metricNameValueKey}</span> <br/>
-        <span class="api-summary">Delete a MetricNameValue entity deleteMetricNameValueEntity</span>
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-affinities/{staffAffinityKey}</span> <br/>
+        <span class="api-summary">Delete a StaffAffinity entity deleteStaffAffinityEntity</span>
     </span>
 </div>
 
@@ -873,6 +816,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/staff-certifications
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffCertification entities scoped by orgProfileKey. getStaffCertificationByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications</span> <br/>
+        <span class="api-summary">Create a new StaffCertification entity. createStaffCertification</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/staff-certifications/{staffCertificationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffCertification entity. gettaffCertificationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Replace a StaffCertification entity. replaceStaffCertification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffCertification entity. updatePartialStaffCertification</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/staff-certifications/{staffCertificationKey}</span> <br/>
+        <span class="api-summary">Delete a StaffCertification entity deleteStaffCertificationEntity</span>
     </span>
 </div>
 
@@ -944,6 +937,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /org-profiles/{orgProfileKey}/teams
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams</span> <br/>
+        <span class="api-summary">Retrieve a list of Team entities scoped by orgProfileKey. getTeamByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams</span> <br/>
+        <span class="api-summary">Create a new Team entity. createTeam</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/teams/{teamKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Team entity. geteamById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Replace a Team entity. replaceTeam</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Partially update a Team entity. updatePartialTeam</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/teams/{teamKey}</span> <br/>
+        <span class="api-summary">Delete a Team entity deleteTeamEntity</span>
+    </span>
+</div>
+
 ### /org-profiles/{orgProfileKey}/privacy-items
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -991,56 +1034,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/privacy-items/{privacyItemKey}</span> <br/>
         <span class="api-summary">Delete a PrivacyItem entity deletePrivacyItemEntity</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/person-names
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PersonName entities scoped by orgProfileKey. getPersonNameByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names</span> <br/>
-        <span class="api-summary">Create a new PersonName entity. createPersonName</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/person-names/{personNameKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PersonName entity. getersonNameById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Replace a PersonName entity. replacePersonName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PersonName entity. updatePartialPersonName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/person-names/{personNameKey}</span> <br/>
-        <span class="api-summary">Delete a PersonName entity deletePersonNameEntity</span>
     </span>
 </div>
 
@@ -1141,6 +1134,106 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/org-profiles/{orgProfileKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
         <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/person-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PersonReference entities scoped by orgProfileKey. getPersonReferenceByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references</span> <br/>
+        <span class="api-summary">Create a new PersonReference entity. createPersonReference</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/person-references/{personReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PersonReference entity. getersonReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PersonReference entity. replacePersonReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PersonReference entity. updatePartialPersonReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/person-references/{personReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PersonReference entity deletePersonReferenceEntity</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/department-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references</span> <br/>
+        <span class="api-summary">Retrieve a list of DepartmentReference entities scoped by orgProfileKey. getDepartmentReferenceByOrgProfileKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references</span> <br/>
+        <span class="api-summary">Create a new DepartmentReference entity. createDepartmentReference</span>
+    </span>
+</div>
+
+### /org-profiles/{orgProfileKey}/department-references/{departmentReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DepartmentReference entity. getepartmentReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a DepartmentReference entity. replaceDepartmentReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a DepartmentReference entity. updatePartialDepartmentReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/org-profiles/{orgProfileKey}/department-references/{departmentReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a DepartmentReference entity deleteDepartmentReferenceEntity</span>
     </span>
 </div>
 
@@ -1312,56 +1405,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /org-profiles/{orgProfileKey}/people
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people</span> <br/>
-        <span class="api-summary">Retrieve a list of Person entities scoped by orgProfileKey. getPersonByOrgProfileKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people</span> <br/>
-        <span class="api-summary">Create a new Person entity. createPerson</span>
-    </span>
-</div>
-
-### /org-profiles/{orgProfileKey}/people/{personKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Person entity. getersonById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Replace a Person entity. replacePerson</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Partially update a Person entity. updatePartialPerson</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/org-profiles/{orgProfileKey}/people/{personKey}</span> <br/>
-        <span class="api-summary">Delete a Person entity deletePersonEntity</span>
-    </span>
-</div>
-
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under OrgProfileroot with key {OrgProfileKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -1369,30 +1412,31 @@ The following resources follow a consistent pattern under OrgProfileroot with ke
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **org-profile** | /org-profiles | listOrgProfile | createOrgProfile | getOrgProfile | updateOrgProfile | deleteOrgProfile |
+    | **staff-skill** | /org-profiles/{orgProfileKey}/staff-skills | listStaffSkillByOrgProfileKey | createStaffSkill | getStaffSkillByOrgProfileKey | updateStaffSkillByOrgProfileKey | deleteStaffSkillByOrgProfileKey |
     | **payment-term-reference** | /org-profiles/{orgProfileKey}/payment-term-references | listPaymentTermReferenceByOrgProfileKey | createPaymentTermReference | getPaymentTermReferenceByOrgProfileKey | updatePaymentTermReferenceByOrgProfileKey | deletePaymentTermReferenceByOrgProfileKey |
     | **discount** | /org-profiles/{orgProfileKey}/discounts | listDiscountByOrgProfileKey | createDiscount | getDiscountByOrgProfileKey | updateDiscountByOrgProfileKey | deleteDiscountByOrgProfileKey |
-    | **addresse** | /org-profiles/{orgProfileKey}/addresses | listAddressByOrgProfileKey | createAddress | getAddressByOrgProfileKey | updateAddressByOrgProfileKey | deleteAddressByOrgProfileKey |
     | **org-name** | /org-profiles/{orgProfileKey}/org-names | listOrgNameByOrgProfileKey | createOrgName | getOrgNameByOrgProfileKey | updateOrgNameByOrgProfileKey | deleteOrgNameByOrgProfileKey |
     | **staff-member** | /org-profiles/{orgProfileKey}/staff-members | listStaffMemberByOrgProfileKey | createStaffMember | getStaffMemberByOrgProfileKey | updateStaffMemberByOrgProfileKey | deleteStaffMemberByOrgProfileKey |
-    | **privacy-event** | /org-profiles/{orgProfileKey}/privacy-events | listPrivacyEventByOrgProfileKey | createPrivacyEvent | getPrivacyEventByOrgProfileKey | updatePrivacyEventByOrgProfileKey | deletePrivacyEventByOrgProfileKey |
     | **time-slot** | /org-profiles/{orgProfileKey}/time-slots | listTimeSlotByOrgProfileKey |  | getTimeSlotByOrgProfileKey | updateTimeSlotByOrgProfileKey | deleteTimeSlotByOrgProfileKey |
-    | **control-account** | /org-profiles/{orgProfileKey}/control-accounts | listControlAccountByOrgProfileKey | createControlAccount | getControlAccountByOrgProfileKey | updateControlAccountByOrgProfileKey | deleteControlAccountByOrgProfileKey |
+    | **privacy-event** | /org-profiles/{orgProfileKey}/privacy-events | listPrivacyEventByOrgProfileKey | createPrivacyEvent | getPrivacyEventByOrgProfileKey | updatePrivacyEventByOrgProfileKey | deletePrivacyEventByOrgProfileKey |
     | **authorization** | /org-profiles/{orgProfileKey}/authorizations | listAuthorizationByOrgProfileKey | createAuthorization | getAuthorizationByOrgProfileKey | updateAuthorizationByOrgProfileKey | deleteAuthorizationByOrgProfileKey |
+    | **party-reference** | /org-profiles/{orgProfileKey}/party-references | listPartyReferenceByOrgProfileKey | createPartyReference | getPartyReferenceByOrgProfileKey | updatePartyReferenceByOrgProfileKey | deletePartyReferenceByOrgProfileKey |
     | **money** | /org-profiles/{orgProfileKey}/money | listMoneyByOrgProfileKey |  | getMoneyByOrgProfileKey | updateMoneyByOrgProfileKey | deleteMoneyByOrgProfileKey |
-    | **department** | /org-profiles/{orgProfileKey}/departments | listDepartmentByOrgProfileKey | createDepartment | getDepartmentByOrgProfileKey | updateDepartmentByOrgProfileKey | deleteDepartmentByOrgProfileKey |
-    | **metric-name-value** | /org-profiles/{orgProfileKey}/metric-name-values | listMetricNameValueByOrgProfileKey | createMetricNameValue | getMetricNameValueByOrgProfileKey | updateMetricNameValueByOrgProfileKey | deleteMetricNameValueByOrgProfileKey |
+    | **staff-affinitie** | /org-profiles/{orgProfileKey}/staff-affinities | listStaffAffinityByOrgProfileKey | createStaffAffinity | getStaffAffinityByOrgProfileKey | updateStaffAffinityByOrgProfileKey | deleteStaffAffinityByOrgProfileKey |
     | **identifier** | /org-profiles/{orgProfileKey}/identifiers | listIdentifierByOrgProfileKey | createIdentifier | getIdentifierByOrgProfileKey | updateIdentifierByOrgProfileKey | deleteIdentifierByOrgProfileKey |
+    | **staff-certification** | /org-profiles/{orgProfileKey}/staff-certifications | listStaffCertificationByOrgProfileKey | createStaffCertification | getStaffCertificationByOrgProfileKey | updateStaffCertificationByOrgProfileKey | deleteStaffCertificationByOrgProfileKey |
     | **effective-period** | /org-profiles/{orgProfileKey}/effective-periods | listEffectivePeriodByOrgProfileKey |  | getEffectivePeriodByOrgProfileKey | updateEffectivePeriodByOrgProfileKey | deleteEffectivePeriodByOrgProfileKey |
     | **discount-policie** | /org-profiles/{orgProfileKey}/discount-policies | listDiscountPolicyByOrgProfileKey | createDiscountPolicy | getDiscountPolicyByOrgProfileKey | updateDiscountPolicyByOrgProfileKey | deleteDiscountPolicyByOrgProfileKey |
+    | **team** | /org-profiles/{orgProfileKey}/teams | listTeamByOrgProfileKey | createTeam | getTeamByOrgProfileKey | updateTeamByOrgProfileKey | deleteTeamByOrgProfileKey |
     | **privacy-item** | /org-profiles/{orgProfileKey}/privacy-items | listPrivacyItemByOrgProfileKey | createPrivacyItem | getPrivacyItemByOrgProfileKey | updatePrivacyItemByOrgProfileKey | deletePrivacyItemByOrgProfileKey |
-    | **person-name** | /org-profiles/{orgProfileKey}/person-names | listPersonNameByOrgProfileKey | createPersonName | getPersonNameByOrgProfileKey | updatePersonNameByOrgProfileKey | deletePersonNameByOrgProfileKey |
     | **payroll-rate** | /org-profiles/{orgProfileKey}/payroll-rates | listPayrollRateByOrgProfileKey | createPayrollRate | getPayrollRateByOrgProfileKey | updatePayrollRateByOrgProfileKey | deletePayrollRateByOrgProfileKey |
     | **control-account-reference** | /org-profiles/{orgProfileKey}/control-account-references | listControlAccountReferenceByOrgProfileKey | createControlAccountReference | getControlAccountReferenceByOrgProfileKey | updateControlAccountReferenceByOrgProfileKey | deleteControlAccountReferenceByOrgProfileKey |
+    | **person-reference** | /org-profiles/{orgProfileKey}/person-references | listPersonReferenceByOrgProfileKey | createPersonReference | getPersonReferenceByOrgProfileKey | updatePersonReferenceByOrgProfileKey | deletePersonReferenceByOrgProfileKey |
+    | **department-reference** | /org-profiles/{orgProfileKey}/department-references | listDepartmentReferenceByOrgProfileKey | createDepartmentReference | getDepartmentReferenceByOrgProfileKey | updateDepartmentReferenceByOrgProfileKey | deleteDepartmentReferenceByOrgProfileKey |
     | **communication-channel** | /org-profiles/{orgProfileKey}/communication-channels | listCommunicationChannelByOrgProfileKey | createCommunicationChannel | getCommunicationChannelByOrgProfileKey | updateCommunicationChannelByOrgProfileKey | deleteCommunicationChannelByOrgProfileKey |
     | **discount-metric-value** | /org-profiles/{orgProfileKey}/discount-metric-values | listDiscountMetricValueByOrgProfileKey | createDiscountMetricValue | getDiscountMetricValueByOrgProfileKey | updateDiscountMetricValueByOrgProfileKey | deleteDiscountMetricValueByOrgProfileKey |
     | **price** | /org-profiles/{orgProfileKey}/prices | listPriceByOrgProfileKey | createPrice | getPriceByOrgProfileKey | updatePriceByOrgProfileKey | deletePriceByOrgProfileKey |
     | **textual-detail** | /org-profiles/{orgProfileKey}/textual-details | listTextualDetailByOrgProfileKey |  | getTextualDetailByOrgProfileKey | updateTextualDetailByOrgProfileKey | deleteTextualDetailByOrgProfileKey |
-    | **people** | /org-profiles/{orgProfileKey}/people | listPersonByOrgProfileKey | createPerson | getPersonByOrgProfileKey | updatePersonByOrgProfileKey | deletePersonByOrgProfileKey |
 
 ***Note on List Operations:***
 
