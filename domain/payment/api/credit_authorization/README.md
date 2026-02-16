@@ -26,11 +26,7 @@ The API is structured around the domain **payment** and **CreditAuthorization** 
     | **Money** | /credit-authorizations/{creditAuthorizationKey}/money | Manages Money belonging to CreditAuthorizations |
     | **PartyReference** | /credit-authorizations/{creditAuthorizationKey}/party-references | Manages PartyReferences belonging to CreditAuthorizations |
     | **Program** | /credit-authorizations/{creditAuthorizationKey}/programs | Manages Programs belonging to CreditAuthorizations |
-    | **Identifier** | /credit-authorizations/{creditAuthorizationKey}/identifiers | Manages Identifiers belonging to CreditAuthorizations |
     | **Price** | /credit-authorizations/{creditAuthorizationKey}/prices | Manages Prices belonging to CreditAuthorizations |
-    | **EffectivePeriod** | /credit-authorizations/{creditAuthorizationKey}/effective-periods | Manages EffectivePeriods belonging to CreditAuthorizations |
-    | **CurrencyExchange** | /credit-authorizations/{creditAuthorizationKey}/currency-exchanges | Manages CurrencyExchanges belonging to CreditAuthorizations |
-    | **TimeSlot** | /credit-authorizations/{creditAuthorizationKey}/time-slots | Manages TimeSlots belonging to CreditAuthorizations |
 
 
 ---
@@ -101,14 +97,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 💠 **CreditAuthorizationStatusTypes** : types of credit authorization status.<br/>
 💠 **CreditAuthorizationTypes** : types of credit authorizations.<br/>
-💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
-💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **InvoiceTypes** : types of invoices.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayTypes** : types of pays.<br/>
 💠 **PriceTypes** : types of prices.<br/>
 💠 **ProgramTypes** : types of programs.<br/>
-💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
 
 ## ✅ Entities
 
@@ -119,7 +113,6 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ✅ **Identifier** : identifier.desc<br/>
 ✅ **Money** : money.desc<br/>
 ✅ **Price** : price.desc<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
 
 ---
 
@@ -369,24 +362,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /credit-authorizations/{creditAuthorizationKey}/identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier entities scoped by creditAuthorizationKey. getIdentifierByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/identifiers/{identifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
-    </span>
-</div>
-
 ### /credit-authorizations/{creditAuthorizationKey}/prices
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -405,60 +380,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /credit-authorizations/{creditAuthorizationKey}/effective-periods
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by creditAuthorizationKey. getEffectivePeriodByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/effective-periods/{effectivePeriodKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/currency-exchanges
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/currency-exchanges</span> <br/>
-        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by creditAuthorizationKey. getCurrencyExchangeByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/currency-exchanges/{currencyExchangeKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by creditAuthorizationKey. getTimeSlotByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
-    </span>
-</div>
-
 ### 🏢 Scoped Dealer Resources
 
 The following resources follow a consistent pattern under CreditAuthorizationroot with key {CreditAuthorizationKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
@@ -469,11 +390,7 @@ The following resources follow a consistent pattern under CreditAuthorizationroo
     | **money** | /credit-authorizations/{creditAuthorizationKey}/money | listMoneyByCreditAuthorizationKey |  | getMoneyByCreditAuthorizationKey | updateMoneyByCreditAuthorizationKey | deleteMoneyByCreditAuthorizationKey |
     | **party-reference** | /credit-authorizations/{creditAuthorizationKey}/party-references | listPartyReferenceByCreditAuthorizationKey | createPartyReference | getPartyReferenceByCreditAuthorizationKey | updatePartyReferenceByCreditAuthorizationKey | deletePartyReferenceByCreditAuthorizationKey |
     | **program** | /credit-authorizations/{creditAuthorizationKey}/programs | listProgramByCreditAuthorizationKey | createProgram | getProgramByCreditAuthorizationKey | updateProgramByCreditAuthorizationKey | deleteProgramByCreditAuthorizationKey |
-    | **identifier** | /credit-authorizations/{creditAuthorizationKey}/identifiers | listIdentifierByCreditAuthorizationKey |  | getIdentifierByCreditAuthorizationKey | updateIdentifierByCreditAuthorizationKey | deleteIdentifierByCreditAuthorizationKey |
     | **price** | /credit-authorizations/{creditAuthorizationKey}/prices | listPriceByCreditAuthorizationKey |  | getPriceByCreditAuthorizationKey | updatePriceByCreditAuthorizationKey | deletePriceByCreditAuthorizationKey |
-    | **effective-period** | /credit-authorizations/{creditAuthorizationKey}/effective-periods | listEffectivePeriodByCreditAuthorizationKey |  | getEffectivePeriodByCreditAuthorizationKey | updateEffectivePeriodByCreditAuthorizationKey | deleteEffectivePeriodByCreditAuthorizationKey |
-    | **currency-exchange** | /credit-authorizations/{creditAuthorizationKey}/currency-exchanges | listCurrencyExchangeByCreditAuthorizationKey |  | getCurrencyExchangeByCreditAuthorizationKey | updateCurrencyExchangeByCreditAuthorizationKey | deleteCurrencyExchangeByCreditAuthorizationKey |
-    | **time-slot** | /credit-authorizations/{creditAuthorizationKey}/time-slots | listTimeSlotByCreditAuthorizationKey |  | getTimeSlotByCreditAuthorizationKey | updateTimeSlotByCreditAuthorizationKey | deleteTimeSlotByCreditAuthorizationKey |
 
 ***Note on List Operations:***
 
