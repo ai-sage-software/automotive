@@ -97,6 +97,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 💠 **CreditAuthorizationStatusTypes** : types of credit authorization status.<br/>
 💠 **CreditAuthorizationTypes** : types of credit authorizations.<br/>
+💠 **EventMessageTypes** : types of event messages.<br/>
 💠 **InvoiceTypes** : types of invoices.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayTypes** : types of pays.<br/>
