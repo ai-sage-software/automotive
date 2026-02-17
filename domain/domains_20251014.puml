@@ -71,24 +71,35 @@ package "4. Service and Repair" as SRP #AAFFDD {
 ' --------------------------------------------------------------------------
 ' LEVEL 3: Financial, Fulfillment, and Support
 ' --------------------------------------------------------------------------
-package "5. Financial & Payments" as FIN #FFCCCC {
-    component "Invoice (AR)" as InvoiceAR
-        component "Payment (AR)" as PaymentAR
-        component "Payment Event" as PaymentEvent
-        component "Journal Entry (AR)" as JournalEntryAR
-        component "Control Account" as ControlAccount
-        component "Credit Application (AR)" as CreditApplicationAR
-        component "Credit Contract (AR)" as CreditContractAR
-        component "Credit Decision (AR)" as CreditDecisionAR
-        component "Financial Statement (AR)" as FinancialStatementAR
-        component "Vehicle Payments (AR)" as VehiclePaymentsAR
-        component "Payment Invoice (AR)" as PaymentInvoiceAR
-        component "Financial Forecast (AR)" as FinancialForecastAR
-        component "Receipt (AR)" as ReceiptAR
-        component "Payroll Payment (AR)" as PayrollPaymentAR
-        component "Payment Method (AR)" as PaymentMethodAR
-        component "Accounting Period (AR)" as AccountingPeriodAR
+package "5a. Payments Context" as PAY #FFCCCC {
+    component "CreditAuthorization (AR)" as CreditAuthAR
+    component "Payment (AR)" as PaymentAR
+    component "PaymentMethod (AR)" as PaymentMethodAR
+    component "CreditDecision (AR)" as CreditDecisionAR
+    component "CreditContract (AR)" as CreditContractAR
+    component "PaymentEvent" as PaymentEvent
+            component "Payroll Payment (AR)" as PayrollPaymentAR
 }
+note bottom of PAY
+    Agentic execution of money movement.
+    Manages Authorization holds, Gateway
+    integrations, and Transaction retries.
+end note
+
+package "5b. Finance & Accounting Context" as FIN #FF9999 {
+    component "Invoice (AR)" as InvoiceAR
+    component "JournalEntry (AR)" as JournalEntryAR
+    component "ControlAccount" as ControlAccount
+        component "Receipt (AR)" as ReceiptAR
+    component "FinancialStatement (AR)" as FinancialStatementAR
+    component "AccountingPeriod (AR)" as AccountingPeriodAR
+    component "FinancialForecast (AR)" as FinancialForecastAR
+}
+note bottom of FIN
+    The System of Record.
+    Handles Tax, Ledger, and
+    Financial Reporting.
+end note
 
 
 package "6. Marketing & Loyalty" as MKT #FFCCFF {
@@ -211,6 +222,18 @@ PartsOrderAR --> PartsShipmentAR : creates shipment request
 
 ' 5. Logistics needs Inventory data
 TransferAR .left.> VehicleAR : specifies Vehicle to move
+
+' Sales to Payments
+DealAR --> CreditAuthAR : requests Authorization
+CreditAuthAR --> PaymentAR : initiates Capture upon success
+
+' Payments to Finance
+PaymentEvent --> InvoiceAR : triggers payment reconciliation
+PaymentAR --> JournalEntryAR : generates transaction record
+
+' References
+CreditAuthAR .up.> CustomerAR : references applicant
+PaymentAR .up.> PaymentMethodAR : uses stored method
 
 ' 6. Marketing and Warranty need Customer data
 Campaign .left.> CustomerAR : targets customers

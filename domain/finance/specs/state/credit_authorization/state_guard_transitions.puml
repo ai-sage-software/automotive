@@ -1,0 +1,49 @@
+@startuml
+skinparam state {
+BackgroundColor<<Terminal>> #LightGrey
+BackgroundColor<<Success>> #LightGreen
+BackgroundColor<<Failure>> #Pink
+}
+
+[*] --> VALIDATION
+
+state VALIDATION {
+VALIDATION : Entry / Validate Request Data
+}
+
+VALIDATION --> FUND_VERIFICATION : Data Valid
+VALIDATION --> FAILED_TECHNICAL : System Error
+VALIDATION --> DECLINED : Validation Failed
+
+state FUND_VERIFICATION {
+FUND_VERIFICATION : Check Balance / Credit Limit
+}
+
+FUND_VERIFICATION --> AUTHORIZED : Funds Available (Hold Placed)
+FUND_VERIFICATION --> DECLINED : Insufficient Funds
+FUND_VERIFICATION --> FAILED_TECHNICAL : Gateway Timeout
+
+state AUTHORIZED {
+AUTHORIZED : "HOLD" active on funds
+}
+
+AUTHORIZED --> CAPTURED : Settlement Requested
+AUTHORIZED --> VOIDED : Agent/User Cancelled
+AUTHORIZED --> EXPIRED : Hold TTL Reached
+
+state CAPTURED <<Success>> {
+CAPTURED : "SETTLEMENT" complete
+}
+
+state VOIDED <<Terminal>>
+state EXPIRED <<Terminal>>
+state DECLINED <<Failure>>
+state FAILED_TECHNICAL <<Failure>>
+
+CAPTURED --> [*]
+VOIDED --> [*]
+EXPIRED --> [*]
+DECLINED --> [*]
+FAILED_TECHNICAL --> [*]
+
+@enduml

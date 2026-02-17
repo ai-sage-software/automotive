@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **CreditAuthorization**, **PartyReference**, **Program**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **NotificationReference**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,16 +18,12 @@ The API adheres to the **OpenAPI 3.0.1** standard.
 ---
 
 
-The API is structured around the domain **payment** and **CreditAuthorization** resource as the primary entity, with several resources scoped under it via various path parameters.
+The API is structured around the domain **core** and **NotificationReference** resource as the primary entity, with several resources scoped under it via various path parameters.
 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
-    | **CreditAuthorization** | /credit-authorizations | Manages CreditAuthorizations |
-    | **Money** | /credit-authorizations/{creditAuthorizationKey}/money | Manages Money belonging to CreditAuthorizations |
-    | **PartyReference** | /credit-authorizations/{creditAuthorizationKey}/party-references | Manages PartyReferences belonging to CreditAuthorizations |
-    | **Program** | /credit-authorizations/{creditAuthorizationKey}/programs | Manages Programs belonging to CreditAuthorizations |
-    | **EventMessage** | /credit-authorizations/{creditAuthorizationKey}/event-messages | Manages EventMessages belonging to CreditAuthorizations |
-    | **Price** | /credit-authorizations/{creditAuthorizationKey}/prices | Manages Prices belonging to CreditAuthorizations |
+    | **NotificationReference** | /notification-references | Manages NotificationReferences |
+    | **Identifier** | /notification-references/{notificationReferenceKey}/identifiers | Manages Identifiers belonging to NotificationReferences |
 
 
 ---
@@ -54,7 +50,7 @@ Enhanced entities are used for Create and Update operations.  This allows the tr
 
 1.  **View the Interactive Docs:** Load the `openapi_monolith.yaml` file into an interactive tool like **Swagger UI**, **Redoc**, or **Postman** to browse endpoints, schemas, and test calls.
 2.  **Make a First Call:** To retrieve the base list of resources, you can make an unauthenticated **GET** request to:
-> `https://[Your-API-Host]/creditauthorizations`
+> `https://[Your-API-Host]/notificationreferences`
 
 ### C. Integrate the API into Your Application 💻
 
@@ -96,27 +92,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-💠 **CreditAuthorizationStatusTypes** : types of credit authorization status.<br/>
-💠 **CreditAuthorizationTypes** : types of credit authorizations.<br/>
-💠 **EventMessageTypes** : types of event messages.<br/>
-💠 **InvoiceTypes** : types of invoices.<br/>
-💠 **PartyRelationshipTypes** : types of party relationships.<br/>
-💠 **PayTypes** : types of pays.<br/>
-💠 **PriceTypes** : types of prices.<br/>
-💠 **ProgramTypes** : types of programs.<br/>
-💠 **StaffRoleTypes** : types of staff roles.<br/>
-💠 **DurationUOMTypes** : Units of Measure for Durations<br/>
+💠 **EventTypes** : types of events.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **CurrencyExchange** : currency.exchange.desc<br/>
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **EventMessage** : event.message.desc<br/>
-✅ **Identifier** : identifier.desc<br/>
-✅ **Money** : money.desc<br/>
-✅ **Price** : price.desc<br/>
 
 ---
 
@@ -198,222 +179,114 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 ### 🏛️ Dealer Endpoints
 
 
-### /credit-authorizations
+### /notification-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations</span> <br/>
-        <span class="api-summary">Retrieve a list of CreditAuthorization entities. getCreditAuthorization</span>
+        <span class="api-path">/notification-references</span> <br/>
+        <span class="api-summary">Retrieve a list of NotificationReference entities. getNotificationReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations</span> <br/>
-        <span class="api-summary">Create a new CreditAuthorization entity. createCreditAuthorization</span>
+        <span class="api-path">/notification-references</span> <br/>
+        <span class="api-summary">Create a new NotificationReference entity. createNotificationReference</span>
     </span>
 </div>
 
-### /credit-authorizations/{creditAuthorizationKey}
+### /notification-references/{notificationReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CreditAuthorization entity. getreditAuthorizationById</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific NotificationReference entity. getotificationReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}</span> <br/>
-        <span class="api-summary">Replace a CreditAuthorization entity. replaceCreditAuthorization</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a NotificationReference entity. replaceNotificationReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}</span> <br/>
-        <span class="api-summary">Partially update a CreditAuthorization entity. updatePartialCreditAuthorization</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a NotificationReference entity. updatePartialNotificationReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}</span> <br/>
-        <span class="api-summary">Delete a CreditAuthorization entity deleteCreditAuthorizationEntity</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a NotificationReference entity deleteNotificationReferenceEntity</span>
     </span>
 </div>
 
-### /credit-authorizations/{creditAuthorizationKey}/money
+### /notification-references/{notificationReferenceKey}/identifiers
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/money</span> <br/>
-        <span class="api-summary">Retrieve a list of Money entities scoped by creditAuthorizationKey. getMoneyByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/money/{moneyKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/money/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/party-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyReference entities scoped by creditAuthorizationKey. getPartyReferenceByCreditAuthorizationKey</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by notificationReferenceKey. getIdentifierByNotificationReferenceKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references</span> <br/>
-        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers</span> <br/>
+        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
     </span>
 </div>
 
-### /credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}
+### /notification-references/{notificationReferenceKey}/identifiers/{identifierKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/programs
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs</span> <br/>
-        <span class="api-summary">Retrieve a list of Program entities scoped by creditAuthorizationKey. getProgramByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs</span> <br/>
-        <span class="api-summary">Create a new Program entity. createProgram</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/programs/{programKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs/{programKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Program entity. getrogramById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs/{programKey}</span> <br/>
-        <span class="api-summary">Replace a Program entity. replaceProgram</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs/{programKey}</span> <br/>
-        <span class="api-summary">Partially update a Program entity. updatePartialProgram</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/programs/{programKey}</span> <br/>
-        <span class="api-summary">Delete a Program entity deleteProgramEntity</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/event-messages
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/event-messages</span> <br/>
-        <span class="api-summary">Retrieve a list of EventMessage entities scoped by creditAuthorizationKey. getEventMessageByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/event-messages/{eventMessageKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/event-messages/{eventMessageKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EventMessage entity. getventMessageById</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/prices
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/prices</span> <br/>
-        <span class="api-summary">Retrieve a list of Price entities scoped by creditAuthorizationKey. getPriceByCreditAuthorizationKey</span>
-    </span>
-</div>
-
-### /credit-authorizations/{creditAuthorizationKey}/prices/{priceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/credit-authorizations/{creditAuthorizationKey}/prices/{priceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
+        <span class="api-path">/notification-references/{notificationReferenceKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
 ### 🏢 Scoped Dealer Resources
 
-The following resources follow a consistent pattern under CreditAuthorizationroot with key {CreditAuthorizationKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
+The following resources follow a consistent pattern under NotificationReferenceroot with key {NotificationReferenceKey} ... Support listing, creation, retrieval, replacement, deletion, and partial updates.
 
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-    | **credit-authorization** | /credit-authorizations | listCreditAuthorization | createCreditAuthorization | getCreditAuthorization | updateCreditAuthorization | deleteCreditAuthorization |
-    | **money** | /credit-authorizations/{creditAuthorizationKey}/money | listMoneyByCreditAuthorizationKey |  | getMoneyByCreditAuthorizationKey | updateMoneyByCreditAuthorizationKey | deleteMoneyByCreditAuthorizationKey |
-    | **party-reference** | /credit-authorizations/{creditAuthorizationKey}/party-references | listPartyReferenceByCreditAuthorizationKey | createPartyReference | getPartyReferenceByCreditAuthorizationKey | updatePartyReferenceByCreditAuthorizationKey | deletePartyReferenceByCreditAuthorizationKey |
-    | **program** | /credit-authorizations/{creditAuthorizationKey}/programs | listProgramByCreditAuthorizationKey | createProgram | getProgramByCreditAuthorizationKey | updateProgramByCreditAuthorizationKey | deleteProgramByCreditAuthorizationKey |
-    | **event-message** | /credit-authorizations/{creditAuthorizationKey}/event-messages | listEventMessageByCreditAuthorizationKey |  | getEventMessageByCreditAuthorizationKey | updateEventMessageByCreditAuthorizationKey | deleteEventMessageByCreditAuthorizationKey |
-    | **price** | /credit-authorizations/{creditAuthorizationKey}/prices | listPriceByCreditAuthorizationKey |  | getPriceByCreditAuthorizationKey | updatePriceByCreditAuthorizationKey | deletePriceByCreditAuthorizationKey |
+    | **notification-reference** | /notification-references | listNotificationReference | createNotificationReference | getNotificationReference | updateNotificationReference | deleteNotificationReference |
+    | **identifier** | /notification-references/{notificationReferenceKey}/identifiers | listIdentifierByNotificationReferenceKey | createIdentifier | getIdentifierByNotificationReferenceKey | updateIdentifierByNotificationReferenceKey | deleteIdentifierByNotificationReferenceKey |
 
 ***Note on List Operations:***
 
@@ -443,13 +316,13 @@ Standard HTTP status codes are used to indicate the outcome of an operation:
 
 ## Batch Processing
 
-## Bulk Create CreditAuthorization (`POST /creditauthorizations/batch`)
+## Bulk Create NotificationReference (`POST /notificationreferences/batch`)
 
-The `/creditauthorizations/batch` endpoint allows you to create multiple CreditAuthorization entities in a single HTTP request. This is significantly more efficient than making individual calls when dealing with large datasets, as it reduces network overhead and connection latency.
+The `/notificationreferences/batch` endpoint allows you to create multiple NotificationReference entities in a single HTTP request. This is significantly more efficient than making individual calls when dealing with large datasets, as it reduces network overhead and connection latency.
 
 ### Overview
 
-This endpoint processes an array of CreditAuthorization and provides a **partial success** response. This means that if some items in your list are invalid, the valid items will still be created, and the API will return a detailed report of which specific items failed.
+This endpoint processes an array of NotificationReference and provides a **partial success** response. This means that if some items in your list are invalid, the valid items will still be created, and the API will return a detailed report of which specific items failed.
 
 ---
 
@@ -458,7 +331,7 @@ This endpoint processes an array of CreditAuthorization and provides a **partial
 The request body must be a JSON object containing an `items` array.
 
 * **Max Items:** 100 per request.
-* **Schema:** Each object in the `items` array should follow the `CreditAuthorizationCreate` schema.
+* **Schema:** Each object in the `items` array should follow the `NotificationReferenceCreate` schema.
 
 **Example Request Body:**
 
@@ -480,7 +353,7 @@ The API returns a `200 OK` status code once the batch has been processed. The re
 
 #### 1. Succeeded Array
 
-Contains the full objects of the CreditAuthorization that were successfully created, including server-generated fields like `id` or `createdAt`.
+Contains the full objects of the NotificationReference that were successfully created, including server-generated fields like `id` or `createdAt`.
 
 #### 2. Failed Array
 
@@ -501,7 +374,7 @@ Contains error objects for items that could not be processed. Each error object 
 "index": 1,
 "error": {
 "code": "DUPLICATE_SKU",
-"message": "A CreditAuthorization with SKU W-002 already exists."
+"message": "A NotificationReference with SKU W-002 already exists."
 }
 }
 ]
@@ -517,15 +390,15 @@ Contains error objects for items that could not be processed. Each error object 
 * **Idempotency:** Ensure your client handles the `failed` array appropriately. You may want to correct the data and retry only the failed indices.
 * **Transactional Safety:** Note that this endpoint is **not** atomic. If 50 items succeed and 50 fail, the 50 successful items remain in the database.
 
-## Health Check (`GET /creditauthorizations/health`)
+## Health Check (`GET /notificationreferences/health`)
 
-The `/creditauthorizations/health` endpoint is a public diagnostic tool used to verify the current availability and operational state of the service. It is designed to be used by load balancers, monitoring tools, and automated deployment pipelines.
+The `/notificationreferences/health` endpoint is a public diagnostic tool used to verify the current availability and operational state of the service. It is designed to be used by load balancers, monitoring tools, and automated deployment pipelines.
 
 ---
 
 ### Overview
 
-This endpoint provides a quick "heartbeat" of the CreditAuthorization aggregated root. Because it is a public endpoint, it typically does not require authentication, making it ideal for external uptime monitors (like Pingdom or UptimeRobot) to ensure the service is responsive.
+This endpoint provides a quick "heartbeat" of the NotificationReference aggregated root. Because it is a public endpoint, it typically does not require authentication, making it ideal for external uptime monitors (like Pingdom or UptimeRobot) to ensure the service is responsive.
 
 ### Response Structure
 
@@ -566,15 +439,15 @@ The `status` field will return one of the following values:
 * **CI/CD Pipelines**: After a deployment, scripts can poll this endpoint to confirm the new version is live and reporting a healthy status before finalizing the rollout.
 * **Integration Debugging**: Quickly verify that the network path to the API is open without needing to send complex, authenticated requests.
 
-## CreditAuthorization Commands and State Management
+## NotificationReference Commands and State Management
 
-The creditauthorizations API can handle complex business workflows. Rather than simple attribute updates, state changes are driven by explicit "Commands" that represent business intents.
+The notificationreferences API can handle complex business workflows. Rather than simple attribute updates, state changes are driven by explicit "Commands" that represent business intents.
 
 ---
 
-### 1. Executing Commands (`POST /creditauthorizations/{CreditAuthorizationKey}/commands`)
+### 1. Executing Commands (`POST /notificationreferences/{NotificationReferenceKey}/commands`)
 
-This endpoint is the single entry point for all intents that change the state of a CreditAuthorization (e.g., rescheduling, cancelling, or deleting).
+This endpoint is the single entry point for all intents that change the state of a NotificationReference (e.g., rescheduling, cancelling, or deleting).
 
 **Request Components:**
 
@@ -587,7 +460,7 @@ The API will return a `status`. If the operation is long-running, you will recei
 
 ---
 
-### 2. Command Polling (`GET /creditauthorizations/{CreditAuthorizationKey}/commands/{commandId}`)
+### 2. Command Polling (`GET /notificationreferences/{NotificationReferenceKey}/commands/{commandId}`)
 
 For asynchronous commands, use this endpoint to track progress.
 
@@ -604,13 +477,13 @@ For asynchronous commands, use this endpoint to track progress.
 
 ---
 
-### 3. Capability Discovery (`GET /creditauthorizations/capabilities`)
+### 3. Capability Discovery (`GET /notificationreferences/capabilities`)
 
-Before sending a command, you can "discover" what actions are valid for a CreditAuthorization based on its current state. This endpoint describes the **State Machine** governing the resource.
+Before sending a command, you can "discover" what actions are valid for a NotificationReference based on its current state. This endpoint describes the **State Machine** governing the resource.
 
 **Key Fields:**
 
-* **`from_states`**: The states the CreditAuthorization must be in to accept this command.
+* **`from_states`**: The states the NotificationReference must be in to accept this command.
 * **`to_state`**: The resulting state after a successful command execution.
 * **`parameters_ref`**: A reference to the data schema required in the `context` of the command.
 
@@ -618,8 +491,8 @@ Before sending a command, you can "discover" what actions are valid for a Credit
 
 | Command Type | From States | To State | Description |
 | --- | --- | --- | --- |
-| `CancelCreditAuthorization` | `CREATED`, `ACTIVE` | `DELETED` | Voids the CreditAuthorization . |
-| `ActivateCreditAuthorization` | `PENDING` | `ACTIVE` | Moves a CreditAuthorization into the operational pool. |
+| `CancelNotificationReference` | `CREATED`, `ACTIVE` | `DELETED` | Voids the NotificationReference . |
+| `ActivateNotificationReference` | `PENDING` | `ACTIVE` | Moves a NotificationReference into the operational pool. |
 
 ---
 
