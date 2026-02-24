@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Locale**, **PartName**, **PriceCriteria**, **PriceCriteriaItem**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Locale**, **PartName**, **PartyReference**, **PriceCriteria**, **PriceCriteriaItem**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -18,13 +18,15 @@ The API adheres to the **OpenAPI 3.0.1** standard.
 ---
 
 
-The API is structured around the domain **part** and **PriceCriteria** resource as the primary entity, with several resources scoped under it via various path parameters.
+The API is structured around the domain **parts** and **PriceCriteria** resource as the primary entity, with several resources scoped under it via various path parameters.
 
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **PriceCriteria** | /price-criteria | Manages PriceCriteria |
     | **Locale** | /price-criteria/{priceCriteriaKey}/locales | Manages Locales belonging to PriceCriteria |
+    | **PartyReference** | /price-criteria/{priceCriteriaKey}/party-references | Manages PartyReferences belonging to PriceCriteria |
     | **PriceCriteriaItem** | /price-criteria/{priceCriteriaKey}/price-criteria-items | Manages PriceCriteriaItems belonging to PriceCriteria |
+    | **Identifier** | /price-criteria/{priceCriteriaKey}/identifiers | Manages Identifiers belonging to PriceCriteria |
     | **EventMessage** | /price-criteria/{priceCriteriaKey}/event-messages | Manages EventMessages belonging to PriceCriteria |
     | **PartName** | /price-criteria/{priceCriteriaKey}/part-names | Manages PartNames belonging to PriceCriteria |
     | **Price** | /price-criteria/{priceCriteriaKey}/prices | Manages Prices belonging to PriceCriteria |
@@ -103,6 +105,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **EventMessageTypes** : types of event messages.<br/>
 💠 **PartNameTypes** : types of part names.<br/>
+💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
@@ -117,6 +120,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ✅ **CurrencyExchange** : currency.exchange.desc<br/>
 ✅ **EffectivePeriod** : effective.period.desc<br/>
 ✅ **EventMessage** : event.message.desc<br/>
+✅ **Identifier** : identifier.desc<br/>
 ✅ **Price** : price.desc<br/>
 ✅ **TimeSlot** : time.slot.desc<br/>
 
@@ -300,6 +304,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /price-criteria/{priceCriteriaKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by priceCriteriaKey. getPartyReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
 ### /price-criteria/{priceCriteriaKey}/price-criteria-items
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -347,6 +401,24 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/price-criteria/{priceCriteriaKey}/price-criteria-items/{priceCriteriaItemKey}</span> <br/>
         <span class="api-summary">Delete a PriceCriteriaItem entity deletePriceCriteriaItemEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by priceCriteriaKey. getIdentifierByPriceCriteriaKey</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/identifiers/{identifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
     </span>
 </div>
 
@@ -498,7 +570,9 @@ The following resources follow a consistent pattern under PriceCriteriaroot with
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **price-criteria** | /price-criteria | listPriceCriteria | createPriceCriteria | getPriceCriteria | updatePriceCriteria | deletePriceCriteria |
     | **locale** | /price-criteria/{priceCriteriaKey}/locales | listLocaleByPriceCriteriaKey | createLocale | getLocaleByPriceCriteriaKey | updateLocaleByPriceCriteriaKey | deleteLocaleByPriceCriteriaKey |
+    | **party-reference** | /price-criteria/{priceCriteriaKey}/party-references | listPartyReferenceByPriceCriteriaKey | createPartyReference | getPartyReferenceByPriceCriteriaKey | updatePartyReferenceByPriceCriteriaKey | deletePartyReferenceByPriceCriteriaKey |
     | **price-criteria-item** | /price-criteria/{priceCriteriaKey}/price-criteria-items | listPriceCriteriaItemByPriceCriteriaKey | createPriceCriteriaItem | getPriceCriteriaItemByPriceCriteriaKey | updatePriceCriteriaItemByPriceCriteriaKey | deletePriceCriteriaItemByPriceCriteriaKey |
+    | **identifier** | /price-criteria/{priceCriteriaKey}/identifiers | listIdentifierByPriceCriteriaKey |  | getIdentifierByPriceCriteriaKey | updateIdentifierByPriceCriteriaKey | deleteIdentifierByPriceCriteriaKey |
     | **event-message** | /price-criteria/{priceCriteriaKey}/event-messages | listEventMessageByPriceCriteriaKey |  | getEventMessageByPriceCriteriaKey | updateEventMessageByPriceCriteriaKey | deleteEventMessageByPriceCriteriaKey |
     | **part-name** | /price-criteria/{priceCriteriaKey}/part-names | listPartNameByPriceCriteriaKey | createPartName | getPartNameByPriceCriteriaKey | updatePartNameByPriceCriteriaKey | deletePartNameByPriceCriteriaKey |
     | **price** | /price-criteria/{priceCriteriaKey}/prices | listPriceByPriceCriteriaKey |  | getPriceByPriceCriteriaKey | updatePriceByPriceCriteriaKey | deletePriceByPriceCriteriaKey |
