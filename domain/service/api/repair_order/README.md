@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AppointmentReference**, **BillOfMaterialReference**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Inspection**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **Locale**, **Media**, **MediaAccessMetric**, **MetricValue**, **PartIdentifier**, **PartyReference**, **PricePlanReference**, **RepairOrder**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**, **VehicleIdentifier**, **VehicleLicense**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AppointmentReference**, **BillOfMaterialReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Inspection**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **Locale**, **Media**, **MediaAccessMetric**, **MetricValue**, **PartIdentifier**, **PartyReference**, **PricePlanReference**, **RebateReference**, **RepairOrder**, **RewardReference**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**, **TaxSplit**, **VehicleIdentifier**, **VehicleLicense**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -24,26 +24,36 @@ The API is structured around the domain **service** and **RepairOrder** resource
 | :--- | :--- | :--- |
     | **RepairOrder** | /repair-orders | Manages RepairOrders |
     | **Locale** | /repair-orders/{repairOrderKey}/locales | Manages Locales belonging to RepairOrders |
-    | **VehicleLicense** | /repair-orders/{repairOrderKey}/vehicle-licenses | Manages VehicleLicenses belonging to RepairOrders |
-    | **LaborOperationEvent** | /repair-orders/{repairOrderKey}/labor-operation-events | Manages LaborOperationEvents belonging to RepairOrders |
-    | **LaborResource** | /repair-orders/{repairOrderKey}/labor-resources | Manages LaborResources belonging to RepairOrders |
-    | **Media** | /repair-orders/{repairOrderKey}/medias | Manages Medias belonging to RepairOrders |
-    | **PricePlanReference** | /repair-orders/{repairOrderKey}/price-plan-references | Manages PricePlanReferences belonging to RepairOrders |
-    | **Inspection** | /repair-orders/{repairOrderKey}/inspections | Manages Inspections belonging to RepairOrders |
-    | **CurrencyExchange** | /repair-orders/{repairOrderKey}/currency-exchanges | Manages CurrencyExchanges belonging to RepairOrders |
+    | **DiscountReference** | /repair-orders/{repairOrderKey}/discount-references | Manages DiscountReferences belonging to RepairOrders |
     | **TimeSlot** | /repair-orders/{repairOrderKey}/time-slots | Manages TimeSlots belonging to RepairOrders |
-    | **MediaAccessMetric** | /repair-orders/{repairOrderKey}/media-access-metrics | Manages MediaAccessMetrics belonging to RepairOrders |
+    | **FinancialCategoryReference** | /repair-orders/{repairOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to RepairOrders |
+    | **FeeReference** | /repair-orders/{repairOrderKey}/fee-references | Manages FeeReferences belonging to RepairOrders |
     | **PartyReference** | /repair-orders/{repairOrderKey}/party-references | Manages PartyReferences belonging to RepairOrders |
     | **StaffAssignmentReference** | /repair-orders/{repairOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to RepairOrders |
     | **Money** | /repair-orders/{repairOrderKey}/money | Manages Money belonging to RepairOrders |
     | **MetricValue** | /repair-orders/{repairOrderKey}/metric-values | Manages MetricValues belonging to RepairOrders |
     | **Identifier** | /repair-orders/{repairOrderKey}/identifiers | Manages Identifiers belonging to RepairOrders |
-    | **BillOfMaterialReference** | /repair-orders/{repairOrderKey}/bill-of-material-references | Manages BillOfMaterialReferences belonging to RepairOrders |
     | **EffectivePeriod** | /repair-orders/{repairOrderKey}/effective-periods | Manages EffectivePeriods belonging to RepairOrders |
+    | **CreditReference** | /repair-orders/{repairOrderKey}/credit-references | Manages CreditReferences belonging to RepairOrders |
+    | **LaborOperation** | /repair-orders/{repairOrderKey}/labor-operations | Manages LaborOperations belonging to RepairOrders |
+    | **RebateReference** | /repair-orders/{repairOrderKey}/rebate-references | Manages RebateReferences belonging to RepairOrders |
+    | **VehicleLicense** | /repair-orders/{repairOrderKey}/vehicle-licenses | Manages VehicleLicenses belonging to RepairOrders |
+    | **LaborOperationEvent** | /repair-orders/{repairOrderKey}/labor-operation-events | Manages LaborOperationEvents belonging to RepairOrders |
+    | **TaxSplit** | /repair-orders/{repairOrderKey}/tax-splits | Manages TaxSplits belonging to RepairOrders |
+    | **LaborResource** | /repair-orders/{repairOrderKey}/labor-resources | Manages LaborResources belonging to RepairOrders |
+    | **Media** | /repair-orders/{repairOrderKey}/medias | Manages Medias belonging to RepairOrders |
+    | **PricePlanReference** | /repair-orders/{repairOrderKey}/price-plan-references | Manages PricePlanReferences belonging to RepairOrders |
+    | **Inspection** | /repair-orders/{repairOrderKey}/inspections | Manages Inspections belonging to RepairOrders |
+    | **ControlAccountReference** | /repair-orders/{repairOrderKey}/control-account-references | Manages ControlAccountReferences belonging to RepairOrders |
+    | **RewardReference** | /repair-orders/{repairOrderKey}/reward-references | Manages RewardReferences belonging to RepairOrders |
+    | **CurrencyExchange** | /repair-orders/{repairOrderKey}/currency-exchanges | Manages CurrencyExchanges belonging to RepairOrders |
+    | **MediaAccessMetric** | /repair-orders/{repairOrderKey}/media-access-metrics | Manages MediaAccessMetrics belonging to RepairOrders |
+    | **BillOfMaterialReference** | /repair-orders/{repairOrderKey}/bill-of-material-references | Manages BillOfMaterialReferences belonging to RepairOrders |
+    | **Price** | /repair-orders/{repairOrderKey}/prices | Manages Prices belonging to RepairOrders |
     | **AppointmentReference** | /repair-orders/{repairOrderKey}/appointment-references | Manages AppointmentReferences belonging to RepairOrders |
     | **FinancialSplitReference** | /repair-orders/{repairOrderKey}/financial-split-references | Manages FinancialSplitReferences belonging to RepairOrders |
     | **TextualDetail** | /repair-orders/{repairOrderKey}/textual-details | Manages TextualDetails belonging to RepairOrders |
-    | **LaborOperation** | /repair-orders/{repairOrderKey}/labor-operations | Manages LaborOperations belonging to RepairOrders |
+    | **FinancialSplit** | /repair-orders/{repairOrderKey}/financial-splits | Manages FinancialSplits belonging to RepairOrders |
     | **VehicleIdentifier** | /repair-orders/{repairOrderKey}/vehicle-identifiers | Manages VehicleIdentifiers belonging to RepairOrders |
 
 
@@ -118,10 +128,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DeviceTypes** : types of devices.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
+💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
 💠 **LaborLocationTypes** : types of labor locations.<br/>
 💠 **LaborOperationStatusTypes** : types of labor operation status.<br/>
 💠 **LaborOperationTypes** : types of labor operations.<br/>
 💠 **LaborResourceTypes** : types of labor resources.<br/>
+💠 **LedgerActionTypes** : types of ledger actions.<br/>
 💠 **MediaDeliveryMethodTypes** : types of media delivery methods.<br/>
 💠 **MediaFormatTypes** : types of media formats.<br/>
 💠 **MediaTypes** : types of medias.<br/>
@@ -130,9 +142,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayTypes** : types of pays.<br/>
 💠 **PayeeTypes** : types of payees.<br/>
+💠 **PriceTypes** : types of prices.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
 💠 **RepairStatusTypes** : types of repair status.<br/>
 💠 **RoleTypes** : types of roles.<br/>
 💠 **ServiceJobTypes** : types of service jobs.<br/>
+💠 **TaxTypes** : types of taxs.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
 💠 **SkillCategoryTypes** : Undocumented Enum<br/>
 💠 **PartIdentifierTypes** : entity<br/>
@@ -146,6 +161,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 ✅ **EffectivePeriod** : effective.period.desc<br/>
 ✅ **Identifier** : identifier.desc<br/>
 ✅ **Money** : money.desc<br/>
+✅ **Price** : price.desc<br/>
 ✅ **TextualDetail** : not nullable<br/>
 ✅ **TimeSlot** : time.slot.desc<br/>
 
@@ -329,6 +345,528 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /repair-orders/{repairOrderKey}/discount-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references</span> <br/>
+        <span class="api-summary">Retrieve a list of DiscountReference entities scoped by repairOrderKey. getDiscountReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references</span> <br/>
+        <span class="api-summary">Create a new DiscountReference entity. createDiscountReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/discount-references/{discountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DiscountReference entity. getiscountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a DiscountReference entity. replaceDiscountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a DiscountReference entity. updatePartialDiscountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by repairOrderKey. getTimeSlotByRepairOrderKey</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/financial-category-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference entities scoped by repairOrderKey. getFinancialCategoryReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Create a new FinancialCategoryReference entity. createFinancialCategoryReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/financial-category-references/{financialCategoryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference entity. getinancialCategoryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialCategoryReference entity. replaceFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updatePartialFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialCategoryReference entity deleteFinancialCategoryReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/fee-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by repairOrderKey. getFeeReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by repairOrderKey. getPartyReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/staff-assignment-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references</span> <br/>
+        <span class="api-summary">Retrieve a list of StaffAssignmentReference entities scoped by repairOrderKey. getStaffAssignmentReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references</span> <br/>
+        <span class="api-summary">Create a new StaffAssignmentReference entity. createStaffAssignmentReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific StaffAssignmentReference entity. gettaffAssignmentReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a StaffAssignmentReference entity. replaceStaffAssignmentReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a StaffAssignmentReference entity. updatePartialStaffAssignmentReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a StaffAssignmentReference entity deleteStaffAssignmentReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/money
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/money</span> <br/>
+        <span class="api-summary">Retrieve a list of Money entities scoped by repairOrderKey. getMoneyByRepairOrderKey</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/money/{moneyKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/money/{moneyKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/metric-values
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values</span> <br/>
+        <span class="api-summary">Retrieve a list of MetricValue entities scoped by repairOrderKey. getMetricValueByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values</span> <br/>
+        <span class="api-summary">Create a new MetricValue entity. createMetricValue</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/metric-values/{metricValueKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific MetricValue entity. getetricValueById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
+        <span class="api-summary">Replace a MetricValue entity. replaceMetricValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
+        <span class="api-summary">Partially update a MetricValue entity. updatePartialMetricValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
+        <span class="api-summary">Delete a MetricValue entity deleteMetricValueEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/identifiers
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/identifiers</span> <br/>
+        <span class="api-summary">Retrieve a list of Identifier entities scoped by repairOrderKey. getIdentifierByRepairOrderKey</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/identifiers/{identifierKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/identifiers/{identifierKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/effective-periods
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/effective-periods</span> <br/>
+        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by repairOrderKey. getEffectivePeriodByRepairOrderKey</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/effective-periods/{effectivePeriodKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/effective-periods/{effectivePeriodKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/credit-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references</span> <br/>
+        <span class="api-summary">Retrieve a list of CreditReference entities scoped by repairOrderKey. getCreditReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references</span> <br/>
+        <span class="api-summary">Create a new CreditReference entity. createCreditReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/credit-references/{creditReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CreditReference entity. getreditReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a CreditReference entity. replaceCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a CreditReference entity. updatePartialCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a CreditReference entity deleteCreditReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/labor-operations
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations</span> <br/>
+        <span class="api-summary">Retrieve a list of LaborOperation entities scoped by repairOrderKey. getLaborOperationByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations</span> <br/>
+        <span class="api-summary">Create a new LaborOperation entity. createLaborOperation</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific LaborOperation entity. getaborOperationById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
+        <span class="api-summary">Replace a LaborOperation entity. replaceLaborOperation</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
+        <span class="api-summary">Partially update a LaborOperation entity. updatePartialLaborOperation</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
+        <span class="api-summary">Delete a LaborOperation entity deleteLaborOperationEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/rebate-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RebateReference entities scoped by repairOrderKey. getRebateReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references</span> <br/>
+        <span class="api-summary">Create a new RebateReference entity. createRebateReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/rebate-references/{rebateReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RebateReference entity. getebateReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RebateReference entity. replaceRebateReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RebateReference entity. updatePartialRebateReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RebateReference entity deleteRebateReferenceEntity</span>
+    </span>
+</div>
+
 ### /repair-orders/{repairOrderKey}/vehicle-licenses
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -426,6 +964,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/repair-orders/{repairOrderKey}/labor-operation-events/{laborOperationEventKey}</span> <br/>
         <span class="api-summary">Delete a LaborOperationEvent entity deleteLaborOperationEventEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/tax-splits
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits</span> <br/>
+        <span class="api-summary">Retrieve a list of TaxSplit entities scoped by repairOrderKey. getTaxSplitByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits</span> <br/>
+        <span class="api-summary">Create a new TaxSplit entity. createTaxSplit</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/tax-splits/{taxSplitKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TaxSplit entity. getaxSplitById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Replace a TaxSplit entity. replaceTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Partially update a TaxSplit entity. updatePartialTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Delete a TaxSplit entity deleteTaxSplitEntity</span>
     </span>
 </div>
 
@@ -629,6 +1217,106 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /repair-orders/{repairOrderKey}/control-account-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references</span> <br/>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by repairOrderKey. getControlAccountReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references</span> <br/>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/control-account-references/{controlAccountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/reward-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RewardReference entities scoped by repairOrderKey. getRewardReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references</span> <br/>
+        <span class="api-summary">Create a new RewardReference entity. createRewardReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/reward-references/{rewardReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RewardReference entity. getewardReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RewardReference entity. replaceRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RewardReference entity. updatePartialRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RewardReference entity deleteRewardReferenceEntity</span>
+    </span>
+</div>
+
 ### /repair-orders/{repairOrderKey}/currency-exchanges
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -644,24 +1332,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/repair-orders/{repairOrderKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
         <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/time-slots
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by repairOrderKey. getTimeSlotByRepairOrderKey</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/time-slots/{timeSlotKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
     </span>
 </div>
 
@@ -715,192 +1385,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/party-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyReference entities scoped by repairOrderKey. getPartyReferenceByRepairOrderKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references</span> <br/>
-        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/staff-assignment-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references</span> <br/>
-        <span class="api-summary">Retrieve a list of StaffAssignmentReference entities scoped by repairOrderKey. getStaffAssignmentReferenceByRepairOrderKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references</span> <br/>
-        <span class="api-summary">Create a new StaffAssignmentReference entity. createStaffAssignmentReference</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific StaffAssignmentReference entity. gettaffAssignmentReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a StaffAssignmentReference entity. replaceStaffAssignmentReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a StaffAssignmentReference entity. updatePartialStaffAssignmentReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/staff-assignment-references/{staffAssignmentReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a StaffAssignmentReference entity deleteStaffAssignmentReferenceEntity</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/money
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/money</span> <br/>
-        <span class="api-summary">Retrieve a list of Money entities scoped by repairOrderKey. getMoneyByRepairOrderKey</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/money/{moneyKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/money/{moneyKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Money entity. getoneyById</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/metric-values
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values</span> <br/>
-        <span class="api-summary">Retrieve a list of MetricValue entities scoped by repairOrderKey. getMetricValueByRepairOrderKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values</span> <br/>
-        <span class="api-summary">Create a new MetricValue entity. createMetricValue</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/metric-values/{metricValueKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific MetricValue entity. getetricValueById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
-        <span class="api-summary">Replace a MetricValue entity. replaceMetricValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
-        <span class="api-summary">Partially update a MetricValue entity. updatePartialMetricValue</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/metric-values/{metricValueKey}</span> <br/>
-        <span class="api-summary">Delete a MetricValue entity deleteMetricValueEntity</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier entities scoped by repairOrderKey. getIdentifierByRepairOrderKey</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/identifiers/{identifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
-    </span>
-</div>
-
 ### /repair-orders/{repairOrderKey}/bill-of-material-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -951,21 +1435,21 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/effective-periods
+### /repair-orders/{repairOrderKey}/prices
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/effective-periods</span> <br/>
-        <span class="api-summary">Retrieve a list of EffectivePeriod entities scoped by repairOrderKey. getEffectivePeriodByRepairOrderKey</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/prices</span> <br/>
+        <span class="api-summary">Retrieve a list of Price entities scoped by repairOrderKey. getPriceByRepairOrderKey</span>
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/effective-periods/{effectivePeriodKey}
+### /repair-orders/{repairOrderKey}/prices/{priceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/effective-periods/{effectivePeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific EffectivePeriod entity. getffectivePeriodById</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/prices/{priceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Price entity. getriceById</span>
     </span>
 </div>
 
@@ -1087,53 +1571,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/labor-operations
+### /repair-orders/{repairOrderKey}/financial-splits
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations</span> <br/>
-        <span class="api-summary">Retrieve a list of LaborOperation entities scoped by repairOrderKey. getLaborOperationByRepairOrderKey</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSplit entities scoped by repairOrderKey. getFinancialSplitByRepairOrderKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations</span> <br/>
-        <span class="api-summary">Create a new LaborOperation entity. createLaborOperation</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits</span> <br/>
+        <span class="api-summary">Create a new FinancialSplit entity. createFinancialSplit</span>
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}
+### /repair-orders/{repairOrderKey}/financial-splits/{financialSplitKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific LaborOperation entity. getaborOperationById</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSplit entity. getinancialSplitById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
-        <span class="api-summary">Replace a LaborOperation entity. replaceLaborOperation</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSplit entity. replaceFinancialSplit</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
-        <span class="api-summary">Partially update a LaborOperation entity. updatePartialLaborOperation</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSplit entity. updatePartialFinancialSplit</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/labor-operations/{laborOperationKey}</span> <br/>
-        <span class="api-summary">Delete a LaborOperation entity deleteLaborOperationEntity</span>
+        <span class="api-path">/repair-orders/{repairOrderKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSplit entity deleteFinancialSplitEntity</span>
     </span>
 </div>
 
@@ -1195,26 +1679,36 @@ The following resources follow a consistent pattern under RepairOrderroot with k
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **repair-order** | /repair-orders | listRepairOrder | createRepairOrder | getRepairOrder | updateRepairOrder | deleteRepairOrder |
     | **locale** | /repair-orders/{repairOrderKey}/locales | listLocaleByRepairOrderKey | createLocale | getLocaleByRepairOrderKey | updateLocaleByRepairOrderKey | deleteLocaleByRepairOrderKey |
-    | **vehicle-license** | /repair-orders/{repairOrderKey}/vehicle-licenses | listVehicleLicenseByRepairOrderKey | createVehicleLicense | getVehicleLicenseByRepairOrderKey | updateVehicleLicenseByRepairOrderKey | deleteVehicleLicenseByRepairOrderKey |
-    | **labor-operation-event** | /repair-orders/{repairOrderKey}/labor-operation-events | listLaborOperationEventByRepairOrderKey | createLaborOperationEvent | getLaborOperationEventByRepairOrderKey | updateLaborOperationEventByRepairOrderKey | deleteLaborOperationEventByRepairOrderKey |
-    | **labor-resource** | /repair-orders/{repairOrderKey}/labor-resources | listLaborResourceByRepairOrderKey | createLaborResource | getLaborResourceByRepairOrderKey | updateLaborResourceByRepairOrderKey | deleteLaborResourceByRepairOrderKey |
-    | **media** | /repair-orders/{repairOrderKey}/medias | listMediaByRepairOrderKey | createMedia | getMediaByRepairOrderKey | updateMediaByRepairOrderKey | deleteMediaByRepairOrderKey |
-    | **price-plan-reference** | /repair-orders/{repairOrderKey}/price-plan-references | listPricePlanReferenceByRepairOrderKey | createPricePlanReference | getPricePlanReferenceByRepairOrderKey | updatePricePlanReferenceByRepairOrderKey | deletePricePlanReferenceByRepairOrderKey |
-    | **inspection** | /repair-orders/{repairOrderKey}/inspections | listInspectionByRepairOrderKey | createInspection | getInspectionByRepairOrderKey | updateInspectionByRepairOrderKey | deleteInspectionByRepairOrderKey |
-    | **currency-exchange** | /repair-orders/{repairOrderKey}/currency-exchanges | listCurrencyExchangeByRepairOrderKey |  | getCurrencyExchangeByRepairOrderKey | updateCurrencyExchangeByRepairOrderKey | deleteCurrencyExchangeByRepairOrderKey |
+    | **discount-reference** | /repair-orders/{repairOrderKey}/discount-references | listDiscountReferenceByRepairOrderKey | createDiscountReference | getDiscountReferenceByRepairOrderKey | updateDiscountReferenceByRepairOrderKey | deleteDiscountReferenceByRepairOrderKey |
     | **time-slot** | /repair-orders/{repairOrderKey}/time-slots | listTimeSlotByRepairOrderKey |  | getTimeSlotByRepairOrderKey | updateTimeSlotByRepairOrderKey | deleteTimeSlotByRepairOrderKey |
-    | **media-access-metric** | /repair-orders/{repairOrderKey}/media-access-metrics | listMediaAccessMetricByRepairOrderKey | createMediaAccessMetric | getMediaAccessMetricByRepairOrderKey | updateMediaAccessMetricByRepairOrderKey | deleteMediaAccessMetricByRepairOrderKey |
+    | **financial-category-reference** | /repair-orders/{repairOrderKey}/financial-category-references | listFinancialCategoryReferenceByRepairOrderKey | createFinancialCategoryReference | getFinancialCategoryReferenceByRepairOrderKey | updateFinancialCategoryReferenceByRepairOrderKey | deleteFinancialCategoryReferenceByRepairOrderKey |
+    | **fee-reference** | /repair-orders/{repairOrderKey}/fee-references | listFeeReferenceByRepairOrderKey | createFeeReference | getFeeReferenceByRepairOrderKey | updateFeeReferenceByRepairOrderKey | deleteFeeReferenceByRepairOrderKey |
     | **party-reference** | /repair-orders/{repairOrderKey}/party-references | listPartyReferenceByRepairOrderKey | createPartyReference | getPartyReferenceByRepairOrderKey | updatePartyReferenceByRepairOrderKey | deletePartyReferenceByRepairOrderKey |
     | **staff-assignment-reference** | /repair-orders/{repairOrderKey}/staff-assignment-references | listStaffAssignmentReferenceByRepairOrderKey | createStaffAssignmentReference | getStaffAssignmentReferenceByRepairOrderKey | updateStaffAssignmentReferenceByRepairOrderKey | deleteStaffAssignmentReferenceByRepairOrderKey |
     | **money** | /repair-orders/{repairOrderKey}/money | listMoneyByRepairOrderKey |  | getMoneyByRepairOrderKey | updateMoneyByRepairOrderKey | deleteMoneyByRepairOrderKey |
     | **metric-value** | /repair-orders/{repairOrderKey}/metric-values | listMetricValueByRepairOrderKey | createMetricValue | getMetricValueByRepairOrderKey | updateMetricValueByRepairOrderKey | deleteMetricValueByRepairOrderKey |
     | **identifier** | /repair-orders/{repairOrderKey}/identifiers | listIdentifierByRepairOrderKey |  | getIdentifierByRepairOrderKey | updateIdentifierByRepairOrderKey | deleteIdentifierByRepairOrderKey |
-    | **bill-of-material-reference** | /repair-orders/{repairOrderKey}/bill-of-material-references | listBillOfMaterialReferenceByRepairOrderKey | createBillOfMaterialReference | getBillOfMaterialReferenceByRepairOrderKey | updateBillOfMaterialReferenceByRepairOrderKey | deleteBillOfMaterialReferenceByRepairOrderKey |
     | **effective-period** | /repair-orders/{repairOrderKey}/effective-periods | listEffectivePeriodByRepairOrderKey |  | getEffectivePeriodByRepairOrderKey | updateEffectivePeriodByRepairOrderKey | deleteEffectivePeriodByRepairOrderKey |
+    | **credit-reference** | /repair-orders/{repairOrderKey}/credit-references | listCreditReferenceByRepairOrderKey | createCreditReference | getCreditReferenceByRepairOrderKey | updateCreditReferenceByRepairOrderKey | deleteCreditReferenceByRepairOrderKey |
+    | **labor-operation** | /repair-orders/{repairOrderKey}/labor-operations | listLaborOperationByRepairOrderKey | createLaborOperation | getLaborOperationByRepairOrderKey | updateLaborOperationByRepairOrderKey | deleteLaborOperationByRepairOrderKey |
+    | **rebate-reference** | /repair-orders/{repairOrderKey}/rebate-references | listRebateReferenceByRepairOrderKey | createRebateReference | getRebateReferenceByRepairOrderKey | updateRebateReferenceByRepairOrderKey | deleteRebateReferenceByRepairOrderKey |
+    | **vehicle-license** | /repair-orders/{repairOrderKey}/vehicle-licenses | listVehicleLicenseByRepairOrderKey | createVehicleLicense | getVehicleLicenseByRepairOrderKey | updateVehicleLicenseByRepairOrderKey | deleteVehicleLicenseByRepairOrderKey |
+    | **labor-operation-event** | /repair-orders/{repairOrderKey}/labor-operation-events | listLaborOperationEventByRepairOrderKey | createLaborOperationEvent | getLaborOperationEventByRepairOrderKey | updateLaborOperationEventByRepairOrderKey | deleteLaborOperationEventByRepairOrderKey |
+    | **tax-split** | /repair-orders/{repairOrderKey}/tax-splits | listTaxSplitByRepairOrderKey | createTaxSplit | getTaxSplitByRepairOrderKey | updateTaxSplitByRepairOrderKey | deleteTaxSplitByRepairOrderKey |
+    | **labor-resource** | /repair-orders/{repairOrderKey}/labor-resources | listLaborResourceByRepairOrderKey | createLaborResource | getLaborResourceByRepairOrderKey | updateLaborResourceByRepairOrderKey | deleteLaborResourceByRepairOrderKey |
+    | **media** | /repair-orders/{repairOrderKey}/medias | listMediaByRepairOrderKey | createMedia | getMediaByRepairOrderKey | updateMediaByRepairOrderKey | deleteMediaByRepairOrderKey |
+    | **price-plan-reference** | /repair-orders/{repairOrderKey}/price-plan-references | listPricePlanReferenceByRepairOrderKey | createPricePlanReference | getPricePlanReferenceByRepairOrderKey | updatePricePlanReferenceByRepairOrderKey | deletePricePlanReferenceByRepairOrderKey |
+    | **inspection** | /repair-orders/{repairOrderKey}/inspections | listInspectionByRepairOrderKey | createInspection | getInspectionByRepairOrderKey | updateInspectionByRepairOrderKey | deleteInspectionByRepairOrderKey |
+    | **control-account-reference** | /repair-orders/{repairOrderKey}/control-account-references | listControlAccountReferenceByRepairOrderKey | createControlAccountReference | getControlAccountReferenceByRepairOrderKey | updateControlAccountReferenceByRepairOrderKey | deleteControlAccountReferenceByRepairOrderKey |
+    | **reward-reference** | /repair-orders/{repairOrderKey}/reward-references | listRewardReferenceByRepairOrderKey | createRewardReference | getRewardReferenceByRepairOrderKey | updateRewardReferenceByRepairOrderKey | deleteRewardReferenceByRepairOrderKey |
+    | **currency-exchange** | /repair-orders/{repairOrderKey}/currency-exchanges | listCurrencyExchangeByRepairOrderKey |  | getCurrencyExchangeByRepairOrderKey | updateCurrencyExchangeByRepairOrderKey | deleteCurrencyExchangeByRepairOrderKey |
+    | **media-access-metric** | /repair-orders/{repairOrderKey}/media-access-metrics | listMediaAccessMetricByRepairOrderKey | createMediaAccessMetric | getMediaAccessMetricByRepairOrderKey | updateMediaAccessMetricByRepairOrderKey | deleteMediaAccessMetricByRepairOrderKey |
+    | **bill-of-material-reference** | /repair-orders/{repairOrderKey}/bill-of-material-references | listBillOfMaterialReferenceByRepairOrderKey | createBillOfMaterialReference | getBillOfMaterialReferenceByRepairOrderKey | updateBillOfMaterialReferenceByRepairOrderKey | deleteBillOfMaterialReferenceByRepairOrderKey |
+    | **price** | /repair-orders/{repairOrderKey}/prices | listPriceByRepairOrderKey |  | getPriceByRepairOrderKey | updatePriceByRepairOrderKey | deletePriceByRepairOrderKey |
     | **appointment-reference** | /repair-orders/{repairOrderKey}/appointment-references | listAppointmentReferenceByRepairOrderKey | createAppointmentReference | getAppointmentReferenceByRepairOrderKey | updateAppointmentReferenceByRepairOrderKey | deleteAppointmentReferenceByRepairOrderKey |
     | **financial-split-reference** | /repair-orders/{repairOrderKey}/financial-split-references | listFinancialSplitReferenceByRepairOrderKey | createFinancialSplitReference | getFinancialSplitReferenceByRepairOrderKey | updateFinancialSplitReferenceByRepairOrderKey | deleteFinancialSplitReferenceByRepairOrderKey |
     | **textual-detail** | /repair-orders/{repairOrderKey}/textual-details | listTextualDetailByRepairOrderKey |  | getTextualDetailByRepairOrderKey | updateTextualDetailByRepairOrderKey | deleteTextualDetailByRepairOrderKey |
-    | **labor-operation** | /repair-orders/{repairOrderKey}/labor-operations | listLaborOperationByRepairOrderKey | createLaborOperation | getLaborOperationByRepairOrderKey | updateLaborOperationByRepairOrderKey | deleteLaborOperationByRepairOrderKey |
+    | **financial-split** | /repair-orders/{repairOrderKey}/financial-splits | listFinancialSplitByRepairOrderKey | createFinancialSplit | getFinancialSplitByRepairOrderKey | updateFinancialSplitByRepairOrderKey | deleteFinancialSplitByRepairOrderKey |
     | **vehicle-identifier** | /repair-orders/{repairOrderKey}/vehicle-identifiers | listVehicleIdentifierByRepairOrderKey | createVehicleIdentifier | getVehicleIdentifierByRepairOrderKey | updateVehicleIdentifierByRepairOrderKey | deleteVehicleIdentifierByRepairOrderKey |
 
 ***Note on List Operations:***
