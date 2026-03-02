@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **BillOfMaterialReference**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Identifier**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **PartIdentifier**, **PartName**, **PartyReference**, **PricePlanReference**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **BillOfMaterialReference**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Inspection**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **Locale**, **Media**, **MediaAccessMetric**, **PartIdentifier**, **PartName**, **PartyReference**, **PricePlanReference**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,17 +23,21 @@ The API is structured around the domain **service** and **LaborOperation** resou
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **LaborOperation** | /labor-operations | Manages LaborOperations |
+    | **Locale** | /labor-operations/{laborOperationKey}/locales | Manages Locales belonging to LaborOperations |
     | **StaffSkill** | /labor-operations/{laborOperationKey}/staff-skills | Manages StaffSkills belonging to LaborOperations |
     | **LaborOperationEvent** | /labor-operations/{laborOperationKey}/labor-operation-events | Manages LaborOperationEvents belonging to LaborOperations |
     | **LaborResource** | /labor-operations/{laborOperationKey}/labor-resources | Manages LaborResources belonging to LaborOperations |
+    | **Inspection** | /labor-operations/{laborOperationKey}/inspections | Manages Inspections belonging to LaborOperations |
     | **PricePlanReference** | /labor-operations/{laborOperationKey}/price-plan-references | Manages PricePlanReferences belonging to LaborOperations |
+    | **Media** | /labor-operations/{laborOperationKey}/medias | Manages Medias belonging to LaborOperations |
+    | **CurrencyExchange** | /labor-operations/{laborOperationKey}/currency-exchanges | Manages CurrencyExchanges belonging to LaborOperations |
     | **TimeSlot** | /labor-operations/{laborOperationKey}/time-slots | Manages TimeSlots belonging to LaborOperations |
+    | **AddressReference** | /labor-operations/{laborOperationKey}/address-references | Manages AddressReferences belonging to LaborOperations |
     | **Money** | /labor-operations/{laborOperationKey}/money | Manages Money belonging to LaborOperations |
     | **PartyReference** | /labor-operations/{laborOperationKey}/party-references | Manages PartyReferences belonging to LaborOperations |
     | **StaffAssignmentReference** | /labor-operations/{laborOperationKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to LaborOperations |
     | **BillOfMaterialReference** | /labor-operations/{laborOperationKey}/bill-of-material-references | Manages BillOfMaterialReferences belonging to LaborOperations |
     | **Identifier** | /labor-operations/{laborOperationKey}/identifiers | Manages Identifiers belonging to LaborOperations |
-    | **PartName** | /labor-operations/{laborOperationKey}/part-names | Manages PartNames belonging to LaborOperations |
     | **GeographicBoundaryReference** | /labor-operations/{laborOperationKey}/geographic-boundary-references | Manages GeographicBoundaryReferences belonging to LaborOperations |
     | **EffectivePeriod** | /labor-operations/{laborOperationKey}/effective-periods | Manages EffectivePeriods belonging to LaborOperations |
     | **PartIdentifier** | /labor-operations/{laborOperationKey}/part-identifiers | Manages PartIdentifiers belonging to LaborOperations |
@@ -107,14 +111,19 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **AddressTypes** : types of address.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **LaborLocationTypes** : types of labor locations.<br/>
 💠 **LaborOperationStatusTypes** : types of labor operation status.<br/>
 💠 **LaborOperationTypes** : types of labor operations.<br/>
 💠 **LaborResourceTypes** : types of labor resources.<br/>
+💠 **MediaDeliveryMethodTypes** : types of media delivery methods.<br/>
+💠 **MediaFormatTypes** : types of media formats.<br/>
+💠 **MediaTypes** : types of medias.<br/>
+💠 **MediaUsageTypes** : types of media usages.<br/>
+💠 **NarrativeUomTypes** : types of narrative uoms.<br/>
 💠 **PartIdentifierTypes** : types of part identifiers.<br/>
-💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartStatusTypes** : types of part status.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PayTypes** : types of pays.<br/>
@@ -123,15 +132,19 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **ServiceJobTypes** : types of service jobs.<br/>
 💠 **SkillCategoryTypes** : types of skill categorys.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **DeviceTypes** : entity<br/>
+💠 **PartNameTypes** : Gets or Sets SalesPipelineStageTypes<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **CurrencyExchange** : Details concerning the conversion between different currencies.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Identifier** : Unique identification key for the record.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 
@@ -260,6 +273,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/labor-operations/{laborOperationKey}</span> <br/>
         <span class="api-summary">Delete a LaborOperation entity deleteLaborOperationEntity</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/locales
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales</span> <br/>
+        <span class="api-summary">Retrieve a list of Locale entities scoped by laborOperationKey. getLocaleByLaborOperationKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales</span> <br/>
+        <span class="api-summary">Create a new Locale entity. createLocale</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/locales/{localeKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales/{localeKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Locale entity. getocaleById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales/{localeKey}</span> <br/>
+        <span class="api-summary">Replace a Locale entity. replaceLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales/{localeKey}</span> <br/>
+        <span class="api-summary">Partially update a Locale entity. updatePartialLocale</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/locales/{localeKey}</span> <br/>
+        <span class="api-summary">Delete a Locale entity deleteLocaleEntity</span>
     </span>
 </div>
 
@@ -413,6 +476,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /labor-operations/{laborOperationKey}/inspections
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections</span> <br/>
+        <span class="api-summary">Retrieve a list of Inspection entities scoped by laborOperationKey. getInspectionByLaborOperationKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections</span> <br/>
+        <span class="api-summary">Create a new Inspection entity. createInspection</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/inspections/{inspectionKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections/{inspectionKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Inspection entity. getnspectionById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections/{inspectionKey}</span> <br/>
+        <span class="api-summary">Replace a Inspection entity. replaceInspection</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections/{inspectionKey}</span> <br/>
+        <span class="api-summary">Partially update a Inspection entity. updatePartialInspection</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/inspections/{inspectionKey}</span> <br/>
+        <span class="api-summary">Delete a Inspection entity deleteInspectionEntity</span>
+    </span>
+</div>
+
 ### /labor-operations/{laborOperationKey}/price-plan-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -463,6 +576,74 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
+### /labor-operations/{laborOperationKey}/medias
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias</span> <br/>
+        <span class="api-summary">Retrieve a list of Media entities scoped by laborOperationKey. getMediaByLaborOperationKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias</span> <br/>
+        <span class="api-summary">Create a new Media entity. createMedia</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/medias/{mediaKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias/{mediaKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific Media entity. getediaById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias/{mediaKey}</span> <br/>
+        <span class="api-summary">Replace a Media entity. replaceMedia</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias/{mediaKey}</span> <br/>
+        <span class="api-summary">Partially update a Media entity. updatePartialMedia</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/medias/{mediaKey}</span> <br/>
+        <span class="api-summary">Delete a Media entity deleteMediaEntity</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/currency-exchanges
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/currency-exchanges</span> <br/>
+        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by laborOperationKey. getCurrencyExchangeByLaborOperationKey</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/currency-exchanges/{currencyExchangeKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
+    </span>
+</div>
+
 ### /labor-operations/{laborOperationKey}/time-slots
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -478,6 +659,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/labor-operations/{laborOperationKey}/time-slots/{timeSlotKey}</span> <br/>
         <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/address-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references</span> <br/>
+        <span class="api-summary">Retrieve a list of AddressReference entities scoped by laborOperationKey. getAddressReferenceByLaborOperationKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references</span> <br/>
+        <span class="api-summary">Create a new AddressReference entity. createAddressReference</span>
+    </span>
+</div>
+
+### /labor-operations/{laborOperationKey}/address-references/{addressReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AddressReference entity. getddressReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a AddressReference entity. replaceAddressReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a AddressReference entity. updatePartialAddressReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/labor-operations/{laborOperationKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a AddressReference entity deleteAddressReferenceEntity</span>
     </span>
 </div>
 
@@ -658,94 +889,12 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
-    </span>
-</div>
-
 ### /labor-operations/{laborOperationKey}/identifiers/{identifierKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/labor-operations/{laborOperationKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
-    </span>
-</div>
-
-### /labor-operations/{laborOperationKey}/part-names
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names</span> <br/>
-        <span class="api-summary">Retrieve a list of PartName entities scoped by laborOperationKey. getPartNameByLaborOperationKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names</span> <br/>
-        <span class="api-summary">Create a new PartName entity. createPartName</span>
-    </span>
-</div>
-
-### /labor-operations/{laborOperationKey}/part-names/{partNameKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartName entity. getartNameById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Replace a PartName entity. replacePartName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Partially update a PartName entity. updatePartialPartName</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/labor-operations/{laborOperationKey}/part-names/{partNameKey}</span> <br/>
-        <span class="api-summary">Delete a PartName entity deletePartNameEntity</span>
     </span>
 </div>
 
@@ -942,17 +1091,21 @@ The following resources follow a consistent pattern under LaborOperationroot wit
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **labor-operation** | /labor-operations | listLaborOperation | createLaborOperation | getLaborOperation | updateLaborOperation | deleteLaborOperation |
+    | **locale** | /labor-operations/{laborOperationKey}/locales | listLocaleByLaborOperationKey | createLocale | getLocaleByLaborOperationKey | updateLocaleByLaborOperationKey | deleteLocaleByLaborOperationKey |
     | **staff-skill** | /labor-operations/{laborOperationKey}/staff-skills | listStaffSkillByLaborOperationKey | createStaffSkill | getStaffSkillByLaborOperationKey | updateStaffSkillByLaborOperationKey | deleteStaffSkillByLaborOperationKey |
     | **labor-operation-event** | /labor-operations/{laborOperationKey}/labor-operation-events | listLaborOperationEventByLaborOperationKey | createLaborOperationEvent | getLaborOperationEventByLaborOperationKey | updateLaborOperationEventByLaborOperationKey | deleteLaborOperationEventByLaborOperationKey |
     | **labor-resource** | /labor-operations/{laborOperationKey}/labor-resources | listLaborResourceByLaborOperationKey | createLaborResource | getLaborResourceByLaborOperationKey | updateLaborResourceByLaborOperationKey | deleteLaborResourceByLaborOperationKey |
+    | **inspection** | /labor-operations/{laborOperationKey}/inspections | listInspectionByLaborOperationKey | createInspection | getInspectionByLaborOperationKey | updateInspectionByLaborOperationKey | deleteInspectionByLaborOperationKey |
     | **price-plan-reference** | /labor-operations/{laborOperationKey}/price-plan-references | listPricePlanReferenceByLaborOperationKey | createPricePlanReference | getPricePlanReferenceByLaborOperationKey | updatePricePlanReferenceByLaborOperationKey | deletePricePlanReferenceByLaborOperationKey |
+    | **media** | /labor-operations/{laborOperationKey}/medias | listMediaByLaborOperationKey | createMedia | getMediaByLaborOperationKey | updateMediaByLaborOperationKey | deleteMediaByLaborOperationKey |
+    | **currency-exchange** | /labor-operations/{laborOperationKey}/currency-exchanges | listCurrencyExchangeByLaborOperationKey |  | getCurrencyExchangeByLaborOperationKey | updateCurrencyExchangeByLaborOperationKey | deleteCurrencyExchangeByLaborOperationKey |
     | **time-slot** | /labor-operations/{laborOperationKey}/time-slots | listTimeSlotByLaborOperationKey |  | getTimeSlotByLaborOperationKey | updateTimeSlotByLaborOperationKey | deleteTimeSlotByLaborOperationKey |
+    | **address-reference** | /labor-operations/{laborOperationKey}/address-references | listAddressReferenceByLaborOperationKey | createAddressReference | getAddressReferenceByLaborOperationKey | updateAddressReferenceByLaborOperationKey | deleteAddressReferenceByLaborOperationKey |
     | **money** | /labor-operations/{laborOperationKey}/money | listMoneyByLaborOperationKey |  | getMoneyByLaborOperationKey | updateMoneyByLaborOperationKey | deleteMoneyByLaborOperationKey |
     | **party-reference** | /labor-operations/{laborOperationKey}/party-references | listPartyReferenceByLaborOperationKey | createPartyReference | getPartyReferenceByLaborOperationKey | updatePartyReferenceByLaborOperationKey | deletePartyReferenceByLaborOperationKey |
     | **staff-assignment-reference** | /labor-operations/{laborOperationKey}/staff-assignment-references | listStaffAssignmentReferenceByLaborOperationKey | createStaffAssignmentReference | getStaffAssignmentReferenceByLaborOperationKey | updateStaffAssignmentReferenceByLaborOperationKey | deleteStaffAssignmentReferenceByLaborOperationKey |
     | **bill-of-material-reference** | /labor-operations/{laborOperationKey}/bill-of-material-references | listBillOfMaterialReferenceByLaborOperationKey | createBillOfMaterialReference | getBillOfMaterialReferenceByLaborOperationKey | updateBillOfMaterialReferenceByLaborOperationKey | deleteBillOfMaterialReferenceByLaborOperationKey |
-    | **identifier** | /labor-operations/{laborOperationKey}/identifiers | listIdentifierByLaborOperationKey | createIdentifier | getIdentifierByLaborOperationKey | updateIdentifierByLaborOperationKey | deleteIdentifierByLaborOperationKey |
-    | **part-name** | /labor-operations/{laborOperationKey}/part-names | listPartNameByLaborOperationKey | createPartName | getPartNameByLaborOperationKey | updatePartNameByLaborOperationKey | deletePartNameByLaborOperationKey |
+    | **identifier** | /labor-operations/{laborOperationKey}/identifiers | listIdentifierByLaborOperationKey |  | getIdentifierByLaborOperationKey | updateIdentifierByLaborOperationKey | deleteIdentifierByLaborOperationKey |
     | **geographic-boundary-reference** | /labor-operations/{laborOperationKey}/geographic-boundary-references | listGeographicBoundaryReferenceByLaborOperationKey | createGeographicBoundaryReference | getGeographicBoundaryReferenceByLaborOperationKey | updateGeographicBoundaryReferenceByLaborOperationKey | deleteGeographicBoundaryReferenceByLaborOperationKey |
     | **effective-period** | /labor-operations/{laborOperationKey}/effective-periods | listEffectivePeriodByLaborOperationKey |  | getEffectivePeriodByLaborOperationKey | updateEffectivePeriodByLaborOperationKey | deleteEffectivePeriodByLaborOperationKey |
     | **part-identifier** | /labor-operations/{laborOperationKey}/part-identifiers | listPartIdentifierByLaborOperationKey | createPartIdentifier | getPartIdentifierByLaborOperationKey | updatePartIdentifierByLaborOperationKey | deletePartIdentifierByLaborOperationKey |

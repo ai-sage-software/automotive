@@ -40,7 +40,6 @@ The API is structured around the domain **service** and **MultiPointInspection**
     | **Media** | /multi-point-inspections/{multiPointInspectionKey}/medias | Manages Medias belonging to MultiPointInspections |
     | **PricePlanReference** | /multi-point-inspections/{multiPointInspectionKey}/price-plan-references | Manages PricePlanReferences belonging to MultiPointInspections |
     | **Inspection** | /multi-point-inspections/{multiPointInspectionKey}/inspections | Manages Inspections belonging to MultiPointInspections |
-    | **CurrencyExchange** | /multi-point-inspections/{multiPointInspectionKey}/currency-exchanges | Manages CurrencyExchanges belonging to MultiPointInspections |
     | **Manifest** | /multi-point-inspections/{multiPointInspectionKey}/manifests | Manages Manifests belonging to MultiPointInspections |
     | **MediaAccessMetric** | /multi-point-inspections/{multiPointInspectionKey}/media-access-metrics | Manages MediaAccessMetrics belonging to MultiPointInspections |
     | **BillOfMaterialReference** | /multi-point-inspections/{multiPointInspectionKey}/bill-of-material-references | Manages BillOfMaterialReferences belonging to MultiPointInspections |
@@ -146,12 +145,12 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
-✅ **CurrencyExchange** : currency.exchange.desc<br/>
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Identifier** : identifier.desc<br/>
-✅ **Money** : money.desc<br/>
+✅ **CurrencyExchange** : Details concerning the conversion between different currencies.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Identifier** : Unique identification key for the record.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 
@@ -1005,24 +1004,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /multi-point-inspections/{multiPointInspectionKey}/currency-exchanges
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/multi-point-inspections/{multiPointInspectionKey}/currency-exchanges</span> <br/>
-        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by multiPointInspectionKey. getCurrencyExchangeByMultiPointInspectionKey</span>
-    </span>
-</div>
-
-### /multi-point-inspections/{multiPointInspectionKey}/currency-exchanges/{currencyExchangeKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/multi-point-inspections/{multiPointInspectionKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
-    </span>
-</div>
-
 ### /multi-point-inspections/{multiPointInspectionKey}/manifests
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1365,7 +1346,6 @@ The following resources follow a consistent pattern under MultiPointInspectionro
     | **media** | /multi-point-inspections/{multiPointInspectionKey}/medias | listMediaByMultiPointInspectionKey | createMedia | getMediaByMultiPointInspectionKey | updateMediaByMultiPointInspectionKey | deleteMediaByMultiPointInspectionKey |
     | **price-plan-reference** | /multi-point-inspections/{multiPointInspectionKey}/price-plan-references | listPricePlanReferenceByMultiPointInspectionKey | createPricePlanReference | getPricePlanReferenceByMultiPointInspectionKey | updatePricePlanReferenceByMultiPointInspectionKey | deletePricePlanReferenceByMultiPointInspectionKey |
     | **inspection** | /multi-point-inspections/{multiPointInspectionKey}/inspections | listInspectionByMultiPointInspectionKey | createInspection | getInspectionByMultiPointInspectionKey | updateInspectionByMultiPointInspectionKey | deleteInspectionByMultiPointInspectionKey |
-    | **currency-exchange** | /multi-point-inspections/{multiPointInspectionKey}/currency-exchanges | listCurrencyExchangeByMultiPointInspectionKey |  | getCurrencyExchangeByMultiPointInspectionKey | updateCurrencyExchangeByMultiPointInspectionKey | deleteCurrencyExchangeByMultiPointInspectionKey |
     | **manifest** | /multi-point-inspections/{multiPointInspectionKey}/manifests | listManifestByMultiPointInspectionKey | createManifest | getManifestByMultiPointInspectionKey | updateManifestByMultiPointInspectionKey | deleteManifestByMultiPointInspectionKey |
     | **media-access-metric** | /multi-point-inspections/{multiPointInspectionKey}/media-access-metrics | listMediaAccessMetricByMultiPointInspectionKey | createMediaAccessMetric | getMediaAccessMetricByMultiPointInspectionKey | updateMediaAccessMetricByMultiPointInspectionKey | deleteMediaAccessMetricByMultiPointInspectionKey |
     | **bill-of-material-reference** | /multi-point-inspections/{multiPointInspectionKey}/bill-of-material-references | listBillOfMaterialReferenceByMultiPointInspectionKey | createBillOfMaterialReference | getBillOfMaterialReferenceByMultiPointInspectionKey | updateBillOfMaterialReferenceByMultiPointInspectionKey | deleteBillOfMaterialReferenceByMultiPointInspectionKey |
