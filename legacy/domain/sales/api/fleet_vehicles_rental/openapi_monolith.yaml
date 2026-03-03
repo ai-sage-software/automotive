@@ -1,0 +1,2821 @@
+openapi: 3.0.3
+info:
+  title: Fleet Vehicles Rental API - OpenAPI 3.0
+  description: "API for to provide the consumers with list of Fleet Vehicles Availabilty Status with pricing details (with available timeslots) for the requested Dealer, Brand, MOdel, BodyStyle, Classification and Date Range (duration)"
+  contact:
+    name: Paco Escobar
+    url: https://starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: www.starstandard.org
+    url: http://starstandard.org
+  version: 0.1.0
+servers:
+- url: https://virtserver.swaggerhub.com/tmna-ddoa/ddoa-fleet-vehicles-rental/0.1.0
+  description: SwaggerHub API Auto Mocking
+- url: "https://{host}/services/v1"
+  variables:
+    host:
+      default: appName.dmsDomain.com
+      enum:
+      - dev.appName.dmsDomain.com
+      - test.appName.dmsDomain.com
+      - qa.appName.dmsDomain.com
+      - appName.dmsDomain.com
+security:
+- FVRAuthorizer: []
+tags:
+- name: Fleet Vehicles Rental
+- name: Fleet Accounting
+paths:
+  /fleet-vehicles/accounting:
+    post:
+      tags:
+      - Fleet Accounting
+      summary: Manage and track rental accounting transactions
+      description: "This endpoint records rental-related accounting transactions, including revenue tracking, payments, refunds, and financial reconciliation within the DMS."
+      operationId: notifyFleetAccouting
+      parameters:
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: reservationId
+        in: header
+        description: Unique identifier for the reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 2JP1WA838K
+      - name: reservationVersion
+        in: header
+        description: Version number of the reservation record
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 1
+      - name: agreementId
+        in: header
+        description: Agreement ID linked to the reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RT-06036-005337
+      - name: transactionId
+        in: header
+        description: Unique transaction identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 7768e839-ea35-4852-a236-eff346ff685d
+      - name: transactionTimestamp
+        in: header
+        description: Timestamp when the transaction occurred
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: date-time
+          example: 2025-02-24T08:22:00Z
+      - name: transactionBy
+        in: header
+        description: Name of the user who processed the transaction
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RadhaKrishnan Pachyappan
+      - name: createdBy
+        in: header
+        description: Name of the user who created the reservation agreement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RadhaKrishnan Pachyappan
+      - name: closedBy
+        in: header
+        description: Name of the user who closed the reservation agreement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RadhaKrishnan Pachyappan
+      - name: lastUpdatedBy
+        in: header
+        description: Name of the user who last updated the reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RadhaKrishnan Pachyappan
+      - name: serviceConsultant
+        in: header
+        description: Name of the assigned service consultant
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: RadhaKrishnan Pachyappan
+      - name: reservationStatus
+        in: header
+        description: Status of the reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Completed
+          enum:
+          - Pending
+          - Completed
+          - Canceled
+      - name: totalAmount
+        in: header
+        description: Total amount due for the reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: number
+          format: float
+          example: 42
+      - name: location
+        in: header
+        description: Service center location where the reservation was made
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Camelback Service Station
+      - name: notes
+        in: header
+        description: Additional comments or special instructions
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Customer requested early pickup.
+      responses:
+        "200":
+          description: Rental revenue added successfully into the DMS
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehiclesWithTimeSlots"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  /fleet-vehicles/availability:
+    get:
+      tags:
+      - Fleet Vehicles Rental
+      summary: "Get Fleet Vehicles Availability status with timeslots for the requested Dealer, Brand, BodyStyle, Classification and Date range (duration)"
+      description: "Get Fleet Vehicles Availability status with timeslots for the requested Dealer, Brand, BodyStyle, Classification and Date range (duration)"
+      operationId: getAvailableVehiclesWithTimeSlots
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: brand
+        in: header
+        description: Brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Vehicle Brand (default value - 'toyota')
+          example: toyota
+          enum:
+          - toyota
+          - lexus
+        example: toyota
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      - name: duration
+        in: query
+        description: Duration of the vechiles requested for the rental availability
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 365
+          minimum: 0
+          type: integer
+          description: Duration of the vechiles requested for the rental availability. default value 14 days (two weeks)
+      - name: startDate
+        in: query
+        description: The UTC start date time from which the appointment slots with vehciles availability are requested. If the start date is not provided the current date will be defaulted.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 21
+          minLength: 0
+          type: string
+          description: Start date time
+          format: date-time
+        example: 2024-11-05T00:00:00Z
+      - name: endDate
+        in: query
+        description: The UTC end date time upto which the appointment slots are requested. If the endDate is not provided the appointment slots from the current date up to 14 calendar days will be provided in the service response.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 21
+          minLength: 0
+          type: string
+          description: End date time
+          format: date-time
+        example: 2024-11-19T00:00:00Z
+      - name: bodyStyle
+        in: query
+        description: "List of body styles with comma seperated like..SUV, SEDAN, MINI_VAN"
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - COUPE
+            - SEDAN
+            - SPORTS
+            - WAGON
+            - HATCHBACK
+            - CONVERTIBLE
+            - SUV
+            - MINI_VAN
+            - TRUCK
+            - BIKE
+            - COMMERCIAL_VAN
+            - PASSENGER_VAN
+            - CARGO_VAN
+            - VAN
+            - CROSSOVER
+            - DIESEL
+            - OTHER
+        example: "SUV, SEDAN, MINI_VAN"
+      - name: classification
+        in: query
+        description: "List of car classification schemes that are used for various purposes including regulation, description, and categorization of cars like..COMPACT, STANDARD, LUXURY"
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - SUPERCAR
+            - SPORT
+            - SMALL
+            - OFF_ROAD
+            - MUSCLE
+            - ECONOMY
+            - COMPACT
+            - MINI
+            - INTERMEDIATE
+            - STANDARD
+            - CONVERTIBLE
+            - PREMIUM
+            - LUXURY
+            - LARGE
+            - HYBRID
+            - FUEL_EFFICIENT
+            - FAMILY
+            - ELECTRIC
+            - COMMUTER
+            - CLASSIC
+            - AMERICAN
+            - EUROPEAN
+            - FOREIGN
+            - OTHER
+        example: "COMPACT, STANDARD, LUXURY"
+      - name: vehiclesGroupBy
+        in: query
+        description: "VehicleGroupBy for to group the results based on ModelName or AcrissCode, by default it is suggested to consider the ModelName."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          description: ModelName or AcrissCode
+        example: ModelName
+      responses:
+        "200":
+          description: Get Available Fleet Vehicles with timeslots successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehiclesWithTimeSlots"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  /fleet-vehicles/pricing:
+    get:
+      tags:
+      - Fleet Vehicles Rental
+      summary: "API for managing Fleet Vehicle Rental Pricing details, including rates, taxes, and fees fort he requested Dealer, Brand, Model, BodyStyle and Date range (duration)."
+      description: "API for managing Fleet Vehicle Rental Pricing details, including rates, taxes, and fees fort he requested Dealer, Brand, Model, BodyStyle and Date range (duration)."
+      operationId: getFleetVehiclesWithRentalPrice
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: brand
+        in: header
+        description: Brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Vehicle Brand (default value - 'toyota')
+          example: toyota
+          enum:
+          - toyota
+          - lexus
+        example: toyota
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      - name: duration
+        in: query
+        description: Duration of the vechiles requested for the rental availability
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 365
+          minimum: 0
+          type: integer
+          description: Duration of the vechiles requested for the rental availability. default value 14 days (two weeks)
+      - name: startDate
+        in: query
+        description: The UTC start date time from which the appointment slots with vehciles availability are requested. If the start date is not provided the current date will be defaulted.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 21
+          minLength: 0
+          type: string
+          description: Start date time
+          format: date-time
+        example: 2024-11-05T09:00:00Z
+      - name: endDate
+        in: query
+        description: The UTC end date time upto which the appointment slots are requested. If the endDate is not provided the appointment slots from the current date up to 14 days will be provided in the service response.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: End date time
+          format: date-time
+        example: 2024-11-26T00:01:00Z
+      - name: bodyStyle
+        in: query
+        description: "List of body styles with comma seperated like..SUV, SEDAN, MINI_VAN"
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - COUPE
+            - SEDAN
+            - SPORTS
+            - WAGON
+            - HATCHBACK
+            - CONVERTIBLE
+            - SUV
+            - MINI_VAN
+            - TRUCK
+            - BIKE
+            - COMMERCIAL_VAN
+            - PASSENGER_VAN
+            - CARGO_VAN
+            - VAN
+            - CROSSOVER
+            - DIESEL
+            - OTHER
+        example: "SUV, SEDAN, MINI_VAN"
+      - name: modelName
+        in: query
+        description: "List of model names with comma seperated like..CAMRY, RAV4, HIGHLANDER, RX350"
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - CAMRY
+            - RAV4
+            - HIGHLANDER
+            - RX350
+            - Tundra
+            - 4Runner
+            - Corolla
+            - OTHER
+        example: "CAMRY, RAV4, HIGHLANDER, RX350"
+      - name: depositAmount
+        in: query
+        description: Deposit Amount paid by the Customer
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 1000
+          minimum: 0
+          type: integer
+          description: Deposit Amount paid by the Customer
+        example: 300
+      - name: vehiclesGroupBy
+        in: query
+        description: "VehicleGroupBy for to group the results based on ModelName or AcrissCode, by default it is suggested to consider the ModelName."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          description: ModelName or AcrissCode
+        example: ModelName
+      responses:
+        "200":
+          description: Get Available Fleet Vehicles with timeslots successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehiclesWithRentalPrice"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  /fleet-vehicles/reservation/{reservationId}:
+    get:
+      tags:
+      - Fleet Vehicles Rental
+      summary: API for getting Fleet Vehicle Rental reservation details
+      description: API for getting Fleet Vehicle Rental reservation details
+      operationId: getFleetReservationDetails
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      - name: reservationId
+        in: path
+        description: Reservation Id of the feet reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          type: string
+          description: Reservation Id generated in Fleet Reservation System
+      responses:
+        "200":
+          description: Get Fleet Vehicle Reservation details successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+    put:
+      tags:
+      - Fleet Vehicles Rental
+      summary: API for updating a Fleet Vehicle Rental reservation
+      description: API for updating a Fleet Vehicle Rental reservation
+      operationId: updateFleetReservation
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: reservationId
+        in: path
+        description: Reservation Id of the feet reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          type: string
+          description: Reservation Id generated in Fleet Reservation System
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      requestBody:
+        description: Update the Appointment
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        "200":
+          description: Fleet Vehicle Rental Reservation updated successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+    delete:
+      tags:
+      - Fleet Vehicles Rental
+      summary: API for updating a Fleet Vehicle Rental reservation
+      description: API for updating a Fleet Vehicle Rental reservation
+      operationId: cancelFleetReservation
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: reservationId
+        in: path
+        description: Reservation Id of the feet reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          type: string
+          description: Reservation Id generated in Fleet Reservation System
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      responses:
+        "200":
+          description: Fleet Vehicle Rental Reservation cancelled successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  /fleet-vehicles/reservation/:
+    post:
+      tags:
+      - Fleet Vehicles Rental
+      summary: API for creating a Fleet Vehicle Rental reservation
+      description: API for creating a Fleet Vehicle Rental reservation
+      operationId: createFleetReservation
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: brand
+        in: header
+        description: Brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Vehicle Brand (default value - 'toyota')
+          example: toyota
+          enum:
+          - toyota
+          - lexus
+        example: toyota
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      requestBody:
+        $ref: "#/components/requestBodies/ReservationRequestBody"
+      responses:
+        "201":
+          description: Fleet Vehicle Rental Reservation created successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  /fleet-vehicles/reservation/{reservationId}/notify:
+    put:
+      tags:
+      - Fleet Vehicles Rental
+      summary: API to receive notofocation for any updates to a Fleet Vehicle Rental reservation
+      description: This API should be implemented by the providers so that OEM can send any updates/notification for a fleet reservation
+      operationId: notifyFleetReservation
+      parameters:
+      - name: api-version
+        in: header
+        description: API Version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: API Version
+          example: 1.0.0
+          enum:
+          - 1.0.0
+          - 1.0.1
+          - 2.0.0
+          - 2.0.1
+        example: 2.0.0
+      - name: countrycode
+        in: header
+        description: Country Code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Country Code
+          example: "1"
+      - name: locale
+        in: header
+        description: Locale
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Locale
+          example: en-US
+      - name: requestId
+        in: header
+        description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+      - name: dealerId
+        in: header
+        description: Dealer Identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 5
+          minLength: 5
+          type: string
+        example: "42278"
+      - name: brand
+        in: header
+        description: Brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Vehicle Brand (default value - 'toyota')
+          example: toyota
+          enum:
+          - toyota
+          - lexus
+        example: toyota
+      - name: requestSource
+        in: header
+        description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+          example: Customer
+          enum:
+          - Business
+          - Dealer
+          - Customer
+        example: Customer
+      - name: Prefer
+        in: header
+        description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: A json payload that details included response fields and reporting information
+        example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+      - name: reservationId
+        in: path
+        description: Reservation Id of the feet reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          type: string
+          description: Reservation Id generated in Fleet Reservation System
+      requestBody:
+        description: Update the Appointment
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "200":
+          description: Fleet Vehicle Rental Notification processed successfully
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: |
+            Bad Request, server cannot or will not process the request.
+            See more details in the Error message
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: |
+            The request requires user authentication. The response MUST include a WWW-Authenticate header field containing a challenge applicable to the requested resource.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: |
+            The requested resource was not found.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "429":
+          description: |
+            Too Many Requests error occurs when a user tries to perform too many requests within a certain timeframe.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "500":
+          description: |
+            The server encountered an unexpected condition which prevented it from fulfilling the request.
+          headers:
+            RequestId:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+components:
+  schemas:
+    VehiclesWithRentalPrice:
+      type: object
+      properties:
+        dealerDetails:
+          $ref: "#/components/schemas/DealerDetails"
+        fleetVehiclesWithRentalPrice:
+          type: array
+          items:
+            $ref: "#/components/schemas/FleetVehiclesWithRentalPrice"
+    VehiclesWithTimeSlots:
+      type: object
+      properties:
+        dealerDetails:
+          $ref: "#/components/schemas/DealerDetails"
+        availableVehiclesWithTimeslots:
+          type: array
+          items:
+            $ref: "#/components/schemas/FleetVehiclesWithTimeSlots"
+    FleetVehicleWithAvailabilityTimeSlots:
+      required:
+      - availableTimeSlots
+      - vehicle
+      type: object
+      properties:
+        vehicle:
+          $ref: "#/components/schemas/FleetVehicle"
+        availableTimeSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/AvailableTimeSlotDateTime"
+    TaxItem:
+      type: object
+      properties:
+        rate:
+          type: number
+          description: Tax Rate
+          example: 10
+        type:
+          type: string
+          description: "Unit of measurement for Tax Rate (e.g., percent, amount)."
+        name:
+          type: string
+          description: "Tax Type. Example like VLT, PrecisionCactusFee, PrecisionSalesTax, StateTax etc.,"
+          example: VLT
+        amount:
+          type: number
+          description: Tax Amount
+          example: 19.2
+    FeeItem:
+      type: object
+      properties:
+        type:
+          type: string
+          description: "Fee Type. Example like Surcharge, cleaning, Toll, Extra Miles etc.,"
+          example: Surcharge
+        rate:
+          type: number
+          description: Fee Item Rate in Amount
+          example: 12
+        frequency:
+          type: string
+          description: Fee Item Frequency
+          example: "1"
+        amount:
+          type: number
+          description: Fee Amount
+          example: 12
+    FleetVehicle:
+      required:
+      - acrissCode
+      - bodyStyleCode
+      - luggageBags
+      - make
+      - modelName
+      - mpg
+      type: object
+      properties:
+        year:
+          maxLength: 4
+          minLength: 4
+          pattern: "(19|20)\\d{2}"
+          type: string
+          description: Model year of car
+          example: "2019"
+        make:
+          type: string
+          description: Car make/brand name
+          example: Toyota
+        modelName:
+          type: string
+          description: Car model name
+          example: Prius
+        bodyStyleCode:
+          type: string
+          description: Car Body Style
+          example: SUV
+        bodyStyleDesc:
+          type: string
+          description: Car Body Description
+          example: Premium SUV
+        classification:
+          type: string
+          description: Car Classification
+          example: Premium
+        mpg:
+          $ref: "#/components/schemas/FleetVehicle_mpg"
+        luggageBags:
+          type: string
+          description: number luggage bags can carry
+          example: "5"
+        acrissCode:
+          type: string
+          description: reference code for to get the vehicle details
+          example: SFAR
+        availableCount:
+          type: integer
+          description: number of vehicles available to rent
+          example: 10
+        stockImage:
+          type: string
+          description: Car Stock Image
+          example: https://www.toyota.com/
+        vin:
+          maxLength: 17
+          minLength: 17
+          pattern: "^[0-9A-HJ-NPR-Z]+$"
+          type: string
+          description: Vehicle Identification Number
+          example: 4T1B11HK6KU804537
+    RentalPriceBreakup:
+      type: object
+      properties:
+        tax:
+          $ref: "#/components/schemas/RentalPriceBreakup_tax"
+        otherFees:
+          $ref: "#/components/schemas/RentalPriceBreakup_otherFees"
+        totalRentalRateAmount:
+          type: number
+          description: "totalRentalRateAmount is the total of duration times rentalRateAmount(per unit e.g., daily, weekly) for the duration that customer requested rental reservation"
+          example: 576
+    RentalRate:
+      type: array
+      items:
+        $ref: "#/components/schemas/RentalRate_inner"
+    FleetVehiclesWithRentalPrice:
+      required:
+      - estimatedTotalRentalPrice
+      - rentalBookingTimeSlot
+      - rentalPriceBreakup
+      - rentalPriceId
+      - rentalRate
+      - vehicle
+      type: object
+      properties:
+        vehicleStationDetails:
+          $ref: "#/components/schemas/FleetVehicleStationDetails"
+        depositAmount:
+          type: number
+          description: depositAmount paid by the Customer
+          example: 250
+        duration:
+          type: number
+          description: Number of Days the Customer would like to rent the vehicle
+          example: 3
+        rentalBookingTimeSlot:
+          $ref: "#/components/schemas/AvailableTimeSlotDateTime"
+        estimatedTotalRentalPrice:
+          type: number
+          description: estimatedTotalRentalPrice by execulding the depositAmount (This estimatedTotalRentalPrice includes all the taxes and other fee amount listed)
+          example: 607.2
+        rentalPriceBreakup:
+          $ref: "#/components/schemas/RentalPriceBreakup"
+        rentalRate:
+          $ref: "#/components/schemas/RentalRate"
+        vehicle:
+          $ref: "#/components/schemas/FleetVehicle"
+        rentalPriceId:
+          type: string
+          description: rentalPriceId is for to identify each vehicle price combination. This rentalPriceId will be used by the consumers to send the user's selection back to Fleet system when creating a reservation
+          example: 16a7d408
+    FleetVehiclesWithTimeSlots:
+      type: object
+      properties:
+        vehicleStationDetails:
+          $ref: "#/components/schemas/FleetVehicleStationDetails"
+        operationalHours:
+          $ref: "#/components/schemas/FleetVehiclesWithTimeSlots_operationalHours"
+        vehicles:
+          type: array
+          items:
+            $ref: "#/components/schemas/FleetVehiclesWithTimeSlots_vehicles"
+    FleetVehicleStationDetails:
+      required:
+      - stationId
+      type: object
+      properties:
+        stationId:
+          type: string
+          description: Station ID
+          example: S12435
+        stationName:
+          type: string
+          description: Station Name
+          example: Dolan Service Station
+        website:
+          type: string
+          description: Dealer WebSite url.
+          format: uri
+          example: https://www.toyotaofdallas.com
+        address:
+          type: string
+          description: Station Address Full
+          example: 2610 Forest Lane Dallas TX 74234 USA
+        street:
+          type: string
+          description: Station Address Street
+          example: 2610 Forest Lane
+        city:
+          type: string
+          description: Station Address City
+          example: Dallas
+        state:
+          type: string
+          description: Station Address State
+          example: TX
+        country:
+          type: string
+          description: Station Address Country
+          example: USA
+        zip:
+          type: string
+          description: Station Address Zip
+          example: "75234"
+        contactDetails:
+          type: string
+          description: Station Contact Details
+          example: Phone# 9722416655; Phone800# 972-241-6655; ToyotaFax# (972) 243-3706
+        addressTitle:
+          type: string
+          description: Station Address Title
+          example: Main Station
+      description: Station Details
+    DealerDetails:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Dealer Name
+          example: Toyota of Dallas
+        website:
+          type: string
+          description: Dealer WebSite url.
+          format: uri
+          example: https://www.toyotaofdallas.com
+        address:
+          type: string
+          description: Dealer Address Full
+          example: 2610 Forest Lane Dallas TX 74234 USA
+        street:
+          type: string
+          description: Dealer Address Street
+          example: 2610 Forest Lane
+        city:
+          type: string
+          description: Dealer Address City
+          example: Dallas
+        state:
+          type: string
+          description: Dealer Address State
+          example: TX
+        country:
+          type: string
+          description: Dealer Address Country
+          example: USA
+        zip:
+          type: string
+          description: Dealer Address Zip
+          example: "75234"
+        contactDetails:
+          type: string
+          description: Dealer Contact Details
+          example: Phone# 9722416655; Phone800# 972-241-6655; ToyotaFax# (972) 243-3706
+        addressTitle:
+          type: string
+          description: Dealer Address Title
+          example: Main Dealer
+      description: Dealer Details
+    ServiceOperationHours:
+      properties:
+        isOpen:
+          type: boolean
+          description: "is DealerShip Open on this day of the week (true for open, false for close)"
+          example: true
+        isToday:
+          type: boolean
+          description: "is this Calendar date is today (true if this day is todays date, false if this day is not todays date)"
+          example: false
+        calendarDate:
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          type: string
+          description: Day of the Week.
+          format: date
+        dayOfWeek:
+          type: string
+          description: Day Of Week
+          example: Monday
+          enum:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+          - Saturday
+          - Sunday
+        hoursOfOperation:
+          type: array
+          items:
+            $ref: "#/components/schemas/HoursOfOperation"
+    HoursOfOperation:
+      type: object
+      properties:
+        availabilityStartTime:
+          type: string
+          description: Service Hours Start Time
+          example: 09:00 AM
+        availabilityEndTime:
+          type: string
+          description: Service Hours End Time
+          example: 05:00 PM
+    AvailableTimeSlotDateTime:
+      required:
+      - endDateTime
+      - startDateTime
+      type: object
+      properties:
+        startDateTime:
+          type: string
+          description: Available TimeSlot/ Rental start DateTime
+          format: date-time
+          example: 2024-06-28T00:01:00Z
+        endDateTime:
+          type: string
+          description: Available TimeSlot/ Rental end DateTime
+          format: date-time
+          example: 2024-08-26T23:59:00Z
+    Healthcheck:
+      type: object
+      properties:
+        status:
+          type: boolean
+          description: status of the service
+          example: true
+        profile:
+          type: string
+          description: configuration profile of the service typically speicifying environment
+          example: production
+    Errors:
+      type: array
+      items:
+        $ref: "#/components/schemas/ErrorModel"
+    ErrorModel:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+        errorId:
+          type: integer
+          description: Unique identifier for the error message for monitoring purposes and organized by error type and profile
+        errorMsg:
+          type: string
+          description: Error message directly from integrated service (if applicable). Returned as is.
+        userErrorMsg:
+          type: string
+    FleetVehicle_mpg:
+      type: object
+      properties:
+        city:
+          type: integer
+          description: mpg in city in ideal conditions
+          example: 26
+        combined:
+          type: integer
+          description: mpg in city and highway combined in ideal conditions
+          example: 30
+        highway:
+          type: integer
+          description: mpg in highway in ideal conditions
+          example: 35
+    RentalPriceBreakup_tax:
+      type: object
+      properties:
+        taxDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxItem"
+        totalTaxAmount:
+          type: number
+          description: Total of all Tax Types listed in the taxDetails
+          example: 19.2
+    RentalPriceBreakup_otherFees:
+      type: object
+      properties:
+        feeDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeItem"
+        totalOtherFeeAmount:
+          type: number
+          description: Total of all Fee Types listed in the feeDetails
+          example: 12
+    RentalRate_inner:
+      type: object
+      properties:
+        unit:
+          type: string
+          description: "Unit of measurement for rental (e.g., daily, weekly)."
+          example: daily
+        rate:
+          type: number
+          description: Rate for the specified unit.
+          example: 96
+        quantity:
+          type: integer
+          description: Quantity of units.
+          example: 2
+        tax:
+          $ref: "#/components/schemas/RentalRate_inner_tax"
+        rentalRateAmount:
+          type: number
+          description: rentalRateAmount is the rate times quantity
+          example: 192
+    FleetVehiclesWithTimeSlots_operationalHours:
+      type: object
+      properties:
+        standardHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceOperationHours"
+        exceptionHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceOperationHours"
+    FleetVehiclesWithTimeSlots_vehicles:
+      required:
+      - brand
+      type: object
+      properties:
+        brand:
+          type: string
+          description: Vehicle Brand
+          example: toyota
+        models:
+          type: array
+          items:
+            $ref: "#/components/schemas/FleetVehicleWithAvailabilityTimeSlots"
+    ReservationCreateBody:
+      type: object
+      properties:
+        dealerDetails:
+          $ref: "#/components/schemas/DealerDetails"
+        fleetVehicleRental:
+          $ref: "#/components/schemas/FleetVehicleRental"
+    Reservation:
+      type: object
+      properties:
+        reservationId:
+          pattern: "[a-zA-Z0-9]"
+          type: string
+          description: Reservation Id generated by Fleet System
+          example: 286AL3H4
+        dealerDetails:
+          $ref: "#/components/schemas/DealerDetails"
+        fleetVehicleRental:
+          $ref: "#/components/schemas/FleetVehicleRental"
+    FleetVehicleRental:
+      required:
+      - customer
+      - dealerId
+      - partnerRequestId
+      - pickupStation
+      - rentalPriceId
+      - reservationEndDate
+      - reservationEndTime
+      - reservationStartDate
+      - reservationStartTime
+      - reservationTimezoneName
+      type: object
+      properties:
+        dealerId:
+          maxLength: 5
+          minLength: 5
+          pattern: "^[0-9]+$"
+          type: string
+          description: Dealer Number
+          example: "04536"
+        partnerRequestId:
+          pattern: "[a-zA-Z0-9]"
+          type: string
+          description: Appointment Id/Request Id generated by the business partner system for correlation
+          example: 286AL3H4
+        reservationStartDate:
+          maxLength: 10
+          minLength: 0
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          type: string
+          description: Reservation Start Date
+          format: date
+        reservationStartTime:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: Reservation Start Time
+          example: 08:30 AM
+        reservationEndDate:
+          maxLength: 10
+          minLength: 0
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          type: string
+          description: Reservation End Date. Will be deafulated to next day(24 hours from start date) if not provided
+          format: date
+        reservationEndTime:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: Reservation End Time
+          example: 08:30 AM
+        reservationTimezoneName:
+          type: string
+          description: Reservation Timezone Name
+          example: America/Los_Angeles
+        pickupStation:
+          $ref: "#/components/schemas/FleetVehicleStationDetails"
+        dropoffStation:
+          $ref: "#/components/schemas/FleetVehicleStationDetails"
+        customers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Customer"
+        drivingLicense:
+          $ref: "#/components/schemas/DriversLicense"
+        insurance:
+          $ref: "#/components/schemas/InsuranceDetails"
+        roNumber:
+          type: array
+          description: List of Repair Order Numbers
+          example:
+          - "123456"
+          - "23424"
+          items:
+            maxLength: 10
+            type: string
+        poNumber:
+          type: array
+          description: List of Purchase Order Numbers
+          example:
+          - "123456"
+          - "23424"
+          items:
+            maxLength: 10
+            type: string
+        rentalPriceId:
+          type: string
+          description: rentalPriceId is for to identify each vehicle price combination. This rentalPriceId will be used by the consumers to send the user's selection back to Fleet system when creating a reservation
+          example: 16a7d408
+        selectedVehicle:
+          $ref: "#/components/schemas/FleetVehicle"
+    Customer:
+      required:
+      - contactMethod
+      - customerType
+      type: object
+      properties:
+        identifier:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identifier"
+        customerType:
+          type: string
+          default: Individual
+          enum:
+          - Individual
+          - Business
+        name:
+          $ref: "#/components/schemas/Name"
+        businessName:
+          $ref: "#/components/schemas/BusinessName"
+        address:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        contactMethod:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactMethod"
+        emailDeclined:
+          type: boolean
+          description: flag indicating if the customer has declined to provide email.
+          example: false
+        communication:
+          type: array
+          items:
+            $ref: "#/components/schemas/Communication"
+        isPrimary:
+          type: boolean
+          description: Flag to indicate if the customer is primary driver for the reservation
+          example: true
+        driversLicense:
+          $ref: "#/components/schemas/DriversLicense"
+      description: Customer Personal details
+    Identifier:
+      required:
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+          description: Unique identifier value within the system
+          example: "12345"
+        system:
+          type: string
+          description: Identifier namespace
+          example: CDK
+    Name:
+      required:
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: array
+          description: Customer First Name.
+          example:
+          - John
+          - Michael
+          items:
+            type: string
+        lastName:
+          type: string
+          description: Customer Last Name.
+          example: Doe
+        prefix:
+          type: array
+          description: Customer Name Prefixes
+          example:
+          - Mr.
+          items:
+            type: string
+        suffix:
+          type: array
+          description: Customer Name Suffixes
+          example:
+          - PhD
+          items:
+            type: string
+    BusinessName:
+      required:
+      - businessName
+      - businessOrgId
+      type: object
+      properties:
+        businessName:
+          type: string
+          description: Business Full Name.
+          example: Enterprise Rent-A-Car
+        businessOrgId:
+          type: string
+          description: Business Ord Id.
+          example: EnterpriseRAC
+    ContactMethod:
+      required:
+      - type
+      - use
+      - value
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of contact method
+          enum:
+          - phone
+          - email
+          - mail
+          - pager
+          - url
+          - sms
+          - other
+        value:
+          type: string
+          description: Actual contact method details
+        use:
+          type: string
+          description: Purpose of contact method
+          enum:
+          - home
+          - work
+          - mobile
+          - other
+        rank:
+          type: integer
+          description: Preferred order of use (1 = highest)
+          example: 1
+        preferredContactTime:
+          type: string
+          description: Customer preferred contact time
+          example: Mon-Fri between 2 PM and 8 PM
+        consent:
+          type: boolean
+          description: Customer gave consent for being contacted using this method
+    Communication:
+      required:
+      - language
+      type: object
+      properties:
+        language:
+          type: string
+          description: Language that may be used to communicate with the customer
+          example: English
+        preferred:
+          type: boolean
+          description: Language preferrence indicator
+    DriversLicense:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Driving License Number
+        expiryDate:
+          type: string
+          description: Driving License's expiry date
+        state:
+          type: string
+          description: State where the driving license is issued
+        country:
+          type: string
+          description: Country where the driving license is issued
+    Address:
+      required:
+      - address
+      - city
+      - country
+      - postalCode
+      - state
+      type: object
+      properties:
+        use:
+          type: string
+          description: Purpose of this address
+          example: home
+          enum:
+          - home
+          - work
+          - billing
+          - shipping
+          - other
+        type:
+          type: string
+          description: Type of address
+          example: physical
+          enum:
+          - postal
+          - physical
+          - both
+        address:
+          type: array
+          description: "Street name, number, direction & P.O. Box etc"
+          example:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          items:
+            type: string
+        city:
+          type: string
+          description: "Name of city, town"
+          example: Plano
+        state:
+          type: string
+          description: Sub-unit of country
+          example: Texas
+        country:
+          type: string
+          description: Country (ISO 3166 2 or 3 letter code)
+          example: USA
+        postalCode:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: "Postal code for area (75234, 75234-2165)"
+          example: "75234"
+      description: Customer Address
+    InsuranceDetails:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: Insurance policy number
+        insuranceProvider:
+          type: string
+          description: Insurance provider name
+        effectiveDate:
+          type: string
+          description: Insurance effective date
+        expirationDate:
+          type: string
+          description: Insurance expiration date
+    Notification:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/Meta"
+        payload:
+          $ref: "#/components/schemas/Payload"
+    Meta:
+      type: object
+      properties:
+        notificationType:
+          type: string
+          description: Notification Type which determines the action to be taken by the provider
+        nofityDesc:
+          type: string
+          description: One liner description of the notification type and the action that can be performed by the provider
+        createAt:
+          type: string
+          description: Notification created DateTime
+          format: date-time
+          example: 2024-06-28T00:01:00Z
+    Payload:
+      type: object
+      properties:
+        cancellationNote:
+          type: string
+          description: notes entered by dealer when cancelling the reservation
+          example: Customer requested to cancel the reservation
+        invoice:
+          $ref: "#/components/schemas/Invoice"
+        agreement:
+          $ref: "#/components/schemas/Agreement"
+      allOf:
+      - $ref: "#/components/schemas/Reservation"
+    Invoice:
+      type: object
+      properties:
+        invoiceDate:
+          type: string
+          description: Invoice DateTime
+          format: date-time
+          example: 2024-06-28T00:01:00Z
+        invoiceAmount:
+          type: number
+          description: Total invoice amount for the rental
+          example: 258.6
+        paidAmount:
+          type: number
+          description: Total amount already paid for the rental
+          example: 258.6
+        dueAmount:
+          type: number
+          description: Total amount due for the rental
+          example: 258.6
+        tax:
+          $ref: "#/components/schemas/RentalPriceBreakup_tax"
+        otherFees:
+          $ref: "#/components/schemas/RentalPriceBreakup_otherFees"
+        pdf:
+          type: string
+          description: Invoice pdf attached as a base64 enconded string
+          example: JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+    Agreement:
+      type: object
+      properties:
+        agreementNumber:
+          type: string
+          description: Rental Agreement Number
+          example: RT-02010-000100
+        agreementDate:
+          type: string
+          description: agreement created DateTime
+          format: date-time
+          example: 2024-06-28T00:01:00Z
+        pdf:
+          type: string
+          description: Invoice pdf attached as a base64 enconded string
+          example: JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+    RentalRate_inner_tax:
+      type: object
+      properties:
+        taxDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaxItem"
+        totalTaxAmount:
+          type: number
+          description: Total of all Tax Types listed in the taxDetails
+          example: 19.2
+  parameters:
+    CountryCode:
+      name: countrycode
+      in: header
+      description: Country Code
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Country Code
+        example: "1"
+    Locale:
+      name: locale
+      in: header
+      description: Locale
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Locale
+        example: en-US
+    Prefer:
+      name: Prefer
+      in: header
+      description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Fleet Vehicles Rental API if they are not specified. Specific field names will default to false."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: A json payload that details included response fields and reporting information
+      example: "{'logsLabel': {context: NNA_API, value: Fleet Vehicles Rental API}, reportingLabel: {context: NNA_API, value: Fleet Vehicles Rental API}}"
+    ApiVersion:
+      name: api-version
+      in: header
+      description: API Version
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: API Version
+        example: 1.0.0
+        enum:
+        - 1.0.0
+        - 1.0.1
+        - 2.0.0
+        - 2.0.1
+      example: 2.0.0
+    RequestId:
+      name: requestId
+      in: header
+      description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+    DealerId:
+      name: dealerId
+      in: header
+      description: Dealer Identifier
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+      example: "42278"
+    RequestSource:
+      name: requestSource
+      in: header
+      description: Source Entity (Business/ Dealer/ Customer) submitted this request.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Source Entity (Business/ Dealer/ Customer) submitted the request (default value - 'Customer')
+        example: Customer
+        enum:
+        - Business
+        - Dealer
+        - Customer
+      example: Customer
+    Brand:
+      name: brand
+      in: header
+      description: Brand
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Vehicle Brand (default value - 'toyota')
+        example: toyota
+        enum:
+        - toyota
+        - lexus
+      example: toyota
+    Duration:
+      name: duration
+      in: query
+      description: Duration of the vechiles requested for the rental availability
+      required: false
+      style: form
+      explode: false
+      schema:
+        maximum: 365
+        minimum: 0
+        type: integer
+        description: Duration of the vechiles requested for the rental availability. default value 14 days (two weeks)
+    StartDate:
+      name: startDate
+      in: query
+      description: The start date from which the appointment slots with vehciles availability are requested. If the start date is not provided the current date will be defaulted.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 10
+        minLength: 0
+        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        type: string
+        description: Start date
+        format: date
+      example: 2024-11-05
+    EndDate:
+      name: endDate
+      in: query
+      description: The end date upto which the appointment slots are requested. If the endDate is not provided the appointment slots from the current date up to 14 days will be provided in the service response.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 10
+        minLength: 0
+        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        type: string
+        description: End date
+        format: date-time
+      example: 2024-11-26
+    BodyStyle:
+      name: bodyStyle
+      in: query
+      description: "List of body styles with comma seperated like..SUV, SEDAN, MINI_VAN"
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - COUPE
+          - SEDAN
+          - SPORTS
+          - WAGON
+          - HATCHBACK
+          - CONVERTIBLE
+          - SUV
+          - MINI_VAN
+          - TRUCK
+          - BIKE
+          - COMMERCIAL_VAN
+          - PASSENGER_VAN
+          - CARGO_VAN
+          - VAN
+          - CROSSOVER
+          - DIESEL
+          - OTHER
+      example: "SUV, SEDAN, MINI_VAN"
+    ModelName:
+      name: modelName
+      in: query
+      description: "List of model names with comma seperated like..CAMRY, RAV4, HIGHLANDER, RX350"
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - CAMRY
+          - RAV4
+          - HIGHLANDER
+          - RX350
+          - Tundra
+          - 4Runner
+          - Corolla
+          - OTHER
+      example: "CAMRY, RAV4, HIGHLANDER, RX350"
+    DepositAmount:
+      name: depositAmount
+      in: query
+      description: Deposit Amount paid by the Customer
+      required: false
+      style: form
+      explode: false
+      schema:
+        maximum: 1000
+        minimum: 0
+        type: integer
+        description: Deposit Amount paid by the Customer
+      example: 300
+    CarClassification:
+      name: classification
+      in: query
+      description: "List of car classification schemes that are used for various purposes including regulation, description, and categorization of cars like..COMPACT, STANDARD, LUXURY"
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - SUPERCAR
+          - SPORT
+          - SMALL
+          - OFF_ROAD
+          - MUSCLE
+          - ECONOMY
+          - COMPACT
+          - MINI
+          - INTERMEDIATE
+          - STANDARD
+          - CONVERTIBLE
+          - PREMIUM
+          - LUXURY
+          - LARGE
+          - HYBRID
+          - FUEL_EFFICIENT
+          - FAMILY
+          - ELECTRIC
+          - COMMUTER
+          - CLASSIC
+          - AMERICAN
+          - EUROPEAN
+          - FOREIGN
+          - OTHER
+      example: "COMPACT, STANDARD, LUXURY"
+    VehiclesGroupBy:
+      name: vehiclesGroupBy
+      in: query
+      description: "VehicleGroupBy for to group the results based on ModelName or AcrissCode, by default it is suggested to consider the ModelName."
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        description: ModelName or AcrissCode
+      example: ModelName
+  requestBodies:
+    ReservationRequestBody:
+      description: Book Reservation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ReservationCreateBody"
+      required: true
+  headers:
+    RequestId:
+      description: Request ID Header (UUID version 4)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+  securitySchemes:
+    FVRAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
