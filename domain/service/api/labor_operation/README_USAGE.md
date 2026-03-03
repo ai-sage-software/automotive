@@ -1,4 +1,4 @@
-## Labor Operations Usage
+Labor Operations Usage
 ---
 
 ### 1. Parts, Miscellaneous Items, and Fees

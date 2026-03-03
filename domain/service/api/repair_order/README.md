@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AppointmentReference**, **BillOfMaterialReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Inspection**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **Locale**, **Media**, **MediaAccessMetric**, **MetricValue**, **PartIdentifier**, **PartyReference**, **PricePlanReference**, **RebateReference**, **RepairOrder**, **RewardReference**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**, **TaxSplit**, **VehicleIdentifier**, **VehicleLicense**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **AppointmentReference**, **BillOfMaterialReference**, **ControlAccountReference**, **CreditReference**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **FinancialSplitReference**, **GeographicBoundaryReference**, **Inspection**, **LaborOperation**, **LaborOperationEvent**, **LaborResource**, **Locale**, **Media**, **MediaAccessMetric**, **MetricValue**, **PartIdentifier**, **PartyReference**, **PricePlanReference**, **RebateReference**, **RepairOrder**, **RewardReference**, **ServiceCatalogReferences**, **StaffAssignmentReference**, **StaffSkill**, **TaxSplit**, **VehicleIdentifier**, **VehicleLicense**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -27,8 +27,8 @@ The API is structured around the domain **service** and **RepairOrder** resource
     | **DiscountReference** | /repair-orders/{repairOrderKey}/discount-references | Manages DiscountReferences belonging to RepairOrders |
     | **TimeSlot** | /repair-orders/{repairOrderKey}/time-slots | Manages TimeSlots belonging to RepairOrders |
     | **FinancialCategoryReference** | /repair-orders/{repairOrderKey}/financial-category-references | Manages FinancialCategoryReferences belonging to RepairOrders |
-    | **FeeReference** | /repair-orders/{repairOrderKey}/fee-references | Manages FeeReferences belonging to RepairOrders |
     | **PartyReference** | /repair-orders/{repairOrderKey}/party-references | Manages PartyReferences belonging to RepairOrders |
+    | **FeeReference** | /repair-orders/{repairOrderKey}/fee-references | Manages FeeReferences belonging to RepairOrders |
     | **StaffAssignmentReference** | /repair-orders/{repairOrderKey}/staff-assignment-references | Manages StaffAssignmentReferences belonging to RepairOrders |
     | **Money** | /repair-orders/{repairOrderKey}/money | Manages Money belonging to RepairOrders |
     | **MetricValue** | /repair-orders/{repairOrderKey}/metric-values | Manages MetricValues belonging to RepairOrders |
@@ -46,7 +46,6 @@ The API is structured around the domain **service** and **RepairOrder** resource
     | **Inspection** | /repair-orders/{repairOrderKey}/inspections | Manages Inspections belonging to RepairOrders |
     | **ControlAccountReference** | /repair-orders/{repairOrderKey}/control-account-references | Manages ControlAccountReferences belonging to RepairOrders |
     | **RewardReference** | /repair-orders/{repairOrderKey}/reward-references | Manages RewardReferences belonging to RepairOrders |
-    | **CurrencyExchange** | /repair-orders/{repairOrderKey}/currency-exchanges | Manages CurrencyExchanges belonging to RepairOrders |
     | **MediaAccessMetric** | /repair-orders/{repairOrderKey}/media-access-metrics | Manages MediaAccessMetrics belonging to RepairOrders |
     | **BillOfMaterialReference** | /repair-orders/{repairOrderKey}/bill-of-material-references | Manages BillOfMaterialReferences belonging to RepairOrders |
     | **Price** | /repair-orders/{repairOrderKey}/prices | Manages Prices belonging to RepairOrders |
@@ -152,18 +151,19 @@ The API is built upon core entities, defined in the /components/schemas/ section
 💠 **SkillCategoryTypes** : Undocumented Enum<br/>
 💠 **PartIdentifierTypes** : entity<br/>
 💠 **PartStatusTypes** : Metrics for a single execution run of a critica...<br/>
+💠 **AddressTypes** : AddressTypes<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **CurrencyExchange** : currency.exchange.desc<br/>
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **Identifier** : identifier.desc<br/>
-✅ **Money** : money.desc<br/>
-✅ **Price** : price.desc<br/>
+✅ **CurrencyExchange** : Details concerning the conversion between different currencies.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **Identifier** : Unique identification key for the record.<br/>
+✅ **Money** : Monetary value and currency information.<br/>
+✅ **Price** : The cost or valuation amount.<br/>
 ✅ **TextualDetail** : not nullable<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 
@@ -463,56 +463,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/fee-references
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
-        <span class="api-summary">Retrieve a list of FeeReference entities scoped by repairOrderKey. getFeeReferenceByRepairOrderKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
-        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
-    </span>
-</div>
-
 ### /repair-orders/{repairOrderKey}/party-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -560,6 +510,56 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/repair-orders/{repairOrderKey}/party-references/{partyReferenceKey}</span> <br/>
         <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/fee-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by repairOrderKey. getFeeReferenceByRepairOrderKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references</span> <br/>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
+    </span>
+</div>
+
+### /repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/repair-orders/{repairOrderKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
     </span>
 </div>
 
@@ -1317,24 +1317,6 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /repair-orders/{repairOrderKey}/currency-exchanges
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/currency-exchanges</span> <br/>
-        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by repairOrderKey. getCurrencyExchangeByRepairOrderKey</span>
-    </span>
-</div>
-
-### /repair-orders/{repairOrderKey}/currency-exchanges/{currencyExchangeKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/repair-orders/{repairOrderKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
-    </span>
-</div>
-
 ### /repair-orders/{repairOrderKey}/media-access-metrics
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
@@ -1682,8 +1664,8 @@ The following resources follow a consistent pattern under RepairOrderroot with k
     | **discount-reference** | /repair-orders/{repairOrderKey}/discount-references | listDiscountReferenceByRepairOrderKey | createDiscountReference | getDiscountReferenceByRepairOrderKey | updateDiscountReferenceByRepairOrderKey | deleteDiscountReferenceByRepairOrderKey |
     | **time-slot** | /repair-orders/{repairOrderKey}/time-slots | listTimeSlotByRepairOrderKey |  | getTimeSlotByRepairOrderKey | updateTimeSlotByRepairOrderKey | deleteTimeSlotByRepairOrderKey |
     | **financial-category-reference** | /repair-orders/{repairOrderKey}/financial-category-references | listFinancialCategoryReferenceByRepairOrderKey | createFinancialCategoryReference | getFinancialCategoryReferenceByRepairOrderKey | updateFinancialCategoryReferenceByRepairOrderKey | deleteFinancialCategoryReferenceByRepairOrderKey |
-    | **fee-reference** | /repair-orders/{repairOrderKey}/fee-references | listFeeReferenceByRepairOrderKey | createFeeReference | getFeeReferenceByRepairOrderKey | updateFeeReferenceByRepairOrderKey | deleteFeeReferenceByRepairOrderKey |
     | **party-reference** | /repair-orders/{repairOrderKey}/party-references | listPartyReferenceByRepairOrderKey | createPartyReference | getPartyReferenceByRepairOrderKey | updatePartyReferenceByRepairOrderKey | deletePartyReferenceByRepairOrderKey |
+    | **fee-reference** | /repair-orders/{repairOrderKey}/fee-references | listFeeReferenceByRepairOrderKey | createFeeReference | getFeeReferenceByRepairOrderKey | updateFeeReferenceByRepairOrderKey | deleteFeeReferenceByRepairOrderKey |
     | **staff-assignment-reference** | /repair-orders/{repairOrderKey}/staff-assignment-references | listStaffAssignmentReferenceByRepairOrderKey | createStaffAssignmentReference | getStaffAssignmentReferenceByRepairOrderKey | updateStaffAssignmentReferenceByRepairOrderKey | deleteStaffAssignmentReferenceByRepairOrderKey |
     | **money** | /repair-orders/{repairOrderKey}/money | listMoneyByRepairOrderKey |  | getMoneyByRepairOrderKey | updateMoneyByRepairOrderKey | deleteMoneyByRepairOrderKey |
     | **metric-value** | /repair-orders/{repairOrderKey}/metric-values | listMetricValueByRepairOrderKey | createMetricValue | getMetricValueByRepairOrderKey | updateMetricValueByRepairOrderKey | deleteMetricValueByRepairOrderKey |
@@ -1701,7 +1683,6 @@ The following resources follow a consistent pattern under RepairOrderroot with k
     | **inspection** | /repair-orders/{repairOrderKey}/inspections | listInspectionByRepairOrderKey | createInspection | getInspectionByRepairOrderKey | updateInspectionByRepairOrderKey | deleteInspectionByRepairOrderKey |
     | **control-account-reference** | /repair-orders/{repairOrderKey}/control-account-references | listControlAccountReferenceByRepairOrderKey | createControlAccountReference | getControlAccountReferenceByRepairOrderKey | updateControlAccountReferenceByRepairOrderKey | deleteControlAccountReferenceByRepairOrderKey |
     | **reward-reference** | /repair-orders/{repairOrderKey}/reward-references | listRewardReferenceByRepairOrderKey | createRewardReference | getRewardReferenceByRepairOrderKey | updateRewardReferenceByRepairOrderKey | deleteRewardReferenceByRepairOrderKey |
-    | **currency-exchange** | /repair-orders/{repairOrderKey}/currency-exchanges | listCurrencyExchangeByRepairOrderKey |  | getCurrencyExchangeByRepairOrderKey | updateCurrencyExchangeByRepairOrderKey | deleteCurrencyExchangeByRepairOrderKey |
     | **media-access-metric** | /repair-orders/{repairOrderKey}/media-access-metrics | listMediaAccessMetricByRepairOrderKey | createMediaAccessMetric | getMediaAccessMetricByRepairOrderKey | updateMediaAccessMetricByRepairOrderKey | deleteMediaAccessMetricByRepairOrderKey |
     | **bill-of-material-reference** | /repair-orders/{repairOrderKey}/bill-of-material-references | listBillOfMaterialReferenceByRepairOrderKey | createBillOfMaterialReference | getBillOfMaterialReferenceByRepairOrderKey | updateBillOfMaterialReferenceByRepairOrderKey | deleteBillOfMaterialReferenceByRepairOrderKey |
     | **price** | /repair-orders/{repairOrderKey}/prices | listPriceByRepairOrderKey |  | getPriceByRepairOrderKey | updatePriceByRepairOrderKey | deletePriceByRepairOrderKey |
