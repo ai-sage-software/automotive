@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Locale**, **PartName**, **PartyReference**, **PriceCriteria**, **PriceCriteriaItem**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AddressReference**, **ControlAccountReference**, **CreditReference**, **DiscountMetricValue**, **DiscountReference**, **FeeReference**, **FinancialCategoryReference**, **FinancialSplit**, **Locale**, **PartName**, **PartyReference**, **PriceCriteria**, **PriceCriteriaItem**, **RebateReference**, **RewardReference**, **TaxSplit**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -24,15 +24,26 @@ The API is structured around the domain **parts** and **PriceCriteria** resource
 | :--- | :--- | :--- |
     | **PriceCriteria** | /price-criteria | Manages PriceCriteria |
     | **Locale** | /price-criteria/{priceCriteriaKey}/locales | Manages Locales belonging to PriceCriteria |
-    | **PartyReference** | /price-criteria/{priceCriteriaKey}/party-references | Manages PartyReferences belonging to PriceCriteria |
+    | **RebateReference** | /price-criteria/{priceCriteriaKey}/rebate-references | Manages RebateReferences belonging to PriceCriteria |
     | **PriceCriteriaItem** | /price-criteria/{priceCriteriaKey}/price-criteria-items | Manages PriceCriteriaItems belonging to PriceCriteria |
+    | **TaxSplit** | /price-criteria/{priceCriteriaKey}/tax-splits | Manages TaxSplits belonging to PriceCriteria |
+    | **DiscountReference** | /price-criteria/{priceCriteriaKey}/discount-references | Manages DiscountReferences belonging to PriceCriteria |
+    | **ControlAccountReference** | /price-criteria/{priceCriteriaKey}/control-account-references | Manages ControlAccountReferences belonging to PriceCriteria |
+    | **RewardReference** | /price-criteria/{priceCriteriaKey}/reward-references | Manages RewardReferences belonging to PriceCriteria |
+    | **CurrencyExchange** | /price-criteria/{priceCriteriaKey}/currency-exchanges | Manages CurrencyExchanges belonging to PriceCriteria |
+    | **TimeSlot** | /price-criteria/{priceCriteriaKey}/time-slots | Manages TimeSlots belonging to PriceCriteria |
+    | **DiscountMetricValue** | /price-criteria/{priceCriteriaKey}/discount-metric-values | Manages DiscountMetricValues belonging to PriceCriteria |
+    | **AddressReference** | /price-criteria/{priceCriteriaKey}/address-references | Manages AddressReferences belonging to PriceCriteria |
+    | **FinancialCategoryReference** | /price-criteria/{priceCriteriaKey}/financial-category-references | Manages FinancialCategoryReferences belonging to PriceCriteria |
+    | **PartyReference** | /price-criteria/{priceCriteriaKey}/party-references | Manages PartyReferences belonging to PriceCriteria |
+    | **FeeReference** | /price-criteria/{priceCriteriaKey}/fee-references | Manages FeeReferences belonging to PriceCriteria |
     | **Identifier** | /price-criteria/{priceCriteriaKey}/identifiers | Manages Identifiers belonging to PriceCriteria |
     | **EventMessage** | /price-criteria/{priceCriteriaKey}/event-messages | Manages EventMessages belonging to PriceCriteria |
     | **PartName** | /price-criteria/{priceCriteriaKey}/part-names | Manages PartNames belonging to PriceCriteria |
     | **Price** | /price-criteria/{priceCriteriaKey}/prices | Manages Prices belonging to PriceCriteria |
     | **EffectivePeriod** | /price-criteria/{priceCriteriaKey}/effective-periods | Manages EffectivePeriods belonging to PriceCriteria |
-    | **CurrencyExchange** | /price-criteria/{priceCriteriaKey}/currency-exchanges | Manages CurrencyExchanges belonging to PriceCriteria |
-    | **TimeSlot** | /price-criteria/{priceCriteriaKey}/time-slots | Manages TimeSlots belonging to PriceCriteria |
+    | **CreditReference** | /price-criteria/{priceCriteriaKey}/credit-references | Manages CreditReferences belonging to PriceCriteria |
+    | **FinancialSplit** | /price-criteria/{priceCriteriaKey}/financial-splits | Manages FinancialSplits belonging to PriceCriteria |
 
 
 ---
@@ -101,28 +112,37 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+💠 **AddressTypes** : types of address.<br/>
 💠 **DaysOfWeekTypes** : types of days of weeks.<br/>
 💠 **DurationUOMTypes** : types of duration u o ms.<br/>
 💠 **EventMessageTypes** : types of event messages.<br/>
+💠 **FinancialTransactionTypes** : types of financial transactions.<br/>
+💠 **IncentiveTypes** : types of incentives.<br/>
+💠 **LedgerActionTypes** : types of ledger actions.<br/>
+💠 **OrderCategoryTypes** : types of order categorys.<br/>
 💠 **PartNameTypes** : types of part names.<br/>
 💠 **PartyRelationshipTypes** : types of party relationships.<br/>
 💠 **PartyTypes** : types of partys.<br/>
 💠 **PayTypes** : types of pays.<br/>
 💠 **PaymentTypes** : types of payments.<br/>
 💠 **PriceTypes** : types of prices.<br/>
+💠 **ProductPriceItemTypes** : types of product price items.<br/>
+💠 **ProductStateTypes** : types of product states.<br/>
 💠 **StaffRoleTypes** : types of staff roles.<br/>
+💠 **TaxTypes** : types of taxs.<br/>
 💠 **TimeslotDirectiveTypes** : types of timeslot directives.<br/>
+💠 **UnitOfMeasureTypes** : types of unit of measures.<br/>
 
 ## ✅ Entities
 
 ---
 
-✅ **CurrencyExchange** : currency.exchange.desc<br/>
-✅ **EffectivePeriod** : effective.period.desc<br/>
-✅ **EventMessage** : event.message.desc<br/>
-✅ **Identifier** : identifier.desc<br/>
-✅ **Price** : price.desc<br/>
-✅ **TimeSlot** : time.slot.desc<br/>
+✅ **CurrencyExchange** : Details concerning the conversion between different currencies.<br/>
+✅ **EffectivePeriod** : The date range during which this record is valid.<br/>
+✅ **EventMessage** : A descriptive notification regarding a system or business event.<br/>
+✅ **Identifier** : Unique identification key for the record.<br/>
+✅ **Price** : The cost or valuation amount.<br/>
+✅ **TimeSlot** : Designated window of time for the activity.<br/>
 
 ---
 
@@ -304,53 +324,53 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/party-references
+### /price-criteria/{priceCriteriaKey}/rebate-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
-        <span class="api-summary">Retrieve a list of PartyReference entities scoped by priceCriteriaKey. getPartyReferenceByPriceCriteriaKey</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RebateReference entities scoped by priceCriteriaKey. getRebateReferenceByPriceCriteriaKey</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
-        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references</span> <br/>
+        <span class="api-summary">Create a new RebateReference entity. createRebateReference</span>
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}
+### /price-criteria/{priceCriteriaKey}/rebate-references/{rebateReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RebateReference entity. getebateReferenceById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RebateReference entity. replaceRebateReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RebateReference entity. updatePartialRebateReference</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
-        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/rebate-references/{rebateReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RebateReference entity deleteRebateReferenceEntity</span>
     </span>
 </div>
 
@@ -401,6 +421,492 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     <span class="api-path-summary">
         <span class="api-path">/price-criteria/{priceCriteriaKey}/price-criteria-items/{priceCriteriaItemKey}</span> <br/>
         <span class="api-summary">Delete a PriceCriteriaItem entity deletePriceCriteriaItemEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/tax-splits
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits</span> <br/>
+        <span class="api-summary">Retrieve a list of TaxSplit entities scoped by priceCriteriaKey. getTaxSplitByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits</span> <br/>
+        <span class="api-summary">Create a new TaxSplit entity. createTaxSplit</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/tax-splits/{taxSplitKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TaxSplit entity. getaxSplitById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Replace a TaxSplit entity. replaceTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Partially update a TaxSplit entity. updatePartialTaxSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/tax-splits/{taxSplitKey}</span> <br/>
+        <span class="api-summary">Delete a TaxSplit entity deleteTaxSplitEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/discount-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references</span> <br/>
+        <span class="api-summary">Retrieve a list of DiscountReference entities scoped by priceCriteriaKey. getDiscountReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references</span> <br/>
+        <span class="api-summary">Create a new DiscountReference entity. createDiscountReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/discount-references/{discountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DiscountReference entity. getiscountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a DiscountReference entity. replaceDiscountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a DiscountReference entity. updatePartialDiscountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-references/{discountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a DiscountReference entity deleteDiscountReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/control-account-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references</span> <br/>
+        <span class="api-summary">Retrieve a list of ControlAccountReference entities scoped by priceCriteriaKey. getControlAccountReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references</span> <br/>
+        <span class="api-summary">Create a new ControlAccountReference entity. createControlAccountReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/control-account-references/{controlAccountReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific ControlAccountReference entity. getontrolAccountReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a ControlAccountReference entity. replaceControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a ControlAccountReference entity. updatePartialControlAccountReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/control-account-references/{controlAccountReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a ControlAccountReference entity deleteControlAccountReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/reward-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references</span> <br/>
+        <span class="api-summary">Retrieve a list of RewardReference entities scoped by priceCriteriaKey. getRewardReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references</span> <br/>
+        <span class="api-summary">Create a new RewardReference entity. createRewardReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/reward-references/{rewardReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific RewardReference entity. getewardReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a RewardReference entity. replaceRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a RewardReference entity. updatePartialRewardReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/reward-references/{rewardReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a RewardReference entity deleteRewardReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/currency-exchanges
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/currency-exchanges</span> <br/>
+        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by priceCriteriaKey. getCurrencyExchangeByPriceCriteriaKey</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/currency-exchanges/{currencyExchangeKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/time-slots
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/time-slots</span> <br/>
+        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by priceCriteriaKey. getTimeSlotByPriceCriteriaKey</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/discount-metric-values
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values</span> <br/>
+        <span class="api-summary">Retrieve a list of DiscountMetricValue entities scoped by priceCriteriaKey. getDiscountMetricValueByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values</span> <br/>
+        <span class="api-summary">Create a new DiscountMetricValue entity. createDiscountMetricValue</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/discount-metric-values/{discountMetricValueKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific DiscountMetricValue entity. getiscountMetricValueById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
+        <span class="api-summary">Replace a DiscountMetricValue entity. replaceDiscountMetricValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
+        <span class="api-summary">Partially update a DiscountMetricValue entity. updatePartialDiscountMetricValue</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/discount-metric-values/{discountMetricValueKey}</span> <br/>
+        <span class="api-summary">Delete a DiscountMetricValue entity deleteDiscountMetricValueEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/address-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references</span> <br/>
+        <span class="api-summary">Retrieve a list of AddressReference entities scoped by priceCriteriaKey. getAddressReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references</span> <br/>
+        <span class="api-summary">Create a new AddressReference entity. createAddressReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/address-references/{addressReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific AddressReference entity. getddressReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a AddressReference entity. replaceAddressReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a AddressReference entity. updatePartialAddressReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/address-references/{addressReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a AddressReference entity deleteAddressReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/financial-category-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialCategoryReference entities scoped by priceCriteriaKey. getFinancialCategoryReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references</span> <br/>
+        <span class="api-summary">Create a new FinancialCategoryReference entity. createFinancialCategoryReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/financial-category-references/{financialCategoryReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialCategoryReference entity. getinancialCategoryReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialCategoryReference entity. replaceFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialCategoryReference entity. updatePartialFinancialCategoryReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-category-references/{financialCategoryReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialCategoryReference entity deleteFinancialCategoryReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/party-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
+        <span class="api-summary">Retrieve a list of PartyReference entities scoped by priceCriteriaKey. getPartyReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references</span> <br/>
+        <span class="api-summary">Create a new PartyReference entity. createPartyReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific PartyReference entity. getartyReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a PartyReference entity. replacePartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a PartyReference entity. updatePartialPartyReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/party-references/{partyReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a PartyReference entity deletePartyReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/fee-references
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references</span> <br/>
+        <span class="api-summary">Retrieve a list of FeeReference entities scoped by priceCriteriaKey. getFeeReferenceByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references</span> <br/>
+        <span class="api-summary">Create a new FeeReference entity. createFeeReference</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/fee-references/{feeReferenceKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FeeReference entity. geteeReferenceById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a FeeReference entity. replaceFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a FeeReference entity. updatePartialFeeReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/fee-references/{feeReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a FeeReference entity deleteFeeReferenceEntity</span>
     </span>
 </div>
 
@@ -526,39 +1032,103 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/currency-exchanges
+### /price-criteria/{priceCriteriaKey}/credit-references
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/currency-exchanges</span> <br/>
-        <span class="api-summary">Retrieve a list of CurrencyExchange entities scoped by priceCriteriaKey. getCurrencyExchangeByPriceCriteriaKey</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references</span> <br/>
+        <span class="api-summary">Retrieve a list of CreditReference entities scoped by priceCriteriaKey. getCreditReferenceByPriceCriteriaKey</span>
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/currency-exchanges/{currencyExchangeKey}
 <div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
+<span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/currency-exchanges/{currencyExchangeKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific CurrencyExchange entity. geturrencyExchangeById</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references</span> <br/>
+        <span class="api-summary">Create a new CreditReference entity. createCreditReference</span>
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/time-slots
+### /price-criteria/{priceCriteriaKey}/credit-references/{creditReferenceKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/time-slots</span> <br/>
-        <span class="api-summary">Retrieve a list of TimeSlot entities scoped by priceCriteriaKey. getTimeSlotByPriceCriteriaKey</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific CreditReference entity. getreditReferenceById</span>
     </span>
 </div>
 
-### /price-criteria/{priceCriteriaKey}/time-slots/{timeSlotKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Replace a CreditReference entity. replaceCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Partially update a CreditReference entity. updatePartialCreditReference</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/credit-references/{creditReferenceKey}</span> <br/>
+        <span class="api-summary">Delete a CreditReference entity deleteCreditReferenceEntity</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/financial-splits
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/price-criteria/{priceCriteriaKey}/time-slots/{timeSlotKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific TimeSlot entity. getimeSlotById</span>
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits</span> <br/>
+        <span class="api-summary">Retrieve a list of FinancialSplit entities scoped by priceCriteriaKey. getFinancialSplitByPriceCriteriaKey</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-post">POST</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits</span> <br/>
+        <span class="api-summary">Create a new FinancialSplit entity. createFinancialSplit</span>
+    </span>
+</div>
+
+### /price-criteria/{priceCriteriaKey}/financial-splits/{financialSplitKey}
+<div class="api-endpoint-row">
+<span class="api-method-button method-get">GET</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Retrieve a specific FinancialSplit entity. getinancialSplitById</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-put">PUT</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Replace a FinancialSplit entity. replaceFinancialSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-patch">PATCH</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Partially update a FinancialSplit entity. updatePartialFinancialSplit</span>
+    </span>
+</div>
+
+<div class="api-endpoint-row">
+<span class="api-method-button method-delete">DELETE</span>
+    <span class="api-path-summary">
+        <span class="api-path">/price-criteria/{priceCriteriaKey}/financial-splits/{financialSplitKey}</span> <br/>
+        <span class="api-summary">Delete a FinancialSplit entity deleteFinancialSplitEntity</span>
     </span>
 </div>
 
@@ -570,15 +1140,26 @@ The following resources follow a consistent pattern under PriceCriteriaroot with
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **price-criteria** | /price-criteria | listPriceCriteria | createPriceCriteria | getPriceCriteria | updatePriceCriteria | deletePriceCriteria |
     | **locale** | /price-criteria/{priceCriteriaKey}/locales | listLocaleByPriceCriteriaKey | createLocale | getLocaleByPriceCriteriaKey | updateLocaleByPriceCriteriaKey | deleteLocaleByPriceCriteriaKey |
-    | **party-reference** | /price-criteria/{priceCriteriaKey}/party-references | listPartyReferenceByPriceCriteriaKey | createPartyReference | getPartyReferenceByPriceCriteriaKey | updatePartyReferenceByPriceCriteriaKey | deletePartyReferenceByPriceCriteriaKey |
+    | **rebate-reference** | /price-criteria/{priceCriteriaKey}/rebate-references | listRebateReferenceByPriceCriteriaKey | createRebateReference | getRebateReferenceByPriceCriteriaKey | updateRebateReferenceByPriceCriteriaKey | deleteRebateReferenceByPriceCriteriaKey |
     | **price-criteria-item** | /price-criteria/{priceCriteriaKey}/price-criteria-items | listPriceCriteriaItemByPriceCriteriaKey | createPriceCriteriaItem | getPriceCriteriaItemByPriceCriteriaKey | updatePriceCriteriaItemByPriceCriteriaKey | deletePriceCriteriaItemByPriceCriteriaKey |
+    | **tax-split** | /price-criteria/{priceCriteriaKey}/tax-splits | listTaxSplitByPriceCriteriaKey | createTaxSplit | getTaxSplitByPriceCriteriaKey | updateTaxSplitByPriceCriteriaKey | deleteTaxSplitByPriceCriteriaKey |
+    | **discount-reference** | /price-criteria/{priceCriteriaKey}/discount-references | listDiscountReferenceByPriceCriteriaKey | createDiscountReference | getDiscountReferenceByPriceCriteriaKey | updateDiscountReferenceByPriceCriteriaKey | deleteDiscountReferenceByPriceCriteriaKey |
+    | **control-account-reference** | /price-criteria/{priceCriteriaKey}/control-account-references | listControlAccountReferenceByPriceCriteriaKey | createControlAccountReference | getControlAccountReferenceByPriceCriteriaKey | updateControlAccountReferenceByPriceCriteriaKey | deleteControlAccountReferenceByPriceCriteriaKey |
+    | **reward-reference** | /price-criteria/{priceCriteriaKey}/reward-references | listRewardReferenceByPriceCriteriaKey | createRewardReference | getRewardReferenceByPriceCriteriaKey | updateRewardReferenceByPriceCriteriaKey | deleteRewardReferenceByPriceCriteriaKey |
+    | **currency-exchange** | /price-criteria/{priceCriteriaKey}/currency-exchanges | listCurrencyExchangeByPriceCriteriaKey |  | getCurrencyExchangeByPriceCriteriaKey | updateCurrencyExchangeByPriceCriteriaKey | deleteCurrencyExchangeByPriceCriteriaKey |
+    | **time-slot** | /price-criteria/{priceCriteriaKey}/time-slots | listTimeSlotByPriceCriteriaKey |  | getTimeSlotByPriceCriteriaKey | updateTimeSlotByPriceCriteriaKey | deleteTimeSlotByPriceCriteriaKey |
+    | **discount-metric-value** | /price-criteria/{priceCriteriaKey}/discount-metric-values | listDiscountMetricValueByPriceCriteriaKey | createDiscountMetricValue | getDiscountMetricValueByPriceCriteriaKey | updateDiscountMetricValueByPriceCriteriaKey | deleteDiscountMetricValueByPriceCriteriaKey |
+    | **address-reference** | /price-criteria/{priceCriteriaKey}/address-references | listAddressReferenceByPriceCriteriaKey | createAddressReference | getAddressReferenceByPriceCriteriaKey | updateAddressReferenceByPriceCriteriaKey | deleteAddressReferenceByPriceCriteriaKey |
+    | **financial-category-reference** | /price-criteria/{priceCriteriaKey}/financial-category-references | listFinancialCategoryReferenceByPriceCriteriaKey | createFinancialCategoryReference | getFinancialCategoryReferenceByPriceCriteriaKey | updateFinancialCategoryReferenceByPriceCriteriaKey | deleteFinancialCategoryReferenceByPriceCriteriaKey |
+    | **party-reference** | /price-criteria/{priceCriteriaKey}/party-references | listPartyReferenceByPriceCriteriaKey | createPartyReference | getPartyReferenceByPriceCriteriaKey | updatePartyReferenceByPriceCriteriaKey | deletePartyReferenceByPriceCriteriaKey |
+    | **fee-reference** | /price-criteria/{priceCriteriaKey}/fee-references | listFeeReferenceByPriceCriteriaKey | createFeeReference | getFeeReferenceByPriceCriteriaKey | updateFeeReferenceByPriceCriteriaKey | deleteFeeReferenceByPriceCriteriaKey |
     | **identifier** | /price-criteria/{priceCriteriaKey}/identifiers | listIdentifierByPriceCriteriaKey |  | getIdentifierByPriceCriteriaKey | updateIdentifierByPriceCriteriaKey | deleteIdentifierByPriceCriteriaKey |
     | **event-message** | /price-criteria/{priceCriteriaKey}/event-messages | listEventMessageByPriceCriteriaKey |  | getEventMessageByPriceCriteriaKey | updateEventMessageByPriceCriteriaKey | deleteEventMessageByPriceCriteriaKey |
     | **part-name** | /price-criteria/{priceCriteriaKey}/part-names | listPartNameByPriceCriteriaKey | createPartName | getPartNameByPriceCriteriaKey | updatePartNameByPriceCriteriaKey | deletePartNameByPriceCriteriaKey |
     | **price** | /price-criteria/{priceCriteriaKey}/prices | listPriceByPriceCriteriaKey |  | getPriceByPriceCriteriaKey | updatePriceByPriceCriteriaKey | deletePriceByPriceCriteriaKey |
     | **effective-period** | /price-criteria/{priceCriteriaKey}/effective-periods | listEffectivePeriodByPriceCriteriaKey |  | getEffectivePeriodByPriceCriteriaKey | updateEffectivePeriodByPriceCriteriaKey | deleteEffectivePeriodByPriceCriteriaKey |
-    | **currency-exchange** | /price-criteria/{priceCriteriaKey}/currency-exchanges | listCurrencyExchangeByPriceCriteriaKey |  | getCurrencyExchangeByPriceCriteriaKey | updateCurrencyExchangeByPriceCriteriaKey | deleteCurrencyExchangeByPriceCriteriaKey |
-    | **time-slot** | /price-criteria/{priceCriteriaKey}/time-slots | listTimeSlotByPriceCriteriaKey |  | getTimeSlotByPriceCriteriaKey | updateTimeSlotByPriceCriteriaKey | deleteTimeSlotByPriceCriteriaKey |
+    | **credit-reference** | /price-criteria/{priceCriteriaKey}/credit-references | listCreditReferenceByPriceCriteriaKey | createCreditReference | getCreditReferenceByPriceCriteriaKey | updateCreditReferenceByPriceCriteriaKey | deleteCreditReferenceByPriceCriteriaKey |
+    | **financial-split** | /price-criteria/{priceCriteriaKey}/financial-splits | listFinancialSplitByPriceCriteriaKey | createFinancialSplit | getFinancialSplitByPriceCriteriaKey | updateFinancialSplitByPriceCriteriaKey | deleteFinancialSplitByPriceCriteriaKey |
 
 ***Note on List Operations:***
 
