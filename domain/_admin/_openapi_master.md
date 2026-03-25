@@ -8,6 +8,8 @@
 
 **context**: party_identity <br /> **root**: org_profile
 
+**context**: sales_operations <br /> **root**: retail_delivery_report
+
 **context**: core <br /> **root**: geographic_boundary
 
 **context**: core <br /> **root**: lifecycle_event
@@ -93,6 +95,10 @@
 **context**: service <br /> **root**: part_pick_list
 
 **context**: service <br /> **root**: labor_operation
+
+**context**: service <br /> **root**: retail_delivery_report
+
+**context**: service <br /> **root**: vehicle_identifier
 
 **context**: service <br /> **root**: service_invoice
 
