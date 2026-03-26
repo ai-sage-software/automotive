@@ -1,0 +1,50 @@
+name: Build ID + Build Tag (v1.0.0)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to tag (branch, tag, or SHA)"
+        required: true
+        default: "release/1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Compute FULL_BUILD_ID
+        shell: bash
+        run: |
+          RELEASE_VERSION="1.0.0"
+          BUILD_TIMESTAMP="$(date +%Y%m%d%H%M)"
+          GIT_REV="$(git rev-parse --short HEAD)"
+
+          FULL_BUILD_ID="${RELEASE_VERSION}+${BUILD_TIMESTAMP}.${GIT_REV}"
+          BUILD_TAG="build/v${RELEASE_VERSION}/${BUILD_TIMESTAMP}.${GIT_REV}"
+
+          echo "FULL_BUILD_ID=${FULL_BUILD_ID}" >> "$GITHUB_ENV"
+          echo "BUILD_TAG=${BUILD_TAG}" >> "$GITHUB_ENV"
+
+          echo "FULL_BUILD_ID=${FULL_BUILD_ID}"
+          echo "BUILD_TAG=${BUILD_TAG}"
+
+      - name: Configure git identity for tagging
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push build tag
+        shell: bash
+        run: |
+          git tag -a "${BUILD_TAG}" -m "Build ${FULL_BUILD_ID}"
+          git push origin "${BUILD_TAG}"

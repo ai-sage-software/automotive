@@ -1,0 +1,1287 @@
+openapi: 3.0.0
+info:
+  title: Service Schedule Booking API
+  description: API for appointment scheduling and management-Development
+  contact:
+    name: Paco Escobar
+    url: https://starstandard.org
+    email: pescobar@starstandard.org
+  license:
+    name: www.starstandard.org
+    url: http://starstandard.org
+  version: 2.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/tmna-ddoa/ddoa-dms-appointments/1.1.0
+  description: SwaggerHub API Auto Mocking
+- url: "https://{host}/services/v1"
+  variables:
+    host:
+      enum:
+      - dev.appName.dmsDomain.com
+      - test.appName.dmsDomain.com
+      - qa.appName.dmsDomain.com
+      - appName.dmsDomain.com
+      default: appName.dmsDomain.com
+security:
+- SSBAuthorizer: []
+tags:
+- name: appointments
+paths: {}
+components:
+  schemas:
+    Healthcheck:
+      type: object
+      properties:
+        status:
+          type: boolean
+          description: status of the service
+          example: true
+        profile:
+          type: string
+          description: configuration profile of the service typically speicifying environment
+          example: production
+    AppointmentTimeSlots:
+      type: object
+      properties:
+        dealerDetails:
+          $ref: "#/components/schemas/DealerDetails"
+        availableTimeslots:
+          $ref: "#/components/schemas/TimeSlots"
+    Appointments:
+      type: object
+      properties:
+        appointments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Appointment"
+    Name:
+      required:
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: array
+          description: Customer First Name.
+          example:
+          - John
+          - Michael
+          items:
+            type: string
+        lastName:
+          type: string
+          description: Customer Last Name.
+          example: Doe
+        prefix:
+          type: array
+          description: Customer Name Prefixes
+          example:
+          - Mr.
+          items:
+            type: string
+        suffix:
+          type: array
+          description: Customer Name Suffixes
+          example:
+          - PhD
+          items:
+            type: string
+    ContactMethod:
+      required:
+      - type
+      - use
+      - value
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of contact method
+          enum:
+          - phone
+          - email
+          - mail
+          - pager
+          - url
+          - sms
+          - other
+        value:
+          type: string
+          description: Actual contact method details
+        use:
+          type: string
+          description: Purpose of contact method
+          enum:
+          - home
+          - work
+          - mobile
+          - other
+        rank:
+          type: integer
+          description: Preferred order of use (1 = highest)
+          example: 1
+        preferredContactTime:
+          type: string
+          description: Customer preferred contact time
+          example: Mon-Fri between 2 PM and 8 PM
+        consent:
+          type: boolean
+          description: Customer gave consent for being contacted using this method
+    Communication:
+      required:
+      - language
+      type: object
+      properties:
+        language:
+          type: string
+          description: Language that may be used to communicate with the customer
+          example: English
+        preferred:
+          type: boolean
+          description: Language preferrence indicator
+    Identifier:
+      required:
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+          description: Unique identifier value within the system
+          example: "12345"
+        system:
+          type: string
+          description: Identifier namespace
+          example: CDK
+    Customer:
+      required:
+      - contactMethod
+      - name
+      type: object
+      properties:
+        identifier:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identifier"
+        name:
+          $ref: "#/components/schemas/Name"
+        address:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        contactMethod:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactMethod"
+        emailDeclined:
+          type: boolean
+          description: flag indicating if the customer has declined to provide email.
+          example: false
+        communication:
+          type: array
+          items:
+            $ref: "#/components/schemas/Communication"
+      description: Customer Personal details
+    Address:
+      required:
+      - address
+      - city
+      - country
+      - postalCode
+      - state
+      type: object
+      properties:
+        use:
+          type: string
+          description: Purpose of this address
+          example: home
+          enum:
+          - home
+          - work
+          - billing
+          - shipping
+          - other
+        type:
+          type: string
+          description: Type of address
+          example: physical
+          enum:
+          - postal
+          - physical
+          - both
+        address:
+          type: array
+          description: "Street name, number, direction & P.O. Box etc"
+          example:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          items:
+            type: string
+        city:
+          type: string
+          description: "Name of city, town"
+          example: Plano
+        state:
+          type: string
+          description: Sub-unit of country
+          example: Texas
+        country:
+          type: string
+          description: Country (ISO 3166 2 or 3 letter code)
+          example: USA
+        postalCode:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: "Postal code for area (75234, 75234-2165)"
+          example: "75234"
+      description: Customer Address
+    Preferences:
+      type: object
+      properties:
+        isValetRequired:
+          type: boolean
+          description: Valet required true/ false.
+          example: false
+          enum:
+          - true
+          - false
+        isLoanerRequired:
+          type: boolean
+          description: Lonar Vehicle required true/ false.
+          example: false
+          enum:
+          - true
+          - false
+        isPickUpRequired:
+          type: boolean
+          description: PickUp required true/ false.
+          example: false
+          enum:
+          - true
+          - false
+        isDropOffRequired:
+          type: boolean
+          description: DropOff required true/ false.
+          example: false
+          enum:
+          - true
+          - false
+        reminders:
+          type: string
+          description: indicate the preference for reminding the appointment by text or an email.
+          example: text
+          enum:
+          - text
+          - email
+    BasicVehicle:
+      type: object
+      properties:
+        year:
+          maxLength: 4
+          minLength: 4
+          pattern: "(19|20)\\d{2}"
+          type: string
+          description: Model year of car
+          example: "2019"
+        make:
+          type: string
+          description: Car make/brand name
+          example: Nissan
+        modelName:
+          type: string
+          description: Car model name
+          example: Prius
+        stockImage:
+          type: string
+          description: Car Stock Image
+          example: https://www.nissanusa.com
+    Vehicle:
+      required:
+      - vin
+      type: object
+      properties:
+        vin:
+          maxLength: 17
+          minLength: 17
+          pattern: "^[0-9A-HJ-NPR-Z]+$"
+          type: string
+          description: Vehicle Identification Number
+          example: 5N1AR2MNXEC689669
+        odometer:
+          $ref: "#/components/schemas/Odometer"
+      allOf:
+      - $ref: "#/components/schemas/BasicVehicle"
+    Odometer:
+      required:
+      - value
+      type: object
+      properties:
+        value:
+          type: integer
+          description: Car odometer value
+          example: 22000
+        unit:
+          type: string
+          description: Car odometer value unit
+          example: mi
+          enum:
+          - mi
+          - km
+    TimeSlots:
+      type: object
+      properties:
+        days:
+          type: array
+          items:
+            $ref: "#/components/schemas/DayOfWeek"
+    AppointmentTransport:
+      required:
+      - code
+      - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        comments:
+          type: string
+        preferences:
+          $ref: "#/components/schemas/Preferences"
+    AppointmentRequest:
+      type: object
+      example:
+        dealerId: "04536"
+        appointmentId: 286AL3H4
+        appointmentDate: 2020-07-20T00:00:00.000+0000
+        appointmentTime: 08:30
+        appointmentTimezone: UTC
+        additionalComments: Check the Tyre Pressure and Breaks.
+        pickUpAddress:
+          use: home
+          type: physical
+          address:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          city: Plano
+          state: Texas
+          country: USA
+          postalCode: "75234"
+        dropOffAddress:
+          use: home
+          type: physical
+          address:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          city: Plano
+          state: Texas
+          country: USA
+          postalCode: "75234"
+        customer:
+          identifier: "12345"
+          name:
+            firstName: John
+            lastName: Doe
+            prefix: Mr.
+            suffix: PhD
+          address:
+          - use: home
+            type: physical
+            address:
+            - "5505 N. Cumberland Ave., Suite 307"
+            - Box 5855
+            city: Plano
+            state: Texas
+            country: USA
+            postalCode: "75234"
+          contactMethod:
+          - type: phone
+            value: string
+            use: home
+            rank: 1
+            preferredContactTime: Mon-Fri between 2 PM and 8 PM
+            consent: true
+          - type: email
+            value: string
+            use: home
+            rank: 2
+            preferredContactTime: Mon-Fri between 2 PM and 8 PM
+            consent: true
+          emailDeclined: false
+          phoneDeclined: false
+          communication:
+          - language: English
+            preferred: true
+        transport:
+          code: string
+          name: string
+          comments: string
+          preferences:
+            isValetRequired: true
+            isLoanerRequired: false
+            isPickUpRequired: false
+            isDropOffRequired: true
+            reminders: text
+        type: service
+        requestId: 16a7d408-aed4-43f8-8af4-7a17f407f799
+        vehicle:
+          vin: 5N1AR2MNXEC689669
+          odometer:
+            value: 22000
+            unit: mi
+        serviceOperations:
+        - opCodeID: 01TOZMAT
+          opCodeDescription: 5k Miles Service.
+          customerComments: Some comments about this specific service operation
+          serviceOperationsDescription: 5k Miles Service.
+          package: tbd
+          maintenance: true
+          validation: true
+          price: 80.0
+          laborHours: 1.0
+          discounts:
+          - code: 01TOZMAT
+            description: 5k Miles Service Promotion
+            price: 80.0
+        advisor:
+          advisorId: SA265FG8
+          name: John Doo
+          jobTitle: Service Advisor
+          email: service.advisor@mail.com
+          imageUrl: https://www.dms-hostdomain.com/advisors/advisorName.jpg
+      oneOf:
+      - $ref: "#/components/schemas/ServiceAppointment"
+      - $ref: "#/components/schemas/TestDriveAppointment"
+      - $ref: "#/components/schemas/DeliveryAppointment"
+      - $ref: "#/components/schemas/TradeAppointment"
+    Appointment:
+      type: object
+      example:
+        dealerId: "04536"
+        appointmentId: 286AL3H4
+        appointmentDate: 2020-07-20T00:00:00.000+0000
+        appointmentTime: 08:30
+        appointmentTimezone: UTC
+        additionalComments: Check the Tyre Pressure and Breaks.
+        pickUpAddress:
+          use: home
+          type: physical
+          address:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          city: Plano
+          state: Texas
+          country: USA
+          postalCode: "75234"
+        dropOffAddress:
+          use: home
+          type: physical
+          address:
+          - "5505 N. Cumberland Ave., Suite 307"
+          - Box 5855
+          city: Plano
+          state: Texas
+          country: USA
+          postalCode: "75234"
+        customer:
+          identifier: "12345"
+          name:
+            firstName: John
+            lastName: Doe
+            prefix: Mr.
+            suffix: PhD
+          address:
+          - use: home
+            type: physical
+            address:
+            - "5505 N. Cumberland Ave., Suite 307"
+            - Box 5855
+            city: Plano
+            state: Texas
+            country: USA
+            postalCode: "75234"
+          contactMethod:
+          - type: phone
+            value: string
+            use: home
+            rank: 1
+            preferredContactTime: Mon-Fri between 2 PM and 8 PM
+            consent: true
+          - type: email
+            value: string
+            use: home
+            rank: 2
+            preferredContactTime: Mon-Fri between 2 PM and 8 PM
+            consent: true
+          emailDeclined: false
+          phoneDeclined: false
+          communication:
+          - language: English
+            preferred: true
+        transport:
+          code: string
+          name: string
+          comments: string
+          preferences:
+            isValetRequired: true
+            isLoanerRequired: false
+            isPickUpRequired: false
+            isDropOffRequired: true
+            reminders: text
+        type: service
+        requestId: 16a7d408-aed4-43f8-8af4-7a17f407f799
+        vehicle:
+          year: "2021"
+          make: Nissan
+          modelName: Rogue
+          stockImage: https://www.nissanusa.com
+          identifier:
+          - value: "12345"
+            system: CDK
+          vin: 5N1AR2MNXEC689669
+          odometer:
+            value: 22000
+            unit: mi
+        serviceOperations:
+        - opCodeID: 01TOZMAT
+          opCodeDescription: 5k Miles Service.
+          customerComments: Some comments about this specific service operation
+          serviceOperationsDescription: 5k Miles Service.
+          package: tbd
+          maintenance: true
+          validation: true
+          price: 80.0
+          laborHours: 1.0
+          discounts:
+          - code: 01TOZMAT
+            description: 5k Miles Service Promotion
+            price: 80.0
+        advisor:
+          advisorId: SA265FG8
+          name: John Doo
+          jobTitle: Service Advisor
+          email: service.advisor@mail.com
+          imageUrl: https://www.dms-hostdomain.com/advisors/advisorName.jpg
+      oneOf:
+      - $ref: "#/components/schemas/ServiceAppointment"
+      - $ref: "#/components/schemas/TestDriveAppointment"
+      - $ref: "#/components/schemas/DeliveryAppointment"
+      - $ref: "#/components/schemas/TradeAppointment"
+    BasicAppointment:
+      required:
+      - appointmentDate
+      - appointmentTime
+      - customer
+      - dealerId
+      type: object
+      properties:
+        dealerId:
+          maxLength: 5
+          minLength: 5
+          pattern: "^[0-9]+$"
+          type: string
+          description: Dealer Number
+          example: "04536"
+        appointmentId:
+          pattern: "[a-zA-Z0-9]"
+          type: string
+          description: Appointment Number
+          example: 286AL3H4
+        appointmentDate:
+          maxLength: 10
+          minLength: 0
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          type: string
+          description: Appointment Date
+          format: date
+        appointmentTime:
+          maxLength: 10
+          minLength: 0
+          type: string
+          description: Appointment Time
+          example: 08:30
+        appointmentTimezone:
+          maxLength: 3
+          minLength: 0
+          type: string
+          description: Appointment Timezone
+          example: UTC
+        additionalComments:
+          type: string
+          description: Additional Comments
+          example: Check the Tyre Pressure and Breaks.
+        preferences:
+          $ref: "#/components/schemas/Preferences"
+        pickUpAddress:
+          $ref: "#/components/schemas/Address"
+        dropOffAddress:
+          $ref: "#/components/schemas/Address"
+        customer:
+          $ref: "#/components/schemas/Customer"
+        transport:
+          $ref: "#/components/schemas/AppointmentTransport"
+    ServiceAppointment:
+      allOf:
+      - $ref: "#/components/schemas/BasicAppointment"
+      - required:
+        - requestId
+        - serviceOperations
+        - vehicle
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - service
+          requestId:
+            type: string
+            description: Request ID
+            format: uuid
+            example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+          vehicle:
+            $ref: "#/components/schemas/Vehicle"
+          serviceOperations:
+            type: array
+            description: Service Operation details that Customer added to service the Vehicle.
+            items:
+              $ref: "#/components/schemas/Operation"
+          advisor:
+            $ref: "#/components/schemas/Advisor"
+    TestDriveAppointment:
+      allOf:
+      - $ref: "#/components/schemas/BasicAppointment"
+      - required:
+        - requestId
+        - vehicle
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - testdrive
+          requestId:
+            type: string
+            description: Request ID
+            format: uuid
+            example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+          vehicle:
+            $ref: "#/components/schemas/BasicVehicle"
+    DeliveryAppointment:
+      allOf:
+      - $ref: "#/components/schemas/BasicAppointment"
+      - required:
+        - requestId
+        - vehicle
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - delivery
+          requestId:
+            type: string
+            description: Request ID
+            format: uuid
+            example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+          vehicle:
+            $ref: "#/components/schemas/Vehicle"
+    TradeAppointment:
+      allOf:
+      - $ref: "#/components/schemas/BasicAppointment"
+      - required:
+        - requestId
+        - vehicle
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - trade
+          requestId:
+            type: string
+            description: Request ID
+            format: uuid
+            example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+          vehicle:
+            $ref: "#/components/schemas/Vehicle"
+    DealerDetails:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Dealer Name
+          example: Nissan of Cool Springs
+        website:
+          type: string
+          description: Dealer webSite url.
+          format: uri
+          example: https://www.nissanofcoolsprings.com
+        address:
+          type: string
+          description: Dealer Address Full
+          example: 212 Comtide Ct Franklin TN 37067 USA
+        street:
+          type: string
+          description: Dealer Address Street
+          example: 212 Comtide Ct
+        city:
+          type: string
+          description: Dealer Address City
+          example: Franklin
+        state:
+          type: string
+          description: Dealer Address State
+          example: TN
+        country:
+          type: string
+          description: Dealer Address Country
+          example: USA
+        zip:
+          type: number
+          description: Dealer Address Zip
+          example: 37067
+        contactDetails:
+          type: string
+          description: Dealer Contact Details
+          example: (615) 224-8301
+        addressTitle:
+          type: string
+          description: Dealer Address Title
+          example: Cool Springs AutoMall
+      description: Dealer Details
+    DayOfWeek:
+      type: object
+      properties:
+        isOpen:
+          type: boolean
+          description: "is DealerShip Open on this day of the week (true for open, false for close)"
+          example: true
+        isToday:
+          type: boolean
+          description: "is this Calendar date is today (true if this day is todays date, false if this day is not todays date)"
+          example: false
+        calendarDate:
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          type: string
+          description: Day of the Week.
+          format: date
+        dayOfWeek:
+          type: string
+          description: Day Of Week
+          example: Monday
+          enum:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+          - Saturday
+          - Sunday
+        hoursOfOperation:
+          $ref: "#/components/schemas/HoursOfOperation"
+        timeslots:
+          type: array
+          items:
+            $ref: "#/components/schemas/AvailableTimeslots"
+    HoursOfOperation:
+      type: object
+      properties:
+        availabilityStartTime:
+          type: string
+          description: Dealer Service Hours Start Time
+          example: 04:00
+        availabilityEndTime:
+          type: string
+          description: Dealer Service Hours End Time
+          example: "1080"
+    AvailableTimeslots:
+      type: object
+      properties:
+        time:
+          type: string
+          description: Timeslot
+          example: 08:15
+        isOpen:
+          type: boolean
+          description: "is this Timeslot is available (true if it is available, false if the Timeslot is not available)"
+          example: true
+    Errors:
+      type: array
+      items:
+        $ref: "#/components/schemas/ErrorModel"
+    ErrorModel:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+        errorId:
+          type: integer
+          description: Unique identifier for the error message for monitoring purposes and organized by error type and profile
+        errorMsg:
+          type: string
+          description: Error message directly from integrated service (if applicable). Returned as is.
+        userErrorMsg:
+          type: string
+    Transport:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Transportation option code
+        name:
+          type: string
+          description: Transportation option name
+        isValet:
+          type: boolean
+          description: indicates if this transportation option is valet type or not. If this option is selected then pickup and drop off address are required.
+        isLoanerAvailable:
+          type: boolean
+          description: indicates if loaner vehicle is available or not for this transportation option.
+        enabled:
+          type: boolean
+          description: "if this true, then display the option in the UI for the customer to pick."
+        comments:
+          type: string
+          description: User comments.
+    Operation:
+      type: object
+      properties:
+        opCodeID:
+          type: string
+          description: OpCode ID
+          example: 01TOZMAT
+        opCodeDescription:
+          type: string
+          description: Op Code Description
+          example: 5k Miles Service.
+        customerComments:
+          type: string
+          description: Customer comments
+          example: Some comments about this specific service operation
+        serviceOperationsDescription:
+          type: string
+          description: Service Operations Description
+          example: 5k Miles Service.
+        package:
+          type: string
+          description: Packages supported by dealership
+          example: "Basic, Platinum, Premium"
+        maintenance:
+          type: boolean
+          description: Service operation to support vehicle maintenance
+          example: true
+        validation:
+          type: boolean
+          description: Service operation to support vehicle validation
+          example: true
+        price:
+          type: number
+          description: Service Operation price.
+          format: double
+          example: 80
+        laborHours:
+          type: number
+          description: Hours of labor on operation.
+          format: double
+          example: 1.5
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Discount"
+      description: Service Operations
+    ServiceOperationsByMileage:
+      type: object
+      properties:
+        vehicleMaintenanceInterval:
+          $ref: "#/components/schemas/ServiceOperationsByMileage_vehicleMaintenanceInterval"
+        servicesAtClosestIntervals:
+          type: array
+          description: 3 closest service intervals around the provided mileage or the first 3 service intervals
+          items:
+            $ref: "#/components/schemas/ServiceOperationsByMileage_servicesAtClosestIntervals"
+    ServiceOperationsDefault:
+      type: object
+      properties:
+        serviceOperations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Operation"
+    Discount:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Discount Code
+          example: 01TOZMAT
+        description:
+          type: string
+          description: Special Promotion
+          example: 5k Miles Service Promotion
+        price:
+          type: number
+          description: Discount Price.
+          format: double
+          example: 80
+    Advisor:
+      type: object
+      properties:
+        advisorId:
+          type: string
+          description: Service Adviser Id
+          example: SA265FG8
+        name:
+          type: string
+          description: Service Adviser
+          example: John Doo
+        jobTitle:
+          type: string
+          description: Service Advisor
+          example: Service Adviser
+        email:
+          type: string
+          description: Service Advisor eamil
+          example: john.doo@mail.com
+        imageUrl:
+          type: string
+          description: Service Advisor profile photo image url
+          example: https://www.dms-hostdomain.com/advisors/advisorName.jpg
+      description: Service Agents Details
+    Advisors:
+      type: array
+      items:
+        $ref: "#/components/schemas/Advisor"
+    AdvisorsResponse:
+      type: object
+      properties:
+        advisors:
+          $ref: "#/components/schemas/Advisors"
+    TransportationOptions:
+      type: object
+      properties:
+        transportationOptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transport"
+    DealerListFetchResponse:
+      type: object
+      properties:
+        optIn:
+          type: array
+          items:
+            type: string
+            example: "18064"
+        optOut:
+          type: array
+          items:
+            type: string
+            example: "18064"
+    DealerListUpdateObject:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Success
+    DealerListUpdateResponse:
+      type: object
+      properties:
+        optIn:
+          $ref: "#/components/schemas/DealerListUpdateObject"
+        optOut:
+          $ref: "#/components/schemas/DealerListUpdateObject"
+    ServiceOperationsByMileage_vehicleMaintenanceInterval:
+      type: object
+      properties:
+        intervalMileage:
+          type: integer
+          example: 5000
+        intervalKilometers:
+          type: integer
+          example: 7500
+        intervalMonth:
+          type: integer
+          example: 6
+    ServiceOperationsByMileage_servicesAtClosestIntervals:
+      type: object
+      properties:
+        intervalMileage:
+          type: number
+          example: 20000
+        serviceOperations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Operation"
+  responses:
+    AppointmentTimeSlotsResponse:
+      description: Get Available Service Appointments successfully
+      headers:
+        Requestid:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppointmentTimeSlots"
+    TransportationOptionsResponse:
+      description: Get Transportation options available.
+      headers:
+        Requestid:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Transport"
+    AppointmentsResponse:
+      description: Get Available Service Appointments successfully
+      headers:
+        RequestId:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Appointments"
+    CreateAppointmentResponse:
+      description: Created the Appointment successfully
+      headers:
+        RequestId:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Appointment"
+    GetAppointmentResponse:
+      description: Get Appointment details successfully
+      headers:
+        RequestId:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Appointment"
+  parameters:
+    CountryCode:
+      name: countrycode
+      in: header
+      description: Country Code
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Country Code
+        example: "1"
+    Locale:
+      name: locale
+      in: header
+      description: Locale
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Locale
+        example: en-US
+    Prefer:
+      name: Prefer
+      in: header
+      description: "Json Payload that details the fields that the client wants included in the repsonse. Can also include reporting information that goes into the error logging through a context value paired specified as in the example. logsLabel specifies key words to be logged in the application loggs, while reportingLogs specifies keywords returned with an error message. Both will default to context NNA_API and value Service Schedule Booking API if they are not specified. Specific field names will default to false."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: A json payload that details included response fields and reporting information
+      example: "{'logsLabel': {context: NNA_API, value: Service Schedule Booking API}, reportingLabel: {context: NNA_API, value: Service Schedule Booking API}}"
+    ApiVersion:
+      name: api-version
+      in: header
+      description: API Version
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: API Version
+        example: 1.0.0
+        enum:
+        - 1.0.0
+        - 1.0.1
+        - 2.0.0
+        - 2.0.1
+      example: 2.0.0
+    RequestId:
+      name: requestId
+      in: header
+      description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+    dealerId:
+      name: dealerId
+      in: header
+      description: Dealer Identifier
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+      example: "18064"
+    optionalDealerId:
+      name: dealerId
+      in: header
+      description: Dealer Identifier
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+      example: "18064"
+    opCodeIDList:
+      name: opCodeIDList
+      in: header
+      description: Comma seperated service operations selected ID list.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: "01TOZMAT,01TOZMAX,01TOZMAG"
+    AdvisorId:
+      name: advisorId
+      in: header
+      description: Advisor Identifier
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 1
+        type: string
+      example: "12345"
+    TransportationId:
+      name: transportationId
+      in: header
+      description: Transportation Identifier
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 15
+        minLength: 1
+        type: string
+      example: own-ride
+    Brand:
+      name: brand
+      in: header
+      description: Brand
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        description: Vehicle Brand (default value - 'nissan')
+        example: nissan
+        enum:
+        - nissan
+        - infiniti
+      example: nissan
+    Vin:
+      name: vin
+      in: query
+      description: vehicle identification number
+      required: true
+      style: form
+      explode: true
+      schema:
+        maxLength: 17
+        minLength: 17
+        type: string
+        description: vin
+      example: 5N1AR2MNXEC689669
+    Vin-Header:
+      name: vin
+      in: header
+      description: vehicle identification number
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 17
+        minLength: 17
+        type: string
+        description: vin
+      example: 5N1AR2MNXEC689669
+    Package:
+      name: package
+      in: header
+      description: Packages supported by dealership
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: boolean
+        description: package
+      example: false
+    AppointmentId:
+      name: appointmentId
+      in: path
+      description: AppointmentID that was returend as part of Book Appointment API.
+      required: true
+      style: simple
+      explode: true
+      schema:
+        maxLength: 9
+        minLength: 9
+        pattern: "^[0-9a-zA-Z]*$"
+        type: string
+        description: Appointment ID
+        example: 29389AB26
+      example: 29389AB26
+  requestBodies:
+    AppointmentRequestBody:
+      description: Book Appointment
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppointmentRequest"
+      required: true
+  headers:
+    RequestId:
+      description: Request ID Header (UUID version 4)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: 16a7d408-aed4-43f8-8af4-7a17f407f799
+    dealerType:
+      description: Type of dealer
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      example: ABC
+  securitySchemes:
+    SSBAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: request
+        authorizerUri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:144656827983:function:acctmgmt-stg-LambdaAuthorizer/invocations
+        authorizerResultTtlInSeconds: 0
+        identitySource: method.request.header.Authorization
