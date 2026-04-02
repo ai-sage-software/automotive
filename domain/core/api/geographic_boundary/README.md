@@ -98,6 +98,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **Code** : not nullable<br/>
 
 ---
 
@@ -184,6 +185,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries</span> <br/>
+
         <span class="api-summary">Retrieve a list of GeographicBoundary entities. getGeographicBoundary</span>
     </span>
 </div>
@@ -192,40 +194,45 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/geographic-boundaries</span> <br/>
-        <span class="api-summary">Create a new GeographicBoundary entity. createGeographicBoundary</span>
+
+        <span class="api-summary">Retrieve a list  of entities. createGeographicBoundary</span>
     </span>
 </div>
 
-### /geographic-boundaries/{geographicBoundaryKey}
+### /geographic-boundaries/{geographic-boundary-key}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific GeographicBoundary entity. geteographicBoundaryById</span>
+        <span class="api-path">/geographic-boundaries/{geographic-boundary-key}</span> <br/>
+
+        <span class="api-summary">API Summary geteographicBoundaryById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Replace a GeographicBoundary entity. replaceGeographicBoundary</span>
+        <span class="api-path">/geographic-boundaries/{geographic-boundary-key}</span> <br/>
+
+        <span class="api-summary">API Summary replaceGeographicBoundary</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Partially update a GeographicBoundary entity. updatePartialGeographicBoundary</span>
+        <span class="api-path">/geographic-boundaries/{geographic-boundary-key}</span> <br/>
+
+        <span class="api-summary">API Summary updatePartialGeographicBoundary</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/geographic-boundaries/{geographicBoundaryKey}</span> <br/>
-        <span class="api-summary">Delete a GeographicBoundary entity deleteGeographicBoundaryEntity</span>
+        <span class="api-path">/geographic-boundaries/{geographic-boundary-key}</span> <br/>
+
+        <span class="api-summary">API Summary deleteGeographicBoundaryEntity</span>
     </span>
 </div>
 

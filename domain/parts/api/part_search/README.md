@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **Identifier**, **PartIdentifier**, **PartName**, **PartPriceCriteria**, **PartSearch**, **PartSearchResult**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **PartIdentifier**, **PartName**, **PartPriceCriteria**, **PartSearch**, **PartSearchResult**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -108,6 +108,7 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **Identifier** : Unique identification key for the record.<br/>
 
 ---
 
@@ -348,44 +349,12 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
     </span>
 </div>
 
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
-    </span>
-</div>
-
 ### /part-searches/{partSearchKey}/identifiers/{identifierKey}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
         <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/part-searches/{partSearchKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
     </span>
 </div>
 
@@ -498,7 +467,7 @@ The following resources follow a consistent pattern under PartSearchroot with ke
     | **part-searche** | /part-searches | listPartSearch | createPartSearch | getPartSearch | updatePartSearch | deletePartSearch |
     | **part-price-criteria** | /part-searches/{partSearchKey}/part-price-criteria | listPartPriceCriteriaByPartSearchKey | createPartPriceCriteria | getPartPriceCriteriaByPartSearchKey | updatePartPriceCriteriaByPartSearchKey | deletePartPriceCriteriaByPartSearchKey |
     | **part-search-result** | /part-searches/{partSearchKey}/part-search-results | listPartSearchResultByPartSearchKey | createPartSearchResult | getPartSearchResultByPartSearchKey | updatePartSearchResultByPartSearchKey | deletePartSearchResultByPartSearchKey |
-    | **identifier** | /part-searches/{partSearchKey}/identifiers | listIdentifierByPartSearchKey | createIdentifier | getIdentifierByPartSearchKey | updateIdentifierByPartSearchKey | deleteIdentifierByPartSearchKey |
+    | **identifier** | /part-searches/{partSearchKey}/identifiers | listIdentifierByPartSearchKey |  | getIdentifierByPartSearchKey | updateIdentifierByPartSearchKey | deleteIdentifierByPartSearchKey |
     | **part-name** | /part-searches/{partSearchKey}/part-names | listPartNameByPartSearchKey | createPartName | getPartNameByPartSearchKey | updatePartNameByPartSearchKey | deletePartNameByPartSearchKey |
     | **part-identifier** | /part-searches/{partSearchKey}/part-identifiers | listPartIdentifierByPartSearchKey | createPartIdentifier | getPartIdentifierByPartSearchKey | updatePartIdentifierByPartSearchKey | deletePartIdentifierByPartSearchKey |
 

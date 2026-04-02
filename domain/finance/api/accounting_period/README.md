@@ -7,7 +7,7 @@
 
 Designed for high-reliability CI/CD environments and asynchronous batch processing.)
 
-This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**, **Identifier**.
+This contains the OpenAPI specification for the **Automotive Retail Systems API**, which provides an interface for managing automotive retail entities such as **AccountingPeriod**.
 
 The API adheres to the **OpenAPI 3.0.1** standard.
 
@@ -23,7 +23,6 @@ The API is structured around the domain **finance** and **AccountingPeriod** res
 | Resource | Base Path | Description |
 | :--- | :--- | :--- |
     | **AccountingPeriod** | /accounting-periods | Manages AccountingPeriods |
-    | **Identifier** | /accounting-periods/{accountingPeriodKey}/identifiers | Manages Identifiers belonging to AccountingPeriods |
 
 
 ---
@@ -98,6 +97,8 @@ The API is built upon core entities, defined in the /components/schemas/ section
 
 ---
 
+✅ **Code** : not nullable<br/>
+✅ **Identifier** : External system identifier<br/>
 
 ---
 
@@ -184,6 +185,7 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods</span> <br/>
+
         <span class="api-summary">Retrieve a list of AccountingPeriod entities. getAccountingPeriod</span>
     </span>
 </div>
@@ -192,90 +194,45 @@ The API utilizes standard **CRUD** (Create, Read, Update, Delete) operations acr
 <span class="api-method-button method-post">POST</span>
     <span class="api-path-summary">
         <span class="api-path">/accounting-periods</span> <br/>
-        <span class="api-summary">Create a new AccountingPeriod entity. createAccountingPeriod</span>
+
+        <span class="api-summary">Retrieve a list  of entities. createAccountingPeriod</span>
     </span>
 </div>
 
-### /accounting-periods/{accountingPeriodKey}
+### /accounting-periods/{accounting-period-key}
 <div class="api-endpoint-row">
 <span class="api-method-button method-get">GET</span>
     <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific AccountingPeriod entity. getccountingPeriodById</span>
+        <span class="api-path">/accounting-periods/{accounting-period-key}</span> <br/>
+
+        <span class="api-summary">API Summary getccountingPeriodById</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-put">PUT</span>
     <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Replace a AccountingPeriod entity. replaceAccountingPeriod</span>
+        <span class="api-path">/accounting-periods/{accounting-period-key}</span> <br/>
+
+        <span class="api-summary">API Summary replaceAccountingPeriod</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-patch">PATCH</span>
     <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Partially update a AccountingPeriod entity. updatePartialAccountingPeriod</span>
+        <span class="api-path">/accounting-periods/{accounting-period-key}</span> <br/>
+
+        <span class="api-summary">API Summary updatePartialAccountingPeriod</span>
     </span>
 </div>
 
 <div class="api-endpoint-row">
 <span class="api-method-button method-delete">DELETE</span>
     <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}</span> <br/>
-        <span class="api-summary">Delete a AccountingPeriod entity deleteAccountingPeriodEntity</span>
-    </span>
-</div>
+        <span class="api-path">/accounting-periods/{accounting-period-key}</span> <br/>
 
-### /accounting-periods/{accountingPeriodKey}/identifiers
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers</span> <br/>
-        <span class="api-summary">Retrieve a list of Identifier entities scoped by accountingPeriodKey. getIdentifierByAccountingPeriodKey</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-post">POST</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers</span> <br/>
-        <span class="api-summary">Create a new Identifier entity. createIdentifier</span>
-    </span>
-</div>
-
-### /accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}
-<div class="api-endpoint-row">
-<span class="api-method-button method-get">GET</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Retrieve a specific Identifier entity. getdentifierById</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-put">PUT</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Replace a Identifier entity. replaceIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-patch">PATCH</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Partially update a Identifier entity. updatePartialIdentifier</span>
-    </span>
-</div>
-
-<div class="api-endpoint-row">
-<span class="api-method-button method-delete">DELETE</span>
-    <span class="api-path-summary">
-        <span class="api-path">/accounting-periods/{accountingPeriodKey}/identifiers/{identifierKey}</span> <br/>
-        <span class="api-summary">Delete a Identifier entity deleteIdentifierEntity</span>
+        <span class="api-summary">API Summary deleteAccountingPeriodEntity</span>
     </span>
 </div>
 
@@ -286,7 +243,6 @@ The following resources follow a consistent pattern under AccountingPeriodroot w
 | Resource | Base Path | List Operation | Create Operation | Get Operation | Update Operation | Delete Operation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
     | **accounting-period** | /accounting-periods | listAccountingPeriod | createAccountingPeriod | getAccountingPeriod | updateAccountingPeriod | deleteAccountingPeriod |
-    | **identifier** | /accounting-periods/{accountingPeriodKey}/identifiers | listIdentifierByAccountingPeriodKey | createIdentifier | getIdentifierByAccountingPeriodKey | updateIdentifierByAccountingPeriodKey | deleteIdentifierByAccountingPeriodKey |
 
 ***Note on List Operations:***
 
