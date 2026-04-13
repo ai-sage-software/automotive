@@ -14,10 +14,13 @@ info:
     email: pescobar@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
@@ -29,7 +32,7 @@ components:
           description: A unique key for the address reference.
         address_reference_value:
           type: string
-          description: The unique value of the address referenc...
+          description: The unique value of the address reference.
         address_types:
           maxItems: 255
           minItems: 1
@@ -39,19 +42,19 @@ components:
             $ref: "#/components/schemas/AddressTypes"
         address_line1:
           type: string
-          description: "Primary address line (Street, PO Box, et..."
+          description: "Primary address line (Street, PO Box, etc)."
         address_line2:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line3:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line4:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line5:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         city:
           type: string
           description: Name of the city.
@@ -74,7 +77,8 @@ components:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-      description: Reference link to a stored address.
+      description: "A reference to an address, including its unique key and a list\
+        \ of its usage types."
     AddressReferences:
       type: array
       items:
@@ -117,13 +121,13 @@ components:
       properties:
         appointment_reference_key:
           type: string
-          description: A unique key for the appointment referen...
+          description: A unique key for the appointment reference.
         appointment_key:
           type: string
           description: A unique key for the appointment record.
         appointment_reference_value:
           type: string
-          description: The unique value of the appointment refe...
+          description: The unique value of the appointment reference.
         appointment_types:
           maxItems: 255
           minItems: 1
@@ -136,7 +140,7 @@ components:
           description: The source code for the appointment.
         description:
           type: string
-          description: Optional description for the part identi...
+          description: Optional description for the part identifier
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         appointment_period:
@@ -147,8 +151,9 @@ components:
           $ref: "#/components/schemas/AppointmentTypes"
         occurrence_date_time:
           type: string
-          description: The date and time the appointment occurr...
+          description: The date and time the appointment occurred.
           format: date-time
+          example: 2026-04-13T15:03:05Z
       description: nullable
     AppointmentReferences:
       type: array
@@ -182,6 +187,27 @@ components:
       - SERVICE
       - WARRANTY_REPAIR
       - VEHICLE_PICKUP
+    Authorization:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-04-13T15:03:05Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+      description: Establish authorization level
+    Authorizations:
+      type: array
+      items:
+        $ref: "#/components/schemas/Authorization"
     BillOfMaterialReference:
       type: object
       properties:
@@ -205,43 +231,156 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         captured_financial_split:
           $ref: "#/components/schemas/FinancialSplitReference"
-      description: bill.of.material.reference.desc
+      description: External system identifier
     BillOfMaterialReferences:
       type: array
       items:
         $ref: "#/components/schemas/BillOfMaterialReference"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
+    CommunicationChannel:
+      type: object
+      properties:
+        communication_channel_key:
+          type: string
+          description: The unique key for the communication channel record.
+        communication_channel_id:
+          type: string
+          description: The unique ID for the communication channel.
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        value:
+          type: string
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+        value_extension:
+          type: string
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
+        label:
+          type: string
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
+        locale:
+          $ref: "#/components/schemas/Locale"
+        preferred_indicator:
+          type: boolean
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
+          example: false
+        preferences:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TimeSlot"
+        authorizations:
+          $ref: "#/components/schemas/Authorizations"
+      description: "Represents a communication channel, such as an email address or\
+        \ phone number, with associated preferences and authorizations."
+    CommunicationChannelTypes:
+      type: string
+      description: types of communication channels.
+      enum:
+      - PHONE
+      - CELL
+      - SMS
+      - VOICE
+      - VIDEO
+      - EMAIL
+      - APP
+      - SOCIAL_MEDIA
+      - URL
+      - BROADCAST
+      - DIRECT_MAIL
+      - PDA
+      - OTHER
+    CommunicationChannels:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationChannel"
+    CorrelationId:
+      pattern: "^[a-zA-Z0-9-]+$"
+      type: string
+      description: The correlation ID or workflow execution identifier for cross-system
+        distributed tracing.
+      example: exec-uuid-99283-7716
+    CountryCode:
+      type: string
+      description: The ISO 3116-1 alpha-2 country code of the issuing jurisdiction.
+      example: US
     CurrencyExchange:
       type: object
       properties:
         currency_exchange_id:
           type: string
-          description: Unique system identifier for the currenc...
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
         currency_exchange_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
         source_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
         target_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
         currency_exchange_desc:
           type: string
-          description: A descriptive title for the currencyExch...
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
         exchange_rate:
           type: string
-          description: Human-readable display value for the sou...
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
         rate_date_time:
           type: string
-          description: The date and time the rate was associate...
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-      description: Details concerning the conversion between different currencies.
+          example: 2026-04-13T15:03:05Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     DaysOfWeekTypes:
       type: string
       description: types of days of weeks.
@@ -288,59 +427,153 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique key identifying the effective per...
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicator if the period is currently act...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
         exclusive_indicator:
           type: boolean
-          description: Indicator if the period is exclusive
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
         start_date_time:
           type: string
-          description: Start date and time of the effective per...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         complete_date_time:
           type: string
-          description: Completion date and time of the effectiv...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: Value of the duration
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
         recur_uom_type:
           $ref: "#/components/schemas/DurationUOMTypes"
         recur_count:
           type: string
-          description: Count of recurrence
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Criteria defining recurrence
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Indicator if recurrence is enabled
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
         timeslot:
           $ref: "#/components/schemas/TimeSlot"
-      description: The date range during which this record is valid.
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
+    EventMessage:
+      type: object
+      properties:
+        event_message_key:
+          type: string
+          description: A unique key for the eventMessage record.
+        event_message_id:
+          type: string
+          description: The unique ID for the eventMessage.
+        event_actor_key:
+          type: string
+          description: The ID of the actor for the event.
+        event_actor_name:
+          type: string
+          description: The name of the actor for the event.
+        event_actor_role_type:
+          $ref: "#/components/schemas/StaffRoleTypes"
+        event_content:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        event_date_time:
+          type: string
+          description: The date and time of the event.
+          format: date-time
+          example: 2026-04-13T15:03:05Z
+        event_message_group:
+          type: string
+          description: The group to which the eventMessage belongs.
+        event_message_action:
+          $ref: "#/components/schemas/Memo"
+        event_message_desc:
+          type: string
+          description: A description for the eventMessage.
+        event_message_type:
+          $ref: "#/components/schemas/EventMessageTypes"
+        event_message_name:
+          type: string
+          description: The name of the eventMessage.
+        event_message_code:
+          type: string
+          description: The code for the eventMessage.
+        event_message_value:
+          type: string
+          description: The value of the eventMessage.
+        internal_indicator:
+          type: boolean
+          description: An indicator for whether the eventMessage is internal.
+          example: false
+      description: narrative of conversation
+    EventMessageTypes:
+      type: string
+      description: types of event messages.
+      enum:
+      - INSTRUCTION
+      - REASONING
+      - RESPONSE
+      - TOOL_CALL
+      - TOOL_OUTPUT
+      - ACTION_CONFIRMATION
+      - COMPENSATION
+      - RETRY_SIGNAL
+      - ERROR_REPORT
+      - DELEGATION
+      - BROADCAST
+      - CRITIQUE
+      - LOGGING
+      - AUDIT
+      - HEARTBEAT
+      - UNKNOWN
+    EventMessages:
+      type: array
+      items:
+        $ref: "#/components/schemas/EventMessage"
     FinancialSplitReference:
       type: object
       properties:
         financial_split_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         financial_split_reference_key:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         financial_split_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment FinancialSplit
+            aggregate.
         context:
           type: string
-          description: Context or domain of the payment financi...
+          description: Context or domain of the payment financialSplit.
         geographic_boundary:
           $ref: "#/components/schemas/GeographicBoundaryReference"
         identifiers:
@@ -349,31 +582,35 @@ components:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the financialSplit was...
+          description: The date and time the financialSplit was associated with the
+            order.
           format: date-time
-      description: Financial Split Reference
+          example: 2026-04-13T15:03:05Z
+      description: Reference to a Payment FinancialSplit Aggregate Root.
     GeographicBoundaryReference:
       type: object
       properties:
         geographic_boundary_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         geographic_boundary_reference_key:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         geographic_boundary_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment Schedule
+            aggregate.
         context:
           type: string
-          description: Context or domain of the payment schedul...
+          description: Context or domain of the payment schedule.
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the schedule was assoc...
+          description: The date and time the schedule was associated with the order.
           format: date-time
-      description: Geographic Boundary Reference
+          example: 2026-04-13T15:03:05Z
+      description: Reference to a Payment Schedule Aggregate Root.
     GeographicBoundaryReferences:
       type: array
       items:
@@ -396,16 +633,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: Unique identification key for the record.
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -428,6 +665,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         inspection_category:
           type: string
           description: The unique ID for the inspection report.
@@ -436,10 +674,10 @@ components:
           description: The unique ID for the inspection report.
         inspection_category_code:
           type: string
-          description: A description for the inspectionCategory...
+          description: A description for the inspectionCategory.
         inspection_notes:
           type: string
-          description: A description for the inspectionCategory...
+          description: A description for the inspectionCategory.
         inspection_code:
           type: string
           description: A description for the inspection.
@@ -453,7 +691,7 @@ components:
           $ref: "#/components/schemas/NarrativeUomTypes"
         medias:
           $ref: "#/components/schemas/Medias"
-      description: inspection.desc
+      description: A inspection report for a vehicle or product.
     Inspections:
       type: array
       items:
@@ -494,7 +732,8 @@ components:
           $ref: "#/components/schemas/Money"
         flat_rate_units:
           type: string
-          description: The labor units billed. Kept as String t...
+          description: The labor units billed. Kept as String to avoid translation
+            loss with legacy systems.
         name:
           type: string
           description: Product Name.
@@ -515,7 +754,8 @@ components:
           $ref: "#/components/schemas/StaffAssignmentReferences"
         parent_reference_id:
           type: string
-          description: The ID of the Sales Order or Repair Orde...
+          description: The ID of the Sales Order or Repair Order this labor belongs
+            to.
         department_context:
           $ref: "#/components/schemas/ServiceJobTypes"
         customers:
@@ -530,7 +770,7 @@ components:
           $ref: "#/components/schemas/TextualDetails"
         legacy_tech_id:
           type: string
-          description: "The legacy ID of the technician (e.g., '..."
+          description: "The legacy ID of the technician (e.g., '101')."
         resolved_amount:
           $ref: "#/components/schemas/Money"
         inspections:
@@ -541,28 +781,33 @@ components:
       properties:
         labor_operation_event_id:
           type: string
-          description: Unique identifier for the labor operatio...
+          description: Unique identifier for the labor operation event record.
         labor_operation_event_key:
           type: string
-          description: Unique key identifying the labor operati...
+          description: Unique key identifying the labor operation event aggregate
+            root.
         occurrence_timestamp:
           type: string
-          description: The precise date and time the event occu...
+          description: The precise date and time the event occurred.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         previous_status_type:
           $ref: "#/components/schemas/LaborOperationStatusTypes"
         new_status_type:
           $ref: "#/components/schemas/LaborOperationStatusTypes"
         actor_key:
           type: string
-          description: The unique key of the Staff (Technician)...
+          description: The unique key of the Staff (Technician) or System (AI Agent)
+            that triggered this event.
         event_note:
           type: string
-          description: Narrative or system-generated notes rega...
+          description: Narrative or system-generated notes regarding the transition.
         location_context:
           type: string
-          description: "GPS coordinates, Geofence ID, or Bay ID ..."
-      description: Labor Operation Event
+          description: "GPS coordinates, Geofence ID, or Bay ID providing spatial\
+            \ context for the event."
+      description: Represents a point-in-time state change or significant occurrence
+        within a Labor Operation's lifecycle.
     LaborOperationEvents:
       type: array
       items:
@@ -624,7 +869,7 @@ components:
           $ref: "#/components/schemas/PartIdentifiers"
         resource_type:
           $ref: "#/components/schemas/LaborResourceTypes"
-      description: Labor Resource
+      description: Details of the resource assigned to the labor operation.
     LaborResourceTypes:
       type: string
       description: types of labor resources.
@@ -639,6 +884,62 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/LaborResource"
+    LifecyclePulse:
+      type: object
+      properties:
+        lifecycle_pulse_id:
+          type: string
+          description: The internal unique identifier for this specific pulse record.
+          example: pls-992837-abc
+        lifecycle_pulse_key:
+          type: string
+          description: "A natural business key for the pulse, typically formatted\
+            \ as EVENT_NAME-TIMESTAMP."
+          example: RDR_TRANSMITTED_20260318_143005
+        lifecycle_pulse_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/LifecyclePulseTypes"
+        occurred_at:
+          type: string
+          description: The high-precision timestamp when the event actually occurred
+            in the source system.
+          format: date-time
+          example: 2026-04-13T15:03:05Z
+        actor_name:
+          type: string
+          description: "The identity of the user, service, or system agent that triggered\
+            \ the event."
+          example: DMS_INTEGRATOR_SVC
+        execution_id:
+          $ref: "#/components/schemas/CorrelationId"
+        pulse_detail:
+          type: string
+          description: pulse detail
+          example: "Updated: Assigned to Ocean Trader V22 for transit."
+        traceability:
+          $ref: "#/components/schemas/EventMessages"
+      description: Represents an immutable audit event or 'pulse' in the record lifecycle.
+    LifecyclePulseTypes:
+      type: string
+      description: types of lifecycle pulses.
+      enum:
+      - STARTED
+      - CREATED
+      - UPDATED
+      - PROCESSED
+      - TRANSMITTED
+      - ACKNOWLEDGED
+      - REJECTED
+      - ARCHIVED
+      - VOIDED
+    LifecyclePulses:
+      type: array
+      items:
+        $ref: "#/components/schemas/LifecyclePulse"
     List:
       type: array
       items:
@@ -646,18 +947,10 @@ components:
     Locale:
       type: object
       properties:
-        locale_id:
-          type: string
-          description: Unique internal identifier for the local...
         locale_key:
           type: string
-          description: "A unique, human-readable string key used..."
-        locale_name:
-          type: string
-          description: The full IETF BCP 47 language tag or Jav...
-        description:
-          type: string
-          description: A detailed description of the alert mess...
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
         language_code:
           type: string
           description: ISO 639-1 two-letter language code.
@@ -666,23 +959,21 @@ components:
           description: ISO 3166-1 alpha-2 country code.
         currency_code:
           type: string
-          description: The three-letter ISO 4217 currency code ...
+          description: The three-letter ISO 4217 currency code used for financial
+            transactions.
         currency_symbol:
           type: string
-          description: The graphical symbol used for the curren...
+          description: The graphical symbol used for the currency.
         timezone:
           type: string
-          description: The IANA Time Zone database ID for regio...
-        number_format:
-          type: string
-          description: Regional pattern for decimal and thousan...
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
+          description: The IANA Time Zone database ID for regional time calculations.
         location_code:
           type: string
-          description: The code of the inventory location or br...
+          description: The code of the inventory location or branch from which this
+            part is sourced.
           example: WH001
-      description: not nullable
+      description: "comprehensive locale configuration for currency, language, and\
+        \ regional formatting."
     Manifest:
       type: object
       properties:
@@ -690,28 +981,34 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique manifest value
+          description: The internal unique identifier for the manifest instance.
+          example: man-55283-abc
         manifest_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Business key for the manifest
+          description: The business key identifying the specific manifest configuration.
+          example: RDR_US_RETAIL_v2
         context:
           type: string
-          description: Context or domain of the manifest
+          description: "The business domain or OEM context for this manifest (e.g.,\
+            \ 'SALES', 'LOGISTICS', 'WARRANTY')."
+          example: VEHICLE_DELIVERY
         schema:
-          type: string
-          description: The monetary or hours-based value of the...
+          $ref: "#/components/schemas/SchemaUri"
         definitions:
           $ref: "#/components/schemas/ManifestItems"
+        lifecycle_pulses:
+          $ref: "#/components/schemas/LifecyclePulses"
         manifest_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: "The classification of manifest (e.g., 'VALIDATION_RULES',\
+            \ 'DATA_MAPPING', 'TRANSFORMATION')."
+          example: VALIDATION_RULES
         version:
-          type: string
-          description: Identifier for the version of the manife...
-          example: actor_123
-      description: A comprehensive list of items or cargo in a shipment.
+          $ref: "#/components/schemas/SemanticVersion"
+      description: External system manifest defining the structural rules and metadata
+        for a transaction.
     ManifestItem:
       type: object
       properties:
@@ -725,15 +1022,18 @@ components:
           minLength: 5
           type: string
           description: Business key for the manifestItem
+        context:
+          type: string
+          description: Context or domain of the manifestItem
         id:
           type: string
           description: Context or domain of the manifestItem
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         description:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
       description: not nullable
     ManifestItems:
       type: array
@@ -756,8 +1056,9 @@ components:
           $ref: "#/components/schemas/PartyReferences"
         occurrence_date_time:
           type: string
-          description: The date and time the media was created ...
+          description: The date and time the media was created or captured.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         name:
           type: string
           description: A hyperlink to the media's content.
@@ -780,7 +1081,7 @@ components:
           description: The version of the media.
         quality:
           type: string
-          description: A numeric value representing the quality...
+          description: A numeric value representing the quality of the media.
         media_source:
           type: string
           description: The source of the media.
@@ -791,7 +1092,7 @@ components:
           $ref: "#/components/schemas/Codes"
         dpi:
           type: string
-          description: "The dots per inch (DPI) for the media, i..."
+          description: "The dots per inch (DPI) for the media, if applicable."
         w_pixel:
           type: string
           description: The width of the media in pixels.
@@ -800,19 +1101,21 @@ components:
           description: The height of the media in pixels.
         media_resolution:
           type: string
-          description: The display resolution of the media (e.g...
+          description: "The display resolution of the media (e.g., 480p, 720p, 1080p)."
         media_duration_seconds:
           type: string
-          description: The total duration of the media file in ...
+          description: The total duration of the media file in seconds.
         media_sent_date_time:
           type: string
-          description: The ISO 8601 date and time when the medi...
+          description: The ISO 8601 date and time when the media was dispatched to
+            the recipient.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         media_keys:
           $ref: "#/components/schemas/Codes"
         media_access_metrics:
           $ref: "#/components/schemas/MediaAccessMetrics"
-      description: media.desc
+      description: "Media item including video, images, and sound."
     MediaAccessMetric:
       type: object
       properties:
@@ -821,41 +1124,42 @@ components:
           description: The unique ID for the media stream.
         media_access_key:
           type: string
-          description: The unique key for the media stream reco...
+          description: The unique key for the media stream record.
         media_key:
           type: string
-          description: The unique ID for the parent media asset...
+          description: The unique ID for the parent media asset.
         first_viewed_at:
           type: string
           description: ISO 8601 timestamp of the first access.
         completed_at:
           type: string
-          description: ISO 8601 timestamp when the user finishe...
+          description: ISO 8601 timestamp when the user finished the media.
         view_count:
           type: string
           description: Total number of engagement events.
         watch_time_seconds:
           type: string
-          description: The cumulative time in seconds the user ...
+          description: The cumulative time in seconds the user spent viewing the media.
         completion_percentage:
           type: string
-          description: The furthest point reached in the media ...
+          description: The furthest point reached in the media as a percentage (0-100).
         last_viewed_date_time:
           type: string
-          description: The ISO 8601 date and time of the most r...
+          description: The ISO 8601 date and time of the most recent access.
           format: date-time
         device_type:
           $ref: "#/components/schemas/DeviceTypes"
         user_agent:
           type: string
-          description: The browser user agent string from the m...
+          description: The browser user agent string from the most recent view.
         buffer_count:
           type: string
-          description: The number of times the media playback w...
+          description: The number of times the media playback was interrupted by buffering.
         load_time_ms:
           type: string
-          description: The time in milliseconds it took for the...
-      description: media.access.metric.desc
+          description: The time in milliseconds it took for the media to begin playback
+            after the request.
+      description: "Represents a media stream, such as a video or audio file."
     MediaAccessMetrics:
       type: array
       items:
@@ -968,41 +1272,62 @@ components:
     MetricValue:
       type: object
       properties:
+        metric_value_id:
+          type: string
+          description: The internal unique identifier for this metric record.
+          example: 8892-abc-123-metric
         metric_value_key:
           type: string
-          description: The unique key for the metric value.
+          description: The natural business key for the metric value.
+          example: EXPIRATION_MILEAGE
         value:
           type: string
-          description: The value of the metric.
+          description: "The actual value of the metric (e.g., the amount or count)."
+          example: "100000"
         uom:
           $ref: "#/components/schemas/NarrativeUomTypes"
-        locales:
+        codes:
           $ref: "#/components/schemas/Codes"
-      description: The actual recorded value of a specific metric.
+      description: "Represents a quantitative measurement including its unit, value,\
+        \ and classification codes."
+    ModelYear:
+      type: string
+      description: The 4-digit model year of the vehicle.
+      example: "2024"
     Money:
       type: object
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
+          description: Three-letter ISO-4217 currency code.
+          example: USD
         display_value:
           type: string
-          description: The locale-specific display format for t...
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
-      description: Monetary value and currency information.
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     MultiPointInspection:
       type: object
       properties:
@@ -1025,12 +1350,13 @@ components:
           $ref: "#/components/schemas/PartyReferences"
         promise_complete_date:
           type: string
-          description: The date the service is promised to be c...
+          description: The date the service is promised to be completed.
           format: date
         status_code_date_time:
           type: string
-          description: The date and time of the last status cod...
+          description: The date and time of the last status code update.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         multi_point_inspection_duration:
           $ref: "#/components/schemas/EffectivePeriod"
         vehicle_identifier:
@@ -1057,7 +1383,8 @@ components:
           $ref: "#/components/schemas/Memo"
         vss_manifests:
           $ref: "#/components/schemas/Manifests"
-      description: multi.point.inspection.desc
+      description: "Represents a repair order for a vehicle, including service details,\
+        \ pricing, and status."
     NarrativeUomTypes:
       type: string
       description: types of narrative uoms.
@@ -1111,6 +1438,7 @@ components:
       - OHM
       - WATT
       - KILOWATT_HOUR
+      - HP
       - RPM
       - G_FORCE
       - DEGREES
@@ -1145,13 +1473,13 @@ components:
       properties:
         part_identifier_key:
           type: string
-          description: Unique key identifying the part identifi...
+          description: Unique key identifying the part identifier
         part_identifier_id:
           type: string
-          description: Unique identifier ID for the part identi...
+          description: Unique identifier ID for the part identifier
         part_source:
           type: string
-          description: Unique identifier ID for the source of t...
+          description: Unique identifier ID for the source of the part
         part_identifier_type:
           $ref: "#/components/schemas/PartIdentifierTypes"
         part_identifier_value:
@@ -1159,45 +1487,175 @@ components:
           description: Value of the part identifier
         description:
           type: string
-          description: Optional description for the part identi...
+          description: Optional description for the part identifier
         identifiers:
           $ref: "#/components/schemas/Identifiers"
+        part_names:
+          $ref: "#/components/schemas/PartNames"
         part_status_type:
           $ref: "#/components/schemas/PartStatusTypes"
       description: nullable
+    PartIdentifierTypes:
+      type: string
+      description: types of part identifiers.
+      enum:
+      - VIN
+      - SKU
+      - UPCA
+      - UPCE
+      - ISBN
+      - MPN
+      - CONFIG_CODE
+      - MFR_CODE
+      - ALT_CODE
+      - STOCK_NBR
+      - UNIV_CODE
+      - PRODUCT_CODE
+      - CATALOG_CODE
+      - NAME
+      - NUMBER
+      - PREFIX
+      - COUNTRY_OF_ORIGIN_CODE
+      - MODEL_CODE
+      - MAKE_CODE
+      - YEAR_CODE
+      - MARKET_DIVISION_CODE
+      - TRIM_CODE
+      - STYLE_CODE
+      - SUB_MODEL_CODE
+      - ENGINE_CODE
+      - TRANSMISSION_CODE
+      - DRAWING_NUMBER
+      - OTHER
     PartIdentifiers:
       type: array
       items:
         $ref: "#/components/schemas/PartIdentifier"
+    PartName:
+      type: object
+      properties:
+        part_name_id:
+          type: string
+          description: Unique identifier for the part name
+        part_name_key:
+          type: string
+          description: Business key for the part name
+        part_prefix:
+          $ref: "#/components/schemas/Codes"
+        part_suffix:
+          $ref: "#/components/schemas/Codes"
+        description:
+          type: string
+          description: Description of the part name
+        language:
+          $ref: "#/components/schemas/Codes"
+        locale:
+          $ref: "#/components/schemas/Codes"
+        alias:
+          $ref: "#/components/schemas/Codes"
+        long_name:
+          $ref: "#/components/schemas/Codes"
+        marketing_name:
+          $ref: "#/components/schemas/Codes"
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        part_number:
+          $ref: "#/components/schemas/Codes"
+      description: nullable
+    PartNameTypes:
+      type: string
+      description: types of part names.
+      enum:
+      - GENERIC
+      - MANUFACTURING
+      - MARKETING
+      - CORE
+      - REMANUFACTURING
+      - OEM
+      - AFTERMARKET
+      - SUPERSEDING
+      - SUPERSEDED
+    PartNames:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartName"
+    PartStatusTypes:
+      type: string
+      description: types of part status.
+      enum:
+      - RECEIVE
+      - INSPECT_INBOUND
+      - DOCUMENT_RECEIPT
+      - PUTAWAY
+      - QUARANTINE_INBOUND
+      - PICK
+      - PACK
+      - STAGE_SHIPMENT
+      - LOAD_SHIPMENT
+      - SHIP
+      - DOCUMENT_SHIPMENT
+      - SCRAP_DISPOSE
+      - DISASSEMBLE
+      - RETURN_RECEIVE
+      - RETURN_INSPECT
+      - RETURN_PUTAWAY
+      - REFURBISH_REPAIR
+      - RETURN_TO_BIN
+      - DEFECTIVE_REMOVAL
+      - ALLOCATE_TO_JOB
+      - PICK_FOR_LABOR
+      - STAGE_FOR_SERVICE
+      - ISSUE_TO_TECH
+      - INSTALLED
+      - CORE_PENDING
+      - CORE_RECEIVED
+      - CROSS_DOCK
+      - LABEL_TAG
+      - KIT_ASSEMBLE
+      - VALUE_ADDED_SERVICE
+      - SUPERSEDE
+      - SUPERSEDED
     PartyReference:
       type: object
       properties:
         party_reference_id:
           type: string
-          description: Unique identifier value
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
         party_reference_key:
           type: string
-          description: Unique identifier value
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
         party_key:
           type: string
-          description: Unique identifier value
-        locale:
-          $ref: "#/components/schemas/Locale"
-        party_reference_type:
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        party_name:
           type: string
-          description: Unique identifier value
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        contact_name:
+          $ref: "#/components/schemas/PersonName"
         authorization_code:
           type: string
-          description: Context or domain of the identifier
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
         source_system_code:
           type: string
-          description: Context or domain of the identifier
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
         context:
           type: string
-          description: Context or domain of the identifier
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
         account_number:
           type: string
-          description: Account Number
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
         party_relationship_types:
           maxItems: 255
           minItems: 1
@@ -1205,21 +1663,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PartyRelationshipTypes"
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        rule_codes:
-          $ref: "#/components/schemas/Codes"
-        party:
+        snapshot_detail:
           $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
         address_references:
           $ref: "#/components/schemas/AddressReferences"
-      description: Reference to an internal or external party/entity.
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-04-13T15:03:05Z
+      description: External system identifier
     PartyReferences:
       type: array
       items:
@@ -1262,6 +1717,8 @@ components:
       - OEM
       - PRIMARY_OEM
       - DRIVER
+      - LIEN_HOLDER
+      - PROVIDER
       - ACCOUNTABLE
       - RESPONSIBLE
       - CONSULT
@@ -1270,6 +1727,21 @@ components:
       - PART_OF
       - MEMBERSHIP
       - COMPOSED_IN
+      - GEN_MGR
+      - SALES_MGR
+      - CLOSING_MGR
+      - FI_MGR
+      - CONCIERGE_MGR
+      - SERVICE_MGR
+      - SALES_ASSOC
+      - BUSINESS_DEVELOPMENT
+      - SPECIALIST
+      - ADVISOR
+      - SERVICE_TECH
+      - CONCIERGE_STAFF
+      - VALET
+      - STAFF
+      - FINANCE
       - PASSENGER
       - CUSTOMER
       - CO_SIGNER
@@ -1299,6 +1771,8 @@ components:
       - TRUSTEE_PERSON
       - REFERENCE_PERSONAL
       - REFERENCE_PROFESSIONAL
+      - APPLICANT
+      - CO_APPLICANT
       - AGENT
       - BENEFICIARY
       - GUARANTOR
@@ -1366,6 +1840,97 @@ components:
       - COMMUNITY
       - SPECIAL_USE
       - OTHER
+    PersonName:
+      type: object
+      properties:
+        alias:
+          type: string
+          description: Alternative or informal name.
+          example: AJ
+        family_name:
+          type: string
+          description: Family or last name.
+          example: Smith
+        full_name:
+          type: string
+          description: Complete name as one string.
+          example: Alice Jane Smith
+        given_name:
+          type: string
+          description: First or given name.
+          example: Alice
+        identifiers_href:
+          type: string
+          description: Reference to external identifiers.
+          format: href
+          example: /identifiers/12345
+        maiden_name:
+          type: string
+          description: Previous family name before marriage.
+          example: Johnson
+        middle_name:
+          type: string
+          description: Middle name(s).
+          example: Jane
+        name_suffix:
+          type: string
+          description: "Suffix such as Jr., Sr., III."
+          example: Jr.
+        party_key:
+          type: string
+          description: External party key.
+          example: PARTY-KEY-123
+        person_key:
+          type: string
+          description: External person key.
+          example: PERSON-KEY-789
+        person_name_key:
+          type: string
+          description: Unique person name key.
+          example: NAME-KEY-456
+        preferred_name:
+          type: string
+          description: Preferred name used in informal situations.
+          example: Ali
+        salutation:
+          type: string
+          description: "Salutation or title such as Mr., Ms., Dr."
+          example: Dr.
+        honorific_prefix:
+          type: string
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
+          example: Dr.
+        honorific_suffix:
+          type: string
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
+          example: Jr.
+        locale:
+          type: string
+          description: Locale or language region associated with the person.
+          example: en-US
+        phonetic_family_name:
+          type: string
+          description: Phonetic representation of the family name.
+          example: FAM-nee
+        phonetic_given_name:
+          type: string
+          description: Phonetic representation of the given name.
+          example: GA-vin
+        phonetic_middle_name:
+          type: string
+          description: Phonetic representation of the middle name.
+          example: MI-chal
+        nationality:
+          type: string
+          description: Nationality of the person.
+          example: Canadian
+      description: a Name for a person
+    PlateNumber:
+      type: string
+      description: The alphanumeric string displayed on the vehicle license plate.
+      example: ABC1234
     PricePlanReference:
       type: object
       properties:
@@ -1389,15 +1954,52 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         geographic_boundaries:
           $ref: "#/components/schemas/GeographicBoundaryReferences"
         captured_financial_split:
           $ref: "#/components/schemas/FinancialSplitReference"
-      description: Reference to the specific pricing strategy or schedule.
+      description: External system identifier
     PricePlanReferences:
       type: array
       items:
         $ref: "#/components/schemas/PricePlanReference"
+    ProductModel:
+      type: object
+      properties:
+        product_model_key:
+          type: string
+          description: A unique key for the vehicle identifier.
+        product_model_id:
+          type: string
+          description: The unique ID for the vehicle identifier.
+        identifiers:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Identifier"
+        brands:
+          $ref: "#/components/schemas/Codes"
+        trims:
+          $ref: "#/components/schemas/Codes"
+        marketing_names:
+          $ref: "#/components/schemas/Codes"
+        oem_names:
+          $ref: "#/components/schemas/Codes"
+        oem_codes:
+          $ref: "#/components/schemas/Codes"
+        model_codes:
+          $ref: "#/components/schemas/Codes"
+        phase_code:
+          type: string
+          description: The phase code.
+        nicknames:
+          $ref: "#/components/schemas/Codes"
+        tags:
+          $ref: "#/components/schemas/Codes"
+      description: Vehicle Identifier
     RepairStatusTypes:
       type: string
       description: types of repair status.
@@ -1449,6 +2051,15 @@ components:
       - TOW_TRUCK
       - AUTONOMOUS_SYSTEM
       - SUBLET_VENDOR
+    SchemaUri:
+      type: string
+      description: The URI or name of the JSON/XML schema defining the payload structure.
+      example: https://starstandard.org/schemas/rdr/v2.1/retail.json
+    SemanticVersion:
+      pattern: ^\d+\.\d+\.\d+$
+      type: string
+      description: The specific semantic version of the manifest configuration.
+      example: 2.1.4
     ServiceCatalogReferences:
       type: object
       description: Service Catalog References
@@ -1475,6 +2086,15 @@ components:
       - MOBILE
       - LOGISTICS
       - QUICK_LUBE
+    SkillCategoryTypes:
+      type: string
+      description: types of skill categorys.
+      enum:
+      - MECHANICAL
+      - ELECTRICAL_EV
+      - AUTONOMOUS_SOFTWARE
+      - FLEET_LOGISTICS
+      - BODY_STRUCTURAL
     StaffAssignmentReference:
       type: object
       properties:
@@ -1482,25 +2102,26 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         staff_reference_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         staff_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Staff (Party) aggregate.
         service_job_type:
           $ref: "#/components/schemas/ServiceJobTypes"
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the staff member was a...
+          description: The date and time the staff member was assigned.
           format: date-time
+          example: 2026-04-13T15:03:05Z
         role_types:
           maxItems: 255
           minItems: 1
@@ -1512,11 +2133,34 @@ components:
           $ref: "#/components/schemas/TimeSlots"
         skills:
           $ref: "#/components/schemas/StaffSkills"
-      description: Reference to a specific staff task assignment.
+      description: Reference to a Staff (Party) Aggregate Root and their role in the
+        order.
     StaffAssignmentReferences:
       type: array
       items:
         $ref: "#/components/schemas/StaffAssignmentReference"
+    StaffRoleTypes:
+      type: string
+      description: types of staff roles.
+      enum:
+      - SERVICE_TECHNICIAN
+      - TECHNICIAN
+      - SERVICE_MANAGER
+      - SERVICE_ADVISOR
+      - SALES_PERSON
+      - CUSTOMER_SERVICE
+      - SALES_MANAGER
+      - F_I_MANAGER
+      - CLOSING_MANAGER
+      - BUSINESS_MANAGER
+      - RECEPTIONIST
+      - PARTS_MANAGER
+      - PARTS_ADVISOR
+      - DETAILER
+      - DRIVER
+      - APPRAISER
+      - GENERAL_MANAGER
+      - UNKNOWN
     StaffSkill:
       type: object
       properties:
@@ -1526,7 +2170,7 @@ components:
           example: sm_123456
         staff_skill_key:
           type: string
-          description: Business key or code for the staff skill...
+          description: Business key or code for the staff skill.
           example: EMPLOYEE_001
         staff_skill_code:
           type: string
@@ -1542,7 +2186,8 @@ components:
           example: EV Certification Level 3
         proficiency_level:
           type: string
-          description: "Level of expertise (e.g., Beginner, Inte..."
+          description: "Level of expertise (e.g., Beginner, Intermediate, Expert,\
+            \ or 1-5 scale)."
           example: Expert
         skill_category_type:
           $ref: "#/components/schemas/SkillCategoryTypes"
@@ -1550,7 +2195,7 @@ components:
           type: string
           description: Number of years practicing this skill.
           example: "8"
-      description: Staff Skill
+      description: Dealership Staff Skill
     StaffSkills:
       type: array
       items:
@@ -1560,7 +2205,7 @@ components:
       properties:
         textual_detail_key:
           type: string
-          description: Natural key or business-friendly key for...
+          description: Natural key or business-friendly key for textual detail.
         textual_detail_id:
           type: string
           description: Unique identifier for textual detail.
@@ -1584,7 +2229,7 @@ components:
           description: Name or title of the textual detail.
         value:
           type: string
-          description: Value associated with the textual detail...
+          description: Value associated with the textual detail.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         groups:
@@ -1594,10 +2239,10 @@ components:
           description: Label for UI representation.
         alt_text:
           type: string
-          description: Alternative text for accessibility or im...
+          description: Alternative text for accessibility or image descriptions.
         textual_detail_code:
           type: string
-          description: Code identifier for textual detail refer...
+          description: Code identifier for textual detail reference.
         tags:
           $ref: "#/components/schemas/Codes"
         uom_display:
@@ -1616,31 +2261,38 @@ components:
       properties:
         time_slot_id:
           type: string
-          description: Unique identifier for the time slot reco...
+          description: Technical unique identifier (GUID) for the time slot record.
+          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
           type: string
-          description: Unique business key for the time slot.
+          description: Natural business key for the time slot within its specific
+            context.
+          example: TS-MON-MORNING-SHIFT
         time_slot_source:
           type: string
-          description: Unique identifier for the time slot sour...
+          description: The originating system or calendar providing this availability
+            data.
           example: GOOGLE_CALENDAR
-        end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        end_time:
-          type: string
-          description: End time in HH:mm format.
-          format: date-time
-        recurring_indicator:
-          type: boolean
-          description: Indicates if the time slot is recurring.
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: Start time in HH:mm format.
+          description: The local start time in 24-hour ISO 8601 format.
           format: date-time
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local end time in 24-hour ISO 8601 format.
+          format: date-time
+        recurring_indicator:
+          type: boolean
+          description: Indicates if this time slot is part of a repeating pattern.
+          example: true
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -1656,7 +2308,8 @@ components:
           format: date
           items:
             type: string
-      description: Designated window of time for the activity.
+      description: "Defines a specific window of time, often within a recurring schedule,\
+        \ used for service availability or appointment booking."
     TimeSlots:
       type: array
       items:
@@ -1671,23 +2324,40 @@ components:
       - BETWEEN
       - BLOCK
       - UNKNOWN
+    UnitId:
+      type: string
+      description: A unique sequence number or business identifier provided by TMS.
+      example: "129375127"
+    VIN:
+      maxLength: 17
+      minLength: 17
+      pattern: "^[0-9A-HJ-NPR-Z]+$"
+      type: string
+      description: The 17-character Vehicle Identification Number.
+      example: 5TFHY5F13KX799310
     VehicleIdentifier:
       type: object
       properties:
         vehicle_identifier_key:
           type: string
-          description: A unique key for the vehicle identifier.
+          description: A unique natural business key for the vehicle identifier record.
+          example: VID-KEY-992831
         vehicle_identifier_id:
           type: string
-          description: The unique ID for the vehicle identifier...
+          description: The unique technical GUID/ID for the vehicle identifier.
+          example: 550e8400-e29b-41d4-a716-446655440000
         odometer:
           $ref: "#/components/schemas/MetricValue"
         vehicle_key:
           type: string
-          description: The unique KEY of the associated vehicle...
+          description: The unique business key of the associated vehicle entity.
+          example: VEH-TOY-TUNDRA-2024
+        unit_id:
+          $ref: "#/components/schemas/UnitId"
         stock_number:
           type: string
-          description: The dealer's internal stock number for t...
+          description: The dealer's internal stock or inventory number.
+          example: STK100293
         identifiers:
           maxItems: 255
           minItems: 1
@@ -1700,30 +2370,43 @@ components:
         make:
           type: string
           description: The manufacturer or make of the vehicle.
+          example: Toyota
         model:
           type: string
-          description: The model name of the vehicle.
+          description: The specific model name.
+          example: Tundra
+        brand:
+          type: string
+          description: The consumer-facing brand name.
+          example: TRD Pro
         trim:
           type: string
-          description: The model name of the vehicle.
-        manufacturer_model_code:
+          description: The specific trim level or package.
+          example: Limited
+        oem_model_code:
           type: string
-          description: The manufacturer's model code.
-        manufacturer_name:
+          description: The manufacturer's specific internal model code.
+          example: 8442A
+        oem_name:
           type: string
-          description: The name of the manufacturer.
+          description: Full name of the Original Equipment Manufacturer.
+          example: Toyota Motor Corporation
+        oem_code:
+          type: string
+          description: The short code representing the OEM.
+          example: TMS
         model_code:
           type: string
-          description: The model code.
+          description: The standardized model code used within the bounded context.
+          example: TUN
         model_description:
           type: string
-          description: A description of the model.
+          description: A verbose description of the vehicle model.
+          example: 4WD CrewMax 5.5' Bed
         model_year:
-          type: string
-          description: The model year of the vehicle.
+          $ref: "#/components/schemas/ModelYear"
         vin:
-          type: string
-          description: The Vehicle Identification Number.
+          $ref: "#/components/schemas/VIN"
         nicknames:
           maxItems: 255
           minItems: 1
@@ -1733,99 +2416,27 @@ components:
             type: string
         tags:
           $ref: "#/components/schemas/Codes"
-      description: Vehicle Identifier
+        model_detail:
+          $ref: "#/components/schemas/ProductModel"
+      description: Vehicle Identifier following STAR standards for cross-context vehicle
+        tracking.
     VehicleLicense:
       type: object
       properties:
         vehicle_license_key:
           type: string
-          description: The unique key for the vehicle license r...
+          description: The unique business key for the vehicle license record.
+          example: LIC-GA-77291-B
         plate_number:
-          type: string
-          description: The license plate number of the vehicle.
+          $ref: "#/components/schemas/PlateNumber"
         jurisdiction_name:
           type: string
-          description: The name of the jurisdiction that issued...
+          description: "The state, province, or territory that issued the license\
+            \ plate."
+          example: Georgia
         country_code:
-          type: string
-          description: The country code of the issuing jurisdic...
+          $ref: "#/components/schemas/CountryCode"
         effective_period:
           $ref: "#/components/schemas/EffectivePeriod"
-      description: The license information for the vehicle.
-    SkillCategoryTypes:
-      type: string
-      description: Undocumented Enum
-      enum:
-      - MECHANICAL
-      - ELECTRICAL_EV
-      - AUTONOMOUS_SOFTWARE
-      - FLEET_LOGISTICS
-      - BODY_STRUCTURAL
-    PartIdentifierTypes:
-      type: string
-      description: entity
-      enum:
-      - VIN
-      - SKU
-      - UPCA
-      - UPCE
-      - ISBN
-      - MPN
-      - CONFIG_CODE
-      - MFR_CODE
-      - ALT_CODE
-      - STOCK_NBR
-      - UNIV_CODE
-      - PRODUCT_CODE
-      - CATALOG_CODE
-      - NAME
-      - NUMBER
-      - PREFIX
-      - COUNTRY_OF_ORIGIN_CODE
-      - MODEL_CODE
-      - MAKE_CODE
-      - YEAR_CODE
-      - MARKET_DIVISION_CODE
-      - TRIM_CODE
-      - STYLE_CODE
-      - SUB_MODEL_CODE
-      - ENGINE_CODE
-      - TRANSMISSION_CODE
-      - DRAWING_NUMBER
-      - OTHER
-    PartStatusTypes:
-      type: string
-      description: Metrics for a single execution run of a critica...
-      enum:
-      - RECEIVE
-      - INSPECT_INBOUND
-      - DOCUMENT_RECEIPT
-      - PUTAWAY
-      - QUARANTINE_INBOUND
-      - PICK
-      - PACK
-      - STAGE_SHIPMENT
-      - LOAD_SHIPMENT
-      - SHIP
-      - DOCUMENT_SHIPMENT
-      - SCRAP_DISPOSE
-      - DISASSEMBLE
-      - RETURN_RECEIVE
-      - RETURN_INSPECT
-      - RETURN_PUTAWAY
-      - REFURBISH_REPAIR
-      - RETURN_TO_BIN
-      - DEFECTIVE_REMOVAL
-      - ALLOCATE_TO_JOB
-      - PICK_FOR_LABOR
-      - STAGE_FOR_SERVICE
-      - ISSUE_TO_TECH
-      - INSTALLED
-      - CORE_PENDING
-      - CORE_RECEIVED
-      - CROSS_DOCK
-      - LABEL_TAG
-      - KIT_ASSEMBLE
-      - VALUE_ADDED_SERVICE
-      - SUPERSEDE
-      - SUPERSEDED
+      description: "Represents the legal registration and license information for\
+        \ a vehicle, including plate details and issuing jurisdiction."
