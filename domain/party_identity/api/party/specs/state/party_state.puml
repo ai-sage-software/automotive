@@ -1,0 +1,55 @@
+@startuml PartyLifecycleStateDiagram
+
+title Party Lifecycle State Management
+
+' Define the starting point
+[*] --> DRAFT
+
+' 1. Intake & Validation States
+state DRAFT #F9F9F9 : Initial record creation\n(Manual or SyntheticGen)
+state PENDING_VERIFICATION #FFF2CC : Awaiting ID, Tax, or\nBusiness validation
+state REJECTED #FFD9D9 : Validation failed\n(Invalid Tax ID/Identity)
+
+' 2. Operational States
+state ACTIVE #D5E8D4 : Verified and usable\nfor all business roles
+state INACTIVE #F5F5F5 : Valid entity, but\nnew activity restricted
+
+' 3. Administrative & Maintenance States
+state PENDING_MERGE #DAE8FC : Identified as duplicate\nawaiting consolidation
+state MERGED #E1D5E7 : Secondary record redirected\nto primary partyKey
+
+' 4. Terminal / Compliance States
+state DECEASED_DISSOLVED #EAEAEA : Individual passed or\nOrganization dissolved
+state ARCHIVED #EAEAEA : Historical record only
+state PURGED #FAEAEA : PII removed for GDPR/CCPA\n(Terminal State)
+
+' --- Transitions ---
+
+' A. Verification Path
+DRAFT --> PENDING_VERIFICATION : Submit for vetting
+PENDING_VERIFICATION --> ACTIVE : Verification successful
+PENDING_VERIFICATION --> REJECTED : Verification failed
+REJECTED --> DRAFT : Corrected and resubmitted
+
+' B. Operational Lifecycle
+ACTIVE --> INACTIVE : Business relationship paused
+INACTIVE --> ACTIVE : Relationship resumed
+ACTIVE --> DECEASED_DISSOLVED : Legal notification received
+
+' C. Data Governance (MDM)
+ACTIVE --> PENDING_MERGE : Duplicate detected
+DRAFT --> PENDING_MERGE : Duplicate detected
+PENDING_MERGE --> MERGED : Merge logic executed
+MERGED --> [*] : Pointer persists in DB
+
+' D. Archival & Privacy
+INACTIVE --> ARCHIVED : Retention period reached
+DECEASED_DISSOLVED --> ARCHIVED : Post-settlement archival
+ARCHIVED --> PURGED : Privacy request / Global expiry
+PURGED --> [*] : End of record lifecycle
+
+' E. Global Exit
+ACTIVE --> [*]
+ARCHIVED --> [*]
+
+@enduml
