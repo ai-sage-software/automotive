@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - PaymentMethod
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,15 +9,18 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
@@ -30,40 +33,37 @@ components:
           maxLength: 10
           minLength: 1
           type: string
-          description: Priority indicator for address usage (e....
+          description: "Priority indicator for address usage (e.g., billing, shipping)."
+          example: "1"
         city_code:
           maxLength: 20
           minLength: 1
           type: string
           description: Standardized city code.
         address_key:
-          maximum: 100
-          minimum: 0
           maxLength: 50
           minLength: 5
           type: string
           description: Unique business key for the address.
         address_id:
-          maximum: 100
-          minimum: 0
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier for the address record...
+          description: Unique identifier for the address record.
         address_input:
           maxLength: 255
           minLength: 1
           type: string
-          description: Raw input provided for address processin...
+          description: Raw input provided for address processing or validation.
         address_line1:
           maxLength: 100
           minLength: 1
           type: string
-          description: "Primary address line (Street, PO Box, et..."
+          description: "Primary address line (Street, PO Box, etc)."
         address_line2:
           maxLength: 100
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line3:
           maxLength: 100
           type: string
@@ -83,8 +83,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AddressTypes"
-        authorizations:
-          $ref: "#/components/schemas/Authorizations"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
         city:
           maxLength: 100
           minLength: 1
@@ -93,7 +93,7 @@ components:
         city_subdivision:
           maxLength: 100
           type: string
-          description: "Subdivision within the city (e.g., neigh..."
+          description: "Subdivision within the city (e.g., neighborhood, district)."
         country:
           maxLength: 100
           minLength: 2
@@ -129,28 +129,18 @@ components:
           description: "Extended postal code (e.g., ZIP+4)."
         preferred_indicator:
           type: boolean
-          description: Flag indicating if this address is the p...
+          description: Flag indicating if this address is the preferred address.
+          example: false
         region:
           maxLength: 50
           type: string
-          description: "Administrative region (e.g., province, s..."
+          description: "Administrative region (e.g., province, state)."
         state:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-        locale:
-          maxLength: 10
-          minLength: 2
-          type: string
-          description: Locale code associated with this address...
-      description: address.desc
-    AddressCreate:
-      required:
-      - address_key
-      type: object
-      description: Address Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Address"
+      description: Address represents a physical or mailing location associated with
+        a party or warehouse.
     AddressLocale:
       type: object
       properties:
@@ -159,10 +149,10 @@ components:
           description: Business key for the address locale.
         address_locale_id:
           type: string
-          description: Unique identifier for the address locale...
+          description: Unique identifier for the address locale.
         region_code:
           type: string
-          description: Code representing the region for the loc...
+          description: Code representing the region for the locale.
         region_name:
           type: string
           description: Name of the region for the locale.
@@ -170,28 +160,7 @@ components:
           $ref: "#/components/schemas/Codes"
         location_type:
           $ref: "#/components/schemas/LocationTypes"
-      description: address.locale.desc
-    AddressLocaleCreate:
-      required:
-      - address_locale_key
-      type: object
-      description: AddressLocale Create for Post
-      allOf:
-      - $ref: "#/components/schemas/AddressLocale"
-    AddressLocaleUpdate:
-      type: object
-      properties:
-        region_name:
-          type: string
-          description: Name of the region for the locale.
-        region_aliases:
-          $ref: "#/components/schemas/Codes"
-        location_type:
-          $ref: "#/components/schemas/LocationTypes"
-        region_code:
-          type: string
-          description: Code representing the region for the loc...
-      description: AddressLocale Update for Patch and Put
+      description: External system address locale including region and location type.
     AddressLocales:
       type: array
       items:
@@ -208,6 +177,8 @@ components:
       - RESIDENCE
       - WORK
       - BUSINESS
+      - OFFICE
+      - PO_BOX
       - LEGAL
       - SERVICE
       - DEALER
@@ -229,151 +200,29 @@ components:
       - PRODUCT
       - ARCHIVE
       - OTHER
-    AddressUpdate:
-      type: object
-      properties:
-        address_input:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: Raw input provided for address processin...
-        country:
-          maxLength: 100
-          minLength: 2
-          type: string
-          description: Full name of the country.
-        city:
-          maxLength: 100
-          minLength: 1
-          type: string
-          description: Name of the city.
-        county_code:
-          maxLength: 20
-          type: string
-          description: Standardized code for the county.
-        authorizations:
-          $ref: "#/components/schemas/Authorizations"
-        county:
-          maxLength: 100
-          type: string
-          description: Name of the county.
-        city_code:
-          maxLength: 20
-          minLength: 1
-          type: string
-          description: Standardized city code.
-        locale:
-          maxLength: 10
-          minLength: 2
-          type: string
-          description: Locale code associated with this address...
-        address_locales:
-          $ref: "#/components/schemas/AddressLocales"
-        address_line5:
-          maxLength: 100
-          type: string
-          description: Additional address line information.
-        address_line4:
-          maxLength: 100
-          type: string
-          description: Additional address line information.
-        address_line3:
-          maxLength: 100
-          type: string
-          description: Additional address line information.
-        address_line2:
-          maxLength: 100
-          type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
-        address_line1:
-          maxLength: 100
-          minLength: 1
-          type: string
-          description: "Primary address line (Street, PO Box, et..."
-        postal_code_ext:
-          maxLength: 10
-          type: string
-          description: "Extended postal code (e.g., ZIP+4)."
-        state:
-          maxLength: 50
-          type: string
-          description: State or equivalent subdivision.
-        preferred_indicator:
-          type: boolean
-          description: Flag indicating if this address is the p...
-        city_subdivision:
-          maxLength: 100
-          type: string
-          description: "Subdivision within the city (e.g., neigh..."
-        label:
-          maxLength: 50
-          type: string
-          description: Label or display name for the address.
-        priority:
-          maxLength: 10
-          minLength: 1
-          type: string
-          description: Priority indicator for address usage (e....
-        address_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/AddressTypes"
-        country_code:
-          maxLength: 2
-          minLength: 2
-          type: string
-          description: ISO 3166-1 Alpha-2 country code.
-        position:
-          $ref: "#/components/schemas/Position"
-        postal_code:
-          maxLength: 20
-          minLength: 3
-          type: string
-          description: Primary postal or ZIP code.
-        region:
-          maxLength: 50
-          type: string
-          description: "Administrative region (e.g., province, s..."
-      description: Address Update for Patch and Put
-    Authorization:
+    AuthorizationLevel:
       type: object
       properties:
         update_date_time:
           type: string
-          description: Timestamp of the last update to this aut...
+          description: Timestamp of the last update to this authorization
           format: date-time
+          example: 2026-05-06T14:08:34Z
         authorized_indicator:
           type: boolean
-          description: Indicates whether the authorization is c...
-        authorization_key:
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
           type: string
-          description: Business key uniquely identifying the au...
-      description: authorization.desc
-    AuthorizationCreate:
-      required:
-      - authorization_key
-      type: object
-      description: Authorization Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Authorization"
-    AuthorizationUpdate:
-      type: object
-      properties:
-        authorized_indicator:
-          type: boolean
-          description: Indicates whether the authorization is c...
-        update_date_time:
-          type: string
-          description: Timestamp of the last update to this aut...
-          format: date-time
-      description: Authorization Update for Patch and Put
-    Authorizations:
+          description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
       type: array
       items:
-        $ref: "#/components/schemas/Authorization"
+        $ref: "#/components/schemas/AuthorizationLevel"
     BankAccountTypes:
       type: string
       description: types of bank accounts.
@@ -390,18 +239,18 @@ components:
       properties:
         bank_beneficiary_key:
           type: string
-          description: A unique key for the bank beneficiary re...
+          description: A unique key for the bank beneficiary record.
         account_number:
           type: string
-          description: The bank account number of the beneficia...
+          description: The bank account number of the beneficiary.
         address_desc:
           type: string
-          description: A description of the beneficiary's addre...
+          description: A description of the beneficiary's address.
         bank_account_type:
           $ref: "#/components/schemas/BankAccountTypes"
         bank_branch_address_desc:
           type: string
-          description: A description of the bank branch address...
+          description: A description of the bank branch address.
         bank_country:
           type: string
           description: The country of the bank.
@@ -416,10 +265,10 @@ components:
           description: The bank branch number.
         budget_code:
           type: string
-          description: The budget code associated with the paym...
+          description: The budget code associated with the payment.
         contact_channel_desc:
           type: string
-          description: A description of the contact channel for...
+          description: A description of the contact channel for the beneficiary.
         electronic_payment_id:
           type: string
           description: The ID for the electronic payment.
@@ -431,61 +280,13 @@ components:
         routing_number:
           type: string
           description: The bank's routing number.
-      description: bank.beneficiary.desc
-    BankBeneficiaryCreate:
-      required:
-      - bank_beneficiary_key
-      type: object
-      description: BankBeneficiary Create for Post
-      allOf:
-      - $ref: "#/components/schemas/BankBeneficiary"
-    BankBeneficiaryUpdate:
-      type: object
-      properties:
-        account_number:
-          type: string
-          description: The bank account number of the beneficia...
-        notes:
-          $ref: "#/components/schemas/Memo"
-        address_desc:
-          type: string
-          description: A description of the beneficiary's addre...
-        budget_code:
-          type: string
-          description: The budget code associated with the paym...
-        bank_branch_address_desc:
-          type: string
-          description: A description of the bank branch address...
-        bank_country:
-          type: string
-          description: The country of the bank.
-        routing_number:
-          type: string
-          description: The bank's routing number.
-        bank_swift_code:
-          type: string
-          description: The bank's SWIFT code.
-        branch_number:
-          type: string
-          description: The bank branch number.
-        contact_channel_desc:
-          type: string
-          description: A description of the contact channel for...
-        purpose_of_payment:
-          type: string
-          description: The purpose of the payment.
-        bank_name:
-          type: string
-          description: The name of the bank.
-        bank_account_type:
-          $ref: "#/components/schemas/BankAccountTypes"
-      description: BankBeneficiary Update for Patch and Put
+      description: Beneficiary for Bank Payment...
     BankIntermediary:
       type: object
       properties:
         bank_intermediary_key:
           type: string
-          description: The unique key for the bank intermediary...
+          description: The unique key for the bank intermediary record.
         bank_intermediary_id:
           type: string
           description: The unique ID for the bank intermediary.
@@ -494,10 +295,10 @@ components:
           description: The name of the financial institution.
         financial_institution_address:
           type: string
-          description: The address of the financial institution...
+          description: The address of the financial institution.
         account_number:
           type: string
-          description: The account number at the intermediary b...
+          description: The account number at the intermediary bank.
         bank_swift_code:
           type: string
           description: The SWIFT/BIC code of the bank.
@@ -509,44 +310,14 @@ components:
           description: The routing number for the bank.
         notes:
           $ref: "#/components/schemas/Memo"
-      description: bank.intermediary.desc
-    BankIntermediaryCreate:
-      required:
-      - bank_intermediary_key
-      type: object
-      description: BankIntermediary Create for Post
-      allOf:
-      - $ref: "#/components/schemas/BankIntermediary"
-    BankIntermediaryUpdate:
-      type: object
-      properties:
-        account_number:
-          type: string
-          description: The account number at the intermediary b...
-        bank_identifier_code:
-          type: string
-          description: The Bank Identifier Code (BIC).
-        notes:
-          $ref: "#/components/schemas/Memo"
-        financial_institution_name:
-          type: string
-          description: The name of the financial institution.
-        financial_institution_address:
-          type: string
-          description: The address of the financial institution...
-        routing_number:
-          type: string
-          description: The routing number for the bank.
-        bank_swift_code:
-          type: string
-          description: The SWIFT/BIC code of the bank.
-      description: BankIntermediary Update for Patch and Put
+      description: "Represents an intermediary bank for electronic payments, including\
+        \ details for e-checks, wire transfers, and other electronic transactions."
     CashPayment:
       type: object
       properties:
         cash_payment_key:
           type: string
-          description: The unique key for the cash payment reco...
+          description: The unique key for the cash payment record.
         cash_payment_id:
           type: string
           description: The unique ID for the cash payment.
@@ -558,46 +329,20 @@ components:
           description: The destination of the cash payment.
         cash_for:
           type: string
-          description: A description of what the cash payment i...
+          description: A description of what the cash payment is for.
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
         preferred_indicator:
           type: boolean
-          description: A boolean indicator for whether this is ...
+          description: A boolean indicator for whether this is the preferred cash
+            payment method.
+          example: false
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         notes:
           $ref: "#/components/schemas/Memo"
-      description: cash.payment.desc
-    CashPaymentCreate:
-      required:
-      - cash_payment_key
-      type: object
-      description: CashPayment Create for Post
-      allOf:
-      - $ref: "#/components/schemas/CashPayment"
-    CashPaymentUpdate:
-      type: object
-      properties:
-        cash_to:
-          type: string
-          description: The destination of the cash payment.
-        notes:
-          $ref: "#/components/schemas/Memo"
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        cash_for:
-          type: string
-          description: A description of what the cash payment i...
-        cash_from:
-          type: string
-          description: The origin of the cash payment.
-        payment_status_type:
-          $ref: "#/components/schemas/PaymentStatusTypes"
-        preferred_indicator:
-          type: boolean
-          description: A boolean indicator for whether this is ...
-      description: CashPayment Update for Patch and Put
+      description: "Represents a cash payment, including details for e-cash, wire\
+        \ transfers, and other electronic transactions."
     CashPayments:
       type: array
       items:
@@ -613,7 +358,7 @@ components:
           description: The unique ID for the check payment.
         confirm_account_number:
           type: string
-          description: The confirmed bank account number for th...
+          description: The confirmed bank account number for the payment.
         bank_beneficiary:
           $ref: "#/components/schemas/BankBeneficiary"
         billing_address:
@@ -624,47 +369,52 @@ components:
           $ref: "#/components/schemas/PaymentStatusTypes"
         preferred_indicator:
           type: boolean
-          description: Indicates if this is the preferred payme...
-      description: check.payment.desc
-    CheckPaymentCreate:
-      required:
-      - check_payment_key
-      type: object
-      description: CheckPayment Create for Post
-      allOf:
-      - $ref: "#/components/schemas/CheckPayment"
-    CheckPaymentUpdate:
-      type: object
-      properties:
-        notes:
-          $ref: "#/components/schemas/Memo"
-        bank_beneficiary:
-          $ref: "#/components/schemas/BankBeneficiary"
-        billing_address:
-          $ref: "#/components/schemas/Address"
-        confirm_account_number:
-          type: string
-          description: The confirmed bank account number for th...
-        payment_status_type:
-          $ref: "#/components/schemas/PaymentStatusTypes"
-        preferred_indicator:
-          type: boolean
-          description: Indicates if this is the preferred payme...
-      description: CheckPayment Update for Patch and Put
+          description: Indicates if this is the preferred payment method.
+          example: false
+      description: "Check payments including e-check, wiring, etc..."
     CheckPayments:
       type: array
       items:
         $ref: "#/components/schemas/CheckPayment"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     CreditCard:
       type: object
       properties:
         credit_card_key:
           type: string
-          description: The unique key for the credit card recor...
+          description: The unique key for the credit card record.
         credit_card_id:
           type: string
           description: The unique ID of the credit card.
@@ -673,10 +423,10 @@ components:
           description: The full credit card number.
         last_four:
           type: string
-          description: The last four digits of the credit card ...
+          description: The last four digits of the credit card number.
         finger_print:
           type: string
-          description: A fingerprint or tokenized representatio...
+          description: A fingerprint or tokenized representation of the card.
         expiration_date:
           type: string
           description: The expiration date of the credit card.
@@ -685,7 +435,7 @@ components:
           $ref: "#/components/schemas/CreditCardTypes"
         network:
           type: string
-          description: The payment network of the credit card (...
+          description: "The payment network of the credit card (e.g., Visa, Mastercard)."
         funding_type:
           $ref: "#/components/schemas/FundingTypes"
         name_on_account:
@@ -712,15 +462,9 @@ components:
           $ref: "#/components/schemas/CreditCardStatusTypes"
         preferred_indicator:
           type: boolean
-          description: Indicates if this credit card is the pre...
-      description: credit.card.desc
-    CreditCardCreate:
-      required:
-      - credit_card_key
-      type: object
-      description: CreditCard Create for Post
-      allOf:
-      - $ref: "#/components/schemas/CreditCard"
+          description: Indicates if this credit card is the preferred payment method.
+          example: false
+      description: Represents a credit card used for payments.
     CreditCardStatusTypes:
       type: string
       description: types of credit card status.
@@ -751,52 +495,6 @@ components:
       - PRIVATE
       - UNKNOWN
       - OTHER
-    CreditCardUpdate:
-      type: object
-      properties:
-        credit_card_status_type:
-          $ref: "#/components/schemas/CreditCardStatusTypes"
-        card_number:
-          type: string
-          description: The full credit card number.
-        billing_address_href:
-          type: string
-          description: The URI to the billing address resource.
-          format: href
-        funding_type:
-          $ref: "#/components/schemas/FundingTypes"
-        billing_address:
-          $ref: "#/components/schemas/Address"
-        company_name_on_account:
-          type: string
-          description: The name of the company on the account.
-        expiration_date:
-          type: string
-          description: The expiration date of the credit card.
-          format: date
-        network:
-          type: string
-          description: The payment network of the credit card (...
-        country_code:
-          type: string
-          description: The country code of the billing address.
-        finger_print:
-          type: string
-          description: A fingerprint or tokenized representatio...
-        credit_card_type:
-          $ref: "#/components/schemas/CreditCardTypes"
-        name_on_account:
-          $ref: "#/components/schemas/PersonName"
-        last_four:
-          type: string
-          description: The last four digits of the credit card ...
-        postal_code:
-          type: string
-          description: The postal code of the billing address.
-        preferred_indicator:
-          type: boolean
-          description: Indicates if this credit card is the pre...
-      description: CreditCard Update for Patch and Put
     CreditCards:
       type: array
       items:
@@ -806,7 +504,7 @@ components:
       properties:
         electronic_payment_key:
           type: string
-          description: A unique key for the electronic payment ...
+          description: A unique key for the electronic payment method.
         bank_beneficiary:
           $ref: "#/components/schemas/BankBeneficiary"
         bank_intermediary:
@@ -820,30 +518,10 @@ components:
           $ref: "#/components/schemas/PaymentStatusTypes"
         preferred_indicator:
           type: boolean
-          description: Indicates whether this is the preferred ...
-      description: electronic.payment.desc
-    ElectronicPaymentCreate:
-      required:
-      - electronic_payment_key
-      type: object
-      description: ElectronicPayment Create for Post
-      allOf:
-      - $ref: "#/components/schemas/ElectronicPayment"
-    ElectronicPaymentUpdate:
-      type: object
-      properties:
-        notes:
-          $ref: "#/components/schemas/Memo"
-        bank_beneficiary:
-          $ref: "#/components/schemas/BankBeneficiary"
-        bank_intermediary:
-          $ref: "#/components/schemas/BankIntermediary"
-        payment_status_type:
-          $ref: "#/components/schemas/PaymentStatusTypes"
-        preferred_indicator:
-          type: boolean
-          description: Indicates whether this is the preferred ...
-      description: ElectronicPayment Update for Patch and Put
+          description: Indicates whether this is the preferred electronic payment
+            method.
+          example: false
+      description: "Electronic payments including e-check, wiring, etc..."
     ElectronicPayments:
       type: array
       items:
@@ -872,41 +550,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        context:
-          type: string
-          description: Context or domain of the identifier
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -946,7 +599,8 @@ components:
       properties:
         default_indicator:
           type: boolean
-          description: Indicates whether this is the default pa...
+          description: Indicates whether this is the default payment method.
+          example: false
         payment_method_key:
           type: string
           description: A unique key for the payment method.
@@ -965,7 +619,9 @@ components:
           $ref: "#/components/schemas/CashPayments"
         platform_payments:
           $ref: "#/components/schemas/PlatformPayments"
-      description: payment.method.desc
+      description: " How you physically or electronically transfer the money. This\
+        \ is what I initially listed: ACH, wire transfer, credit card, check, etc.\
+        \ They are the tools used to execute a payment."
     PaymentMethodCreate:
       required:
       - payment_method_key
@@ -978,7 +634,8 @@ components:
       properties:
         default_indicator:
           type: boolean
-          description: Indicates whether this is the default pa...
+          description: Indicates whether this is the default payment method.
+          example: false
         cash_payments:
           $ref: "#/components/schemas/CashPayments"
         credit_cards:
@@ -997,46 +654,30 @@ components:
       description: types of payment status.
       enum:
       - CREATED
-      - PENDING
-      - PROCESSING
-      - PROCESSED
-      - COMPLETED
-      - SUCCEEDED
-      - PAID
-      - REJECTED
       - SCHEDULED
       - SUBMITTED
-      - DEFERRED
-      - DEFERRED_INTERNAL
-      - CLEARED
       - FRAUD_REVIEW
-      - APPROVED
-      - ACCEPTED
-      - REQUIRES_ACTION
-      - REQUIRES_PAYMENT_STATUS
-      - AUTO_SCHEDULED
-      - AUTO_INITIATED
-      - MANUAL_INITIATED
-      - PENDING_PAYER_FUNDS
-      - FAILED
-      - DENIED
-      - EXPIRED
-      - CANCELLED
-      - VOIDED
-      - REVERSED
+      - PROCESSING
+      - SUCCEEDED
+      - CLEARED
+      - COMPLETED
+      - PAID
       - REFUNDED
-      - PAYROLL_PENDING
-      - PAYROLL_FINALIZED
-      - ACTIVE
-      - INACTIVE
-      - FUNDED
+      - VOIDED
+      - CANCELLED
+      - REJECTED
+      - DENIED
+      - FAILED
+      - EXPIRED
+      - DEFERRED
       - RETURNED
+      - INACTIVE
     PersonName:
       type: object
       properties:
         alias:
           type: string
-          description: Alternative or informal name.
+          description: Alternative or informal name or role.
           example: AJ
         family_name:
           type: string
@@ -1079,43 +720,49 @@ components:
           type: string
           description: Unique person name key.
           example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
         preferred_name:
           type: string
-          description: Preferred name used in informal situatio...
+          description: Preferred name used in informal situations.
           example: Ali
         salutation:
           type: string
-          description: "Salutation or title such as Mr., Ms., Dr..."
+          description: "Salutation or title such as Mr., Ms., Dr."
           example: Dr.
         honorific_prefix:
           type: string
-          description: Prefix title used before the person's na...
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
           example: Dr.
         honorific_suffix:
           type: string
-          description: Suffix title used after the person's nam...
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
           example: Jr.
         locale:
           type: string
-          description: Locale or language region associated wit...
+          description: Locale or language region associated with the person.
           example: en-US
         phonetic_family_name:
           type: string
-          description: Phonetic representation of the family na...
+          description: Phonetic representation of the family name.
           example: FAM-nee
         phonetic_given_name:
           type: string
-          description: Phonetic representation of the given nam...
+          description: Phonetic representation of the given name.
           example: GA-vin
         phonetic_middle_name:
           type: string
-          description: Phonetic representation of the middle na...
+          description: Phonetic representation of the middle name.
           example: MI-chal
         nationality:
           type: string
           description: Nationality of the person.
           example: Canadian
-      description: person.name.desc
+      description: a Name for a person
     PlatformPayment:
       type: object
       properties:
@@ -1124,59 +771,36 @@ components:
           description: A unique key for the platform payment.
         platform_payment_id:
           type: string
-          description: The unique ID assigned to the payment by...
+          description: The unique ID assigned to the payment by the platform.
         platform_name:
           type: string
-          description: The name of the platform used for the pa...
+          description: "The name of the platform used for the payment (e.g., 'Circle',\
+            \ 'PayPal')."
         settlement_currency:
           type: string
-          description: The currency in which the payment is set...
+          description: The currency in which the payment is settled.
         merchant_wallet_id:
           type: string
-          description: The ID of the merchant's wallet on the p...
+          description: The ID of the merchant's wallet on the payment platform.
         merchant_id:
           type: string
-          description: The unique ID of the merchant within the...
+          description: The unique ID of the merchant within the platform.
         source_type:
           type: string
-          description: "The type of payment source (e.g., 'credi..."
+          description: "The type of payment source (e.g., 'credit_card', 'bank_account')."
         source_id:
           type: string
-          description: The unique ID of the payment source with...
+          description: The unique ID of the payment source within the platform.
         source_addr:
           type: string
           description: The address of the payment source.
         payment_method_key:
           type: string
-          description: A reference key to the associated paymen...
+          description: A reference key to the associated payment method.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
-      description: platform.payment.desc
-    PlatformPaymentCreate:
-      required:
-      - platform_payment_key
-      type: object
-      description: PlatformPayment Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PlatformPayment"
-    PlatformPaymentUpdate:
-      type: object
-      properties:
-        settlement_currency:
-          type: string
-          description: The currency in which the payment is set...
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        platform_name:
-          type: string
-          description: The name of the platform used for the pa...
-        source_type:
-          type: string
-          description: "The type of payment source (e.g., 'credi..."
-        source_addr:
-          type: string
-          description: The address of the payment source.
-      description: PlatformPayment Update for Patch and Put
+      description: "Information for payments made via a third-party platform (e.g.,\
+        \ Circle, PayPal, Stripe)."
     PlatformPayments:
       type: array
       items:
@@ -1216,8 +840,7 @@ components:
           maxLength: 20
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: "Standardized code for the county. Pattern: ^[a-zA-Z0-9_]+$\
-            \ (Alphanumeric and underscores allowed)"
+          description: Standardized code for the county.
         position_codes:
           maxItems: 255
           minItems: 1
@@ -1225,51 +848,7 @@ components:
           type: array
           items:
             type: string
-      description: position.desc
-    PositionCreate:
-      required:
-      - position_key
-      type: object
-      description: Position Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Position"
-    PositionUpdate:
-      type: object
-      properties:
-        altitude:
-          type: string
-          description: Altitude of the location
-          example: "320"
-        county_code:
-          maxLength: 20
-          pattern: "^[a-zA-Z0-9_]+$"
-          type: string
-          description: "Standardized code for the county. Pattern: ^[a-zA-Z0-9_]+$\
-            \ (Alphanumeric and underscores allowed)"
-        bearing:
-          type: string
-          description: Bearing direction (compass)
-          example: NW
-        latitude:
-          type: string
-          description: Latitude of the location
-          example: "33.7490"
-        postal_code:
-          type: string
-          description: Postal code of the location
-          example: "30303"
-        position_codes:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        longitude:
-          type: string
-          description: Longitude of the location
-          example: "-84.3880"
-      description: Position Update for Patch and Put
+      description: "position meta-data that includes postal code, and lat/long"
     RewardEventTypes:
       type: string
       description: types of reward events.
@@ -1288,7 +867,7 @@ components:
       properties:
         reward_payment_key:
           type: string
-          description: The unique key for the reward payment re...
+          description: The unique key for the reward payment record.
         reward_payment_id:
           type: string
           description: The unique ID for the reward payment.
@@ -1300,7 +879,7 @@ components:
           description: The name of the reward.
         occurrence_date:
           type: string
-          description: The date and time the reward payment occ...
+          description: The date and time the reward payment occurred.
           format: date
         as_of_date:
           type: string
@@ -1312,7 +891,8 @@ components:
           format: date
         currency_indicator:
           type: boolean
-          description: A boolean indicator for whether the rewa...
+          description: A boolean indicator for whether the reward is in currency.
+          example: false
         reward_codes:
           maxItems: 255
           minItems: 1
@@ -1324,47 +904,8 @@ components:
           $ref: "#/components/schemas/Memo"
         reward_event_type:
           $ref: "#/components/schemas/RewardEventTypes"
-      description: reward.payment.desc
-    RewardPaymentCreate:
-      required:
-      - reward_payment_key
-      type: object
-      description: RewardPayment Create for Post
-      allOf:
-      - $ref: "#/components/schemas/RewardPayment"
-    RewardPaymentUpdate:
-      type: object
-      properties:
-        occurrence_date:
-          type: string
-          description: The date and time the reward payment occ...
-          format: date
-        currency_indicator:
-          type: boolean
-          description: A boolean indicator for whether the rewa...
-        as_of_date:
-          type: string
-          description: The effective date of the reward.
-          format: date
-        reward_codes:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        reward_name:
-          type: string
-          description: The name of the reward.
-        reward_payment_description:
-          $ref: "#/components/schemas/Memo"
-        expiration_date:
-          type: string
-          description: The expiration date of the reward.
-          format: date
-        reward_event_type:
-          $ref: "#/components/schemas/RewardEventTypes"
-      description: RewardPayment Update for Patch and Put
+      description: "Represents information about a reward payment, including its details,\
+        \ dates, and related metadata."
     RewardPayments:
       type: array
       items:

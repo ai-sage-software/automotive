@@ -1,0 +1,299 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - FinancialSnapshot
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-06T14:08:16Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+    FinancialReportTypes:
+      type: string
+      description: types of financial reports.
+      enum:
+      - TRIAL_BALANCE
+      - BALANCE_SHEET
+      - P_AND_L
+      - CASH_FLOW_STATEMENT
+      - BUDGET_VARIANCE
+      - CASH_FLOW_PROJECTION
+      - GENERAL_LEDGER_DETAIL
+    FinancialSnapshot:
+      type: object
+      properties:
+        financial_snapshot_id:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_snapshot_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        as_of_date:
+          type: string
+          description: The date and time the snapshot was processed and is accurate
+            as of.
+          format: date
+        criteria:
+          $ref: "#/components/schemas/FinancialSnapshotCriteria"
+        lines:
+          $ref: "#/components/schemas/FinancialSnapshotLineItems"
+      description: "A real-time aggregated financial report (P&L, Balance Sheet, or\
+        \ Trial Balance) generated as a view model for dashboards."
+    FinancialSnapshotCriteria:
+      type: object
+      properties:
+        financial_snapshot_criteria_id:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_snapshot_criteria_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        organization_id:
+          type: string
+          description: The unique identifier for the organization or business unit
+            to filter the financial data.
+        financial_report_type:
+          $ref: "#/components/schemas/FinancialReportTypes"
+        as_of_date:
+          type: string
+          description: The exact date for which the financial data should be calculated
+            and current as of.
+          format: date
+        comparison_date:
+          type: string
+          description: Optional date defining a previous period for comparison.
+          format: date
+        gl_account_filter_key:
+          type: string
+          description: Optional key for filtering the report to a single General Ledger
+            account or a set of accounts.
+      description: "Defines the criteria for requesting a real-time financial snapshot\
+        \ (P&L, Balance Sheet, Trial Balance)."
+    FinancialSnapshotLineItem:
+      type: object
+      properties:
+        financial_snapshot_line_item_id:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_snapshot_line_item_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        general_ledger_reference:
+          $ref: "#/components/schemas/GeneralLedgerReference"
+        account_name:
+          type: string
+          description: The descriptive name of the account line item.
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        current_balance:
+          $ref: "#/components/schemas/Money"
+        comparison_balance:
+          $ref: "#/components/schemas/Money"
+      description: A generic line item representing an aggregated balance for a specific
+        GL account or category within a financial snapshot.
+    FinancialSnapshotLineItems:
+      type: array
+      items:
+        $ref: "#/components/schemas/FinancialSnapshotLineItem"
+    GeneralLedgerReference:
+      type: object
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        context:
+          type: string
+          description: Context or domain of the reference
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-05-06T14:08:16Z
+      description: External system reference
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
+        currency_code:
+          type: string
+          description: money.currency.code.desc
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        value:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

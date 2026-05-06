@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - PriceList
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,22 +9,272 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
+    AddressReference:
+      type: object
+      properties:
+        address_reference_key:
+          type: string
+          description: A unique key for the address reference.
+        address_reference_id:
+          type: string
+          description: The unique value of the address reference.
+        address_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/AddressTypes"
+        address_line1:
+          type: string
+          description: "Primary address line (Street, PO Box, etc)."
+        address_line2:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+        address_line3:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+        address_line4:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+        address_line5:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+        city:
+          type: string
+          description: Name of the city.
+        country_code:
+          type: string
+          description: Full name of the country.
+        district:
+          type: string
+          description: Name of the district.
+        label:
+          maxLength: 50
+          type: string
+          description: Label or display name for the address.
+        postal_code:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: Primary postal or ZIP code.
+        state_province:
+          maxLength: 50
+          type: string
+          description: State or equivalent subdivision.
+      description: "A reference to an address, including its unique key and a list\
+        \ of its usage types."
+    AddressReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/AddressReference"
+    AddressTypes:
+      type: string
+      description: types of address.
+      enum:
+      - BILLING
+      - SHIPPING
+      - MAILING
+      - POSTAL
+      - HOME
+      - RESIDENCE
+      - WORK
+      - BUSINESS
+      - OFFICE
+      - PO_BOX
+      - LEGAL
+      - SERVICE
+      - DEALER
+      - CONTRACT
+      - AR_ADDRESS
+      - RECIPIENT
+      - DELIVERY
+      - DESTINATION
+      - ORIGINAL
+      - CURRENT
+      - PREVIOUS
+      - TEMPORARY
+      - VACATION
+      - GARAGE
+      - EMERGENCY
+      - REBATE
+      - SERVICE_CONTRACT
+      - INSURANCE
+      - PRODUCT
+      - ARCHIVE
+      - OTHER
+    AuthorizationLevel:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-05-05T18:15:24Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuthorizationLevel"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
+    CommunicationChannel:
+      type: object
+      properties:
+        communication_channel_key:
+          type: string
+          description: The unique key for the communication channel record.
+        communication_channel_id:
+          type: string
+          description: The unique ID for the communication channel.
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        value:
+          type: string
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
+        value_extension:
+          type: string
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
+        label:
+          type: string
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
+        locale:
+          $ref: "#/components/schemas/Locale"
+        preferred_indicator:
+          type: boolean
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
+          example: false
+        preferences:
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+      description: "Represents a communication channel, such as an email address or\
+        \ phone number, with associated preferences and authorizations."
+    CommunicationChannelTypes:
+      type: string
+      description: types of communication channels.
+      enum:
+      - PHONE
+      - CELL
+      - SMS
+      - VOICE
+      - VIDEO
+      - EMAIL
+      - APP
+      - SOCIAL_MEDIA
+      - URL
+      - BROADCAST
+      - DIRECT_MAIL
+      - PDA
+      - OTHER
+    CommunicationChannels:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationChannel"
+    CurrencyCode:
+      type: string
+      description: "ISO 4217 currency code, e.g., 'USD', 'EUR'."
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-05T18:15:24Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     DaysOfWeekTypes:
       type: string
       description: types of days of weeks.
@@ -36,9 +286,9 @@ components:
       - THURS
       - FRI
       - SAT
-    DurationUOMTypes:
+    DurationUomTypes:
       type: string
-      description: types of duration u o ms.
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -62,42 +312,56 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique key identifying the effective per...
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicator if the period is currently act...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
         exclusive_indicator:
           type: boolean
-          description: Indicator if the period is exclusive
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
         start_date_time:
           type: string
-          description: Start date and time of the effective per...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
+          example: 2026-05-05T18:15:24Z
         complete_date_time:
           type: string
-          description: Completion date and time of the effectiv...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
+          example: 2026-05-05T18:15:24Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: Value of the duration
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
-          description: Count of recurrence
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Criteria defining recurrence
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Indicator if recurrence is enabled
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
-      description: effective.period.desc
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
     Identifier:
       type: object
       properties:
@@ -116,41 +380,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        context:
-          type: string
-          description: Context or domain of the identifier
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -164,19 +403,19 @@ components:
           example: EVT-99887766
         lifecycle_event_key:
           type: string
-          description: The unique external key or business iden...
+          description: The unique external key or business identifier used in integrations.
           example: LIFECYCLE-879234
         actor_href:
           type: string
-          description: The href of the actor who initiated the ...
+          description: The href of the actor who initiated the event.
           format: href
         actor_id:
           type: string
-          description: The unique identifier of the actor who i...
+          description: The unique identifier of the actor who initiated the event.
           example: USR-24681357
         actor_name:
           type: string
-          description: The name of the actor who initiated the ...
+          description: The name of the actor who initiated the event.
           example: John Doe
         lifecycle_event_type:
           $ref: "#/components/schemas/LifecycleEventTypes"
@@ -186,11 +425,11 @@ components:
           format: date
         resource_href:
           type: string
-          description: The href of the resource associated with...
+          description: The href of the resource associated with the event.
           format: href
         resource_identifier:
           type: string
-          description: The unique identifier of the resource as...
+          description: The unique identifier of the resource associated with the event.
           example: RSC-88776655
         detail_name:
           type: string
@@ -214,14 +453,7 @@ components:
           example: ORDER_STATUS_CHANGED
         resource_types:
           $ref: "#/components/schemas/ResourceTypes"
-      description: lifecycle.event.desc
-    LifecycleEventCreate:
-      required:
-      - lifecycle_event_key
-      type: object
-      description: LifecycleEvent Create for Post
-      allOf:
-      - $ref: "#/components/schemas/LifecycleEvent"
+      description: Lifecycle Event
     LifecycleEventTypes:
       type: string
       description: types of lifecycle events.
@@ -243,54 +475,275 @@ components:
       - FAILED
       - VALIDATED
       - QUALIFIED
-    LifecycleEventUpdate:
-      type: object
-      properties:
-        occurrence_date:
-          type: string
-          description: The date and time the event occurred.
-          format: date
-        resource_href:
-          type: string
-          description: The href of the resource associated with...
-          format: href
-        detail_name:
-          type: string
-          description: The name of the event detail.
-          example: Order ID
-        lifecycle_event_type:
-          $ref: "#/components/schemas/LifecycleEventTypes"
-        resource_identifier:
-          type: string
-          description: The unique identifier of the resource as...
-          example: RSC-88776655
-        actor_name:
-          type: string
-          description: The name of the actor who initiated the ...
-          example: John Doe
-        detail_desc:
-          type: string
-          description: A description of the event detail.
-          example: The unique ID of the order being processed.
-        detail_value:
-          type: string
-          description: The value of the event detail.
-          example: ORD-44556677
-        detail_code:
-          type: string
-          description: The code for the event detail.
-          example: ORDER_STATUS_CHANGED
-        actor_href:
-          type: string
-          description: The href of the actor who initiated the ...
-          format: href
-        resource_types:
-          $ref: "#/components/schemas/ResourceTypes"
-      description: LifecycleEvent Update for Patch and Put
+      - STEP_TRANSITION
+      - STATUS_CHANGE
+      - QUEUED
+      - ACKNOWLEDGMENT
+      - REJECTED
+      - UNQUALIFIED
+      - INCOMPLETE
     LifecycleEvents:
       type: array
       items:
         $ref: "#/components/schemas/LifecycleEvent"
+    Locale:
+      type: object
+      properties:
+        locale_key:
+          type: string
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
+        locale_name:
+          type: string
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
+        description:
+          type: string
+          description: A detailed description of the alert message.
+        language_code:
+          type: string
+          description: ISO 639-1 two-letter language code.
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        currency_symbol:
+          type: string
+          description: The graphical symbol used for the currency.
+        timezone:
+          type: string
+          description: The IANA Time Zone database ID for regional time calculations.
+        number_format:
+          type: string
+          description: Regional pattern for decimal and thousands separators.
+        location_code:
+          type: string
+          description: The code of the inventory location or branch from which this
+            part is sourced.
+          example: WH001
+      description: not nullable
+    PartyReference:
+      type: object
+      properties:
+        party_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        party_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
+        party_key:
+          type: string
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        party_name:
+          type: string
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        individual_name:
+          $ref: "#/components/schemas/PersonName"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
+        authorization_code:
+          type: string
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
+        source_system_code:
+          type: string
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
+        context:
+          type: string
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
+        account_number:
+          type: string
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
+        party_relationship_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        snapshot_detail:
+          $ref: "#/components/schemas/Identifier"
+        address_references:
+          $ref: "#/components/schemas/AddressReferences"
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-05-05T18:15:24Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
+      description: External system identifier
+    PartyReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartyReference"
+    PartyRelationshipTypes:
+      type: string
+      description: types of party relationships.
+      enum:
+      - CORPORATION
+      - GROUP
+      - STORE
+      - BRANCH
+      - DEPARTMENT
+      - SECTION
+      - TEAM
+      - DEALERSHIP
+      - THIRD_PARTY
+      - VENDOR
+      - MERCHANT
+      - SUPPLIER
+      - PARTNER_ORGANIZATION
+      - AFFILIATE
+      - DISTRIBUTOR
+      - MANUFACTURER
+      - SERVICE_PROVIDER
+      - EMPLOYER
+      - INTERNAL_ORGANIZATION
+      - COST_CENTER
+      - FREIGHT_FORWARDER
+      - BUYER
+      - REGULATOR
+      - GOVERNMENT_AGENCY
+      - NON_PROFIT
+      - FRANCHISE
+      - SUBSIDIARY
+      - DIVISION
+      - JOINT_VENTURE
+      - AUDITOR
+      - ACTOR
+      - OEM
+      - PRIMARY_OEM
+      - DRIVER
+      - LIEN_HOLDER
+      - PROVIDER
+      - ACCOUNTABLE
+      - RESPONSIBLE
+      - CONSULT
+      - NOTIFY
+      - EXECUTE
+      - PART_OF
+      - MEMBERSHIP
+      - COMPOSED_IN
+      - GEN_MGR
+      - SALES_MGR
+      - CLOSING_MGR
+      - FI_MGR
+      - CONCIERGE_MGR
+      - SERVICE_MGR
+      - SALES_ASSOC
+      - BUSINESS_DEVELOPMENT
+      - SPECIALIST
+      - ADVISOR
+      - SERVICE_TECH
+      - CONCIERGE_STAFF
+      - VALET
+      - STAFF
+      - FINANCE
+      - PASSENGER
+      - CUSTOMER
+      - CO_SIGNER
+      - SPOUSE
+      - PARENT
+      - CHILD
+      - SIBLING
+      - LEGAL_GUARDIAN
+      - DEPENDENT
+      - EMERGENCY_CONTACT
+      - FAMILY_MEMBER
+      - FRIEND
+      - ACQUAINTANCE
+      - ASSOCIATE
+      - EX_SPOUSE
+      - PROFESSIONAL_CONTACT
+      - MANAGER
+      - CO_WORKER
+      - FINANCIAL_ADVISOR
+      - SELF
+      - ROMANTIC_PARTNER
+      - OTHER_FAMILY
+      - CAREGIVER
+      - MENTOR
+      - MENTEE
+      - HEIR
+      - TRUSTEE_PERSON
+      - REFERENCE_PERSONAL
+      - REFERENCE_PROFESSIONAL
+      - APPLICANT
+      - CO_APPLICANT
+      - AGENT
+      - BENEFICIARY
+      - GUARANTOR
+      - EMPLOYEE
+      - CONTRACTOR
+      - OWNER
+      - BUSINESS_PARTNER
+      - SERVICE_CONSUMER
+      - POLITICAL_AFFILIATE
+      - ADVISOR_CONSULTANT
+      - PROXY
+      - SHAREHOLDER
+      - INVESTOR
+      - CUSTODIAN
+      - SOLD_TO
+      - SHIP_TO
+      - PAYER
+      - PAYEE
+      - GIFT_TO
+      - LOAN_PROVIDER
+      - CREDIT_CARD_PROVIDER
+      - LESSEE
+      - LESSOR
+      - INSURED
+      - INSURER
+      - UNDERWRITER
+      - RECIPIENT
+      - TRANSACTION_FROM
+      - TRANSACTION_TO
+      - REMOVE
+      - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
     PayTypes:
       type: string
       description: types of pays.
@@ -301,30 +754,122 @@ components:
       - SUBLET
       - MANUFACTURER
       - DEALER
+    PersonName:
+      type: object
+      properties:
+        alias:
+          type: string
+          description: Alternative or informal name or role.
+          example: AJ
+        family_name:
+          type: string
+          description: Family or last name.
+          example: Smith
+        full_name:
+          type: string
+          description: Complete name as one string.
+          example: Alice Jane Smith
+        given_name:
+          type: string
+          description: First or given name.
+          example: Alice
+        identifiers_href:
+          type: string
+          description: Reference to external identifiers.
+          format: href
+          example: /identifiers/12345
+        maiden_name:
+          type: string
+          description: Previous family name before marriage.
+          example: Johnson
+        middle_name:
+          type: string
+          description: Middle name(s).
+          example: Jane
+        name_suffix:
+          type: string
+          description: "Suffix such as Jr., Sr., III."
+          example: Jr.
+        party_key:
+          type: string
+          description: External party key.
+          example: PARTY-KEY-123
+        person_key:
+          type: string
+          description: External person key.
+          example: PERSON-KEY-789
+        person_name_key:
+          type: string
+          description: Unique person name key.
+          example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
+        preferred_name:
+          type: string
+          description: Preferred name used in informal situations.
+          example: Ali
+        salutation:
+          type: string
+          description: "Salutation or title such as Mr., Ms., Dr."
+          example: Dr.
+        honorific_prefix:
+          type: string
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
+          example: Dr.
+        honorific_suffix:
+          type: string
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
+          example: Jr.
+        locale:
+          type: string
+          description: Locale or language region associated with the person.
+          example: en-US
+        phonetic_family_name:
+          type: string
+          description: Phonetic representation of the family name.
+          example: FAM-nee
+        phonetic_given_name:
+          type: string
+          description: Phonetic representation of the given name.
+          example: GA-vin
+        phonetic_middle_name:
+          type: string
+          description: Phonetic representation of the middle name.
+          example: MI-chal
+        nationality:
+          type: string
+          description: Nationality of the person.
+          example: Canadian
+      description: a Name for a person
     Price:
       type: object
       properties:
         display_value:
           type: string
-          description: Human-readable display value for the pri...
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
         locale:
           type: string
-          description: Locale used for formatting display value...
+          description: Locale used for formatting display value.
         value:
           type: string
-          description: The numeric value of the price (before t...
+          description: The numeric value of the price (before tax/cost breakdowns).
         tax_value:
           type: string
-          description: The calculated amount of tax applied to ...
+          description: The calculated amount of tax applied to the price.
         taxable_amount:
           type: string
           description: The portion of the price subject to tax.
         non_taxable_amount:
           type: string
-          description: The portion of the price not subject to ...
+          description: The portion of the price not subject to tax.
         total_amount:
           type: string
-          description: The total final price including all comp...
+          description: The total final price including all components and tax.
         total_cost_amount:
           type: string
           description: The total cost to the provider/seller.
@@ -333,19 +878,19 @@ components:
           description: The unit cost to the provider/seller.
         price_description:
           type: string
-          description: "A descriptive title for the price (e.g.,..."
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
         price_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Natural key or business identifier for the price entry.
         tax_included_indicator:
           type: boolean
-          description: Indicates whether tax is included in the...
+          description: Indicates whether tax is included in the base price (value).
+          example: false
         currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
+          $ref: "#/components/schemas/CurrencyCode"
         price_id:
           type: string
-          description: Unique system identifier for the price r...
+          description: Unique system identifier for the price record.
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
@@ -357,7 +902,10 @@ components:
             $ref: "#/components/schemas/PriceTypes"
         pay_type:
           $ref: "#/components/schemas/PayTypes"
-      description: price.desc
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Price that includes display value, currency, locale, and value,\
+        \ along with tax and cost components."
     PriceClassTypes:
       type: string
       description: types of price class.
@@ -400,13 +948,6 @@ components:
       - REFUND
       - REQUESTED
       - OTHER
-    PriceCreate:
-      required:
-      - price_key
-      type: object
-      description: Price Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Price"
     PriceList:
       type: object
       properties:
@@ -442,6 +983,8 @@ components:
           $ref: "#/components/schemas/Identifiers"
         price:
           $ref: "#/components/schemas/Price"
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
         geographic_boundaries:
           $ref: "#/components/schemas/Identifiers"
         codes:
@@ -471,7 +1014,8 @@ components:
           $ref: "#/components/schemas/Identifiers"
         part_identifiers:
           $ref: "#/components/schemas/Identifiers"
-      description: price.list.desc
+      description: "Price details for this product, including schedule, currency,\
+        \ pricing type, and tax financial indicators."
     PriceListCreate:
       required:
       - price_list_key
@@ -523,6 +1067,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
         price_unit_detail:
           $ref: "#/components/schemas/Identifiers"
         lifecycle_events:
@@ -545,29 +1091,22 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier for the price sensitiv...
+          description: Unique identifier for the price sensitivity
         price_sensitivity_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Business key for the price sensitivity c...
+          description: Business key for the price sensitivity classification
         sensitivity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
         quantity_level_types:
           $ref: "#/components/schemas/PriceSensitivityTypes"
         description:
           type: string
-          description: Description of this price sensitivity cl...
+          description: Description of this price sensitivity classification
         alias:
           $ref: "#/components/schemas/Codes"
       description: nullable
-    PriceSensitivityCreate:
-      required:
-      - price_sensitivity_key
-      type: object
-      description: PriceSensitivity Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PriceSensitivity"
     PriceSensitivityTypes:
       type: string
       description: types of price sensitivitys.
@@ -577,19 +1116,6 @@ components:
       - HIGH
       - ELASTIC
       - INELASTIC
-    PriceSensitivityUpdate:
-      type: object
-      properties:
-        quantity_level_types:
-          $ref: "#/components/schemas/PriceSensitivityTypes"
-        description:
-          type: string
-          description: Description of this price sensitivity cl...
-        alias:
-          $ref: "#/components/schemas/Codes"
-        sensitivity_level_types:
-          $ref: "#/components/schemas/PriceSensitivityTypes"
-      description: PriceSensitivity Update for Patch and Put
     PriceTypes:
       type: string
       description: types of prices.
@@ -616,24 +1142,51 @@ components:
       - RETAIL
       - MSRP
       - WHOLESALE
-      - DEALER
+      - DEALER_COST
+      - TOTAL_DEALER_COST
+      - TOTAL_DEALER_OPTION_COST
+      - TOTAL_DEALER_OPTION_SELLING_PRICE
+      - RECONDITIONING_COST
+      - RESIDUAL_VALUE
+      - TDA
+      - FUEL
+      - TOTAL_HOLD_BACK
+      - PPO_HOLD_BACK
+      - WRF
       - TRADE
       - CORE
       - LANDED
+      - FREIGHT_CHARGE
+      - MONEY
+      - INTERNET
+      - BALANCE
+      - BASE
+      - BASE_MSRP
+      - TOTAL_MSRP
+      - TOTAL_OPTION_MSRP
+      - PRODUCT_TOTAL
+      - FINANCE_TOTAL
+      - APPLIED_REWARD_TOTAL
+      - UPFRONT_PAYMENT_TOTAL
+      - REMOVED_EQUIPT_TOTAL
+      - ADJUSTED_MSRP
+      - GROSS_SALE
+      - NET_SALE
+      - NET_SALE_REDUCTION_PRICE
+      - DISCOUNT_TOTAL
+      - DISCOUNT_PACKAGES_TOTAL
+      - CREDIT_TOTAL
+      - FEE_TOTAL
+      - REBATE_TOTAL
+      - TAX_TOTAL
+      - TRADE_IN_TOTAL
+      - TRADE_IN_EQUITY_TOTAL
       - PROMOTIONAL
       - DISCOUNT
       - CONTRACT
       - SALE
-      - CUSTOMER
-      - AFFILIATE
-      - ONLINE
-      - STORE
-      - REGION
-      - LOCATION
-      - ESTIMATED
-      - NET
-      - PURCHASE
-      - MONEY
+      - PREMIUM_TOTAL
+      - DISABILITY_PREMIUM_TOTAL
       - TAXABLE
       - NONTAXABLE
       - TOTAL
@@ -641,58 +1194,16 @@ components:
       - TOTAL_COST
       - UNIT_COST
       - TAX
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
       - OTHER
-    PriceUpdate:
-      type: object
-      properties:
-        display_value:
-          type: string
-          description: Human-readable display value for the pri...
-        unit_cost_amount:
-          type: string
-          description: The unit cost to the provider/seller.
-        locale:
-          type: string
-          description: Locale used for formatting display value...
-        currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-        tax_value:
-          type: string
-          description: The calculated amount of tax applied to ...
-        total_amount:
-          type: string
-          description: The total final price including all comp...
-        total_cost_amount:
-          type: string
-          description: The total cost to the provider/seller.
-        price_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/PriceTypes"
-        tax_included_indicator:
-          type: boolean
-          description: Indicates whether tax is included in the...
-        price_description:
-          type: string
-          description: "A descriptive title for the price (e.g.,..."
-        pay_type:
-          $ref: "#/components/schemas/PayTypes"
-        non_taxable_amount:
-          type: string
-          description: The portion of the price not subject to ...
-        value:
-          type: string
-          description: The numeric value of the price (before t...
-        taxable_amount:
-          type: string
-          description: The portion of the price subject to tax.
-      description: Price Update for Patch and Put
     ResourceTypes:
       type: string
       description: types of resources.
@@ -730,6 +1241,15 @@ components:
       - FEE
       - INCENTIVE
       - DEALERSHIP
+      - PART
+      - ACCESSORIES
+      - PURCHASE_ORDER
+      - VEHICLE_OPTION
+      - RENTAL
+      - SUBSCRIPTION
+      - INSURANCE
+      - WARRANTY
+      - SERVICE
       - APPOINTMENT
       - OTHER
     TimeSlot:
@@ -737,31 +1257,36 @@ components:
       properties:
         time_slot_id:
           type: string
-          description: Unique identifier for the time slot reco...
+          description: Technical unique identifier (GUID) for the time slot record.
+          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
           type: string
-          description: Unique business key for the time slot.
+          description: Natural business key for the time slot within its specific
+            context.
+          example: TS-MON-MORNING-SHIFT
         time_slot_source:
           type: string
-          description: Unique identifier for the time slot sour...
+          description: The originating system or calendar providing this availability
+            data.
           example: GOOGLE_CALENDAR
-        end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        end_time:
-          type: string
-          description: End time in HH:mm format.
-          format: date-time
-        recurring_indicator:
-          type: boolean
-          description: Indicates if the time slot is recurring.
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: Start time in HH:mm format.
+          description: The local start time in 24-hour ISO 8601 format.
           format: date-time
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local end time in 24-hour ISO 8601 format.
+          format: date-time
+        recurring_indicator:
+          type: boolean
+          description: Indicates if this time slot is part of a repeating pattern.
+          example: true
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -770,14 +1295,13 @@ components:
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
-      description: time.slot.desc
+          $ref: "#/components/schemas/Codes"
+      description: "Defines a specific window of time, often within a recurring schedule,\
+        \ used for service availability or appointment booking."
+    TimeSlots:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeSlot"
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.

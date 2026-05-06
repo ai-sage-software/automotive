@@ -2,104 +2,112 @@
 --- 
 
 
-**context**: party_identity <br /> **root**: party
+info.add(new String[] {"party_identity","party"});
 
-**context**: party_identity <br /> **root**: dealer
+info.add(new String[] {"party_identity","dealer"});
 
-**context**: party_identity <br /> **root**: org_profile
+info.add(new String[] {"party_identity","org_profile"});
 
-**context**: sales_operations <br /> **root**: retail_delivery_report
+info.add(new String[] {"sales_operations","retail_delivery_report"});
 
-**context**: core <br /> **root**: geographic_boundary
+info.add(new String[] {"core","geographic_boundary"});
 
-**context**: core <br /> **root**: lifecycle_event
+info.add(new String[] {"core","effective_period"});
 
-**context**: core <br /> **root**: notification_reference
+info.add(new String[] {"core","metric_value"});
 
-**context**: payment <br /> **root**: credit_authorization
+info.add(new String[] {"core","lifecycle_event"});
 
-**context**: human_resources <br /> **root**: payroll_run
+info.add(new String[] {"core","notification_reference"});
 
-**context**: human_resources <br /> **root**: staff_member
+info.add(new String[] {"core","garage"});
 
-**context**: human_resources <br /> **root**: payroll_stub
+info.add(new String[] {"core","media"});
 
-**context**: human_resources <br /> **root**: payroll_cycle
+info.add(new String[] {"payment","credit_authorization"});
 
-**context**: inventory_vehicle <br /> **root**: warehouse
+info.add(new String[] {"human_resources","payroll_run"});
 
-**context**: subscriptions <br /> **root**: price_plan
+info.add(new String[] {"human_resources","staff_member"});
 
-**context**: inventory <br /> **root**: part_pick_list
+info.add(new String[] {"human_resources","payroll_stub"});
 
-**context**: parts <br /> **root**: part_search
+info.add(new String[] {"human_resources","payroll_cycle"});
 
-**context**: parts <br /> **root**: part_master
+info.add(new String[] {"inventory_vehicle","warehouse"});
 
-**context**: parts <br /> **root**: part_search_criteria
+info.add(new String[] {"subscriptions","price_plan"});
 
-**context**: parts <br /> **root**: part_order
+info.add(new String[] {"inventory","part_pick_list"});
 
-**context**: parts <br /> **root**: bill_of_material
+info.add(new String[] {"parts","part_search"});
 
-**context**: parts <br /> **root**: part_inventory
+info.add(new String[] {"parts","part_master"});
 
-**context**: parts <br /> **root**: part
+info.add(new String[] {"parts","part_search_criteria"});
 
-**context**: parts <br /> **root**: price_list
+info.add(new String[] {"parts","part_order"});
 
-**context**: parts <br /> **root**: price_criteria
+info.add(new String[] {"parts","bill_of_material"});
 
-**context**: parts <br /> **root**: part_invoice
+info.add(new String[] {"parts","part_inventory"});
 
-**context**: finance <br /> **root**: budget_variance_report
+info.add(new String[] {"parts","part"});
 
-**context**: finance <br /> **root**: cash_flow_projection
+info.add(new String[] {"parts","price_list"});
 
-**context**: finance <br /> **root**: financial_snapshot
+info.add(new String[] {"parts","price_criteria"});
 
-**context**: finance <br /> **root**: payroll_run
+info.add(new String[] {"parts","part_invoice"});
 
-**context**: finance <br /> **root**: staff_member
+info.add(new String[] {"finance","budget_variance_report"});
 
-**context**: finance <br /> **root**: payment_event
+info.add(new String[] {"finance","cash_flow_projection"});
 
-**context**: finance <br /> **root**: payment
+info.add(new String[] {"finance","financial_snapshot"});
 
-**context**: finance <br /> **root**: subsidiary_ledger_transaction
+info.add(new String[] {"finance","payroll_run"});
 
-**context**: finance <br /> **root**: payment_method
+info.add(new String[] {"finance","staff_member"});
 
-**context**: finance <br /> **root**: journal_entry_transaction
+info.add(new String[] {"finance","payment_event"});
 
-**context**: finance <br /> **root**: receipt
+info.add(new String[] {"finance","payment"});
 
-**context**: finance <br /> **root**: financial_forecast
+info.add(new String[] {"finance","subsidiary_ledger_transaction"});
 
-**context**: finance <br /> **root**: payroll_stub
+info.add(new String[] {"finance","payment_method"});
 
-**context**: finance <br /> **root**: general_ledger_account
+info.add(new String[] {"finance","journal_entry_transaction"});
 
-**context**: finance <br /> **root**: control_account
+info.add(new String[] {"finance","receipt"});
 
-**context**: finance <br /> **root**: invoice
+info.add(new String[] {"finance","financial_forecast"});
 
-**context**: finance <br /> **root**: accounting_period
+info.add(new String[] {"finance","payroll_stub"});
 
-**context**: finance <br /> **root**: budget
+info.add(new String[] {"finance","general_ledger_account"});
 
-**context**: service <br /> **root**: repair_order
+info.add(new String[] {"finance","control_account"});
 
-**context**: service <br /> **root**: multi_point_inspection
+info.add(new String[] {"finance","invoice"});
 
-**context**: service <br /> **root**: part_pick_list
+info.add(new String[] {"finance","accounting_period"});
 
-**context**: service <br /> **root**: labor_operation
+info.add(new String[] {"finance","budget"});
 
-**context**: service <br /> **root**: retail_delivery_report
+info.add(new String[] {"service_operations","retail_delivery_report"});
 
-**context**: service <br /> **root**: vehicle_identifier
+info.add(new String[] {"service","repair_order"});
 
-**context**: service <br /> **root**: service_invoice
+info.add(new String[] {"service","multi_point_inspection"});
 
-**context**: logistics_fulfillment <br /> **root**: shipment
+info.add(new String[] {"service","part_pick_list"});
+
+info.add(new String[] {"service","labor_operation"});
+
+info.add(new String[] {"service","vehicle_identifier"});
+
+info.add(new String[] {"service","service_invoice"});
+
+info.add(new String[] {"logistics_fulfillment","shipment"});

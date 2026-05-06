@@ -1,100 +1,61 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
-  description: A standardized interface for Automotive Retail ...
+  title: Automotive Retail Systems API - CreditAuthorization
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: //v1_0_0
+- url: https://api.starstandard.org/v1/v1_0_0
+  description: Production server
+- url: https://sandbox.starstandard.org/v1/v1_0_0
+  description: Sandbox for testing
 security:
 - industry-oauth:
   - standard:read
 - member-api-key: []
 - {}
 tags:
-- name: Money
-  description: Operations related to Money
-- name: PartyReference
-  description: Operations related to PartyReference
-- name: Program
-  description: Operations related to Program
 - name: CreditAuthorization
-  description: Operations related to CreditAuthorization
-- name: EventMessage
-  description: Operations related to EventMessage
-- name: Price
-  description: Operations related to Price
-- name: Default
-  description: Operations related to Default
+  description: CreditAuthorization Controlled Root
 paths:
   /credit-authorizations:
     get:
       tags:
-      - CreditAuthorization
-      summary: Retrieve a list of CreditAuthorization entities.
-      description: list CreditAuthorization By
-      operationId: listCreditAuthorization
+      - CreditAuthorizations
+      summary: Returns a paginated list of credit authorization
+      description: a list of CreditAuthorization
+      operationId: listCreditAuthorizations
       parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: A list of CreditAuthorization entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/CreditAuthorization"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
+          $ref: "#/components/responses/CreditAuthorizationCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -103,18 +64,35 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     post:
       tags:
-      - CreditAuthorization
-      summary: Create a new CreditAuthorization entity.
-      description: Create CreditAuthorization
+      - CreditAuthorizations
+      summary: create credit authorization
+      description: create CreditAuthorization
       operationId: createCreditAuthorization
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: CreditAuthorization data to create the new reso...
         content:
           application/json:
             schema:
@@ -122,54 +100,52 @@ paths:
         required: true
       responses:
         "201":
-          description: CreditAuthorization created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /credit-authorizations/KEY78G
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreditAuthorization"
+          $ref: "#/components/responses/CreditAuthorizationCreatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /credit-authorizations/{creditAuthorizationKey}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /credit-authorizations/{credit-authorization-key}:
     get:
       tags:
-      - CreditAuthorization
-      summary: Retrieve a specific CreditAuthorization entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}"
-      operationId: getCreditAuthorizationById
+      - CreditAuthorizations
+      summary: Retrieve a single item scoped by a key CreditAuthorization entities.
+      operationId: getCreditAuthorizationByKey
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/CreditAuthorizationKey"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: The requested CreditAuthorization entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreditAuthorizationResponse"
+          $ref: "#/components/responses/CreditAuthorizationSingleResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -178,43 +154,45 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     put:
       tags:
-      - CreditAuthorization
-      summary: Replace a CreditAuthorization entity.
-      description: replace CreditAuthorization
-      operationId: replaceCreditAuthorization
+      - CreditAuthorizations
+      summary: Replace values in a single item scoped by a key CreditAuthorization
+        entities.
+      operationId: replaceCreditAuthorizationByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/CreditAuthorizationKey"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreditAuthorization"
+              $ref: "#/components/schemas/CreditAuthorizationUpdate"
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreditAuthorization"
+          $ref: "#/components/responses/CreditAuthorizationUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -227,21 +205,39 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     delete:
       tags:
-      - CreditAuthorization
-      summary: Delete a CreditAuthorization entity
-      description: Marks the CreditAuthorization entity as inactiv...
-      operationId: deleteCreditAuthorizationEntity
+      - CreditAuthorizations
+      description: delete a CreditAuthorization
+      operationId: deleteCreditAuthorization
       parameters:
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/ReasonQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/CreditAuthorizationKey"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       responses:
+        "200":
+          $ref: "#/components/responses/CreditAuthorizationSingleResponse"
         "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/NoContentSuccess"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
@@ -250,24 +246,35 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     patch:
       tags:
-      - CreditAuthorization
-      summary: Partially update a CreditAuthorization entity.
-      description: Partially update a CreditAuthorization
-      operationId: updatePartialCreditAuthorization
+      - CreditAuthorizations
+      summary: Update a single item scoped by a key CreditAuthorization
+      description: update a single item
+      operationId: updateCreditAuthorizationByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/CreditAuthorizationKey"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: Included Fields to be updated will be modified.
         content:
           application/merge-patch+json:
             schema:
@@ -275,18 +282,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreditAuthorization"
+          $ref: "#/components/responses/CreditAuthorizationUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -299,1418 +295,43 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the specific CreditAuthorization.
-      required: true
-      schema:
-        type: string
-        example: KEY78A
-  /credit-authorizations/{creditAuthorizationKey}/money:
-    get:
-      tags:
-      - Money
-      summary: Retrieve a list of Money entities scoped by cre...
-      description: list Money By CreditAuthorizationKey
-      operationId: listMoneyByCreditAuthorizationKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Money entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Money"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: true
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /credit-authorizations/{creditAuthorizationKey}/money/{moneyKey}:
-    get:
-      tags:
-      - Money
-      summary: Retrieve a specific Money entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}/money/{moneyKey}"
-      operationId: getMoneyById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Money entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Money"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: moneyKey
-      in: path
-      description: The unique identifier for the specific Money.
-      required: true
-      schema:
-        type: string
-        example: KEY78Am
-  /credit-authorizations/{creditAuthorizationKey}/party-references:
-    get:
-      tags:
-      - PartyReference
-      summary: Retrieve a list of PartyReference entities scop...
-      description: list PartyReference By CreditAuthorizationKey
-      operationId: listPartyReferenceByCreditAuthorizationKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of PartyReference entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PartyReference"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - PartyReference
-      summary: Create a new PartyReference entity.
-      description: Create PartyReference
-      operationId: createPartyReference
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: PartyReference data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PartyReferenceCreate"
-        required: true
-      responses:
-        "201":
-          description: PartyReference created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/credit-authorizations{creditAuthorizationKey}party-references/KEY78G1x"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PartyReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}:
-    get:
-      tags:
-      - PartyReference
-      summary: Retrieve a specific PartyReference entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}/party-references/{partyReferenceKey}"
-      operationId: getPartyReferenceById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested PartyReference entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PartyReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - PartyReference
-      summary: Replace a PartyReference entity.
-      description: replace PartyReference
-      operationId: replacePartyReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PartyReference"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PartyReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - PartyReference
-      summary: Delete a PartyReference entity
-      description: Marks the PartyReference entity as inactive or ...
-      operationId: deletePartyReferenceEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - PartyReference
-      summary: Partially update a PartyReference entity.
-      description: Partially update a PartyReference
-      operationId: updatePartialPartyReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/PartyReferenceUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PartyReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: partyReferenceKey
-      in: path
-      description: The unique identifier for the specific PartyReference.
-      required: true
-      schema:
-        type: string
-        example: KEY78Amq
-  /credit-authorizations/{creditAuthorizationKey}/programs:
-    get:
-      tags:
-      - Program
-      summary: Retrieve a list of Program entities scoped by c...
-      description: list Program By CreditAuthorizationKey
-      operationId: listProgramByCreditAuthorizationKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Program entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Program"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: true
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - Program
-      summary: Create a new Program entity.
-      description: Create Program
-      operationId: createProgram
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Program data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ProgramCreate"
-        required: true
-      responses:
-        "201":
-          description: Program created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/credit-authorizations{creditAuthorizationKey}programs/KEY78G1x5"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Program"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /credit-authorizations/{creditAuthorizationKey}/programs/{programKey}:
-    get:
-      tags:
-      - Program
-      summary: Retrieve a specific Program entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}/programs/{programKey}"
-      operationId: getProgramById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Program entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Program"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - Program
-      summary: Replace a Program entity.
-      description: replace Program
-      operationId: replaceProgram
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Program"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Program"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - Program
-      summary: Delete a Program entity
-      description: Marks the Program entity as inactive or removes...
-      operationId: deleteProgramEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - Program
-      summary: Partially update a Program entity.
-      description: Partially update a Program
-      operationId: updatePartialProgram
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/ProgramUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Program"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: programKey
-      in: path
-      description: The unique identifier for the specific Program.
-      required: true
-      schema:
-        type: string
-        example: KEY78AmqA
-  /credit-authorizations/{creditAuthorizationKey}/event-messages:
-    get:
-      tags:
-      - EventMessage
-      summary: Retrieve a list of EventMessage entities scoped...
-      description: list EventMessage By CreditAuthorizationKey
-      operationId: listEventMessageByCreditAuthorizationKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of EventMessage entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/EventMessage"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /credit-authorizations/{creditAuthorizationKey}/event-messages/{eventMessageKey}:
-    get:
-      tags:
-      - EventMessage
-      summary: Retrieve a specific EventMessage entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}/event-messages/{eventMessageKey}"
-      operationId: getEventMessageById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested EventMessage entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EventMessage"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: eventMessageKey
-      in: path
-      description: The unique identifier for the specific EventMessage.
-      required: true
-      schema:
-        type: string
-        example: KEY78AmqA0
-  /credit-authorizations/{creditAuthorizationKey}/prices:
-    get:
-      tags:
-      - Price
-      summary: Retrieve a list of Price entities scoped by cre...
-      description: list Price By CreditAuthorizationKey
-      operationId: listPriceByCreditAuthorizationKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Price entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Price"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: true
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /credit-authorizations/{creditAuthorizationKey}/prices/{priceKey}:
-    get:
-      tags:
-      - Price
-      summary: Retrieve a specific Price entity.
-      description: "Standard GET operation for /credit-authorizations/{creditAuthorizationKey}/prices/{priceKey}"
-      operationId: getPriceById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Price entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Price"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: creditAuthorizationKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: priceKey
-      in: path
-      description: The unique identifier for the specific Price.
-      required: true
-      schema:
-        type: string
-        example: KEY78AmqA0d
-  /credit-authorizations/health:
-    get:
-      tags:
-      - Default
-      summary: Health Check
-      description: Public endpoint to verify service availability.
-      operationId: getCreditAuthorizationHealth
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: Service is healthy
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - status
-                - version
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: UP
-                    enum:
-                    - UP
-                    - DOWN
-                    - MAINTENANCE
-                  version:
-                    type: string
-                    description: The version of the ontology implemented by this service.
-                    example: 1.0.0
-                  timestamp:
-                    type: string
-                    description: Server time in ISO-8601 format.
-                    format: date-time
-                    example: 2025-12-21T23:00:00Z
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
       security:
-      - {}
-  /credit-authorizations/batch:
-    post:
-      tags:
-      - Default
-      summary: Bulk create credit-authorizations
-      description: Bulk Create of CreditAuthorization
-      operationId: createCreditAuthorizationBatch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                items:
-                  maxItems: 100
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/CreditAuthorizationCreate"
-      responses:
-        "200":
-          description: Batch processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /credit-authorizations/batch/4308497413751505708
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  succeeded:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/CreditAuthorization"
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        index:
-                          type: integer
-                          format: int32
-                        error:
-                          $ref: "#/components/schemas/ErrorDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-  /credit-authorizations/exports:
-    post:
-      tags:
-      - Default
-      summary: Initiate a bulk CreditAuthorization export
-      description: Standard POST operation for /credit-authorizations/exports
-      operationId: initiateCreditAuthorizationExport
-      parameters:
-      - name: Idempotency-Key
-        in: header
-        description: Unique string to prevent duplicate export jobs for the same request
-        required: false
-        schema:
-          type: string
-          format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                format:
-                  type: string
-                  example: ' 4dab7cd6'
-                  default: PARQUET
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                  - TOON
-                date_range:
-                  type: object
-                  properties:
-                    start:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                    end:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                data_contract_key:
-                  type: string
-                  description: "The identifier of the specific data contract/projection\
-                    \ (e.g., 'customer_contact_v1')"
-                  example: contact_details_only
-                compression:
-                  type: string
-                  description: "The compression algorithm to apply. ZSTD is recommended\
-                    \ for \nbalancing high compression ratios with blazing decompression\
-                    \ speeds."
-                  example: ZSTD
-                  default: ZSTD
-                  enum:
-                  - SNAPPY
-                  - GZIP
-                  - LZO
-                  - ZSTD
-                compression_level:
-                  maximum: 22
-                  minimum: 1
-                  type: string
-                  description: "Tunable intensity for ZSTD. Use lower levels (1-3)\
-                    \ for speed, higher levels (19+) for expensive bandwidth scenarios."
-                  default: "3"
-                destination:
-                  type: object
-                  properties:
-                    retrieval_url:
-                      type: string
-                      description: The URL where the user intends to receive or pull
-                        the data
-                      format: uri
-                  description: Configuration for file retrieval
-                notification:
-                  type: object
-                  properties:
-                    webhook_url:
-                      type: string
-                      format: uri
-                      example: https://client-system.com/callbacks/exports
-                    signature_key:
-                      type: string
-                      description: A secret key used to sign the webhook payload for
-                        security
-                  description: "Optional: Callback configuration for completion alerts"
-                dry_run:
-                  type: boolean
-                  description: "If true, the system validates the request and returns\
-                    \ potential violations or metadata (like estimated size) without\
-                    \ starting the job."
-                  example: false
-                  default: false
-              example: PARQUET
-      responses:
-        "200":
-          description: "Dry run results: validation and cost estimation metadata."
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /credit-authorizations/exports/471731376280070282
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: VALIDATED
-                  estimated_metrics:
-                    type: object
-                    properties:
-                      record_count:
-                        type: integer
-                        format: int32
-                        example: 1250000
-                      estimated_uncompressed_gb:
-                        type: number
-                        example: 4.2
-                      estimated_compressed_gb:
-                        type: number
-                        description: "Prediction based on the chosen compression (e.g.,\
-                          \ ZSTD)"
-                        example: 0.85
-                      estimated_processing_time_ms:
-                        type: integer
-                        format: int32
-                        example: 45000
-                    description: Predicted impact of the export job
-                  validation_results:
-                    type: object
-                    properties:
-                      is_executable:
-                        type: boolean
-                        example: true
-                      warnings:
-                        type: array
-                        example:
-                        - "Large export detected: ensure destination storage exceeds\
-                          \ 1GB"
-                        items:
-                          type: string
-                      violations:
-                        type: array
-                        description: Business rule or data contract violations
-                        items:
-                          $ref: "#/components/schemas/ProblemDetail"
-                  suggested_optimizations:
-                    type: array
-                    description: Feedback for the agent to improve request efficiency
-                    items:
-                      type: string
-                      example: Switch to PARQUET for 30% faster processing of this
-                        specific data contract
-                description: "Metadata returned when dry_run is true, allowing agentic\
-                  \ pre-flight reasoning."
-        "202":
-          description: Export job successfully created and accepted.
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions.
-              schema:
-                type: string
-                example: "</exports/capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created export resource.
-              schema:
-                type: string
-                example: /accounting-periods/exports/2379845498403762952
-        "409":
-          description: "Conflict: Job with this Idempotency-Key already exists"
-        "422":
-          description: Unprocessable Entity - Business Rule Violation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-      callbacks:
-        onExportCompleted:
-          '{$request.body#/notification/webhook_url}':
-            post:
-              description: Sent when the export job reaches a terminal state (COMPLETED
-                or FAILED)
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/ExportNotification"
-              responses:
-                "200":
-                  description: Webhook received
-  /credit-authorizations/exports/{exportId}:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /credit-authorizations/{credit-authorization-key}/programs:
     get:
       tags:
-      - Default
-      summary: Get export status
-      description: Get Export Status of CreditAuthorization
-      operationId: getCreditAuthorizationExportStatus
+      - Programs
+      summary: Returns a paginated list of program
+      description: a list of Program
+      operationId: listProgramsByCredit-authorization-key
       parameters:
-      - name: exportId
-        in: path
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Current status and file URLs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExportJob"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-  /credit-authorizations/{creditAuthorizationKey}/commands:
-    post:
-      tags:
-      - Default
-      summary: Execute a business workflow on CreditAuthorization
-      description: Single entry point for all CreditAuthorization state-changing intents.
-      operationId: executeCreditAuthorizationCommand
-      parameters:
-      - name: creditAuthorizationKey
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Command intent and parameters
-        content:
-          application/json:
-            schema:
-              required:
-              - type
-              - method
-              - params
-              - id
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: jsonrpc
-                  default: jsonrpc
-                jsonrpc:
-                  type: string
-                  example: "2.0"
-                  default: "2.0"
-                method:
-                  type: string
-                  description: star.order.update)
-                id:
-                  type: string
-                  description: "match the response with request. If omitted, Notification\
-                    \ the server will not respond."
-                version:
-                  type: string
-                  description: "2.0"
-                workflow_state:
-                  type: string
-                  description: "The intent of the command (e.g., CREATED, DELETED)"
-                  enum:
-                  - CREATED
-                  - DELETED
-                context:
-                  type: object
-                  additionalProperties: true
-                  description: context payload required for this specific command
-                    type
-                params:
-                  $ref: "#/components/schemas/CreditAuthorization"
-      responses:
-        "200":
-          description: Commands processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/credit-authorizations/{creditAuthorizationKey}/commands/7531645478076053194"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The execution status of the command
-                    example: SUCCESS
-                    enum:
-                    - SUCCESS
-                    - FAILED
-                    - PENDING
-                    - PROCESSING
-                    - VALIDATION_ERROR
-                    - PARTIAL_SUCCESS
-                    - REQUIRES_ACTION
-                    - MITIGATION_APPLIED
-                  message:
-                    type: string
-                    description: A human-readable summary or error detail
-                    example: "Invoice #531e47e1 has been successfully cancelled."
-                  command_id:
-                    type: string
-                    description: The tracking ID for this specific command execution
-                    format: identifier
-                  code:
-                    type: string
-                    description: detailed code for workflow business processing
-                    example: b4a4450d
-                  retry_after:
-                    type: string
-                    description: "For PENDING or PROCESSING statuses, retry_after\
-                      \ (integer, seconds) "
-                  retryable:
-                    type: boolean
-                    description: "If true, the agent can attempt this command again\
-                      \ immediately"
-                    example: false
+          $ref: "#/components/responses/ProgramCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -1719,388 +340,342 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /credit-authorizations/{creditAuthorizationKey}/commands/{commandId}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/CreditAuthorizationKey"
+  /credit-authorizations/{credit-authorization-key}/programs/{program-key}:
     get:
       tags:
-      - Default
-      summary: Poll CreditAuthorization command status
-      description: Check the progress or result of a previously submitted command.
-      operationId: getCreditAuthorizationCommandStatus
+      - Programs
+      summary: Retrieve a single item scoped by a key Program entities.
+      operationId: getProgramByKey
       parameters:
-      - name: creditAuthorizationKey
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
-      - name: commandId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
+      - $ref: "#/components/parameters/ProgramKey"
       responses:
         "200":
-          description: Current status of the command
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  command_id:
-                    type: string
-                    description: The unique identifier for the command being tracked
-                    format: uuid
-                    readOnly: true
-                  status:
-                    type: string
-                    description: The current lifecycle state of the command
-                    enum:
-                    - PENDING
-                    - PROCESSING
-                    - SUCCESS
-                    - FAILED
-                    - REQUIRES_ACTION
-                  progress:
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                    description: Percentage of completion (0-100)
-                    format: int32
-                  message:
-                    type: string
-                    description: Status update or error message
-                  result:
-                    type: object
-                    additionalProperties: true
-                    description: The final output of the command (only populated on
-                      SUCCESS)
-                  errors:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ErrorDetail"
+          $ref: "#/components/responses/ProgramSingleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /credit-authorizations/capabilities:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/CreditAuthorizationKey"
+  /credit-authorization/health:
     get:
       tags:
-      - Default
-      summary: Discover CreditAuthorization Capabilities
-      description: Standard GET operation for /credit-authorizations/capabilities
-      operationId: getCreditAuthorizationCapabilities
+      - Health
+      summary: Health Check
+      description: Returns the health status of the CreditAuthorization root node.
+      operationId: healthCreditAuthorization
       parameters:
-      - name: include
-        in: query
-        description: "Comma-separated list of sections to include (e.g., 'commands,exports,constraints')"
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - COMMANDS
-            - EXPORTS
-            - CONSTRAINTS
-      - name: role
-        in: query
-        description: Filter capabilities by the agent's current role(s)
-        schema:
-          type: string
-          example: ACCOUNTANT
-      - name: state
-        in: query
-        description: Filter commands and constraints relevant only to a specific aggregate
-          state
-        required: true
-        schema:
-          type: string
-          example: ACTIVE
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
       responses:
         "200":
-          description: Successful discovery response (may be partial based on filters)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Capabilities"
+          $ref: "#/components/responses/HealthStatusResponse"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
 components:
   schemas:
-    Capabilities:
+    AddressReference:
       type: object
       properties:
-        aggregate:
+        address_reference_key:
           type: string
-          example: CreditAuthorization
-        version:
+          description: A unique key for the address reference.
+          example: "839681363589550080"
+        address_reference_id:
           type: string
-          example: 1.2.0
-        current_state:
-          type: string
-          description: The state used to filter these capabilities
-          example: PENDING_APPROVAL
-        transitions:
+          description: The unique value of the address reference.
+          example: "839681363589550081"
+        address_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
           type: array
+          description: address_types list
+          example:
+          - BILLING
+          - SHIPPING
+          - MAILING
           items:
-            type: object
-            properties:
-              action:
-                type: string
-                example: APPROVE_INVOICE
-              from_states:
-                type: array
-                example:
-                - PENDING_APPROVAL
-                items:
-                  type: string
-              to_state:
-                type: string
-                example: ISSUED
-              required_roles:
-                type: array
-                description: Roles authorized to trigger this transition
-                example:
-                - MANAGER
-                - FINANCE_VP
-                items:
-                  type: string
-              links:
-                type: object
-                properties:
-                  execute:
-                    type: string
-                    description: The relative or absolute URL to POST the command
-                      to
-                    example: "/credit-authorizations/{key}/commands/approve"
-                  method:
-                    type: string
-                    example: POST
-                    enum:
-                    - POST
-                    - PUT
-                    - PATCH
-                  schema_ref:
-                    type: string
-                    description: Reference to the input payload schema for this action
-                    example: "#/components/schemas/CreditAuthorizationCommand"
-                description: HATEOAS-style links to execute the transition or fetch
-                  related metadata
-              _self:
-                type: string
-                description: Link to the specific transition documentation or detail
-                example: /metadata/capabilities/CreditAuthorization/transitions/approve
-              instructions:
-                type: array
-                description: Step-by-step checklist the agent must verify before execution
-                example:
-                - Verify credit limit is sufficient
-                - Confirm tax jurisdiction matches customer address
-                - Ensure currency matches original purchase order
-                items:
-                  type: string
-              parameters_ref:
-                type: string
-                example: "#/components/schemas/CreditAuthorization"
-        available_exports:
-          type: array
-          items:
-            type: object
-            properties:
-              data_contract_key:
-                type: string
-                example: customer_contact_v1
-              description:
-                type: string
-                example: Optimized view containing only non-sensitive contact details.
-              supported_formats:
-                type: array
-                example:
-                - PARQUET
-                - CSV
-                items:
-                  type: string
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                default: PARQUET
-              columns:
-                type: array
-                example:
-                - first_name
-                - last_name
-                - email
-                items:
-                  type: string
-              retention_policy:
-                type: object
-                properties:
-                  retention_period:
-                    type: string
-                    description: ISO-8601 duration the file remains available for
-                      download
-                    example: P7D
-                  is_pii_sensitive:
-                    type: boolean
-                    description: Indicates export contains PII
-                    example: false
-                  access_tier:
-                    type: string
-                    description: The security clearance required for this contract
-                    example: INTERNAL
-                    enum:
-                    - PUBLIC
-                    - INTERNAL
-                    - RESTRICTED
-                    - CONFIDENTIAL
-              constraints:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    rule_id:
-                      type: string
-                      description: Unique identifier for the business rule
-                      readOnly: true
-                      example: IDENTITY_LOCK_STATE
-                    constraint_type:
-                      type: string
-                      enum:
-                      - RANGE_LIMIT
-                      - SIZE_LIMIT
-                      - FORMAT_INCOMPATIBILITY
-                      - PATTERN_MISMATCH
-                      - PERMISSION_LOCK
-                      - MANDATORY_MISSING
-                      - STATE_TRANSITION_ERROR
-                      - IMMUTABILITY_VIOLATION
-                      - RELATIONAL_DEPENDENCY
-                      - CONFLICT_DETECTION
-                      - AGGREGATE_LIMIT
-                      - ORPHAN_PREVENTION
-                    target_fields:
-                      type: array
-                      description: The specific fields or attributes this constraint
-                        applies to
-                      example:
-                      - first_name
-                      - last_name
-                      - ssn
-                      items:
-                        type: string
-                    rule_context:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: Key-value pairs representing the 'facts' of the
-                        current state
-                      example:
-                        item_type: Inventory
-                        limit: "0"
-                        count: "45"
-                    rule_constraints:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: "Key-value pairs for simple UI-driven validation\
-                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
-                        \ checks."
-                      example:
-                        min: "1"
-                        unit: days
-                        value: "31"
-                    limit_rule:
-                      type: string
-                      description: A Prolog-based predicate defining the valid boundary
-                        for this constraint.
-                      example: "allow_export(Format, Days) :- Format == 'parquet',\
-                        \ Days =< 31; Format == 'csv', Days =< 90."
-                    estimated_size:
-                      type: string
-                      description: approximate size of
-                      example: 10gig
-                    estimated_time_min:
-                      type: string
-                      description: approximate amount of minutes to run
-                      example: "12.3"
-                    complexity:
-                      type: string
-                      description: complexity score 1-100
-                      example: "34"
-                    mitigation_hint:
-                      type: string
-                      description: Conflict Resolution Hints
-                      example: "To resolve this PERMISSION_LOCK, you must first call\
-                        \ the /unlock endpoint."
-                    message:
-                      type: string
-                      description: Human-readable explanation for UI/Logs
-                      example: Identity fields cannot be modified while in PENDING_APPROVAL
-                        state.
-                    severity:
-                      type: string
-                      enum:
-                      - ERROR
-                      - WARNING
-                    link:
-                      type: string
-                      description: Link to documentation regarding this rule
-                      format: uri
-        documentation_ref:
+            $ref: "#/components/schemas/AddressTypes"
+        address_line1:
           type: string
-          description: Link to full business documentation for this aggregate
-          format: uri
-          example: /documentation/credit-authorizations
+          description: "Primary address line (Street, PO Box, etc)."
+          example: 123 Main St
+        address_line2:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Suite 400
+        address_line3:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Building A
+        address_line4:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Mail Stop 22
+        address_line5:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: "Attention: Accounts Payable"
+        city:
+          type: string
+          description: Name of the city.
+          example: Atlanta
+        country_code:
+          type: string
+          description: Full name of the country.
+          example: US
+        district:
+          type: string
+          description: Name of the district.
+          example: North District
+        label:
+          maxLength: 50
+          type: string
+          description: Label or display name for the address.
+          example: Work Email
+        postal_code:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: Primary postal or ZIP code.
+          example: "30303"
+        state_province:
+          maxLength: 50
+          type: string
+          description: State or equivalent subdivision.
+          example: GA
+      description: "A reference to an address, including its unique key and a list\
+        \ of its usage types."
+    AddressReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/AddressReference"
+    AddressTypes:
+      type: string
+      description: types of address.
+      enum:
+      - BILLING
+      - SHIPPING
+      - MAILING
+      - POSTAL
+      - HOME
+      - RESIDENCE
+      - WORK
+      - BUSINESS
+      - OFFICE
+      - PO_BOX
+      - LEGAL
+      - SERVICE
+      - DEALER
+      - CONTRACT
+      - AR_ADDRESS
+      - RECIPIENT
+      - DELIVERY
+      - DESTINATION
+      - ORIGINAL
+      - CURRENT
+      - PREVIOUS
+      - TEMPORARY
+      - VACATION
+      - GARAGE
+      - EMERGENCY
+      - REBATE
+      - SERVICE_CONTRACT
+      - INSURANCE
+      - PRODUCT
+      - ARCHIVE
+      - OTHER
+    AuthorizationLevel:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-05-06T01:53:50Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+          example: "839681363593744384"
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuthorizationLevel"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
-    CommandOption:
+        $ref: "#/components/schemas/Code"
+    CommunicationChannel:
       type: object
       properties:
-        type:
+        communication_channel_key:
           type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
+          description: The unique key for the communication channel record.
+          example: "839681363593744385"
+        communication_channel_id:
           type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
+          description: The unique ID for the communication channel.
+          example: "839681363593744386"
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        value:
           type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+          example: user@example.com
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
+        value_extension:
+          type: string
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
+          example: "{country_code=+1}"
+        label:
+          type: string
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
+          example: Work Email
+        locale:
+          $ref: "#/components/schemas/Locale"
+        preferred_indicator:
+          type: boolean
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
+          example: false
+        preferences:
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+      description: "Represents a communication channel, such as an email address or\
+        \ phone number, with associated preferences and authorizations."
+    CommunicationChannelTypes:
+      type: string
+      description: types of communication channels.
+      enum:
+      - PHONE
+      - CELL
+      - SMS
+      - VOICE
+      - VIDEO
+      - EMAIL
+      - APP
+      - SOCIAL_MEDIA
+      - URL
+      - BROADCAST
+      - DIRECT_MAIL
+      - PDA
+      - OTHER
+    CommunicationChannels:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationChannel"
     CreditAuthorization:
       type: object
       properties:
         credit_authorization_id:
           type: string
-          description: Unique system identifier for the Credit ...
-          readOnly: true
-          example: ' fefdc309'
+          description: Unique system identifier for the Credit Authorization record.
+          example: "839681363593744387"
         credit_authorization_key:
           type: string
-          description: Natural business key for the authorizati...
-          example: ' 3370d35a'
+          description: Natural business key for the authorization record.
+          example: "839681363593744388"
         credit_authorization_status_type:
           $ref: "#/components/schemas/CreditAuthorizationStatusTypes"
         credit_authorization_type:
@@ -2113,31 +688,31 @@ components:
           $ref: "#/components/schemas/EventMessage"
         auth_number:
           type: string
-          description: The approval number returned by the exte...
-          example: ' c571a91f'
+          description: The approval number returned by the external processor.
+          example: "85"
         auth_code:
           type: string
-          description: Specific response code from the financia...
-          example: ' 0bb7ecef'
+          description: Specific response code from the financial gateway.
+          example: AUTH123456
         auth_date_time:
           type: string
-          description: Timestamp when the authorization was pro...
+          description: Timestamp when the authorization was processed.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T01:53:50Z
         pre_auth_num:
           type: string
-          description: The fund verification or pre-authorizati...
-          example: ' de73d27b'
+          description: The fund verification or pre-authorization number.
+          example: PA-2026-000123
         party_references:
           $ref: "#/components/schemas/PartyReferences"
         source_key:
           type: string
-          description: Identification of the originating system...
-          example: ' 107870db'
+          description: Identification of the originating system.
+          example: "839681363593744389"
         purchase_order_num:
           type: string
           description: Associated Purchase Order number.
-          example: ' 08fdad97'
+          example: PO-789456123
         auth_reasons:
           $ref: "#/components/schemas/Codes"
         program:
@@ -2149,22 +724,23 @@ components:
         language:
           type: string
           description: "English, Spanish"
-          example: ' 350700b4'
+          example: EN
         address_verification:
           type: string
           description: Context or domain of the reference.
-          example: ' 9aa986d3'
+          example: VERIFIED
         context:
           type: string
           description: Context or domain of the reference.
-          example: ' 9adcba96'
+          example: FINANCE
         transaction_number:
           type: string
           description: Context or domain of the reference.
-          example: ' 43c458a1'
+          example: "23"
         invoice_types:
           $ref: "#/components/schemas/InvoiceTypes"
-      description: credit.authorization.desc
+      description: Reference to a CreditMethod (Party) Aggregate Root for financing
+        details.
     CreditAuthorizationCreate:
       required:
       - credit_authorization_key
@@ -2172,10 +748,6 @@ components:
       description: CreditAuthorization Create for Post
       allOf:
       - $ref: "#/components/schemas/CreditAuthorization"
-    CreditAuthorizationResponse:
-      allOf:
-      - $ref: "#/components/schemas/CreditAuthorization"
-      - $ref: "#/components/schemas/CreditAuthorizationWorkflowMetadata"
     CreditAuthorizationStatusTypes:
       type: string
       description: types of credit authorization status.
@@ -2211,23 +783,23 @@ components:
         address_verification:
           type: string
           description: Context or domain of the reference.
-          example: ' 9aa986d3'
+          example: VERIFIED
         dealer_price:
           $ref: "#/components/schemas/Price"
         language:
           type: string
           description: "English, Spanish"
-          example: ' 350700b4'
+          example: ES
         program:
           $ref: "#/components/schemas/Program"
         purchase_order_num:
           type: string
           description: Associated Purchase Order number.
-          example: ' 08fdad97'
+          example: PO-789456124
         auth_code:
           type: string
-          description: Specific response code from the financia...
-          example: ' 0bb7ecef'
+          description: Specific response code from the financial gateway.
+          example: AUTH123456
         invoice_types:
           $ref: "#/components/schemas/InvoiceTypes"
         auth_amount:
@@ -2237,88 +809,88 @@ components:
         transaction_number:
           type: string
           description: Context or domain of the reference.
-          example: ' 43c458a1'
+          example: "9"
         party_references:
           $ref: "#/components/schemas/PartyReferences"
         context:
           type: string
           description: Context or domain of the reference.
-          example: ' 9adcba96'
+          example: FINANCE
         auth_date_time:
           type: string
-          description: Timestamp when the authorization was pro...
+          description: Timestamp when the authorization was processed.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T01:53:50Z
         pre_auth_num:
           type: string
-          description: The fund verification or pre-authorizati...
-          example: ' de73d27b'
+          description: The fund verification or pre-authorization number.
+          example: PA-2026-000124
         invoice_price:
           $ref: "#/components/schemas/Price"
         event_message:
           $ref: "#/components/schemas/EventMessage"
         auth_number:
           type: string
-          description: The approval number returned by the exte...
-          example: ' c571a91f'
+          description: The approval number returned by the external processor.
+          example: "14"
         auth_reasons:
           $ref: "#/components/schemas/Codes"
       description: CreditAuthorization Update for Patch and Put
-    CreditAuthorizationWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          example: ' 94f90390'
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
+    CurrencyCode:
+      type: string
+      description: "ISO 4217 currency code, e.g., 'USD', 'EUR'."
     CurrencyExchange:
       type: object
       properties:
         currency_exchange_id:
           type: string
-          description: Unique system identifier for the currenc...
-          readOnly: true
-          example: ' 9776873f'
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
         currency_exchange_key:
           type: string
-          description: Natural key or business identifier for t...
-          example: ' 060606a4'
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
         source_currency:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' cf85cefe'
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
         target_currency:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' 91689707'
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
         currency_exchange_desc:
           type: string
-          description: A descriptive title for the currencyExch...
-          example: ' 0c3248c7'
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
         exchange_rate:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' 067138fb'
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
         rate_date_time:
           type: string
-          description: The date and time the rate was associate...
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-          example: 2026-01-14T12:00:00Z
-      description: currency.exchange.desc
-    DurationUOMTypes:
+          example: 2026-05-06T01:53:50Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    DaysOfWeekTypes:
       type: string
-      description: Units of Measure for Durations
+      description: types of days of weeks.
+      enum:
+      - SUN
+      - MON
+      - TUES
+      - WED
+      - THURS
+      - FRI
+      - SAT
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -2342,49 +914,56 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique key identifying the effective per...
-          example: ' d1df7210'
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicator if the period is currently act...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
           example: true
         exclusive_indicator:
           type: boolean
-          description: Indicator if the period is exclusive
-          example: true
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
         start_date_time:
           type: string
-          description: Start date and time of the effective per...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T01:53:50Z
         complete_date_time:
           type: string
-          description: Completion date and time of the effectiv...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T01:53:50Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: Value of the duration
-          example: ' 73942725'
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
-          description: Count of recurrence
-          example: ' a65350d4'
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Criteria defining recurrence
-          example: ' 27a7e740'
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Indicator if recurrence is enabled
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
           example: true
-      description: effective.period.desc
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
     ErrorDetail:
       required:
       - category
@@ -2404,7 +983,8 @@ components:
           example: Personnel Record with ID PR-1234567 was not found.
         category:
           type: string
-          description: Classifies the error to help clients determine ...
+          description: Classifies the error to help clients determine high-level retry
+            or handling logic.
           example: DATA_INTEGRITY
           enum:
           - VALIDATION
@@ -2421,16 +1001,17 @@ components:
         trace_id:
           type: string
           description: A unique identifier for this specific request.
-          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
-          description: A URL leading to the documentation page for thi...
+          description: A URL leading to the documentation page for this specific error
+            code.
           format: uri
           example: https://api.docs.com/errors/NOT_FOUND_PR
         details:
           type: array
-          description: Field-level validation errors or granular diagn...
+          description: Field-level validation errors or granular diagnostic information.
+          example: Invalid request parameter.
           items:
             type: object
             properties:
@@ -2446,27 +1027,27 @@ components:
                 type: string
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
-      description: Standardized error response for the entire API ...
+      description: Standardized error response for the entire API ecosystem. Follows
+        RFC 7807 principles for problem details to ensure consistency across microservices.
     EventMessage:
       type: object
       properties:
         event_message_key:
           type: string
-          description: A unique key for the eventMessage record...
-          example: ' c651e0aa'
+          description: A unique key for the eventMessage record.
+          example: "839681363593744390"
         event_message_id:
           type: string
           description: The unique ID for the eventMessage.
-          readOnly: true
-          example: ' 6eab4d6a'
+          example: "839681363593744391"
         event_actor_key:
           type: string
           description: The ID of the actor for the event.
-          example: ' 258c9168'
+          example: "839681363593744392"
         event_actor_name:
           type: string
           description: The name of the actor for the event.
-          example: ' ca3f0ef6'
+          example: System
         event_actor_role_type:
           $ref: "#/components/schemas/StaffRoleTypes"
         event_content:
@@ -2474,42 +1055,44 @@ components:
           minItems: 1
           uniqueItems: true
           type: array
+          description: Content of the event message.
+          example: Order created successfully.
           items:
             type: string
         event_date_time:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T01:53:50Z
         event_message_group:
           type: string
-          description: The group to which the eventMessage belo...
-          example: ' f56036da'
+          description: The group to which the eventMessage belongs.
+          example: ORDER_EVENTS
         event_message_action:
           $ref: "#/components/schemas/Memo"
         event_message_desc:
           type: string
           description: A description for the eventMessage.
-          example: ' 869eb5ab'
+          example: Order creation event.
         event_message_type:
           $ref: "#/components/schemas/EventMessageTypes"
         event_message_name:
           type: string
           description: The name of the eventMessage.
-          example: ' c9e17f23'
+          example: OrderCreated
         event_message_code:
           type: string
           description: The code for the eventMessage.
-          example: ' 0034fa18'
+          example: ORD-001
         event_message_value:
           type: string
           description: The value of the eventMessage.
-          example: ' 794d9a50'
+          example: SUCCESS
         internal_indicator:
           type: boolean
-          description: An indicator for whether the eventMessag...
-          example: true
-      description: event.message.desc
+          description: An indicator for whether the eventMessage is internal.
+          example: false
+      description: narrative of conversation
     EventMessageTypes:
       type: string
       description: types of event messages.
@@ -2530,100 +1113,18 @@ components:
       - AUDIT
       - HEARTBEAT
       - UNKNOWN
-    ExportFile:
+    HealthStatus:
       type: object
       properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-          example: 1
-        download_url:
-          type: string
-          format: uri
-          example: https://api.example.com
-        format:
-          type: string
-          example: ' 4dab7cd6'
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-          - TOON
-        expires_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        checksum_sha256:
-          type: string
-          example: ' d76de2db'
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-          example: ' 5fb207f8'
         status:
           type: string
-          example: ' f439b2d9'
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-          example: 1
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
+          description: Current health status of the service.
+          example: UP
+        version:
           type: string
-          example: EXPORT_COMPLETED
-          enum:
-          - EXPORT_COMPLETED
-          - EXPORT_FAILED
-        occurred_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-              readOnly: true
-              example: c473ebe5
-            aggregate:
-              type: string
-              example: CreditAuthorization
-            data_product_id:
-              type: string
-              readOnly: true
-            status:
-              type: string
-              example: FAILED
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
+          description: Version of the deployed service.
+          example: 2.0.0
+      description: Standard health check response body
     Identifier:
       type: object
       properties:
@@ -2632,40 +1133,40 @@ components:
           minLength: 5
           type: string
           description: Unique identifier value
-          readOnly: true
-          example: ' 4724ba52'
+          example: "839681363593744393"
         identifier_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Business key for the identifier
-          readOnly: true
-          example: ' c3c03168'
+          example: "839681363593744394"
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 3af897a4'
+          example: FINANCE
         value:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' a2220f11'
+          description: The monetary or hours-based value of the event.
+          example: user@example.com
         detail:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' b8b7589c'
+          description: The monetary or hours-based value of the event.
+          example: Primary identifier
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' 69611ff3'
+          description: The monetary or hours-based value of the event.
+          example: identifier_type value
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: External system identifier
     InvoiceTypes:
       type: string
       description: types of invoices.
       enum:
       - INVOICE
+      - SERVICE_INVOICE
+      - PART_INVOICE
+      - LOAN
       - STANDARD
       - CREDIT_MEMO
       - DEBIT_MEMO
@@ -2681,6 +1182,55 @@ components:
       - STATEMENT
       - ADVANCE
       - FINAL
+      - REPAIR
+      - FUEL
+      - RENTAL
+      - SUBSCRIPTION
+    Locale:
+      type: object
+      properties:
+        locale_key:
+          type: string
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
+          example: "839681363593744395"
+        locale_name:
+          type: string
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
+          example: English (US)
+        description:
+          type: string
+          description: A detailed description of the alert message.
+          example: Vehicle engine component.
+        language_code:
+          type: string
+          description: ISO 639-1 two-letter language code.
+          example: en
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+          example: US
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        currency_symbol:
+          type: string
+          description: The graphical symbol used for the currency.
+          example: $
+        timezone:
+          type: string
+          description: The IANA Time Zone database ID for regional time calculations.
+          example: America/New_York
+        number_format:
+          type: string
+          description: Regional pattern for decimal and thousands separators.
+          example: "###,###.##"
+        location_code:
+          type: string
+          description: The code of the inventory location or branch from which this
+            part is sourced.
+          example: WH001
+      description: not nullable
     Memo:
       type: array
       items:
@@ -2690,124 +1240,109 @@ components:
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
-          example: ' 26fee352'
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
-          readOnly: true
-          example: ' 87935718'
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
-          example: ' b6dea196'
+          description: money.currency.code.desc
+          example: USD
         display_value:
           type: string
-          description: The locale-specific display format for t...
-          example: ' 44c49e7e'
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
-          example: ' d9890363'
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
-          example: ' a71948fd'
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
-      description: money.desc
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     PartyReference:
       type: object
       properties:
         party_reference_id:
           type: string
-          description: Unique identifier value
-          readOnly: true
-          example: ' 7d4e6114'
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
         party_reference_key:
           type: string
-          description: Unique identifier value
-          example: ' 7fb3791f'
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
         party_key:
           type: string
-          description: Unique identifier value
-          example: ' 2c50bc62'
-        party_reference_type:
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        party_name:
           type: string
-          description: Unique identifier value
-          example: ' 8bf190ea'
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        individual_name:
+          $ref: "#/components/schemas/PersonName"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
+        authorization_code:
+          type: string
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
+        source_system_code:
+          type: string
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
         context:
           type: string
-          description: Context or domain of the identifier
-          example: ' 2aab4749'
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
         account_number:
           type: string
-          description: Account Number
-          example: ' 082636b1'
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
         party_relationship_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
           type: array
+          description: party_relationship_types list
+          example:
+          - CORPORATION
+          - GROUP
+          - STORE
           items:
             $ref: "#/components/schemas/PartyRelationshipTypes"
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        rule_codes:
-          $ref: "#/components/schemas/Codes"
-        party:
+        snapshot_detail:
           $ref: "#/components/schemas/Identifier"
+        address_references:
+          $ref: "#/components/schemas/AddressReferences"
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
         occurrence_date_time:
           type: string
-          description: The date and time the event occurred.
+          description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-01-14T12:00:00Z
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-      description: party.reference.desc
-    PartyReferenceCreate:
-      required:
-      - party_reference_key
-      type: object
-      description: PartyReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PartyReference"
-    PartyReferenceUpdate:
-      type: object
-      properties:
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-        account_number:
-          type: string
-          description: Account Number
-          example: ' 082636b1'
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        rule_codes:
-          $ref: "#/components/schemas/Codes"
-        context:
-          type: string
-          description: Context or domain of the identifier
-          example: ' 2aab4749'
-        party_reference_type:
-          type: string
-          description: Unique identifier value
-          example: ' 8bf190ea'
-        party_relationship_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/PartyRelationshipTypes"
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        party:
-          $ref: "#/components/schemas/Identifier"
-      description: PartyReference Update for Patch and Put
+          example: 2026-05-06T01:53:50Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
+      description: External system identifier
     PartyReferences:
       type: array
       items:
@@ -2826,6 +1361,7 @@ components:
       - DEALERSHIP
       - THIRD_PARTY
       - VENDOR
+      - MERCHANT
       - SUPPLIER
       - PARTNER_ORGANIZATION
       - AFFILIATE
@@ -2846,6 +1382,11 @@ components:
       - JOINT_VENTURE
       - AUDITOR
       - ACTOR
+      - OEM
+      - PRIMARY_OEM
+      - DRIVER
+      - LIEN_HOLDER
+      - PROVIDER
       - ACCOUNTABLE
       - RESPONSIBLE
       - CONSULT
@@ -2854,6 +1395,22 @@ components:
       - PART_OF
       - MEMBERSHIP
       - COMPOSED_IN
+      - GEN_MGR
+      - SALES_MGR
+      - CLOSING_MGR
+      - FI_MGR
+      - CONCIERGE_MGR
+      - SERVICE_MGR
+      - SALES_ASSOC
+      - BUSINESS_DEVELOPMENT
+      - SPECIALIST
+      - ADVISOR
+      - SERVICE_TECH
+      - CONCIERGE_STAFF
+      - VALET
+      - STAFF
+      - FINANCE
+      - PASSENGER
       - CUSTOMER
       - CO_SIGNER
       - SPOUSE
@@ -2882,6 +1439,8 @@ components:
       - TRUSTEE_PERSON
       - REFERENCE_PERSONAL
       - REFERENCE_PROFESSIONAL
+      - APPLICANT
+      - CO_APPLICANT
       - AGENT
       - BENEFICIARY
       - GUARANTOR
@@ -2913,6 +1472,31 @@ components:
       - TRANSACTION_TO
       - REMOVE
       - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
     PayTypes:
       type: string
       description: types of pays.
@@ -2923,66 +1507,155 @@ components:
       - SUBLET
       - MANUFACTURER
       - DEALER
+    PersonName:
+      type: object
+      properties:
+        alias:
+          type: string
+          description: Alternative or informal name or role.
+          example: AJ
+        family_name:
+          type: string
+          description: Family or last name.
+          example: Smith
+        full_name:
+          type: string
+          description: Complete name as one string.
+          example: Alice Jane Smith
+        given_name:
+          type: string
+          description: First or given name.
+          example: Alice
+        identifiers_href:
+          type: string
+          description: Reference to external identifiers.
+          format: href
+          example: /identifiers/12345
+        maiden_name:
+          type: string
+          description: Previous family name before marriage.
+          example: Johnson
+        middle_name:
+          type: string
+          description: Middle name(s).
+          example: Jane
+        name_suffix:
+          type: string
+          description: "Suffix such as Jr., Sr., III."
+          example: Jr.
+        party_key:
+          type: string
+          description: External party key.
+          example: PARTY-KEY-123
+        person_key:
+          type: string
+          description: External person key.
+          example: PERSON-KEY-789
+        person_name_key:
+          type: string
+          description: Unique person name key.
+          example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
+        preferred_name:
+          type: string
+          description: Preferred name used in informal situations.
+          example: Ali
+        salutation:
+          type: string
+          description: "Salutation or title such as Mr., Ms., Dr."
+          example: Dr.
+        honorific_prefix:
+          type: string
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
+          example: Dr.
+        honorific_suffix:
+          type: string
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
+          example: Jr.
+        locale:
+          type: string
+          description: Locale or language region associated with the person.
+          example: en-US
+        phonetic_family_name:
+          type: string
+          description: Phonetic representation of the family name.
+          example: FAM-nee
+        phonetic_given_name:
+          type: string
+          description: Phonetic representation of the given name.
+          example: GA-vin
+        phonetic_middle_name:
+          type: string
+          description: Phonetic representation of the middle name.
+          example: MI-chal
+        nationality:
+          type: string
+          description: Nationality of the person.
+          example: Canadian
+      description: a Name for a person
     Price:
       type: object
       properties:
         display_value:
           type: string
-          description: Human-readable display value for the pri...
-          example: ' baf7e840'
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
+          example: "$25,000"
         locale:
           type: string
-          description: Locale used for formatting display value...
-          example: ' 7b9e7a60'
+          description: Locale used for formatting display value.
+          example: en-US
         value:
           type: string
-          description: The numeric value of the price (before t...
-          example: ' 4114357d'
+          description: The numeric value of the price (before tax/cost breakdowns).
+          example: user@example.com
         tax_value:
           type: string
-          description: The calculated amount of tax applied to ...
-          example: ' 1d8df4d9'
+          description: The calculated amount of tax applied to the price.
+          example: "1500"
         taxable_amount:
           type: string
           description: The portion of the price subject to tax.
-          example: ' 11f44ede'
+          example: $641.11
         non_taxable_amount:
           type: string
-          description: The portion of the price not subject to ...
-          example: ' 07d2e88d'
+          description: The portion of the price not subject to tax.
+          example: $777.51
         total_amount:
           type: string
-          description: The total final price including all comp...
-          example: ' 28805dfb'
+          description: The total final price including all components and tax.
+          example: $545.52
         total_cost_amount:
           type: string
           description: The total cost to the provider/seller.
-          example: ' 18c018a6'
+          example: $35.21
         unit_cost_amount:
           type: string
           description: The unit cost to the provider/seller.
-          example: ' b688e619'
+          example: $441.63
         price_description:
           type: string
-          description: "A descriptive title for the price (e.g.,..."
-          example: ' 86e30a55'
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
+          example: Vehicle base price
         price_key:
           type: string
-          description: Natural key or business identifier for t...
-          example: ' 8bbbb588'
+          description: Natural key or business identifier for the price entry.
+          example: "839681363593744396"
         tax_included_indicator:
           type: boolean
-          description: Indicates whether tax is included in the...
-          example: true
+          description: Indicates whether tax is included in the base price (value).
+          example: false
         currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
-          example: ' def59889'
+          $ref: "#/components/schemas/CurrencyCode"
         price_id:
           type: string
-          description: Unique system identifier for the price r...
-          readOnly: true
-          example: ' 3aba79a1'
+          description: Unique system identifier for the price record.
+          example: "839681363593744397"
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
@@ -2990,13 +1663,19 @@ components:
           minItems: 1
           uniqueItems: true
           type: array
+          description: price_types list
+          example:
+          - METERED
+          - SEAT
+          - FLAT
           items:
             $ref: "#/components/schemas/PriceTypes"
         pay_type:
           $ref: "#/components/schemas/PayTypes"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
-      description: price.desc
+      description: "Price that includes display value, currency, locale, and value,\
+        \ along with tax and cost components."
     PriceTypes:
       type: string
       description: types of prices.
@@ -3023,24 +1702,51 @@ components:
       - RETAIL
       - MSRP
       - WHOLESALE
-      - DEALER
+      - DEALER_COST
+      - TOTAL_DEALER_COST
+      - TOTAL_DEALER_OPTION_COST
+      - TOTAL_DEALER_OPTION_SELLING_PRICE
+      - RECONDITIONING_COST
+      - RESIDUAL_VALUE
+      - TDA
+      - FUEL
+      - TOTAL_HOLD_BACK
+      - PPO_HOLD_BACK
+      - WRF
       - TRADE
       - CORE
       - LANDED
+      - FREIGHT_CHARGE
+      - MONEY
+      - INTERNET
+      - BALANCE
+      - BASE
+      - BASE_MSRP
+      - TOTAL_MSRP
+      - TOTAL_OPTION_MSRP
+      - PRODUCT_TOTAL
+      - FINANCE_TOTAL
+      - APPLIED_REWARD_TOTAL
+      - UPFRONT_PAYMENT_TOTAL
+      - REMOVED_EQUIPT_TOTAL
+      - ADJUSTED_MSRP
+      - GROSS_SALE
+      - NET_SALE
+      - NET_SALE_REDUCTION_PRICE
+      - DISCOUNT_TOTAL
+      - DISCOUNT_PACKAGES_TOTAL
+      - CREDIT_TOTAL
+      - FEE_TOTAL
+      - REBATE_TOTAL
+      - TAX_TOTAL
+      - TRADE_IN_TOTAL
+      - TRADE_IN_EQUITY_TOTAL
       - PROMOTIONAL
       - DISCOUNT
       - CONTRACT
       - SALE
-      - CUSTOMER
-      - AFFILIATE
-      - ONLINE
-      - STORE
-      - REGION
-      - LOCATION
-      - ESTIMATED
-      - NET
-      - PURCHASE
-      - MONEY
+      - PREMIUM_TOTAL
+      - DISABILITY_PREMIUM_TOTAL
       - TAXABLE
       - NONTAXABLE
       - TOTAL
@@ -3048,115 +1754,148 @@ components:
       - TOTAL_COST
       - UNIT_COST
       - TAX
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
       - OTHER
     ProblemDetail:
       type: object
       properties:
         type:
           type: string
+          description: A URI reference that identifies the problem type. Provides
+            human-readable documentation for the error.
           format: uri
           example: https://api.yourdomain.com/errors/validation-failed
         title:
           type: string
+          description: "A short, human-readable summary of the problem type. It should\
+            \ not change from occurrence to occurrence."
           example: Intent Validation Failed
         status:
           type: integer
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
           format: int32
           example: 422
         detail:
           type: string
+          description: "A human-readable explanation specific to this occurrence of\
+            \ the problem, providing context on the failure."
           example: The export request could not be processed due to business constraints.
         instance:
           type: string
+          description: "A URI reference that identifies the specific occurrence of\
+            \ the problem (e.g., the specific resource path)."
           format: uri
           example: https://api.yourdomain.com/money/exports
         intent:
           type: string
+          description: The specific agentic or business intent that was being processed
+            when the error occurred.
           example: InitiateMoneyExport
+        error_code:
+          type: string
+          description: "A stable, machine-readable string code for the error."
+          example: INSUFFICIENT_FUNDS_FOR_EXPORT
+        pointer:
+          type: string
+          description: A JSON Pointer to the field in the request body that caused
+            the violation.
+          example: "#/plate_number"
         violations:
           type: array
+          description: "A collection of specific validation failures, including field\
+            \ paths and localized messages."
+          example: "[{field=postal_code, message=Invalid format}]"
           items:
             type: object
             properties:
-              rule:
+              pointer:
                 type: string
-                example: INSUFFICIENT_FUNDS
+                description: A JSON Pointer (RFC 6901) referencing the specific field
+                  in the request body that caused the violation.
+                example: "#/vehicle_license/plate_number"
+              code:
+                type: string
+                description: "A stable, machine-readable string identifying the specific\
+                  \ validation rule that was breached."
+                example: PATTERN_MISMATCH
               message:
                 type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
+                description: "A localized, human-readable description of the validation\
+                  \ error."
+                example: The plate number must be alphanumeric and between 1 and 20
+                  characters.
+              severity:
                 type: string
-                example: date_range.start
+                description: The impact level of this violation. ERROR blocks execution;
+                  WARNING is advisory.
+                example: ERROR
+                enum:
+                - ERROR
+                - WARNING
+                - INFO
               metadata:
                 type: object
                 additionalProperties:
                   type: string
+                description: "Contextual key-value pairs to help the agent resolve\
+                  \ the error (e.g., actual vs. expected limits)."
+                example:
+                  regex: "^[A-Z0-9]{1,20}$"
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              path:
+                type: string
+                example: date_range.start
+            description: "An individual validation failure within a request, providing\
+              \ a direct map to the offending field."
+      description: "A standardized error response based on RFC 7807, extended with\
+        \ domain-specific intent and validation violations."
     Program:
       type: object
       properties:
         program_key:
           type: string
           description: The unique key for the program  record.
-          example: ' aca07bee'
+          example: "839681363593744398"
         program_id:
           type: string
           description: The unique id for the program  record.
-          readOnly: true
-          example: ' 6281c53b'
+          example: "839681363593744399"
         program_code:
           type: string
           description: The unique code for the .
-          example: ' 73008cc2'
+          example: LOYALTY_PLUS
         program_name:
           type: string
           description: The name of the .
-          example: ' 838ab34c'
+          example: Customer Loyalty Rewards Program
         program_oem:
           type: string
           description: The value of the owner.
-          example: ' 4243b48f'
+          example: TOYOTA
         description:
           type: string
           description: A description of the .
-          example: ' 07685d38'
+          example: Vehicle engine component.
         program_type:
           $ref: "#/components/schemas/ProgramTypes"
       description: not nullable
-    ProgramCreate:
-      required:
-      - program_key
-      type: object
-      description: Program Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Program"
     ProgramTypes:
       type: string
       description: types of programs.
       enum:
       - BILL_EXTENDED_TERM
       - BILL_NET_30
-    ProgramUpdate:
-      type: object
-      properties:
-        program_type:
-          $ref: "#/components/schemas/ProgramTypes"
-        program_code:
-          type: string
-          description: The unique code for the .
-          example: ' 73008cc2'
-        program_name:
-          type: string
-          description: The name of the .
-          example: ' 838ab34c'
-        description:
-          type: string
-          description: A description of the .
-          example: ' 07685d38'
-        program_oem:
-          type: string
-          description: The value of the owner.
-          example: ' 4243b48f'
-      description: Program Update for Patch and Put
     StaffRoleTypes:
       type: string
       description: types of staff roles.
@@ -3179,65 +1918,1011 @@ components:
       - APPRAISER
       - GENERAL_MANAGER
       - UNKNOWN
+    TimeSlot:
+      type: object
+      properties:
+        time_slot_id:
+          type: string
+          description: Technical unique identifier (GUID) for the time slot record.
+          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
+        time_slot_key:
+          type: string
+          description: Natural business key for the time slot within its specific
+            context.
+          example: TS-MON-MORNING-SHIFT
+        time_slot_source:
+          type: string
+          description: The originating system or calendar providing this availability
+            data.
+          example: GOOGLE_CALENDAR
+        start_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local start time in 24-hour ISO 8601 format.
+          format: date-time
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local end time in 24-hour ISO 8601 format.
+          format: date-time
+        recurring_indicator:
+          type: boolean
+          description: Indicates if this time slot is part of a repeating pattern.
+          example: true
+        timeslot_directive_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          description: timeslot_directive_types list
+          example:
+          - AFTER
+          - ANYTIME
+          - BEFORE
+          items:
+            $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        week_of_date:
+          $ref: "#/components/schemas/Codes"
+      description: "Defines a specific window of time, often within a recurring schedule,\
+        \ used for service availability or appointment booking."
+    TimeSlots:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeSlot"
+    TimeslotDirectiveTypes:
+      type: string
+      description: types of timeslot directives.
+      enum:
+      - AFTER
+      - ANYTIME
+      - BEFORE
+      - BETWEEN
+      - BLOCK
+      - UNKNOWN
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
   responses:
-    ForbiddenError:
-      description: The authenticated user does not have the necess...
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorDetail"
     ConflictError:
-      description: The request could not be completed because it c...
+      description: The request could not be completed because it conflicts with the
+        current state of the resource.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: An unexpected error occurred on the server whil...
+      description: An unexpected error occurred on the server while processing the
+        request.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-    PreconditionFailedError:
-      description: The request was not processed because the 'If-M...
+    CreditAuthorizationCreatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        Location:
+          $ref: "#/components/headers/LocationHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: "#/components/schemas/CreditAuthorization"
     NotFoundError:
       description: The requested resource was not found.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    CreditAuthorizationCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of CreditAuthorizations entities.
+                items:
+                  $ref: "#/components/schemas/CreditAuthorization"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
     BadRequestError:
-      description: "The request was malformed, failed validation, o..."
+      description: "The request was malformed, failed validation, or contained invalid\
+        \ parameters."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: Authentication failed. The access token is miss...
+      description: "Authentication failed. The access token is missing, expired, or\
+        \ invalid."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    CreditAuthorizationUpdatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreditAuthorization"
+    ProgramCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of Programs entities.
+                items:
+                  $ref: "#/components/schemas/Program"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
+    TooManyRequestsError:
+      description: Rate Limit Error. Too Many Requests
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    HealthStatusResponse:
+      description: Service is Operational
+      headers:
+        Transaction-Id:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HealthStatus"
+    CreditAuthorizationSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreditAuthorization"
+    NotAcceptableError:
+      description: The client requested a format (via Accept header) the server can't
+        provide
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ServiceUnavailableError:
+      description: Unable to serve request.  Service is unavailable
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    GatewayTimeout:
+      description: Timeout serving request
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    UnsupportedMediaTypeError:
+      description: The request could not be completed because of missing or invalid
+        content type
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    NoContentSuccess:
+      description: "No Content: The resource was successfully updated."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ForbiddenError:
+      description: The authenticated user does not have the necessary permissions.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    PreconditionFailedError:
+      description: The request was not processed because the 'If-Match' header provided
+        does not match the current ETag.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    UnprocessableEntity:
+      description: "Unprocessable Content: Semantic logic error."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
+    ProgramSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Program"
   parameters:
-    StandardsVersionHeader:
-      name: standards-version
+    ReasonQuery:
+      name: reason
+      in: query
+      description: Reason parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "duplicate,soft_delete"
+    OrgVersionHeader:
+      name: Org-Version
+      in: header
+      description: "The version of the api for the organization that this request\
+        \ adheres to (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    CacheControlHeader:
+      name: Cache-Control
+      in: header
+      description: Tells the client and intermediary caches how to store the response.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "max-age=300, private"
+    SourceSystemHeader:
+      name: Source-System
+      in: header
+      description: The system originating the transaction pulse.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 25
+        minLength: 2
+        type: string
+        example: GM_GLOBAL_NVS
+    CreditAuthorizationKey:
+      name: credit-authorization-key
+      in: path
+      description: The unique identifier for an CreditAuthorization entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839681333236539392"
+    FilterQuery:
+      name: filter
+      in: query
+      description: Filter parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "sdate:2026-02-09,edate:2026-02-09"
+    CreatorCodeHeader:
+      name: Creator-Code
+      in: header
+      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 8
+        minLength: 2
+        type: string
+        example: CDK
+    PreferHeader:
+      name: Prefer
+      in: header
+      description: JSON context for field selection and error logging behavior.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
+    LocaleHeader:
+      name: Locale
       in: header
       required: true
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: en-US
+    IfMatchHeader:
+      name: If-Match
+      in: header
+      description: Used for optimistic concurrency control. The request will fail
+        (412) if the current ETag does not match this value.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    IfNoneMatchHeader:
+      name: If-None-Match
+      in: header
+      description: Used for conditional GETs. The operation is executed only if the
+        stored ETag does not match this value. Prevents 'Lost Updates' in high-concurrency
+        Service Bounded Contexts.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: "^\"?[a-f0-9]+\"?$|^\\*$"
+        type: string
+        example: '"686897696a7c876b7e"'
+    CountryCodeHeader:
+      name: Country-Code
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "1"
+    CorrelationIDHeader:
+      name: Correlation-ID
+      in: header
+      description: A unique identifier spanning the entire business lifecycle. Essential
+        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
+        Domain.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+    ProgramKey:
+      name: program-key
+      in: path
+      description: The unique identifier for an Program entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839681333236539393"
+    AgentHeader:
+      name: Agent
+      in: header
+      description: "The URI profile of the calling Agent. Used to negotiate supported\
+        \ Industry Extensions (e.g., ) via the protocol."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://xxx.com/agent/v1
+    SortQuery:
+      name: sort
+      in: query
+      description: Sort parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "name,country"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      description: A unique identifier sent by the client to allow the server to prevent
+        duplicate processing of the same request.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    OffsetQuery:
+      name: offset
+      in: query
+      description: The number of entities to skip before starting to collect the result
+        set. Used in conjunction with 'limit' for traditional page-based navigation.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 234
+    LimitQuery:
+      name: limit
+      in: query
+      description: The maximum number of entities to return in a single response page.
+        Limits the 'data' array size to prevent payload bloat.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        format: int32
+        example: 100
+    RegionHeader:
+      name: Region
+      in: header
+      description: The geographic or business region code.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 2
+        type: string
+        example: NE-01
+    StandardsVersionHeader:
+      name: Standards-Version
+      in: header
+      description: "The version of the STAR REST Standard this request adheres to\
+        \ (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    TransactionIDHeader:
+      name: Transaction-ID
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+    BrandHeader:
+      name: Brand
+      in: header
+      description: The automotive brand context for the RDR.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: TOYOTA
+        default: TOYOTA
+        enum:
+        - TOYOTA
+        - LEXUS
+    SubscriberCodeHeader:
+      name: Subscriber-Code
+      in: header
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
+    DealerIdHeader:
+      name: Dealer-Id
+      in: header
+      description: Unique 5-digit Dealer Identifier.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+        example: "42278"
+    PreferenceAppliedHeader:
+      name: Preference-Applied
+      in: header
+      description: Indicates which client preferences (from the 'Prefer' request header)
+        were honored by the server.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: return=minimal
   headers:
-    StandardsVersionResponse:
-      description: Standards Version
+    CacheControlHeader:
+      description: Tells the client and intermediary caches how to store the response.
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: "max-age=300, private"
+    VaryHeader:
+      description: Instructs downstream caches that the response varies based on the
+        Agent's profile or media type. Critical for Extension-based responses.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "Accept, UCP-Agent"
+        default: "Accept, UCP-Agent"
+    ExpiresHeader:
+      description: The timestamp after which the resource state is considered stale.
+        Vital for volatile QQQ/SQQQ market data or real-time Inventory availability.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T16:00:00Z
+    LinkHeader:
+      description: "RFC 8288 compliant links providing discovery for related resources\
+        \ and 'Service Primitives' (e.g., :cancel, :execute). Essential for non-linear\
+        \ state transitions across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: "^<[^>]+>;\\s*rel=\"[^\"]+\"(,\\s*<[^>]+>;\\s*rel=\"[^\"]+\")*$"
+        type: string
+        example: "<https://api.ai-sage.com/labor-operations/123:cancel>; rel=\"cancel\"\
+          , <https://api.ai-sage.com/labor-operations/123>; rel=\"self\""
+    LocationHeader:
+      description: "The absolute URI of the newly created resource or the status monitor\
+        \ for an asynchronous 'Service Primitive' (e.g., :execute). Used to follow\
+        \ the state of a Transaction across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789
+    ContentLocationHeader:
+      description: The URI of the specific representation returned in the payload.
+        Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
+        multi-format or versioned Bounded Contexts.
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789/versions/v2
+    TransactionIDHeader:
+      description: Echoes the unique identifier for the specific atomic unit of work
+        processed by the server.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    CorrelationIDHeader:
+      description: Echoes the unique identifier spanning the entire business lifecycle
+        for cross-context tracing.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    StandardsVersionHeader:
+      description: The version of the STAR REST Standard the response adheres to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    OrgVersionHeader:
+      description: The version of the organization schema and API the response adheres
+        to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    AgentHeader:
+      description: The unique identifier of the agent or user executing this method.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    ETagHeader:
+      description: An entity tag (ETag) is an identifier for a specific version of
+        a resource.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    LastModifiedHeader:
+      description: The ISO 8601 timestamp at which the resource was last modified
+        in the underlying Postgres/Saga store.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T15:47:17Z
+    RateLimitLimitHeader:
+      description: The maximum number of requests allowed in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 1000
+    RateLimitRemainingHeader:
+      description: The number of requests remaining in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 999
+    RateLimitResetHeader:
+      description: The number of seconds until the current rate limit window resets.
+        Using 'Delta Seconds' avoids clock-skew issues between distributed systems.
+      style: simple
+      explode: false
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 60
+    RateLimitPolicyHeader:
+      description: "The quota policy for the current user/agent. Format: 'limit;w=window'.\
+        \ E.g., '1000;w=3600' means 1000 requests per hour."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^\d+;w=\d+(;burst=\d+)?$
+        type: string
+        example: 1000;w=3600
   securitySchemes:
     industry-oauth:
       type: oauth2
@@ -3254,5 +2939,18 @@ components:
     bearer-auth:
       type: http
       description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyHeader:
+      type: apiKey
+      description: "A unique member-specific identifier used for API routing, quota\
+        \ management, and rate limiting. This key does not replace the Authorization\
+        \ bearer token for identity."
+      name: X-API-Key
+      in: header
+    AuthorizationHeader:
+      type: http
+      description: Standard OIDC/OAuth 2.0 Bearer Token
+      name: Authorization
       scheme: bearer
       bearerFormat: JWT

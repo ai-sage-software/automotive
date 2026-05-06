@@ -1,11 +1,17 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
-  description: A standardized interface for Automotive Retail ...
+  title: Automotive Retail Systems API - Payment
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -21,2742 +27,409 @@ security:
 - member-api-key: []
 - {}
 tags:
-- name: PaymentTransaction
-  description: Operations related to PaymentTransaction
 - name: Payment
-  description: Operations related to Payment
-- name: Health
-  description: Operations related to Health
-- name: Default
-  description: Operations related to Default
+  description: Payment Controlled Root
 paths:
   /payments:
     get:
       tags:
-      - Payment
-      summary: Retrieve a list of Payment entities.
-      description: Standard GET operation for /payments
-      operationId: listPayment
+      - Payments
+      summary: Returns a paginated list of payment
+      description: a list of Payment
+      operationId: listPayments
       parameters:
-      - name: sort
-        in: query
-        schema:
-          type: string
-      - name: filter
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 50
-      - name: limit
-        in: query
-        description: The maximum number of entities to return in a single response
-          page. Limits the 'data' array size to prevent payload bloat.
-        required: false
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          format: int32
-          default: 50
-      - name: offset
-        in: query
-        description: The number of entities to skip before starting to collect the
-          result set. Used in conjunction with 'limit' for traditional page-based
-          navigation.
-        required: false
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-          default: 0
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      - $ref: "#/components/parameters/UnitIdQuery"
-      - $ref: "#/components/parameters/VINQuery"
-      - $ref: "#/components/parameters/StatusQuery"
-      - $ref: "#/components/parameters/StartDateQuery"
-      - $ref: "#/components/parameters/EndDateQuery"
-      - $ref: "#/components/parameters/PageNumberQuery"
-      - $ref: "#/components/parameters/PageSizeQuery"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Success
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Payment"
-                  has_more:
-                    type: boolean
-                    example: false
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentCollectionResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     post:
       tags:
-      - Payment
-      summary: Retrieve a list  of entities.
-      description: Standard POST operation for /payments
+      - Payments
+      summary: create payment
+      description: create Payment
       operationId: createPayment
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Payment"
+              $ref: "#/components/schemas/PaymentCreate"
+        required: true
       responses:
         "201":
-          description: Created
-          headers:
-            Location:
-              $ref: "#/components/headers/LocationHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentCreatedResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
+          $ref: "#/components/responses/ForbiddenError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
         "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
   /payments/{payment-key}:
     get:
       tags:
-      - Payment
-      description: "Standard GET operation for /payments/{payment-key}"
-      operationId: getPaymentById
+      - Payments
+      summary: Retrieve a single item scoped by a key Payment entities.
+      operationId: getPaymentByKey
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentKey"
       - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: get Payment By Id
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Payment"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentSingleResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     put:
       tags:
-      - Payment
-      description: "Standard PUT operation for /payments/{payment-key}"
-      operationId: replacePayment
+      - Payments
+      summary: Replace values in a single item scoped by a key Payment entities.
+      operationId: replacePaymentByKey
+      parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentKey"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentUpdate"
+        required: true
       responses:
         "200":
-          description: Replaced
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentUpdatedResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
         "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     delete:
       tags:
-      - Payment
-      description: "Standard DELETE operation for /payments/{payment-key}"
-      operationId: deletePaymentEntity
+      - Payments
+      description: delete a Payment
+      operationId: deletePayment
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/ReasonQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentKey"
       responses:
+        "200":
+          $ref: "#/components/responses/PaymentSingleResponse"
         "204":
-          description: Deleted
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/NoContentSuccess"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     patch:
       tags:
-      - Payment
-      description: "Standard PATCH operation for /payments/{payment-key}"
-      operationId: updatePartialPayment
+      - Payments
+      summary: Update a single item scoped by a key Payment
+      description: update a single item
+      operationId: updatePaymentByKey
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentKey"
       requestBody:
         content:
           application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/PaymentUpdate"
+        required: true
       responses:
         "200":
-          description: Updated
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentUpdatedResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
         "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payment-key
-      in: path
-      description: The unique identifier for the specific Payment
-      required: true
-      schema:
-        type: string
-        example: KEY78w
+          $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
   /payments/{payment-key}/payment-transactions:
     get:
       tags:
-      - PaymentTransaction
-      summary: Retrieve a list scoped by payment-key
-      description: "Standard GET operation for /payments/{payment-key}/payment-transactions"
-      operationId: listPaymentTransactionByPayment-key
+      - PaymentTransactions
+      summary: Returns a paginated list of payment transaction
+      description: a list of PaymentTransaction
+      operationId: listPaymentTransactionsByPayment-key
       parameters:
-      - name: sort
-        in: query
-        schema:
-          type: string
-      - name: filter
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 50
-      - name: limit
-        in: query
-        description: The maximum number of entities to return in a single response
-          page. Limits the 'data' array size to prevent payload bloat.
-        required: false
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          format: int32
-          default: 50
-      - name: offset
-        in: query
-        description: The number of entities to skip before starting to collect the
-          result set. Used in conjunction with 'limit' for traditional page-based
-          navigation.
-        required: false
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-          default: 0
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      - $ref: "#/components/parameters/UnitIdQuery"
-      - $ref: "#/components/parameters/VINQuery"
-      - $ref: "#/components/parameters/StatusQuery"
-      - $ref: "#/components/parameters/StartDateQuery"
-      - $ref: "#/components/parameters/EndDateQuery"
-      - $ref: "#/components/parameters/PageNumberQuery"
-      - $ref: "#/components/parameters/PageSizeQuery"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Success
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PaymentTransaction"
-                  has_more:
-                    type: boolean
-                    example: false
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentTransactionCollectionResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - PaymentTransaction
-      summary: Retrieve a list  of entities.
-      description: "Standard POST operation for /payments/{payment-key}/payment-transactions"
-      operationId: createPaymentTransaction
-      parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PaymentTransactionCreate"
-      responses:
-        "201":
-          description: Created
-          headers:
-            Location:
-              $ref: "#/components/headers/LocationHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     parameters:
-    - name: payment-key
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
+    - $ref: "#/components/parameters/PaymentKey"
   /payments/{payment-key}/payment-transactions/{payment-transaction-key}:
     get:
       tags:
-      - PaymentTransaction
-      description: "Standard GET operation for /payments/{payment-key}/payment-transactions/{payment-transaction-key}"
-      operationId: getPaymentTransactionById
+      - PaymentTransactions
+      summary: Retrieve a single item scoped by a key PaymentTransaction entities.
+      operationId: getPaymentTransactionByKey
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentTransactionKey"
       - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: get PaymentTransaction By Id
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentTransaction"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
+          $ref: "#/components/responses/PaymentTransactionSingleResponse"
         "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - PaymentTransaction
-      description: "Standard PUT operation for /payments/{payment-key}/payment-transactions/{payment-transaction-key}"
-      operationId: replacePaymentTransaction
-      responses:
-        "200":
-          description: Replaced
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - PaymentTransaction
-      description: "Standard DELETE operation for /payments/{payment-key}/payment-transactions/{payment-transaction-key}"
-      operationId: deletePaymentTransactionEntity
-      parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      responses:
-        "204":
-          description: Deleted
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - PaymentTransaction
-      description: "Standard PATCH operation for /payments/{payment-key}/payment-transactions/{payment-transaction-key}"
-      operationId: updatePartialPaymentTransaction
-      parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      requestBody:
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/PaymentTransactionUpdate"
-      responses:
-        "200":
-          description: Updated
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     parameters:
-    - name: payment-key
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: payment-transaction-key
-      in: path
-      description: The unique identifier for the specific PaymentTransaction
-      required: true
-      schema:
-        type: string
-        example: KEY78F
-  /payments/health:
+    - $ref: "#/components/parameters/PaymentKey"
+  /payment/health:
     get:
       tags:
       - Health
       summary: Health Check
-      description: Public endpoint to verify service availability.
+      description: Returns the health status of the Payment root node.
       operationId: healthPayment
       parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
       responses:
         "200":
-          description: Service is healthy
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                required:
-                - status
-                - version
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: UP
-                    enum:
-                    - UP
-                    - DOWN
-                    - MAINTENANCE
-                  version:
-                    type: string
-                    description: The version of the ontology implemented by this service.
-                    example: 1.0.0
-                  timestamp:
-                    type: string
-                    description: Server time in ISO-8601 format.
-                    format: date-time
-                    example: 2025-12-21T23:00:00Z
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/HealthStatusResponse"
         "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
+          $ref: "#/components/responses/ForbiddenError"
         "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
       security:
-      - {}
-  /payments/{paymentKey}/commands/{commandId}:
-    get:
-      tags:
-      - Default
-      summary: Poll Payment command status
-      description: Check the progress or result of a previously submitted command.
-      operationId: getPaymentCommandStatus
-      parameters:
-      - name: paymentKey
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
-      - name: commandId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      responses:
-        "200":
-          description: Current status of the command
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  command_id:
-                    type: string
-                    description: The unique identifier for the command being tracked
-                    format: uuid
-                    readOnly: true
-                  status:
-                    type: string
-                    description: The current lifecycle state of the command
-                    enum:
-                    - PENDING
-                    - PROCESSING
-                    - SUCCESS
-                    - FAILED
-                    - REQUIRES_ACTION
-                  progress:
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                    description: Percentage of completion (0-100)
-                    format: int32
-                  message:
-                    type: string
-                    description: Status update or error message
-                  result:
-                    type: object
-                    additionalProperties: true
-                    description: The final output of the command (only populated on
-                      SUCCESS)
-                  errors:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ErrorDetail"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-  /payments/batch:
-    post:
-      tags:
-      - Default
-      summary: Bulk create payments
-      description: Bulk Create of Payment
-      operationId: createPaymentBatch
-      parameters:
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                items:
-                  maxItems: 100
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/PaymentCreate"
-      responses:
-        "200":
-          description: Success
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /payments/batch/1597159011928232788
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  succeeded:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Payment"
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        index:
-                          type: integer
-                          format: int32
-                        error:
-                          $ref: "#/components/schemas/ErrorDetail"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-  /payments/exports:
-    post:
-      tags:
-      - Default
-      summary: Initiate a bulk Payment export
-      description: Standard POST operation for /payments/exports
-      operationId: initiatePaymentExport
-      parameters:
-      - name: Idempotency-Key
-        in: header
-        description: Unique string to prevent duplicate export jobs for the same request
-        required: false
-        schema:
-          type: string
-          format: uuid
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                format:
-                  type: string
-                  description: "The serialization format of the exported data. PARQUET\
-                    \ is recommended for large-scale analytical processing, while\
-                    \ JSON/XML are intended for legacy DMS compatibility."
-                  example: PARQUET
-                  default: PARQUET
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                  - TOON
-                date_range:
-                  type: object
-                  properties:
-                    start:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                    end:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                data_contract_key:
-                  type: string
-                  description: "The identifier of the specific data contract/projection\
-                    \ (e.g., 'customer_contact_v1')"
-                  example: contact_details_only
-                compression:
-                  type: string
-                  description: "The compression algorithm to apply. ZSTD is recommended\
-                    \ for \nbalancing high compression ratios with blazing decompression\
-                    \ speeds."
-                  example: ZSTD
-                  default: ZSTD
-                  enum:
-                  - SNAPPY
-                  - GZIP
-                  - LZO
-                  - ZSTD
-                compression_level:
-                  maximum: 22
-                  minimum: 1
-                  type: string
-                  description: "Tunable intensity for ZSTD. Use lower levels (1-3)\
-                    \ for speed, higher levels (19+) for expensive bandwidth scenarios."
-                  default: "3"
-                destination:
-                  type: object
-                  properties:
-                    retrieval_url:
-                      type: string
-                      description: The URL where the user intends to receive or pull
-                        the data
-                      format: uri
-                  description: Configuration for file retrieval
-                notification:
-                  type: object
-                  properties:
-                    webhook_url:
-                      type: string
-                      format: uri
-                      example: https://client-system.com/callbacks/exports
-                    signature_key:
-                      type: string
-                      description: A secret key used to sign the webhook payload for
-                        security
-                  description: "Optional: Callback configuration for completion alerts"
-                dry_run:
-                  type: boolean
-                  description: "If true, the system validates the request and returns\
-                    \ potential violations or metadata (like estimated size) without\
-                    \ starting the job."
-                  example: false
-                  default: false
-              example: PARQUET
-      responses:
-        "200":
-          description: "Dry run results: validation and cost estimation metadata."
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /payments/exports/4637273024417150604
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The outcome of the dry-run evaluation. VALIDATED
-                      implies readiness; REJECTED implies blocking violations.
-                    example: VALIDATED
-                    enum:
-                    - VALIDATED
-                    - WARNING
-                    - REJECTED
-                  estimated_metrics:
-                    type: object
-                    properties:
-                      record_count:
-                        type: integer
-                        description: Total number of source records targeted by the
-                          current filter criteria.
-                        format: int32
-                        example: 1250000
-                      estimated_uncompressed_gb:
-                        type: number
-                        description: The projected raw byte size of the data set before
-                          any compression or encoding.
-                        example: 4.2
-                      estimated_compressed_gb:
-                        type: number
-                        description: "Projected final footprint based on the chosen\
-                          \ compression algorithm (e.g., ZSTD, GZIP)."
-                        example: 0.85
-                      estimated_processing_time_ms:
-                        type: integer
-                        description: The estimated wall-clock time required to complete
-                          the transformation and upload phase.
-                        format: int32
-                        example: 45000
-                    description: Heuristic-based predictions of the job's resource
-                      consumption and output size.
-                  validation_results:
-                    type: object
-                    properties:
-                      is_executable:
-                        type: boolean
-                        description: A definitive flag indicating if the request can
-                          be executed without modification.
-                        example: true
-                      warnings:
-                        type: array
-                        description: "Non-blocking advisory messages regarding performance,\
-                          \ cost, or storage limits."
-                        example:
-                        - "Large export detected: ensure destination storage exceeds\
-                          \ 1GB"
-                        items:
-                          type: string
-                      violations:
-                        type: array
-                        description: Blocking business rule or data contract violations
-                          that must be resolved prior to execution.
-                        items:
-                          $ref: "#/components/schemas/ProblemDetail"
-                    description: The logical assessment of the request against domain
-                      business rules and technical limits.
-                  suggested_optimizations:
-                    type: array
-                    description: Actionable feedback for the calling agent to improve
-                      request efficiency or lower data entropy.
-                    example:
-                    - Switch to PARQUET for 30% faster processing of this specific
-                      data contract
-                    items:
-                      type: string
-                description: "Metadata returned when dry_run is true, enabling agentic\
-                  \ pre-flight reasoning and predictive impact analysis."
-        "202":
-          description: Export job successfully created and accepted.
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              description: HATEOAS link to discover state-aware transitions.
-              schema:
-                type: string
-                example: "</exports/capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              $ref: "#/components/headers/LocationHeader"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "422":
-          description: Unprocessable Entity - Business Rule Violation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-      callbacks:
-        onExportCompleted:
-          '{$request.body#/notification/webhook_url}':
-            post:
-              description: Sent when the export job reaches a terminal state (COMPLETED
-                or FAILED)
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/ExportNotification"
-              responses:
-                "200":
-                  description: Webhook received
-  /payments/exports/{exportId}:
-    get:
-      tags:
-      - Default
-      summary: Get export status
-      description: Get Export Status of Payment
-      operationId: getPaymentExportStatus
-      parameters:
-      - name: exportId
-        in: path
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      responses:
-        "200":
-          description: Current status and file URLs
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExportJob"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-  /payments/{paymentKey}/commands:
-    post:
-      tags:
-      - Default
-      summary: Execute a business workflow on Payment
-      description: Single entry point for all Payment state-changing intents.
-      operationId: executePaymentCommand
-      parameters:
-      - name: paymentKey
-        in: path
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      requestBody:
-        description: Command intent and parameters
-        content:
-          application/json:
-            schema:
-              required:
-              - type
-              - method
-              - params
-              - id
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: jsonrpc
-                  default: jsonrpc
-                jsonrpc:
-                  type: string
-                  example: "2.0"
-                  default: "2.0"
-                method:
-                  type: string
-                  description: star.order.update)
-                id:
-                  type: string
-                  description: "match the response with request. If omitted, Notification\
-                    \ the server will not respond."
-                version:
-                  type: string
-                  description: "2.0"
-                workflow_state:
-                  type: string
-                  description: "The intent of the command (e.g., CREATED, DELETED)"
-                  enum:
-                  - CREATED
-                  - DELETED
-                context:
-                  type: object
-                  additionalProperties: true
-                  description: context payload required for this specific command
-                    type
-                params:
-                  $ref: "#/components/schemas/Payment"
-      responses:
-        "200":
-          description: Success
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/payments/{paymentKey}/commands/2918568016006040443"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The execution status of the command
-                    example: SUCCESS
-                    enum:
-                    - SUCCESS
-                    - FAILED
-                    - PENDING
-                    - PROCESSING
-                    - VALIDATION_ERROR
-                    - PARTIAL_SUCCESS
-                    - REQUIRES_ACTION
-                    - MITIGATION_APPLIED
-                  message:
-                    type: string
-                    description: A human-readable summary or error detail
-                    example: "Invoice #1f41ba4e has been successfully cancelled."
-                  command_id:
-                    type: string
-                    description: The tracking ID for this specific command execution
-                    format: identifier
-                  code:
-                    type: string
-                    description: detailed code for workflow business processing
-                    example: 0d068c29
-                  retry_after:
-                    type: string
-                    description: "For PENDING or PROCESSING statuses, retry_after\
-                      \ (integer, seconds) "
-                  retryable:
-                    type: boolean
-                    description: "If true, the agent can attempt this command again\
-                      \ immediately"
-                    example: false
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
-  /payments/capabilities:
-    get:
-      tags:
-      - Default
-      summary: Discover Payment Capabilities
-      description: Standard GET operation for /payments/capabilities
-      operationId: getPaymentCapabilities
-      parameters:
-      - name: include
-        in: query
-        description: "Comma-separated list of sections to include (e.g., 'commands,exports,constraints')"
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - COMMANDS
-            - EXPORTS
-            - CONSTRAINTS
-      - name: role
-        in: query
-        description: Filter capabilities by the agent's current role(s)
-        schema:
-          type: string
-          example: ACCOUNTANT
-      - name: state
-        in: query
-        description: Filter commands and constraints relevant only to a specific aggregate
-          state
-        required: true
-        schema:
-          type: string
-          example: ACTIVE
-      - $ref: "#/components/parameters/TransactionIdHeader"
-      - $ref: "#/components/parameters/ApiVersionHeader"
-      - $ref: "#/components/parameters/CountryCodeHeader"
-      - $ref: "#/components/parameters/LocaleHeader"
-      - $ref: "#/components/parameters/BrandHeader"
-      - $ref: "#/components/parameters/DealerIdHeader"
-      - $ref: "#/components/parameters/CreatorCodeHeader"
-      - $ref: "#/components/parameters/SourceSystemHeader"
-      - $ref: "#/components/parameters/SubscriberCodeHeader"
-      - $ref: "#/components/parameters/PreferHeader"
-      - $ref: "#/components/parameters/RegionHeader"
-      - $ref: "#/components/parameters/UnitIdQuery"
-      - $ref: "#/components/parameters/VINQuery"
-      - $ref: "#/components/parameters/StatusQuery"
-      - $ref: "#/components/parameters/StartDateQuery"
-      - $ref: "#/components/parameters/EndDateQuery"
-      - $ref: "#/components/parameters/PageNumberQuery"
-      - $ref: "#/components/parameters/PageSizeQuery"
-      responses:
-        "200":
-          description: Successful discovery response (may be partial based on filters)
-          headers:
-            Standards-Version:
-              $ref: "#/components/headers/StandardsVersionHeader"
-            Transaction-Id:
-              $ref: "#/components/headers/TransactionIdHeader"
-            Link:
-              $ref: "#/components/headers/LinkHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Capabilities"
-        "409":
-          description: "Conflict: Resource state mismatch or concurrent update."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ConflictError"
-        "400":
-          description: "Bad Request: Malformed STAR schema or invalid syntax."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/BadRequestError"
-        "401":
-          description: "Unauthorized: Credentials missing or expired."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnauthorizedError"
-        "412":
-          description: "Precondition Failed: Required headers or state criteria not\
-            \ met."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/PreconditionFailedError"
-        "403":
-          description: "Forbidden: System code mismatch or transition guard failure."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ForbiddenError"
-        "404":
-          description: "Not Found: The requested RDR aggregate does not exist."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/NotFoundError"
-        "415":
-          description: "Unsupported Media Type: Content must be application/json."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/UnsupportedMediaType"
-        "500":
-          description: "Internal Server Error: An unexpected metabolic fault occurred."
-          headers:
-            Transaction-Id:
-              $ref: "#/components/parameters/TransactionIdHeader"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/ServerError"
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
 components:
   schemas:
-    Capabilities:
-      type: object
-      properties:
-        aggregate:
-          type: string
-          example: Payment
-        version:
-          type: string
-          example: 1.2.0
-        current_state:
-          type: string
-          description: The state used to filter these capabilities
-          example: PENDING_APPROVAL
-        transitions:
-          type: array
-          description: list of array
-          example: "[]"
-          items:
-            type: object
-            properties:
-              action:
-                type: string
-                example: APPROVE_INVOICE
-              from_states:
-                type: array
-                example:
-                - PENDING_APPROVAL
-                items:
-                  type: string
-              to_state:
-                type: string
-                example: ISSUED
-              required_roles:
-                type: array
-                description: Roles authorized to trigger this transition
-                example:
-                - MANAGER
-                - FINANCE_VP
-                items:
-                  type: string
-              links:
-                type: object
-                properties:
-                  execute:
-                    type: string
-                    description: The relative or absolute URL to POST the command
-                      to
-                    example: "/payments/{key}/commands/approve"
-                  method:
-                    type: string
-                    example: POST
-                    enum:
-                    - POST
-                    - PUT
-                    - PATCH
-                  schema_ref:
-                    type: string
-                    description: Reference to the input payload schema for this action
-                    example: "#/components/schemas/PaymentCommand"
-                description: HATEOAS-style links to execute the transition or fetch
-                  related metadata
-              _self:
-                type: string
-                description: Link to the specific transition documentation or detail
-                example: /metadata/capabilities/Payment/transitions/approve
-              instructions:
-                type: array
-                description: Step-by-step checklist the agent must verify before execution
-                example:
-                - Verify credit limit is sufficient
-                - Confirm tax jurisdiction matches customer address
-                - Ensure currency matches original purchase order
-                items:
-                  type: string
-              parameters_ref:
-                type: string
-                example: "#/components/schemas/Payment"
-        available_exports:
-          type: array
-          description: list of array
-          example: "[]"
-          items:
-            type: object
-            properties:
-              data_contract_key:
-                type: string
-                example: customer_contact_v1
-              description:
-                type: string
-                example: Optimized view containing only non-sensitive contact details.
-              supported_formats:
-                type: array
-                example:
-                - PARQUET
-                - CSV
-                items:
-                  type: string
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                default: PARQUET
-              columns:
-                type: array
-                example:
-                - first_name
-                - last_name
-                - email
-                items:
-                  type: string
-              retention_policy:
-                type: object
-                properties:
-                  retention_period:
-                    type: string
-                    description: ISO-8601 duration the file remains available for
-                      download
-                    example: P7D
-                  is_pii_sensitive:
-                    type: boolean
-                    description: Indicates export contains PII
-                    example: false
-                  access_tier:
-                    type: string
-                    description: The security clearance required for this contract
-                    example: INTERNAL
-                    enum:
-                    - PUBLIC
-                    - INTERNAL
-                    - RESTRICTED
-                    - CONFIDENTIAL
-              constraints:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    rule_id:
-                      type: string
-                      description: Unique identifier for the business rule
-                      readOnly: true
-                      example: IDENTITY_LOCK_STATE
-                    constraint_type:
-                      type: string
-                      enum:
-                      - RANGE_LIMIT
-                      - SIZE_LIMIT
-                      - FORMAT_INCOMPATIBILITY
-                      - PATTERN_MISMATCH
-                      - PERMISSION_LOCK
-                      - MANDATORY_MISSING
-                      - STATE_TRANSITION_ERROR
-                      - IMMUTABILITY_VIOLATION
-                      - RELATIONAL_DEPENDENCY
-                      - CONFLICT_DETECTION
-                      - AGGREGATE_LIMIT
-                      - ORPHAN_PREVENTION
-                    target_fields:
-                      type: array
-                      description: The specific fields or attributes this constraint
-                        applies to
-                      example:
-                      - first_name
-                      - last_name
-                      - ssn
-                      items:
-                        type: string
-                    rule_context:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: Key-value pairs representing the 'facts' of the
-                        current state
-                      example:
-                        item_type: Inventory
-                        count: "45"
-                        limit: "0"
-                    rule_constraints:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: "Key-value pairs for simple UI-driven validation\
-                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
-                        \ checks."
-                      example:
-                        unit: days
-                        min: "1"
-                        value: "31"
-                    limit_rule:
-                      type: string
-                      description: A Prolog-based predicate defining the valid boundary
-                        for this constraint.
-                      example: "allow_export(Format, Days) :- Format == 'parquet',\
-                        \ Days =< 31; Format == 'csv', Days =< 90."
-                    estimated_size:
-                      type: string
-                      description: approximate size of
-                      example: 10gig
-                    estimated_time_min:
-                      type: string
-                      description: approximate amount of minutes to run
-                      example: "12.3"
-                    complexity:
-                      type: string
-                      description: complexity score 1-100
-                      example: "34"
-                    mitigation_hint:
-                      type: string
-                      description: Conflict Resolution Hints
-                      example: "To resolve this PERMISSION_LOCK, you must first call\
-                        \ the /unlock endpoint."
-                    message:
-                      type: string
-                      description: Human-readable explanation for UI/Logs
-                      example: Identity fields cannot be modified while in PENDING_APPROVAL
-                        state.
-                    severity:
-                      type: string
-                      enum:
-                      - ERROR
-                      - WARNING
-                    link:
-                      type: string
-                      description: Link to documentation regarding this rule
-                      format: uri
-        documentation_ref:
-          type: string
-          description: Link to full business documentation for this aggregate
-          format: uri
-          example: /documentation/payments
     Code:
       type: object
       properties:
@@ -2764,81 +437,70 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
-          readOnly: true
-          example: ' a81ff160'
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
         code_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
-          example: ' 9f864ef3'
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
         code:
           maxLength: 50
-          minLength: 5
+          minLength: 1
           type: string
-          description: The unique key code
-          example: ' 9b8d09c3'
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
         description:
-          maxLength: 50
+          maxLength: 255
           minLength: 5
           type: string
-          description: The unique key code
-          example: ' 636bc560'
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
       description: not nullable
     Codes:
       type: array
       items:
         $ref: "#/components/schemas/Code"
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
     CurrencyExchange:
       type: object
       properties:
         currency_exchange_id:
           type: string
-          description: Unique system identifier for the currenc...
-          readOnly: true
-          example: ' 68806737'
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
         currency_exchange_key:
           type: string
-          description: Natural key or business identifier for t...
-          example: ' 40fac297'
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
         source_currency:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' 0c99138d'
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
         target_currency:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' 9f50f62f'
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
         currency_exchange_desc:
           type: string
-          description: A descriptive title for the currencyExch...
-          example: ' b60d9f9e'
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
         exchange_rate:
           type: string
-          description: Human-readable display value for the sou...
-          example: ' 1d0036fb'
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
         rate_date_time:
           type: string
-          description: The date and time the rate was associate...
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-          example: 2026-03-25T12:21:35Z
-      description: "CurrencyExchange that includes display value, c..."
+          example: 2026-05-06T14:08:26Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     ErrorDetail:
       required:
       - category
@@ -2858,7 +520,8 @@ components:
           example: Personnel Record with ID PR-1234567 was not found.
         category:
           type: string
-          description: Classifies the error to help clients determine ...
+          description: Classifies the error to help clients determine high-level retry
+            or handling logic.
           example: DATA_INTEGRITY
           enum:
           - VALIDATION
@@ -2875,17 +538,17 @@ components:
         trace_id:
           type: string
           description: A unique identifier for this specific request.
-          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
-          description: A URL leading to the documentation page for thi...
+          description: A URL leading to the documentation page for this specific error
+            code.
           format: uri
           example: https://api.docs.com/errors/NOT_FOUND_PR
         details:
           type: array
-          description: list of array
-          example: "[]"
+          description: Field-level validation errors or granular diagnostic information.
+          example: Invalid request parameter.
           items:
             type: object
             properties:
@@ -2901,137 +564,20 @@ components:
                 type: string
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
-      description: Standardized error response for the entire API ...
-    ExportFile:
+      description: Standardized error response for the entire API ecosystem. Follows
+        RFC 7807 principles for problem details to ensure consistency across microservices.
+    HealthStatus:
       type: object
       properties:
-        sequence:
-          type: integer
-          description: The ordinal position of this file in a multi-part set. Essential
-            for reassembling sharded datasets.
-          format: int32
-          example: 1
-        download_url:
-          type: string
-          description: "A secure, pre-signed URL for direct binary retrieval. Access\
-            \ is restricted by the 'expires_at' timestamp."
-          format: uri
-          example: https://s3.us-east-1.amazonaws.com/star-exports/job-77216/part-1.parquet?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
-        format:
-          type: string
-          description: "The technical encoding of the file, enabling the agent to\
-            \ select the correct parser (e.g., Parquet, Avro, CSV)."
-          example: PARQUET
-        checksum_sha256:
-          type: string
-          description: The hex-encoded SHA-256 hash of the file. Used by the agent
-            to verify bit-level integrity after download.
-          example: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-        size_bytes:
-          type: integer
-          description: "The exact size of the file in bytes, allowing for pre-download\
-            \ storage capacity checks."
-          format: int64
-          example: 8912734
-        expires_at:
-          type: string
-          description: "The ISO 8601 deadline for initiating the download. After this\
-            \ point, the URL will return a 403 Forbidden."
-          format: date-time
-          example: 2026-03-18T12:00:00Z
-      description: "A discrete data artifact representing a segment of the total export\
-        \ set, including integrity and access metadata."
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique GUID tracking this specific export execution.
-          readOnly: true
-          example: job-99283-x7
         status:
           type: string
-          description: The current state of the export job in the processing pipeline.
-          example: ' 6c4523e6'
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          description: The estimated completion percentage of the job.
-          format: int32
-          example: 75
-        files:
-          type: array
-          description: list of array
-          example: "[]"
-          items:
-            $ref: "#/components/schemas/ExportFile"
-      description: "The root tracking object for an export operation, providing real-time\
-        \ status and access to generated artifacts."
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
+          description: Current health status of the service.
+          example: UP
+        version:
           type: string
-          description: The classification of the event. Used by routing logic to determine
-            the next handling step.
-          example: EXPORT_COMPLETED
-          enum:
-          - EXPORT_COMPLETED
-          - EXPORT_FAILED
-        occurred_at:
-          type: string
-          description: The ISO 8601 timestamp when the job reached its terminal state.
-          format: date-time
-          example: 2026-03-17T14:30:00Z
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-              description: The unique tracking identifier for the completed or failed
-                export job.
-              readOnly: true
-              example: job-77216-af82
-            aggregate:
-              type: string
-              description: The Domain-Driven Design (DDD) aggregate root name targeted
-                by this export.
-              example: VehicleIdentifier
-            data_product_id:
-              type: string
-              description: The specific identifier of the data product or contract
-                used for the projection.
-              readOnly: true
-              example: standard_vin_inventory_v1
-            status:
-              type: string
-              description: The final resolution of the job. 'FAILED' will include
-                an error_message.
-              example: COMPLETED
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: A human-readable explanation of why the export failed.
-                Null if status is COMPLETED.
-              example: Storage destination quota exceeded.
-            files:
-              type: array
-              description: The list of generated file artifacts. Empty if status is
-                FAILED.
-              items:
-                $ref: "#/components/schemas/ExportFile"
-          description: The core payload containing the results or failure diagnostics
-            of the export.
-      description: The asynchronous payload sent to the configured webhook URL upon
-        the terminal state of an export job.
+          description: Version of the deployed service.
+          example: 2.0.0
+      description: Standard health check response body
     Identifier:
       type: object
       properties:
@@ -3040,101 +586,72 @@ components:
           minLength: 5
           type: string
           description: Unique identifier value
-          readOnly: true
-          example: ' d2465c0d'
+          example: "839867678966009856"
         identifier_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Business key for the identifier
-          readOnly: true
-          example: ' 99fd51a2'
+          example: "839867678966009857"
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' dd0c36f8'
+          example: FINANCE
         value:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' 03fcd024'
+          description: The monetary or hours-based value of the event.
+          example: user@example.com
         detail:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' 58013031'
+          description: The monetary or hours-based value of the event.
+          example: Primary identifier
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' f123be55'
+          description: The monetary or hours-based value of the event.
+          example: identifier_type value
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
     Money:
       type: object
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
-          example: ' fb151142'
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
-          readOnly: true
-          example: ' 1ea86735'
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
-          example: ' ef3a70cb'
+          description: money.currency.code.desc
+          example: USD
         display_value:
           type: string
-          description: The locale-specific display format for t...
-          example: ' 470415de'
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
-          example: ' c67eb044'
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
-          example: ' 3b20ef5e'
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
-      description: "Represents a monetary value, including its curr..."
-    Pagination:
-      type: object
-      properties:
-        limit:
-          minimum: 1
-          type: integer
-          description: The maximum number of records requested per page.
-          format: int32
-          example: 25
-        offset:
-          minimum: 0
-          type: integer
-          description: The number of records to skip from the beginning.
-          format: int32
-          example: 50
-        cursor:
-          type: string
-          description: An opaque token for stable deep-paging.
-          example: dW5pcXVlX2lkXzEyMw==
-        records_count:
-          type: integer
-          description: Total records matching search across all pages.
-          format: int64
-          example: 1050
-        total_pages:
-          type: integer
-          description: Calculated total number of pages.
-          format: int32
-          example: 42
-        page_number:
-          type: integer
-          description: The current page index (1-based).
-          format: int32
-          example: 3
-      description: Metadata for navigating paginated collection results.
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     Payment:
       type: object
       properties:
@@ -3142,15 +659,14 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
-          readOnly: true
-          example: ' bb6a8d95'
+          description: Unique identifier value for the reference record.
+          example: "839867678966009858"
         payment_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
-          example: ' 4e3072ff'
+          description: Unique key value for the reference record.
+          example: "839867678966009859"
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         target_amount:
@@ -3160,13 +676,14 @@ components:
         context:
           type: string
           description: Context or domain of the reference.
-          example: ' 8e53f730'
+          example: FINANCE
         occurrence_date_time:
           type: string
-          description: The date and time the payment was associ...
+          description: The date and time the payment was associated with the order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
-      description: Reference to a PaymentMethod (Party) Aggregate ...
+          example: 2026-05-06T14:08:26Z
+      description: Reference to a PaymentMethod (Party) Aggregate Root for financing
+        details.
     PaymentAmountTypes:
       type: string
       description: types of payment amounts.
@@ -3207,37 +724,39 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
-          readOnly: true
-          example: ' ce967d7c'
+          description: Unique identifier value for the reference record.
+          example: "839867678966009860"
         payment_method_reference_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
-          example: ' 3c4e21a5'
+          description: Unique key value for the reference record.
+          example: "839867678966009861"
         payment_method_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
-          example: ' 2187fcb5'
+          description: The unique key identifying the referenced PaymentMethod (Party)
+            aggregate.
+          example: "839867678966009862"
         context:
           type: string
           description: Context or domain of the reference.
-          example: ' 0d8d9c22'
+          example: FINANCE
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
         processor_options:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         snapshot_details:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         occurrence_date_time:
           type: string
-          description: The date and time the paymentMethod was ...
+          description: The date and time the paymentMethod was associated with the
+            order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
-      description: Reference to a PaymentMethod (Party) Aggregate ...
+          example: 2026-05-06T14:08:26Z
+      description: Reference to a PaymentMethod (Party) Aggregate Root for financing
+        details.
     PaymentMethodTypes:
       type: string
       description: types of payment methods.
@@ -3266,21 +785,6 @@ components:
       - EXCHANGE
       - OTHER
       - NOT_APPLICABLE
-    PaymentResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: "#/components/schemas/Pagination"
-        data:
-          type: array
-          description: list of array
-          example: "[]"
-          items:
-            $ref: "#/components/schemas/Payment"
-      description: A paginated collection of Payment Items.
-      allOf:
-      - $ref: "#/components/schemas/Payment"
-      - $ref: "#/components/schemas/PaymentWorkflowMetadata"
     PaymentStatusTypes:
       type: string
       description: types of payment status.
@@ -3310,12 +814,11 @@ components:
         payment_amount_key:
           type: string
           description: A unique key for the payment amount.
-          example: ' ae0a300a'
+          example: "839867678966009863"
         payment_amount_id:
           type: string
           description: A unique key for the payment amount.
-          readOnly: true
-          example: ' e5d7cc64'
+          example: "839867678966009864"
         payment_amount_type:
           $ref: "#/components/schemas/PaymentAmountTypes"
         payment_method_reference:
@@ -3325,13 +828,6 @@ components:
         payment_transaction_status_type:
           $ref: "#/components/schemas/PaymentTransactionStatusTypes"
       description: Represents the type and value of a payment amount.
-    PaymentTransactionCreate:
-      required:
-      - payment_transaction_key
-      type: object
-      description: PaymentTransaction Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PaymentTransaction"
     PaymentTransactionStatusTypes:
       type: string
       description: types of payment transaction status.
@@ -3369,18 +865,6 @@ components:
       - HOLD_ON_DATE
       - PAYMENT
       - DOWNGRADE
-    PaymentTransactionUpdate:
-      type: object
-      properties:
-        amount:
-          $ref: "#/components/schemas/Money"
-        payment_transaction_status_type:
-          $ref: "#/components/schemas/PaymentTransactionStatusTypes"
-        payment_method_reference:
-          $ref: "#/components/schemas/PaymentMethodReference"
-        payment_amount_type:
-          $ref: "#/components/schemas/PaymentAmountTypes"
-      description: PaymentTransaction Update for Patch and Put
     PaymentTransactions:
       type: array
       items:
@@ -3393,35 +877,17 @@ components:
         context:
           type: string
           description: Context or domain of the reference.
-          example: ' 8e53f730'
+          example: FINANCE
         occurrence_date_time:
           type: string
-          description: The date and time the payment was associ...
+          description: The date and time the payment was associated with the order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
+          example: 2026-05-06T14:08:26Z
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
       description: Payment Update for Patch and Put
-    PaymentWorkflowMetadata:
-      type: object
-      properties:
-        current_state:
-          type: string
-          description: The current lifecycle phase of this entity.
-          example: ' 0bdb2dc1'
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: list of array
-          example: "[]"
-          items:
-            $ref: "#/components/schemas/CommandOption"
     ProblemDetail:
       type: object
       properties:
@@ -3469,8 +935,9 @@ components:
           example: "#/plate_number"
         violations:
           type: array
-          description: list of array
-          example: "[]"
+          description: "A collection of specific validation failures, including field\
+            \ paths and localized messages."
+          example: "[{field=postal_code, message=Invalid format}]"
           items:
             type: object
             properties:
@@ -3517,161 +984,584 @@ components:
               \ a direct map to the offending field."
       description: "A standardized error response based on RFC 7807, extended with\
         \ domain-specific intent and validation violations."
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
   responses:
-    ForbiddenError:
-      description: The authenticated user does not have the necess...
+    PaymentTransactionSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: "#/components/schemas/PaymentTransaction"
+    PaymentSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Payment"
+    PaymentUpdatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Payment"
+    PaymentCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of Payments entities.
+                items:
+                  $ref: "#/components/schemas/Payment"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
+    PaymentCreatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        Location:
+          $ref: "#/components/headers/LocationHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Payment"
     ConflictError:
-      description: The request could not be completed because it c...
+      description: The request could not be completed because it conflicts with the
+        current state of the resource.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: An unexpected error occurred on the server whil...
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorDetail"
-    PreconditionFailedError:
-      description: The request was not processed because the 'If-M...
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorDetail"
-    UnsupportedMediaType:
-      description: The request could not be completed because of m...
+      description: An unexpected error occurred on the server while processing the
+        request.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     NotFoundError:
       description: The requested resource was not found.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    PaymentTransactionCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of PaymentTransactions entities.
+                items:
+                  $ref: "#/components/schemas/PaymentTransaction"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
     BadRequestError:
-      description: "The request was malformed, failed validation, o..."
+      description: "The request was malformed, failed validation, or contained invalid\
+        \ parameters."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: Authentication failed. The access token is miss...
+      description: "Authentication failed. The access token is missing, expired, or\
+        \ invalid."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    TooManyRequestsError:
+      description: Rate Limit Error. Too Many Requests
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    HealthStatusResponse:
+      description: Service is Operational
+      headers:
+        Transaction-Id:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HealthStatus"
+    NotAcceptableError:
+      description: The client requested a format (via Accept header) the server can't
+        provide
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ServiceUnavailableError:
+      description: Unable to serve request.  Service is unavailable
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    GatewayTimeout:
+      description: Timeout serving request
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    UnsupportedMediaTypeError:
+      description: The request could not be completed because of missing or invalid
+        content type
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    NoContentSuccess:
+      description: "No Content: The resource was successfully updated."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ForbiddenError:
+      description: The authenticated user does not have the necessary permissions.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    PreconditionFailedError:
+      description: The request was not processed because the 'If-Match' header provided
+        does not match the current ETag.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    UnprocessableEntity:
+      description: "Unprocessable Content: Semantic logic error."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
   parameters:
-    BrandHeader:
-      name: Brand
+    ReasonQuery:
+      name: reason
+      in: query
+      description: Reason parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "duplicate,soft_delete"
+    OrgVersionHeader:
+      name: Org-Version
       in: header
-      description: The automotive brand context for the RDR.
+      description: "The version of the api for the organization that this request\
+        \ adheres to (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    PaymentTransactionKey:
+      name: payment-transaction-key
+      in: path
+      description: The unique identifier for an PaymentTransaction entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839866203640373249"
+    CacheControlHeader:
+      name: Cache-Control
+      in: header
+      description: Tells the client and intermediary caches how to store the response.
       required: false
       style: simple
       explode: false
       schema:
         type: string
-        example: toyota
-        default: toyota
-        enum:
-        - toyota
-        - lexus
-    StandardsVersionHeader:
-      name: Standards-Version
-      in: header
-      description: "The version of the STAR REST Standard this request adheres to\
-        \ (e.g., 2026.01)."
-      required: true
-      schema:
-        maxLength: 12
-        minLength: 7
-        pattern: "^\\d{4}\\.\\d{2}$"
-        type: string
-        example: "2026.01"
-    DealerIdHeader:
-      name: Dealer-Id
-      in: header
-      description: Unique 5-digit Dealer Identifier.
-      required: false
-      schema:
-        maxLength: 5
-        minLength: 5
-        type: string
-        example: "42278"
-    CreatorCodeHeader:
-      name: Creator-Code
-      in: header
-      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
-      required: false
-      schema:
-        maxLength: 8
-        minLength: 2
-        type: string
-        example: CDK
-    SubscriberCodeHeader:
-      name: Subscriber-Code
-      in: header
-      required: false
-      schema:
-        type: string
-        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
-    PreferHeader:
-      name: Prefer
-      in: header
-      description: JSON context for field selection and error logging behavior.
-      required: false
-      schema:
-        type: string
-        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
+        example: "max-age=300, private"
     SourceSystemHeader:
       name: Source-System
       in: header
       description: The system originating the transaction pulse.
       required: true
+      style: simple
+      explode: false
       schema:
         maxLength: 25
         minLength: 2
         type: string
         example: GM_GLOBAL_NVS
-    RegionHeader:
-      name: Region
-      in: header
-      description: The geographic or business region code.
+    FilterQuery:
+      name: filter
+      in: query
+      description: Filter parameters
       required: false
+      style: form
+      explode: true
       schema:
-        maxLength: 10
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "sdate:2026-02-09,edate:2026-02-09"
+    CreatorCodeHeader:
+      name: Creator-Code
+      in: header
+      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 8
         minLength: 2
         type: string
-        example: NE-01
-    ApiVersionHeader:
-      name: Api-Version
+        example: CDK
+    PreferHeader:
+      name: Prefer
       in: header
-      description: API Version
-      required: true
+      description: JSON context for field selection and error logging behavior.
+      required: false
       style: simple
       explode: false
       schema:
         type: string
-        example: 2.0.0
-        enum:
-        - 1.0.0
-        - 1.0.1
-        - 2.0.0
-        - 2.0.1
-    CountryCodeHeader:
-      name: Country-Code
-      in: header
-      required: true
-      style: simple
-      explode: false
-      schema:
-        type: string
-        example: "1"
+        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
     LocaleHeader:
       name: Locale
       in: header
@@ -3681,119 +1571,359 @@ components:
       schema:
         type: string
         example: en-US
-    TransactionIdHeader:
-      name: Transaction-Id
+    IfMatchHeader:
+      name: If-Match
       in: header
-      description: Request ID/ Transaction ID Header Parameter (UUID version 4)
+      description: Used for optimistic concurrency control. The request will fail
+        (412) if the current ETag does not match this value.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    IfNoneMatchHeader:
+      name: If-None-Match
+      in: header
+      description: Used for conditional GETs. The operation is executed only if the
+        stored ETag does not match this value. Prevents 'Lost Updates' in high-concurrency
+        Service Bounded Contexts.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: "^\"?[a-f0-9]+\"?$|^\\*$"
+        type: string
+        example: '"686897696a7c876b7e"'
+    CountryCodeHeader:
+      name: Country-Code
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "1"
+    CorrelationIDHeader:
+      name: Correlation-ID
+      in: header
+      description: A unique identifier spanning the entire business lifecycle. Essential
+        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
+        Domain.
       required: true
       style: simple
       explode: false
       schema:
         type: string
         format: uuid
-        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
-    UnitIdQuery:
-      name: unit_id
-      in: query
-      description: Vehicle UnitId
+        example: 550e8400-e29b-41d4-a716-446655440000
+    AgentHeader:
+      name: Agent
+      in: header
+      description: "The URI profile of the calling Agent. Used to negotiate supported\
+        \ Industry Extensions (e.g., ) via the protocol."
       required: false
+      style: simple
+      explode: false
       schema:
-        type: integer
-        description: Vehicle UnitId
-        format: int32
-        example: 129375127
-    VINQuery:
-      name: vin
-      in: query
-      description: Vehicle Identification Number
-      required: false
-      schema:
+        pattern: ^https?://.+
         type: string
-        description: Vehicle Identification Number
-        example: 5TFHY5F13KX799310
-    StatusQuery:
-      name: status
+        format: uri
+        example: https://xxx.com/agent/v1
+    SortQuery:
+      name: sort
       in: query
-      description: Status of RDR to filter for
-      required: false
-      schema:
-        type: string
-        description: Status of RDR to filter for
-        example: Approved
-    StartDateQuery:
-      name: start_date
-      in: query
-      description: The start date (YYYY-MM-DD). Defaults to current date if omitted.
+      description: Sort parameters
       required: false
       style: form
       explode: true
       schema:
-        maxLength: 10
+        maxLength: 100
         minLength: 0
-        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
         type: string
-        format: date
-        example: 2026-02-09
-    EndDateQuery:
-      name: end_date
-      in: query
-      description: The end date (YYYY-MM-DD). Defaults to current date + 14 days.
+        example: "name,country"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      description: A unique identifier sent by the client to allow the server to prevent
+        duplicate processing of the same request.
       required: false
-      style: form
-      explode: true
-      schema:
-        maxLength: 10
-        minLength: 0
-        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
-        type: string
-        format: date
-        example: 2026-02-09
-    PageNumberQuery:
-      name: page_number
-      in: query
-      description: The number of returned page
-      required: false
-      schema:
-        maximum: 1000000
-        minimum: 1
-        type: integer
-        format: int32
-        default: 1
-    PageSizeQuery:
-      name: page_size
-      in: query
-      description: The number of records to return
-      required: false
-      schema:
-        maximum: 600
-        minimum: 1
-        type: integer
-        format: int32
-        default: 100
-  headers:
-    StandardsVersionHeader:
-      description: The version of the STAR REST Standard this implementation adheres
-        to.
-      schema:
-        type: string
-        example: "2026.1"
-    TransactionIdHeader:
-      description: Forensic trace UUID echoed back for log reconciliation.
+      style: simple
+      explode: false
       schema:
         type: string
         format: uuid
-        example: 16a7d408-aed4-43f8-8af4-7a17f407f799
-    LocationHeader:
-      description: The relative or absolute URI of the newly created or modified resource.
+        example: 123e4567-e89b-12d3-a456-426614174000
+    OffsetQuery:
+      name: offset
+      in: query
+      description: The number of entities to skip before starting to collect the result
+        set. Used in conjunction with 'limit' for traditional page-based navigation.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 234
+    LimitQuery:
+      name: limit
+      in: query
+      description: The maximum number of entities to return in a single response page.
+        Limits the 'data' array size to prevent payload bloat.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        format: int32
+        example: 100
+    RegionHeader:
+      name: Region
+      in: header
+      description: The geographic or business region code.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 2
+        type: string
+        example: NE-01
+    StandardsVersionHeader:
+      name: Standards-Version
+      in: header
+      description: "The version of the STAR REST Standard this request adheres to\
+        \ (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    PaymentKey:
+      name: payment-key
+      in: path
+      description: The unique identifier for an Payment entity.
+      required: true
+      style: simple
+      explode: false
       schema:
         type: string
-        example: /retail-delivery-reports/2329046043316857069
+        example: "839866203640373248"
+    TransactionIDHeader:
+      name: Transaction-ID
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+    BrandHeader:
+      name: Brand
+      in: header
+      description: The automotive brand context for the RDR.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: TOYOTA
+        default: TOYOTA
+        enum:
+        - TOYOTA
+        - LEXUS
+    SubscriberCodeHeader:
+      name: Subscriber-Code
+      in: header
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
+    DealerIdHeader:
+      name: Dealer-Id
+      in: header
+      description: Unique 5-digit Dealer Identifier.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+        example: "42278"
+    PreferenceAppliedHeader:
+      name: Preference-Applied
+      in: header
+      description: Indicates which client preferences (from the 'Prefer' request header)
+        were honored by the server.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: return=minimal
+  headers:
+    CacheControlHeader:
+      description: Tells the client and intermediary caches how to store the response.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "max-age=300, private"
+    VaryHeader:
+      description: Instructs downstream caches that the response varies based on the
+        Agent's profile or media type. Critical for Extension-based responses.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "Accept, UCP-Agent"
+        default: "Accept, UCP-Agent"
+    ExpiresHeader:
+      description: The timestamp after which the resource state is considered stale.
+        Vital for volatile QQQ/SQQQ market data or real-time Inventory availability.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T16:00:00Z
     LinkHeader:
-      description: "RFC 5988 Link header for discovering state-aware transitions (e.g.,\
-        \ rel='capabilities')."
+      description: "RFC 8288 compliant links providing discovery for related resources\
+        \ and 'Service Primitives' (e.g., :cancel, :execute). Essential for non-linear\
+        \ state transitions across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: "^<[^>]+>;\\s*rel=\"[^\"]+\"(,\\s*<[^>]+>;\\s*rel=\"[^\"]+\")*$"
+        type: string
+        example: "<https://api.ai-sage.com/labor-operations/123:cancel>; rel=\"cancel\"\
+          , <https://api.ai-sage.com/labor-operations/123>; rel=\"self\""
+    LocationHeader:
+      description: "The absolute URI of the newly created resource or the status monitor\
+        \ for an asynchronous 'Service Primitive' (e.g., :execute). Used to follow\
+        \ the state of a Transaction across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789
+    ContentLocationHeader:
+      description: The URI of the specific representation returned in the payload.
+        Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
+        multi-format or versioned Bounded Contexts.
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789/versions/v2
+    TransactionIDHeader:
+      description: Echoes the unique identifier for the specific atomic unit of work
+        processed by the server.
+      style: simple
+      explode: false
       schema:
         type: string
-        example: </rdr/99310/capabilities>; rel="capabilities"
+        format: uuid
+    CorrelationIDHeader:
+      description: Echoes the unique identifier spanning the entire business lifecycle
+        for cross-context tracing.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    StandardsVersionHeader:
+      description: The version of the STAR REST Standard the response adheres to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    OrgVersionHeader:
+      description: The version of the organization schema and API the response adheres
+        to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    AgentHeader:
+      description: The unique identifier of the agent or user executing this method.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    ETagHeader:
+      description: An entity tag (ETag) is an identifier for a specific version of
+        a resource.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    LastModifiedHeader:
+      description: The ISO 8601 timestamp at which the resource was last modified
+        in the underlying Postgres/Saga store.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T15:47:17Z
+    RateLimitLimitHeader:
+      description: The maximum number of requests allowed in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 1000
+    RateLimitRemainingHeader:
+      description: The number of requests remaining in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 999
+    RateLimitResetHeader:
+      description: The number of seconds until the current rate limit window resets.
+        Using 'Delta Seconds' avoids clock-skew issues between distributed systems.
+      style: simple
+      explode: false
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 60
+    RateLimitPolicyHeader:
+      description: "The quota policy for the current user/agent. Format: 'limit;w=window'.\
+        \ E.g., '1000;w=3600' means 1000 requests per hour."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^\d+;w=\d+(;burst=\d+)?$
+        type: string
+        example: 1000;w=3600
   securitySchemes:
     industry-oauth:
       type: oauth2
@@ -3810,5 +1940,18 @@ components:
     bearer-auth:
       type: http
       description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyHeader:
+      type: apiKey
+      description: "A unique member-specific identifier used for API routing, quota\
+        \ management, and rate limiting. This key does not replace the Authorization\
+        \ bearer token for identity."
+      name: X-API-Key
+      in: header
+    AuthorizationHeader:
+      type: http
+      description: Standard OIDC/OAuth 2.0 Bearer Token
+      name: Authorization
       scheme: bearer
       bearerFormat: JWT

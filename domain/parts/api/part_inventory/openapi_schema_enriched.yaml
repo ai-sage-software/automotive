@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - PartInventory
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,22 +9,54 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     ControlAccountReference:
       type: object
       properties:
@@ -54,47 +86,56 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: control.account.reference.desc
-    ControlAccountReferenceCreate:
-      required:
-      - control_account_reference_key
-      type: object
-      description: ControlAccountReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/ControlAccountReference"
-    ControlAccountReferenceUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        context:
-          type: string
-          description: Context or domain of the identifier
-        control_account:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-      description: ControlAccountReference Update for Patch and Put
+          example: 2026-05-05T17:43:38Z
+      description: External system identifier
     ControlAccountReferences:
       type: array
       items:
         $ref: "#/components/schemas/ControlAccountReference"
-    DaysOfWeekTypes:
+    CurrencyCode:
       type: string
-      description: types of days of weeks.
-      enum:
-      - SUN
-      - MON
-      - TUES
-      - WED
-      - THURS
-      - FRI
-      - SAT
-    DurationUOMTypes:
+      description: "ISO 4217 currency code, e.g., 'USD', 'EUR'."
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-05T17:43:38Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    DurationUomTypes:
       type: string
-      description: types of duration u o ms.
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -118,42 +159,56 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique key identifying the effective per...
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicator if the period is currently act...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
         exclusive_indicator:
           type: boolean
-          description: Indicator if the period is exclusive
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
         start_date_time:
           type: string
-          description: Start date and time of the effective per...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
+          example: 2026-05-05T17:43:38Z
         complete_date_time:
           type: string
-          description: Completion date and time of the effectiv...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
+          example: 2026-05-05T17:43:38Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: Value of the duration
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
-          description: Count of recurrence
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Criteria defining recurrence
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Indicator if recurrence is enabled
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
-      description: effective.period.desc
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
     Identifier:
       type: object
       properties:
@@ -172,41 +227,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        context:
-          type: string
-          description: Context or domain of the identifier
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -215,42 +245,108 @@ components:
       type: string
       description: types of inventory status.
       enum:
+      - ON_ORDER
+      - RECEIVED
+      - PREPARATION
+      - STOCKED_IN
       - AVAILABLE
       - RESERVED
+      - PRE_SOLD
       - ON_HOLD
       - SALES_HOLD
       - SERVICE_HOLD
       - RECALL_HOLD
       - IN_TRANSIT
-      - RECEIVED
-      - STOCKED_IN
-      - ON_ORDER
-      - PREPARATION
-      - SOLD
-      - WHOLESALE
       - ON_DEALER_LOT
       - ON_CENTRAL_LOT
       - ASSIGNED_BY_MANUFACTURER
+      - SOLD
+      - WHOLESALE
       - DAMAGED
       - UNAVAILABLE
       - RETURNED
       - DISPOSAL
       - UNKNOWN
+    PartIdentifier:
+      type: object
+      properties:
+        part_identifier_key:
+          type: string
+          description: Unique key identifying the part identifier
+        part_identifier_id:
+          type: string
+          description: Unique identifier ID for the part identifier
+        part_source:
+          type: string
+          description: Unique identifier ID for the source of the part
+        part_identifier_type:
+          $ref: "#/components/schemas/PartIdentifierTypes"
+        part_identifier_value:
+          type: string
+          description: Value of the part identifier
+        description:
+          type: string
+          description: Optional description for the part identifier
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_names:
+          $ref: "#/components/schemas/PartNames"
+        part_status_type:
+          $ref: "#/components/schemas/PartStatusTypes"
+      description: nullable
+    PartIdentifierTypes:
+      type: string
+      description: types of part identifiers.
+      enum:
+      - VIN
+      - SKU
+      - UPCA
+      - UPCE
+      - ISBN
+      - MPN
+      - CONFIG_CODE
+      - MFR_CODE
+      - ALT_CODE
+      - STOCK_NBR
+      - UNIV_CODE
+      - PRODUCT_CODE
+      - CATALOG_CODE
+      - NAME
+      - NUMBER
+      - PREFIX
+      - COUNTRY_OF_ORIGIN_CODE
+      - MODEL_CODE
+      - MAKE_CODE
+      - YEAR_CODE
+      - MARKET_DIVISION_CODE
+      - TRIM_CODE
+      - STYLE_CODE
+      - SUB_MODEL_CODE
+      - ENGINE_CODE
+      - TRANSMISSION_CODE
+      - DRAWING_NUMBER
+      - OTHER
+    PartIdentifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartIdentifier"
     PartInventory:
       type: object
       properties:
         part_master_id:
           type: string
-          description: Unique identifier for the Part Master re...
+          description: Unique identifier for the Part Master record.
         part_inventory_id:
           type: string
-          description: Unique identifier for the PartInventory ...
+          description: Unique identifier for the PartInventory record.
         part_inventory_key:
           type: string
-          description: Natural key or business-friendly key for...
+          description: Natural key or business-friendly key for the PartInventory
+            record.
         last_inventory_date:
           type: string
-          description: The date of the most recent physical inv...
+          description: "The date of the most recent physical inventory count or cycle\
+            \ count for this specific part at this location, in YYYY-MM-DD format."
           format: date
         inventory_status_type:
           $ref: "#/components/schemas/InventoryStatusTypes"
@@ -268,7 +364,8 @@ components:
           $ref: "#/components/schemas/ControlAccountReferences"
         warehouse_identifier:
           $ref: "#/components/schemas/Identifier"
-      description: part.inventory.desc
+      description: The aggregated quantity of a specific Part Master item at a particular
+        location
     PartInventoryCreate:
       required:
       - part_inventory_key
@@ -281,17 +378,18 @@ components:
       properties:
         warehouse_event_key:
           type: string
-          description: The unique key for the part inventory ev...
+          description: The unique key for the part inventory event record.
         occurrence_date_time:
           type: string
-          description: The date and time of the event's occurre...
+          description: The date and time of the event's occurrence.
           format: date-time
+          example: 2026-05-05T17:43:38Z
         actor_id:
           type: string
-          description: The unique ID of the actor involved in t...
+          description: The unique ID of the actor involved in the event.
         actor_name:
           type: string
-          description: The name of the actor involved in the ev...
+          description: The name of the actor involved in the event.
         actor_href:
           type: string
           description: The URI to the actor resource.
@@ -314,6 +412,8 @@ components:
             type: string
         part_inventory_action_type:
           $ref: "#/components/schemas/PartInventoryOrderTypes"
+        part_identifier:
+          $ref: "#/components/schemas/PartIdentifiers"
         warehouse_keys:
           maxItems: 255
           minItems: 1
@@ -321,54 +421,8 @@ components:
           type: array
           items:
             type: string
-      description: part.inventory.event.desc
-    PartInventoryEventCreate:
-      required:
-      - part_inventory_event_key
-      type: object
-      description: PartInventoryEvent Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PartInventoryEvent"
-    PartInventoryEventUpdate:
-      type: object
-      properties:
-        event_action:
-          type: string
-          description: The action performed in the event.
-        warehouse_keys:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        actor_name:
-          type: string
-          description: The name of the actor involved in the ev...
-        event_values:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        event_label:
-          type: string
-          description: A label for the event.
-        event_category:
-          type: string
-          description: The category of the event.
-        part_inventory_action_type:
-          $ref: "#/components/schemas/PartInventoryOrderTypes"
-        occurrence_date_time:
-          type: string
-          description: The date and time of the event's occurre...
-          format: date-time
-        actor_href:
-          type: string
-          description: The URI to the actor resource.
-          format: href
-      description: PartInventoryEvent Update for Patch and Put
+      description: "Represents a part event, typically related to inventory actions\
+        \ such as a state change or an action taken within a warehouse."
     PartInventoryEvents:
       type: array
       items:
@@ -378,20 +432,14 @@ components:
       properties:
         uom_value:
           type: string
-          description: Unit of Measure (UOM) code representing ...
+          description: Unit of Measure (UOM) code representing the measurement unit
+            for the metric value.
         part_inventory_metric_type:
           $ref: "#/components/schemas/PartInventoryMetricTypes"
         metric_value:
           type: string
-          description: The numerical value for the specified in...
-      description: part.inventory.metric.desc
-    PartInventoryMetricCreate:
-      required:
-      - part_inventory_metric_key
-      type: object
-      description: PartInventoryMetric Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PartInventoryMetric"
+          description: The numerical value for the specified inventory metric type.
+      description: Value price with unit of measure for inventory metrics.
     PartInventoryMetricTypes:
       type: string
       description: types of part inventory metrics.
@@ -421,18 +469,6 @@ components:
       - QUANTITY_SIX_MONTH_SALES
       - QUANTITY_DAILY_USAGE
       - OTHER
-    PartInventoryMetricUpdate:
-      type: object
-      properties:
-        part_inventory_metric_type:
-          $ref: "#/components/schemas/PartInventoryMetricTypes"
-        metric_value:
-          type: string
-          description: The numerical value for the specified in...
-        uom_value:
-          type: string
-          description: Unit of Measure (UOM) code representing ...
-      description: PartInventoryMetric Update for Patch and Put
     PartInventoryMetrics:
       type: array
       items:
@@ -473,7 +509,8 @@ components:
       properties:
         last_inventory_date:
           type: string
-          description: The date of the most recent physical inv...
+          description: "The date of the most recent physical inventory count or cycle\
+            \ count for this specific part at this location, in YYYY-MM-DD format."
           format: date
         inventory_status_type:
           $ref: "#/components/schemas/InventoryStatusTypes"
@@ -492,6 +529,54 @@ components:
         part_inventory_events:
           $ref: "#/components/schemas/PartInventoryEvents"
       description: PartInventory Update for Patch and Put
+    PartName:
+      type: object
+      properties:
+        part_name_id:
+          type: string
+          description: Unique identifier for the part name
+        part_name_key:
+          type: string
+          description: Business key for the part name
+        part_prefix:
+          $ref: "#/components/schemas/Codes"
+        part_suffix:
+          $ref: "#/components/schemas/Codes"
+        description:
+          type: string
+          description: Description of the part name
+        language:
+          $ref: "#/components/schemas/Codes"
+        locale:
+          $ref: "#/components/schemas/Codes"
+        alias:
+          $ref: "#/components/schemas/Codes"
+        long_name:
+          $ref: "#/components/schemas/Codes"
+        marketing_name:
+          $ref: "#/components/schemas/Codes"
+        part_name_type:
+          $ref: "#/components/schemas/PartNameTypes"
+        part_number:
+          $ref: "#/components/schemas/Codes"
+      description: nullable
+    PartNameTypes:
+      type: string
+      description: types of part names.
+      enum:
+      - GENERIC
+      - MANUFACTURING
+      - MARKETING
+      - CORE
+      - REMANUFACTURING
+      - OEM
+      - AFTERMARKET
+      - SUPERSEDING
+      - SUPERSEDED
+    PartNames:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartName"
     PartReference:
       type: object
       properties:
@@ -512,6 +597,9 @@ components:
         part_master_key:
           type: string
           description: Unique identifier value
+        manufacturer:
+          type: string
+          description: Context or domain of the identifier
         context:
           type: string
           description: Context or domain of the identifier
@@ -528,43 +616,50 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: part.reference.desc
-    PartReferenceCreate:
-      required:
-      - part_reference_key
-      type: object
-      description: PartReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PartReference"
-    PartReferenceUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        product_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/ProductTypes"
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        name:
-          type: string
-          description: Product Name.
-        context:
-          type: string
-          description: Context or domain of the identifier
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-      description: PartReference Update for Patch and Put
+          example: 2026-05-05T17:43:38Z
+        unit_of_measure:
+          $ref: "#/components/schemas/UnitOfMeasure"
+      description: External system identifier
     PartReferences:
       type: array
       items:
         $ref: "#/components/schemas/PartReference"
+    PartStatusTypes:
+      type: string
+      description: types of part status.
+      enum:
+      - RECEIVE
+      - INSPECT_INBOUND
+      - DOCUMENT_RECEIPT
+      - PUTAWAY
+      - QUARANTINE_INBOUND
+      - PICK
+      - PACK
+      - STAGE_SHIPMENT
+      - LOAD_SHIPMENT
+      - SHIP
+      - DOCUMENT_SHIPMENT
+      - SCRAP_DISPOSE
+      - DISASSEMBLE
+      - RETURN_RECEIVE
+      - RETURN_INSPECT
+      - RETURN_PUTAWAY
+      - REFURBISH_REPAIR
+      - RETURN_TO_BIN
+      - DEFECTIVE_REMOVAL
+      - ALLOCATE_TO_JOB
+      - PICK_FOR_LABOR
+      - STAGE_FOR_SERVICE
+      - ISSUE_TO_TECH
+      - INSTALLED
+      - CORE_PENDING
+      - CORE_RECEIVED
+      - CROSS_DOCK
+      - LABEL_TAG
+      - KIT_ASSEMBLE
+      - VALUE_ADDED_SERVICE
+      - SUPERSEDE
+      - SUPERSEDED
     PayTypes:
       type: string
       description: types of pays.
@@ -580,25 +675,26 @@ components:
       properties:
         display_value:
           type: string
-          description: Human-readable display value for the pri...
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
         locale:
           type: string
-          description: Locale used for formatting display value...
+          description: Locale used for formatting display value.
         value:
           type: string
-          description: The numeric value of the price (before t...
+          description: The numeric value of the price (before tax/cost breakdowns).
         tax_value:
           type: string
-          description: The calculated amount of tax applied to ...
+          description: The calculated amount of tax applied to the price.
         taxable_amount:
           type: string
           description: The portion of the price subject to tax.
         non_taxable_amount:
           type: string
-          description: The portion of the price not subject to ...
+          description: The portion of the price not subject to tax.
         total_amount:
           type: string
-          description: The total final price including all comp...
+          description: The total final price including all components and tax.
         total_cost_amount:
           type: string
           description: The total cost to the provider/seller.
@@ -607,19 +703,19 @@ components:
           description: The unit cost to the provider/seller.
         price_description:
           type: string
-          description: "A descriptive title for the price (e.g.,..."
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
         price_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Natural key or business identifier for the price entry.
         tax_included_indicator:
           type: boolean
-          description: Indicates whether tax is included in the...
+          description: Indicates whether tax is included in the base price (value).
+          example: false
         currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
+          $ref: "#/components/schemas/CurrencyCode"
         price_id:
           type: string
-          description: Unique system identifier for the price r...
+          description: Unique system identifier for the price record.
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
@@ -631,14 +727,10 @@ components:
             $ref: "#/components/schemas/PriceTypes"
         pay_type:
           $ref: "#/components/schemas/PayTypes"
-      description: price.desc
-    PriceCreate:
-      required:
-      - price_key
-      type: object
-      description: Price Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Price"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Price that includes display value, currency, locale, and value,\
+        \ along with tax and cost components."
     PriceTypes:
       type: string
       description: types of prices.
@@ -665,24 +757,51 @@ components:
       - RETAIL
       - MSRP
       - WHOLESALE
-      - DEALER
+      - DEALER_COST
+      - TOTAL_DEALER_COST
+      - TOTAL_DEALER_OPTION_COST
+      - TOTAL_DEALER_OPTION_SELLING_PRICE
+      - RECONDITIONING_COST
+      - RESIDUAL_VALUE
+      - TDA
+      - FUEL
+      - TOTAL_HOLD_BACK
+      - PPO_HOLD_BACK
+      - WRF
       - TRADE
       - CORE
       - LANDED
+      - FREIGHT_CHARGE
+      - MONEY
+      - INTERNET
+      - BALANCE
+      - BASE
+      - BASE_MSRP
+      - TOTAL_MSRP
+      - TOTAL_OPTION_MSRP
+      - PRODUCT_TOTAL
+      - FINANCE_TOTAL
+      - APPLIED_REWARD_TOTAL
+      - UPFRONT_PAYMENT_TOTAL
+      - REMOVED_EQUIPT_TOTAL
+      - ADJUSTED_MSRP
+      - GROSS_SALE
+      - NET_SALE
+      - NET_SALE_REDUCTION_PRICE
+      - DISCOUNT_TOTAL
+      - DISCOUNT_PACKAGES_TOTAL
+      - CREDIT_TOTAL
+      - FEE_TOTAL
+      - REBATE_TOTAL
+      - TAX_TOTAL
+      - TRADE_IN_TOTAL
+      - TRADE_IN_EQUITY_TOTAL
       - PROMOTIONAL
       - DISCOUNT
       - CONTRACT
       - SALE
-      - CUSTOMER
-      - AFFILIATE
-      - ONLINE
-      - STORE
-      - REGION
-      - LOCATION
-      - ESTIMATED
-      - NET
-      - PURCHASE
-      - MONEY
+      - PREMIUM_TOTAL
+      - DISABILITY_PREMIUM_TOTAL
       - TAXABLE
       - NONTAXABLE
       - TOTAL
@@ -690,58 +809,16 @@ components:
       - TOTAL_COST
       - UNIT_COST
       - TAX
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
       - OTHER
-    PriceUpdate:
-      type: object
-      properties:
-        display_value:
-          type: string
-          description: Human-readable display value for the pri...
-        unit_cost_amount:
-          type: string
-          description: The unit cost to the provider/seller.
-        locale:
-          type: string
-          description: Locale used for formatting display value...
-        currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-        tax_value:
-          type: string
-          description: The calculated amount of tax applied to ...
-        total_amount:
-          type: string
-          description: The total final price including all comp...
-        total_cost_amount:
-          type: string
-          description: The total cost to the provider/seller.
-        price_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/PriceTypes"
-        tax_included_indicator:
-          type: boolean
-          description: Indicates whether tax is included in the...
-        price_description:
-          type: string
-          description: "A descriptive title for the price (e.g.,..."
-        pay_type:
-          $ref: "#/components/schemas/PayTypes"
-        non_taxable_amount:
-          type: string
-          description: The portion of the price not subject to ...
-        value:
-          type: string
-          description: The numeric value of the price (before t...
-        taxable_amount:
-          type: string
-          description: The portion of the price subject to tax.
-      description: Price Update for Patch and Put
     Prices:
       type: array
       items:
@@ -769,59 +846,61 @@ components:
       - WARRANTY_PLAN
       - SUBSCRIPTION
       - OTHER
-    TimeSlot:
+    UnitOfMeasure:
       type: object
       properties:
-        time_slot_id:
+        unit_of_measure_key:
           type: string
-          description: Unique identifier for the time slot reco...
-        time_slot_key:
+          description: Unit of Measure Value
+        unit_name:
           type: string
-          description: Unique business key for the time slot.
-        time_slot_source:
+          description: Unit of Measure
+        uom_value:
+          maxLength: 100
+          minLength: 1
           type: string
-          description: Unique identifier for the time slot sour...
-          example: GOOGLE_CALENDAR
-        end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        end_time:
-          type: string
-          description: End time in HH:mm format.
-          format: date-time
-        recurring_indicator:
-          type: boolean
-          description: Indicates if the time slot is recurring.
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
-        start_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        start_time:
-          type: string
-          description: Start time in HH:mm format.
-          format: date-time
-        timeslot_directive_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/TimeslotDirectiveTypes"
-        week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
-      description: time.slot.desc
-    TimeslotDirectiveTypes:
+          description: Unit of Measure Value
+        uom_quantity_category_type:
+          $ref: "#/components/schemas/UomQuantityCategoryTypes"
+      description: value price with unit of measure
+    UomQuantityCategoryTypes:
       type: string
-      description: types of timeslot directives.
+      description: types of uom quantity categorys.
       enum:
-      - AFTER
-      - ANYTIME
-      - BEFORE
-      - BETWEEN
-      - BLOCK
-      - UNKNOWN
+      - COUNT
+      - WEIGHT
+      - VOLUME
+      - TIME
+      - NET_WEIGHT
+      - NET_VOLUME
+      - PACKAGE_QUANTITY
+      - MIN_ORDER_QUANTITY
+      - GROSS_WEIGHT
+      - GROSS_VOLUME
+      - SHIPPING_WEIGHT
+      - DIMENSIONAL_WEIGHT
+      - MATERIAL
+      - ELECTRICAL_RATING
+      - DEFAULT_LEAD_TIME
+      - MAX_LEAD_TIME
+      - DIMENSION_UNIT
+      - MIN_LENGTH
+      - MAX_LENGTH
+      - MIN_WIDTH
+      - MAX_WIDTH
+      - MIN_HEIGHT
+      - MAX_HEIGHT
+      - MIN_WEIGHT
+      - MAX_WEIGHT
+      - MAX_ORDER_QUANTITY
+      - MIN_ORDER_AVAILABLE
+      - DIMENSIONS
+      - SHIPPING_DIM_LENGTH
+      - SHIPPING_DIM_WIDTH
+      - SHIPPING_DIM_HEIGHT
+      - SHIPPING_DIM_GROSS_WEIGHT
+      - SHIPPING_DIM_NET_WEIGHT
+      - SHELF_LIFE_HOURS
+      - EXPIRATION_DATE
+      - MIN_PAYMENT_PERCENT
+      - MIN_PAYMENT_AMOUNT

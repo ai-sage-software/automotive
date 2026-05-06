@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - Invoice
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,9 +9,9 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -30,9 +30,9 @@ components:
         address_reference_key:
           type: string
           description: A unique key for the address reference.
-        address_reference_value:
+        address_reference_id:
           type: string
-          description: The unique value of the address referenc...
+          description: The unique value of the address reference.
         address_types:
           maxItems: 255
           minItems: 1
@@ -42,19 +42,19 @@ components:
             $ref: "#/components/schemas/AddressTypes"
         address_line1:
           type: string
-          description: "Primary address line (Street, PO Box, et..."
+          description: "Primary address line (Street, PO Box, etc)."
         address_line2:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line3:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line4:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line5:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         city:
           type: string
           description: Name of the city.
@@ -95,6 +95,8 @@ components:
       - RESIDENCE
       - WORK
       - BUSINESS
+      - OFFICE
+      - PO_BOX
       - LEGAL
       - SERVICE
       - DEALER
@@ -116,6 +118,29 @@ components:
       - PRODUCT
       - ARCHIVE
       - OTHER
+    AuthorizationLevel:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-05-06T14:09:00Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuthorizationLevel"
     CarrierParty:
       $ref: "#/components/schemas/PartyReference"
     Code:
@@ -125,22 +150,27 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
         code_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
         code:
           maxLength: 50
-          minLength: 5
+          minLength: 1
           type: string
-          description: The unique key code
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
         description:
-          maxLength: 50
+          maxLength: 255
           minLength: 5
           type: string
-          description: The unique key code
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
       description: not nullable
     Codes:
       type: array
@@ -151,46 +181,43 @@ components:
       properties:
         communication_channel_key:
           type: string
-          description: The unique key for the communication cha...
+          description: The unique key for the communication channel record.
         communication_channel_id:
           type: string
-          description: The unique ID for the communication chan...
+          description: The unique ID for the communication channel.
         communication_channel_type:
           $ref: "#/components/schemas/CommunicationChannelTypes"
         value:
           type: string
-          description: The value of the communication channel (...
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
         value_extension:
           type: string
-          description: An optional extension for the communicat...
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
         label:
           type: string
-          description: A label for the communication channel (e...
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
         locale:
           $ref: "#/components/schemas/Locale"
         preferred_indicator:
           type: boolean
-          description: A boolean indicator of whether this is t...
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
           example: false
         preferences:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/TimeSlot"
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
       description: "Represents a communication channel, such as an email address or\
         \ phone number, with associated preferences and authorizations."
-    CommunicationChannelCreate:
-      required:
-      - communication_channel_key
-      type: object
-      description: CommunicationChannel Create for Post
-      allOf:
-      - $ref: "#/components/schemas/CommunicationChannel"
     CommunicationChannelTypes:
       type: string
-      description: Defines the various types of communication chan...
+      description: types of communication channels.
       enum:
       - PHONE
       - CELL
@@ -205,34 +232,6 @@ components:
       - DIRECT_MAIL
       - PDA
       - OTHER
-    CommunicationChannelUpdate:
-      type: object
-      properties:
-        communication_channel_type:
-          $ref: "#/components/schemas/CommunicationChannelTypes"
-        preferences:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/TimeSlot"
-        label:
-          type: string
-          description: A label for the communication channel (e...
-        locale:
-          $ref: "#/components/schemas/Locale"
-        value:
-          type: string
-          description: The value of the communication channel (...
-        value_extension:
-          type: string
-          description: An optional extension for the communicat...
-        preferred_indicator:
-          type: boolean
-          description: A boolean indicator of whether this is t...
-          example: false
-      description: CommunicationChannel Update for Patch and Put
     CommunicationChannels:
       type: array
       items:
@@ -266,7 +265,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: External system identifier
     CreditReference:
       type: object
@@ -291,51 +290,64 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
       description: External system identifier
     CreditReferences:
       type: array
       items:
         $ref: "#/components/schemas/CreditReference"
+    CurrencyCode:
+      type: string
+      description: The three-letter ISO 4217 currency code used for financial transactions.
     CurrencyExchange:
       type: object
       properties:
         currency_exchange_id:
           type: string
-          description: Unique system identifier for the currenc...
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
         currency_exchange_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
         source_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
         target_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
         currency_exchange_desc:
           type: string
-          description: A descriptive title for the currencyExch...
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
         exchange_rate:
           type: string
-          description: Human-readable display value for the sou...
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
         rate_date_time:
           type: string
-          description: The date and time the rate was associate...
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
     DaysOfWeekTypes:
       type: string
-      description: Status of the account
+      description: types of days of weeks.
       enum:
       - SUN
       - MON
@@ -362,25 +374,6 @@ components:
           description: Unique identifier for the metric value.
           example: METRIC_KEY_ABC
       description: value price with unit of measure
-    DiscountMetricValueCreate:
-      required:
-      - discount_metric_value_key
-      type: object
-      description: DiscountMetricValue Create for Post
-      allOf:
-      - $ref: "#/components/schemas/DiscountMetricValue"
-    DiscountMetricValueUpdate:
-      type: object
-      properties:
-        uom:
-          $ref: "#/components/schemas/UnitOfMeasureTypes"
-        locales:
-          $ref: "#/components/schemas/Codes"
-        value:
-          type: string
-          description: The numeric value of the metric.
-          example: "5551235545"
-      description: DiscountMetricValue Update for Patch and Put
     DiscountMetricValues:
       type: array
       items:
@@ -411,24 +404,24 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
         discount_plan_name:
           type: string
-          description: The display name of the discount for sea...
+          description: The display name of the discount for search results.
           example: Loyalty Rebate
         discount_duration:
           $ref: "#/components/schemas/EffectivePeriod"
         discount_href:
           type: string
-          description: Hyperlink to the full Discount entity fo...
+          description: Hyperlink to the full Discount entity for deep-linking.
           format: href
           example: /discounts/123
         discount_metric_values:
@@ -437,7 +430,8 @@ components:
           $ref: "#/components/schemas/Price"
         capitalized_indicator:
           type: boolean
-          description: Indicates if the discount is capitalized...
+          description: Indicates if the discount is capitalized (crucial for Lease
+            calculations).
           example: true
         purchase_types:
           maxItems: 255
@@ -480,9 +474,9 @@ components:
       - LIFETIME
       - CUSTOM
       - OTHER
-    DurationUOMTypes:
+    DurationUomTypes:
       type: string
-      description: types of duration u o ms.
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -506,51 +500,54 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique natural business key identifying ...
+          description: Unique natural business key identifying the effective period
+            record.
           example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicates if this period is currently co...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
           example: true
         exclusive_indicator:
           type: boolean
-          description: "If true, this period represents the only..."
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
           example: false
         start_date_time:
           type: string
-          description: The inclusive start point of the period ...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         complete_date_time:
           type: string
-          description: The exclusive end point of the period (c...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
           pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: The length of the period expressed in IS...
+          description: The length of the period expressed in ISO 8601 duration format.
           example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
-          description: Number of times the period repeats. Use ...
+          description: Number of times the period repeats. Use -1 for infinite.
           example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Natural language or DSL expression of co...
+          description: Natural language or DSL expression of complex recurrence logic.
           example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Flag indicating if this period repeats b...
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
           example: true
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
       description: "Defines a temporal range and recurrence logic for business validity,\
         \ such as license expirations or service intervals."
     ExitConsiderationTypes:
@@ -587,14 +584,14 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
       description: External system identifier
     FeeReferences:
@@ -606,23 +603,26 @@ components:
       properties:
         category_reference_id:
           type: string
-          description: Unique identifier value for the financia...
+          description: Unique identifier value for the financial category reference
+            record.
         category_reference_key:
           type: string
-          description: Unique key value for the financial categ...
+          description: Unique key value for the financial category reference record.
         category_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Financial Category
+            aggregate.
         context:
           type: string
-          description: Context or domain of the financial categ...
+          description: "Context or domain of the financial category (e.g., 'INCOME',\
+            \ 'BALANCE_SHEET')."
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the financial category...
+          description: The date and time the financial category was assigned or referenced.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: "Reference to a Financial Category Aggregate Root (e.g., Revenue,\
         \ Expense, Asset)."
     FinancialCategoryReferences:
@@ -634,51 +634,52 @@ components:
       properties:
         financial_event_id:
           type: string
-          description: System-generated ID for the financial ev...
+          description: System-generated ID for the financial event.
           example: FE-998877
         financial_event_key:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         payment_provider:
           type: string
-          description: The payment provider handling this trans...
+          description: The payment provider handling this transaction.
           example: Stripe
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         from_voided_apcheck_indicator:
           type: boolean
-          description: Indicates whether this event originated ...
+          description: Indicates whether this event originated from a voided accounts
+            payable check.
           example: false
         confirmation_code:
           type: string
-          description: Confirmation code for the financial tran...
+          description: Confirmation code for the financial transaction.
           example: CNF-987654
         forecast_indicator:
           type: boolean
-          description: Confirmation code for the financial tran...
+          description: Confirmation code for the financial transaction.
           example: false
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
         payment_methods_href:
           type: string
-          description: Hyperlink reference to payment method de...
+          description: Hyperlink reference to payment method details.
           format: href
           example: https://api.example.com/payment-methods/pm_123
         payment_method_key:
           type: string
-          description: Unique key for the specific payment meth...
+          description: Unique key for the specific payment method used.
           example: pm_12345
         capability_codes:
           $ref: "#/components/schemas/Codes"
         occurrence_date_time:
           type: string
-          description: The date and time when the financial eve...
+          description: The date and time when the financial event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         post_date:
           type: string
-          description: The posting date of the financial transa...
+          description: The posting date of the financial transaction.
           format: date
         transaction_date:
           type: string
@@ -686,7 +687,7 @@ components:
           format: date
         batch_number:
           type: string
-          description: The batch number associated with this tr...
+          description: The batch number associated with this transaction.
           example: BATCH-2025-001
         previous_event_types:
           maxItems: 255
@@ -697,11 +698,11 @@ components:
             $ref: "#/components/schemas/PaymentTransactionStatusTypes"
         staff_id:
           type: string
-          description: Identifier for the staff member who proc...
+          description: Identifier for the staff member who processed the transaction.
           example: staff_001
         provider_transaction_id:
           type: string
-          description: Unique transaction ID from the payment p...
+          description: Unique transaction ID from the payment provider.
           example: txn_87654321
         event_description:
           $ref: "#/components/schemas/TextualDetail"
@@ -717,7 +718,7 @@ components:
           $ref: "#/components/schemas/Codes"
         transaction_hash:
           type: string
-          description: Unique cryptographic hash of the transac...
+          description: Unique cryptographic hash of the transaction.
           example: abc123def456
         tracking_ref:
           type: string
@@ -729,7 +730,7 @@ components:
           example: txn_ref_12345
         event_fee:
           type: string
-          description: Fee amount associated with the financial...
+          description: Fee amount associated with the financial event.
           example: "5.00"
         amount:
           $ref: "#/components/schemas/Money"
@@ -741,17 +742,19 @@ components:
           example: dep_123456
         deposit_addr:
           type: string
-          description: The deposit address for cryptocurrency o...
+          description: The deposit address for cryptocurrency or other digital asset
+            transactions.
           example: 1A2b3C4d5E6f...
         seed_phrase:
           type: string
-          description: The seed phrase associated with a wallet...
+          description: The seed phrase associated with a wallet (if applicable).
           example: correct horse battery staple
         control_account_reference:
           $ref: "#/components/schemas/ControlAccountReference"
         actor_id:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         financial_categories:
           $ref: "#/components/schemas/FinancialCategoryReferences"
@@ -775,23 +778,23 @@ components:
       properties:
         financial_split_id:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         financial_split_key:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         reference_key:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         price_name:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         price_description:
           type: string
-          description: Unique key identifying this financial ev...
+          description: Unique key identifying this financial event.
           example: fe_123456
         price:
           $ref: "#/components/schemas/Price"
@@ -827,18 +830,19 @@ components:
       properties:
         financial_split_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         financial_split_reference_key:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         financial_split_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment FinancialSplit
+            aggregate.
         context:
           type: string
-          description: Context or domain of the payment financi...
+          description: Context or domain of the payment financialSplit.
         geographic_boundary:
           $ref: "#/components/schemas/GeographicBoundaryReference"
         identifiers:
@@ -847,35 +851,11 @@ components:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the financialSplit was...
+          description: The date and time the financialSplit was associated with the
+            order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: Reference to a Payment FinancialSplit Aggregate Root.
-    FinancialSplitReferenceCreate:
-      required:
-      - financial_split_reference_key
-      type: object
-      description: FinancialSplitReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/FinancialSplitReference"
-    FinancialSplitReferenceUpdate:
-      type: object
-      properties:
-        geographic_boundary:
-          $ref: "#/components/schemas/GeographicBoundaryReference"
-        total:
-          $ref: "#/components/schemas/Identifier"
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        context:
-          type: string
-          description: Context or domain of the payment financi...
-        occurrence_date_time:
-          type: string
-          description: The date and time the financialSplit was...
-          format: date-time
-          example: 2026-03-23T22:14:04Z
-      description: FinancialSplitReference Update for Patch and Put
     FinancialSplits:
       type: array
       items:
@@ -885,26 +865,27 @@ components:
       properties:
         financial_track_id:
           type: string
-          description: Internal transaction reference for this ...
+          description: Internal transaction reference for this tracking record.
           example: txn_ref_12345
         financial_track_key:
           type: string
-          description: Internal transaction reference for this ...
+          description: Internal transaction reference for this tracking record.
           example: txn_ref_12345
         reference_key:
           type: string
-          description: Purchase order ID associated with this t...
+          description: Purchase order ID associated with this tracking record.
           example: PO-2025-10045
         financial_event_keys:
           $ref: "#/components/schemas/Codes"
         occurrence_date_time:
           type: string
-          description: Timestamp of the last update for this tr...
+          description: Timestamp of the last update for this tracking record.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         actor_id:
           type: string
-          description: Identifier of the actor who updated or i...
+          description: Identifier of the actor who updated or is responsible for this
+            tracking record.
           example: actor_123
         financial_splits:
           $ref: "#/components/schemas/FinancialSplits"
@@ -967,45 +948,25 @@ components:
       properties:
         geographic_boundary_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         geographic_boundary_reference_key:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         geographic_boundary_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment Schedule
+            aggregate.
         context:
           type: string
-          description: Context or domain of the payment schedul...
+          description: Context or domain of the payment schedule.
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the schedule was assoc...
+          description: The date and time the schedule was associated with the order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: Reference to a Payment Schedule Aggregate Root.
-    GeographicBoundaryReferenceCreate:
-      required:
-      - geographic_boundary_reference_key
-      type: object
-      description: GeographicBoundaryReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/GeographicBoundaryReference"
-    GeographicBoundaryReferenceUpdate:
-      type: object
-      properties:
-        identifier:
-          $ref: "#/components/schemas/Identifier"
-        context:
-          type: string
-          description: Context or domain of the payment schedul...
-        occurrence_date_time:
-          type: string
-          description: The date and time the schedule was assoc...
-          format: date-time
-          example: 2026-03-23T22:14:04Z
-      description: GeographicBoundaryReference Update for Patch and Put
     GeographicBoundaryReferences:
       type: array
       items:
@@ -1028,13 +989,13 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: External system identifier
@@ -1056,65 +1017,72 @@ components:
       properties:
         order_ref_id:
           type: string
-          description: Identifier of the associated Purchase Or...
+          description: Identifier of the associated Purchase Order.
           example: PO-2025-00001
         invoice_id:
           type: string
-          description: Unique identifier for this specific part...
+          description: Unique identifier for this specific parts invoice line item.
           example: pii_abc123xyz
         invoice_key:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         invoice_number:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         subject:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         description:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         ref_code:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         payment_authorizations:
           $ref: "#/components/schemas/PaymentAuthorizations"
         vat_number:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         invoice_date_time:
           type: string
           description: The date and time when was created.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         due_date_time:
           type: string
           description: The date and time when was created.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         post_date_time:
           type: string
           description: The date and time when was posted.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         create_date_time:
           type: string
           description: The date and time when was posted.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         address_references:
           $ref: "#/components/schemas/AddressReferences"
         invoice_status_type:
           $ref: "#/components/schemas/InvoiceStatusTypes"
         priority:
           type: string
-          description: The priority assigned to this line item ...
+          description: The priority assigned to this line item within the invoice
+            or fulfillment process.
           example: HIGH
         locale:
           $ref: "#/components/schemas/Locale"
@@ -1132,11 +1100,13 @@ components:
           $ref: "#/components/schemas/PartReferences"
         version:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         actor_id:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         purchase_type:
           $ref: "#/components/schemas/OrderCategoryTypes"
@@ -1157,11 +1127,11 @@ components:
           $ref: "#/components/schemas/PaymentStatusTypes"
         total_quantity:
           type: string
-          description: The total quantity of this specific part...
+          description: The total quantity of this specific part in the line item.
           example: "5"
         legal_terms:
           type: string
-          description: The total quantity of this specific part...
+          description: The total quantity of this specific part in the line item.
           example: "5"
         totals:
           $ref: "#/components/schemas/FinancialSplits"
@@ -1175,7 +1145,7 @@ components:
           $ref: "#/components/schemas/InvoiceItems"
         status:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
       description: not nullable
     InvoiceCreate:
       required:
@@ -1189,50 +1159,60 @@ components:
       properties:
         invoice_item_id:
           type: string
-          description: Unique identifier for this specific part...
+          description: Unique identifier for this specific parts invoice line item.
           example: pii_abc123xyz
         line_number:
           type: string
-          description: "An Invoice Line Number is a sequential, ..."
+          description: "An Invoice Line Number is a sequential, numerical identifier\
+            \ assigned to each individual item, product, or service listed on an invoice.\
+            \ It serves to uniquely identify and order each distinct entry within\
+            \ the invoice's detail section, facilitating clarity, tracking, and reconciliation."
           example: PARTINVITEM-2023-001-A
         invoice_item_key:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         invoice_id:
           type: string
-          description: The unique identifier of the parent invo...
+          description: The unique identifier of the parent invoice to which this line
+            item belongs.
           example: inv_789def456
         priority:
           type: string
-          description: The priority assigned to this line item ...
+          description: The priority assigned to this line item within the invoice
+            or fulfillment process.
           example: HIGH
         currency:
           type: string
-          description: The currency code for the prices within ...
+          description: "The currency code for the prices within this line item (e.g.,\
+            \ 'USD', 'EUR')."
           example: USD
         locale:
           type: string
-          description: The locale code relevant to this invoice...
+          description: "The locale code relevant to this invoice item, influencing\
+            \ formatting or language (e.g., 'en_US')."
           example: en_US
         location_code:
           type: string
-          description: The code of the inventory location or br...
+          description: The code of the inventory location or branch from which this
+            part is sourced.
           example: WH001
         total_quantity:
           type: string
-          description: The total quantity of this specific part...
+          description: The total quantity of this specific part in the line item.
           example: "5"
         item_date_time:
           type: string
-          description: The date and time when this invoice item...
+          description: The date and time when this invoice item was added or last
+            updated.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         totals:
           $ref: "#/components/schemas/FinancialSplits"
         description:
           type: string
-          description: A detailed description of the part inclu...
+          description: A detailed description of the part included in this line item.
           example: Engine oil filter for model XYZ-123.
         address_reference:
           $ref: "#/components/schemas/AddressReference"
@@ -1277,17 +1257,17 @@ components:
           description: The price before tax.
         total_amount:
           type: string
-          description: Total price that was paid (after deducin...
+          description: Total price that was paid (after deducing discount and/or tax).
         part_references:
           $ref: "#/components/schemas/PartReferences"
         journal_entry_key:
           type: string
-          description: A link to the corresponding financial jo...
+          description: A link to the corresponding financial journal entry.
         status:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         party_references:
           $ref: "#/components/schemas/PartyReferences"
         shipment_references:
@@ -1364,19 +1344,23 @@ components:
           $ref: "#/components/schemas/InvoiceItems"
         subject:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         vat_number:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         description:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         ref_code:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         invoice_status_type:
           $ref: "#/components/schemas/InvoiceStatusTypes"
@@ -1399,12 +1383,12 @@ components:
           type: string
           description: The date and time when was created.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         create_date_time:
           type: string
           description: The date and time when was posted.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         address_references:
           $ref: "#/components/schemas/AddressReferences"
         financial_events:
@@ -1415,17 +1399,18 @@ components:
           $ref: "#/components/schemas/OrderStageTypes"
         total_quantity:
           type: string
-          description: The total quantity of this specific part...
+          description: The total quantity of this specific part in the line item.
           example: "5"
         invoice_type:
           $ref: "#/components/schemas/InvoiceTypes"
         invoice_number:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         legal_terms:
           type: string
-          description: The total quantity of this specific part...
+          description: The total quantity of this specific part in the line item.
           example: "5"
         purchase_type:
           $ref: "#/components/schemas/OrderCategoryTypes"
@@ -1439,16 +1424,18 @@ components:
           $ref: "#/components/schemas/FinancialSplits"
         priority:
           type: string
-          description: The priority assigned to this line item ...
+          description: The priority assigned to this line item within the invoice
+            or fulfillment process.
           example: HIGH
         post_date_time:
           type: string
           description: The date and time when was posted.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         version:
           type: string
-          description: Identifier of the actor who initiated or...
+          description: Identifier of the actor who initiated or is responsible for
+            the financial event.
           example: actor_123
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
@@ -1456,7 +1443,7 @@ components:
           type: string
           description: The date and time when was created.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         trade_ins:
           $ref: "#/components/schemas/PartReferences"
         payment_method_references:
@@ -1465,7 +1452,7 @@ components:
           $ref: "#/components/schemas/PartyReferences"
         status:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
       description: Invoice Update for Patch and Put
     LedgerActionTypes:
       type: string
@@ -1479,18 +1466,17 @@ components:
     Locale:
       type: object
       properties:
-        locale_id:
-          type: string
-          description: Unique internal identifier for the local...
         locale_key:
           type: string
-          description: "A unique, human-readable string key used..."
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
         locale_name:
           type: string
-          description: The full IETF BCP 47 language tag or Jav...
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
         description:
           type: string
-          description: A detailed description of the alert mess...
+          description: A detailed description of the alert message.
         language_code:
           type: string
           description: ISO 639-1 two-letter language code.
@@ -1498,22 +1484,20 @@ components:
           type: string
           description: ISO 3166-1 alpha-2 country code.
         currency_code:
-          type: string
-          description: The three-letter ISO 4217 currency code ...
+          $ref: "#/components/schemas/CurrencyCode"
         currency_symbol:
           type: string
-          description: The graphical symbol used for the curren...
+          description: The graphical symbol used for the currency.
         timezone:
           type: string
-          description: The IANA Time Zone database ID for regio...
+          description: The IANA Time Zone database ID for regional time calculations.
         number_format:
           type: string
-          description: Regional pattern for decimal and thousan...
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
+          description: Regional pattern for decimal and thousands separators.
         location_code:
           type: string
-          description: The code of the inventory location or br...
+          description: The code of the inventory location or branch from which this
+            part is sourced.
           example: WH001
       description: not nullable
     Memo:
@@ -1525,22 +1509,32 @@ components:
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
+          description: money.currency.code.desc
         display_value:
           type: string
-          description: The locale-specific display format for t...
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
       description: "Represents a monetary value, including its currency, locale, and\
@@ -1689,7 +1683,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         unit_of_measure:
           $ref: "#/components/schemas/UnitOfMeasure"
       description: External system identifier
@@ -1702,32 +1696,44 @@ components:
       properties:
         party_reference_id:
           type: string
-          description: Unique identifier value
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
         party_reference_key:
           type: string
-          description: Unique identifier value
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
         party_key:
           type: string
-          description: Unique identifier value
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
         party_name:
           type: string
-          description: Unique identifier value
-        contact_name:
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        individual_name:
           $ref: "#/components/schemas/PersonName"
-        locale:
-          $ref: "#/components/schemas/Locale"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
         authorization_code:
           type: string
-          description: Context or domain of the identifier
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
         source_system_code:
           type: string
-          description: Context or domain of the identifier
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
         context:
           type: string
-          description: Context or domain of the identifier
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
         account_number:
           type: string
-          description: Account Number
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
         party_relationship_types:
           maxItems: 255
           minItems: 1
@@ -1735,23 +1741,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PartyRelationshipTypes"
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        rule_codes:
-          $ref: "#/components/schemas/Codes"
-        party:
+        snapshot_detail:
           $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-          example: 2026-03-23T22:14:04Z
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
         address_references:
           $ref: "#/components/schemas/AddressReferences"
         communication_channels:
           $ref: "#/components/schemas/CommunicationChannels"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-05-06T14:09:00Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
       description: External system identifier
     PartyReferences:
       type: array
@@ -1882,6 +1887,31 @@ components:
       - TRANSACTION_TO
       - REMOVE
       - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
     PayTypes:
       type: string
       description: types of pays.
@@ -1897,10 +1927,10 @@ components:
       properties:
         payment_authorization_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_authorization_key:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         auth_reasons:
           $ref: "#/components/schemas/Codes"
         auth_amount:
@@ -1922,9 +1952,9 @@ components:
           description: Context or domain of the reference.
         auth_date_time:
           type: string
-          description: The date and time the payment was associ...
+          description: The date and time the payment was associated with the order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentAuthorizations:
@@ -1938,31 +1968,33 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_method_reference_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         payment_method_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced PaymentMethod (Party)
+            aggregate.
         context:
           type: string
           description: Context or domain of the reference.
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
         processor_options:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         snapshot_details:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         occurrence_date_time:
           type: string
-          description: The date and time the paymentMethod was ...
+          description: The date and time the paymentMethod was associated with the
+            order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentMethodReferences:
@@ -2002,38 +2034,39 @@ components:
       properties:
         payment_schedule_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_schedule_reference_key:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_schedule_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment Schedule
+            aggregate.
         payment_period:
           $ref: "#/components/schemas/EffectivePeriod"
         context:
           type: string
-          description: Context or domain of the payment schedul...
+          description: Context or domain of the payment schedule.
         total_payments:
           type: integer
-          description: The total number of payments in this sch...
+          description: The total number of payments in this schedule.
           format: int32
           example: 60
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the schedule was assoc...
+          description: The date and time the schedule was associated with the order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         payment_frequency:
           $ref: "#/components/schemas/DurationIntervalTypes"
         payment_amount:
           type: string
-          description: The price of all products and services b...
+          description: The price of all products and services before tax.
         annual_percentage_rate:
           type: string
-          description: Context or domain of the payment schedul...
+          description: Context or domain of the payment schedule.
       description: Reference to a Payment Schedule Aggregate Root.
     PaymentScheduleReferences:
       type: array
@@ -2067,13 +2100,13 @@ components:
       properties:
         term_reference_id:
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         term_reference_key:
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         term_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Payment Term aggregate.
         context:
           type: string
           description: Context or domain of the payment term.
@@ -2081,9 +2114,9 @@ components:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the terms were applied...
+          description: The date and time the terms were applied to the order.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
       description: "Reference to a Payment Term Aggregate Root (e.g., Net 30)."
     PaymentTermReferences:
       type: array
@@ -2148,7 +2181,7 @@ components:
       properties:
         alias:
           type: string
-          description: Alternative or informal name.
+          description: Alternative or informal name or role.
           example: AJ
         family_name:
           type: string
@@ -2191,37 +2224,43 @@ components:
           type: string
           description: Unique person name key.
           example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
         preferred_name:
           type: string
-          description: Preferred name used in informal situatio...
+          description: Preferred name used in informal situations.
           example: Ali
         salutation:
           type: string
-          description: "Salutation or title such as Mr., Ms., Dr..."
+          description: "Salutation or title such as Mr., Ms., Dr."
           example: Dr.
         honorific_prefix:
           type: string
-          description: Prefix title used before the person's na...
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
           example: Dr.
         honorific_suffix:
           type: string
-          description: Suffix title used after the person's nam...
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
           example: Jr.
         locale:
           type: string
-          description: Locale or language region associated wit...
+          description: Locale or language region associated with the person.
           example: en-US
         phonetic_family_name:
           type: string
-          description: Phonetic representation of the family na...
+          description: Phonetic representation of the family name.
           example: FAM-nee
         phonetic_given_name:
           type: string
-          description: Phonetic representation of the given nam...
+          description: Phonetic representation of the given name.
           example: GA-vin
         phonetic_middle_name:
           type: string
-          description: Phonetic representation of the middle na...
+          description: Phonetic representation of the middle name.
           example: MI-chal
         nationality:
           type: string
@@ -2233,25 +2272,26 @@ components:
       properties:
         display_value:
           type: string
-          description: Human-readable display value for the pri...
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
         locale:
           type: string
-          description: Locale used for formatting display value...
+          description: Locale used for formatting display value.
         value:
           type: string
-          description: The numeric value of the price (before t...
+          description: The numeric value of the price (before tax/cost breakdowns).
         tax_value:
           type: string
-          description: The calculated amount of tax applied to ...
+          description: The calculated amount of tax applied to the price.
         taxable_amount:
           type: string
           description: The portion of the price subject to tax.
         non_taxable_amount:
           type: string
-          description: The portion of the price not subject to ...
+          description: The portion of the price not subject to tax.
         total_amount:
           type: string
-          description: The total final price including all comp...
+          description: The total final price including all components and tax.
         total_cost_amount:
           type: string
           description: The total cost to the provider/seller.
@@ -2260,20 +2300,19 @@ components:
           description: The unit cost to the provider/seller.
         price_description:
           type: string
-          description: "A descriptive title for the price (e.g.,..."
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
         price_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Natural key or business identifier for the price entry.
         tax_included_indicator:
           type: boolean
-          description: Indicates whether tax is included in the...
+          description: Indicates whether tax is included in the base price (value).
           example: false
         currency_code:
-          type: string
-          description: "ISO 4217 currency code, e.g., 'USD', 'EU..."
+          $ref: "#/components/schemas/CurrencyCode"
         price_id:
           type: string
-          description: Unique system identifier for the price r...
+          description: Unique system identifier for the price record.
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
@@ -2312,7 +2351,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         geographic_boundaries:
           $ref: "#/components/schemas/GeographicBoundaryReferences"
         captured_financial_split:
@@ -2511,23 +2550,23 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
         rebate_name:
           type: string
-          description: The name of the rebate for search result...
+          description: The name of the rebate for search result display.
         rebate_price:
           $ref: "#/components/schemas/Price"
         capitalized_indicator:
           type: boolean
-          description: Indicates if the rebate is capitalized i...
+          description: Indicates if the rebate is capitalized in lease deals.
           example: false
         purchase_type:
           $ref: "#/components/schemas/OrderCategoryTypes"
@@ -2542,7 +2581,7 @@ components:
           $ref: "#/components/schemas/ProductStateTypes"
         location_code:
           type: string
-          description: Regional applicability code for the reba...
+          description: Regional applicability code for the rebate.
         incentive_type:
           $ref: "#/components/schemas/IncentiveTypes"
         rebate_duration:
@@ -2627,14 +2666,14 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
       description: External system identifier
     RewardReferences:
@@ -2646,11 +2685,11 @@ components:
       properties:
         shipment_reference_id:
           type: string
-          description: Internal unique identifier for the shipm...
+          description: Internal unique identifier for the shipment reference record.
           example: shp-ref-55092
         shipment_reference_key:
           type: string
-          description: Natural business key for the shipment re...
+          description: Natural business key for the shipment reference.
           example: LOGISTICS_ESTIMATE_2026_001
         shipment_key:
           type: string
@@ -2660,7 +2699,8 @@ components:
           $ref: "#/components/schemas/ShipmentTrackingNumber"
         context:
           type: string
-          description: The domain or carrier context of the shi...
+          description: "The domain or carrier context of the shipment (e.g., 'FEDEX',\
+            \ 'CASSENS', 'OEM_LOGISTICS')."
           example: OEM_LOGISTICS
         system_codes:
           $ref: "#/components/schemas/Codes"
@@ -2668,9 +2708,10 @@ components:
           $ref: "#/components/schemas/CarrierParty"
         occurrence_date_time:
           type: string
-          description: The timestamp when the shipment was init...
+          description: The timestamp when the shipment was initiated or the record
+            was created.
           format: date-time
-          example: 2026-03-23T22:14:04Z
+          example: 2026-05-06T14:09:00Z
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
         estimated_delivery:
@@ -2685,38 +2726,30 @@ components:
       type: string
       description: The external tracking number.
       example: TRK123456789
-    ShipmentTrackingNumberCreate:
-      required:
-      - shipment_tracking_number_key
-      type: string
-      description: ShipmentTrackingNumber Create for Post
-      allOf:
-      - $ref: "#/components/schemas/ShipmentTrackingNumber"
-    ShipmentTrackingNumberUpdate:
-      type: string
-      description: ShipmentTrackingNumber Update for Patch and Put
     TaxSplit:
       type: object
       properties:
         tax_split_id:
           type: string
-          description: Unique ID identifying this specific tax ...
+          description: Unique ID identifying this specific tax component split.
           example: ts_789012
         tax_split_key:
           type: string
-          description: Unique key identifying this specific tax...
+          description: Unique key identifying this specific tax component split.
           example: tsk_789012
         tax_code:
           type: string
-          description: The specific code used by the jurisdicti...
+          description: "The specific code used by the jurisdiction for this tax (e.g.,\
+            \ VAT, GST, state sales tax code)."
           example: TX-A-45
         tax_rate:
           type: string
-          description: The tax rate applied as a decimal percen...
+          description: The tax rate applied as a decimal percentage.
           example: "0.0825"
         jurisdiction:
           type: string
-          description: The tax jurisdiction or authority applyi...
+          description: "The tax jurisdiction or authority applying the tax (e.g.,\
+            \ 'Texas', 'City of Austin')."
           example: State of Texas
         tax_amount:
           $ref: "#/components/schemas/Price"
@@ -2724,11 +2757,11 @@ components:
           $ref: "#/components/schemas/TaxTypes"
         sequence_id:
           type: string
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: ts_789012
         taxable_indicator:
           type: boolean
-          description: Unique Sequencing Order for this entity ...
+          description: Unique Sequencing Order for this entity in a list
           example: false
       description: Details of a single tax component applied to a financial split.
     TaxSplits:
@@ -2753,7 +2786,7 @@ components:
       properties:
         textual_detail_key:
           type: string
-          description: Natural key or business-friendly key for...
+          description: Natural key or business-friendly key for textual detail.
         textual_detail_id:
           type: string
           description: Unique identifier for textual detail.
@@ -2777,7 +2810,7 @@ components:
           description: Name or title of the textual detail.
         value:
           type: string
-          description: Value associated with the textual detail...
+          description: Value associated with the textual detail.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         groups:
@@ -2787,10 +2820,10 @@ components:
           description: Label for UI representation.
         alt_text:
           type: string
-          description: Alternative text for accessibility or im...
+          description: Alternative text for accessibility or image descriptions.
         textual_detail_code:
           type: string
-          description: Code identifier for textual detail refer...
+          description: Code identifier for textual detail reference.
         tags:
           $ref: "#/components/schemas/Codes"
         uom_display:
@@ -2805,36 +2838,36 @@ components:
       properties:
         time_slot_id:
           type: string
-          description: Technical unique identifier (GUID) for t...
+          description: Technical unique identifier (GUID) for the time slot record.
           example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
           type: string
-          description: Natural business key for the time slot w...
+          description: Natural business key for the time slot within its specific
+            context.
           example: TS-MON-MORNING-SHIFT
         time_slot_source:
           type: string
-          description: The originating system or calendar provi...
+          description: The originating system or calendar providing this availability
+            data.
           example: GOOGLE_CALENDAR
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local start time in 24-hour ISO 8601...
+          description: The local start time in 24-hour ISO 8601 format.
           format: date-time
         end_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         end_time:
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local end time in 24-hour ISO 8601 f...
+          description: The local end time in 24-hour ISO 8601 format.
           format: date-time
         recurring_indicator:
           type: boolean
-          description: Indicates if this time slot is part of a...
+          description: Indicates if this time slot is part of a repeating pattern.
           example: true
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -2843,18 +2876,16 @@ components:
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
+          $ref: "#/components/schemas/Codes"
       description: "Defines a specific window of time, often within a recurring schedule,\
         \ used for service availability or appointment booking."
+    TimeSlots:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeSlot"
     TimeslotDirectiveTypes:
       type: string
-      description: Represents the directive for a timeslot.
+      description: types of timeslot directives.
       enum:
       - AFTER
       - ANYTIME
@@ -2862,47 +2893,6 @@ components:
       - BETWEEN
       - BLOCK
       - UNKNOWN
-    UOMQuantityCategoryTypes:
-      type: string
-      description: types of u o m quantity categorys.
-      enum:
-      - COUNT
-      - WEIGHT
-      - VOLUME
-      - TIME
-      - NET_WEIGHT
-      - NET_VOLUME
-      - PACKAGE_QUANTITY
-      - MIN_ORDER_QUANTITY
-      - GROSS_WEIGHT
-      - GROSS_VOLUME
-      - SHIPPING_WEIGHT
-      - DIMENSIONAL_WEIGHT
-      - MATERIAL
-      - ELECTRICAL_RATING
-      - DEFAULT_LEAD_TIME
-      - MAX_LEAD_TIME
-      - DIMENSION_UNIT
-      - MIN_LENGTH
-      - MAX_LENGTH
-      - MIN_WIDTH
-      - MAX_WIDTH
-      - MIN_HEIGHT
-      - MAX_HEIGHT
-      - MIN_WEIGHT
-      - MAX_WEIGHT
-      - MAX_ORDER_QUANTITY
-      - MIN_ORDER_AVAILABLE
-      - DIMENSIONS
-      - SHIPPING_DIM_LENGTH
-      - SHIPPING_DIM_WIDTH
-      - SHIPPING_DIM_HEIGHT
-      - SHIPPING_DIM_GROSS_WEIGHT
-      - SHIPPING_DIM_NET_WEIGHT
-      - SHELF_LIFE_HOURS
-      - EXPIRATION_DATE
-      - MIN_PAYMENT_PERCENT
-      - MIN_PAYMENT_AMOUNT
     UnitOfMeasure:
       type: object
       properties:
@@ -2918,11 +2908,11 @@ components:
           type: string
           description: Unit of Measure Value
         uom_quantity_category_type:
-          $ref: "#/components/schemas/UOMQuantityCategoryTypes"
+          $ref: "#/components/schemas/UomQuantityCategoryTypes"
       description: value price with unit of measure
     UnitOfMeasureTypes:
       type: string
-      description: Represents a comprehensive list of units of mea...
+      description: types of unit of measures.
       enum:
       - MILES
       - KM
@@ -2989,3 +2979,48 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/UnitOfMeasure"
+    UomQuantityCategoryTypes:
+      type: string
+      description: types of uom quantity categorys.
+      enum:
+      - COUNT
+      - WEIGHT
+      - VOLUME
+      - TIME
+      - NET_WEIGHT
+      - NET_VOLUME
+      - PACKAGE_QUANTITY
+      - MIN_ORDER_QUANTITY
+      - GROSS_WEIGHT
+      - GROSS_VOLUME
+      - SHIPPING_WEIGHT
+      - DIMENSIONAL_WEIGHT
+      - MATERIAL
+      - ELECTRICAL_RATING
+      - DEFAULT_LEAD_TIME
+      - MAX_LEAD_TIME
+      - DIMENSION_UNIT
+      - MIN_LENGTH
+      - MAX_LENGTH
+      - MIN_WIDTH
+      - MAX_WIDTH
+      - MIN_HEIGHT
+      - MAX_HEIGHT
+      - MIN_WEIGHT
+      - MAX_WEIGHT
+      - MAX_ORDER_QUANTITY
+      - MIN_ORDER_AVAILABLE
+      - DIMENSIONS
+      - SHIPPING_DIM_LENGTH
+      - SHIPPING_DIM_WIDTH
+      - SHIPPING_DIM_HEIGHT
+      - SHIPPING_DIM_GROSS_WEIGHT
+      - SHIPPING_DIM_NET_WEIGHT
+      - SHELF_LIFE_HOURS
+      - EXPIRATION_DATE
+      - MIN_PAYMENT_PERCENT
+      - MIN_PAYMENT_AMOUNT
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

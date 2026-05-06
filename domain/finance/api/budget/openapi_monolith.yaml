@@ -1,102 +1,61 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
-  description: A standardized interface for Automotive Retail ...
+  title: Automotive Retail Systems API - Budget
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: //v1_0_0
+- url: https://api.starstandard.org/v1/v1_0_0
+  description: Production server
+- url: https://sandbox.starstandard.org/v1/v1_0_0
+  description: Sandbox for testing
 security:
 - industry-oauth:
   - standard:read
 - member-api-key: []
 - {}
 tags:
-- name: Money
-  description: Operations related to Money
-- name: GeneralLedgerReference
-  description: Operations related to GeneralLedgerReference
-- name: Identifier
-  description: Operations related to Identifier
-- name: BudgetItem
-  description: Operations related to BudgetItem
-- name: AccountingPeriod
-  description: Operations related to AccountingPeriod
-- name: ControlAccountReference
-  description: Operations related to ControlAccountReference
 - name: Budget
-  description: Operations related to Budget
-- name: Default
-  description: Operations related to Default
+  description: Budget Controlled Root
 paths:
   /budgets:
     get:
       tags:
-      - Budget
-      summary: Retrieve a list of Budget entities.
-      description: list Budget By
-      operationId: listBudget
+      - Budgets
+      summary: Returns a paginated list of budget
+      description: a list of Budget
+      operationId: listBudgets
       parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: A list of Budget entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Budget"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
+          $ref: "#/components/responses/BudgetCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -105,18 +64,35 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     post:
       tags:
-      - Budget
-      summary: Create a new Budget entity.
-      description: Create Budget
+      - Budgets
+      summary: create budget
+      description: create Budget
       operationId: createBudget
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: Budget data to create the new resource.
         content:
           application/json:
             schema:
@@ -124,54 +100,52 @@ paths:
         required: true
       responses:
         "201":
-          description: Budget created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /budgets/KEY78s
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Budget"
+          $ref: "#/components/responses/BudgetCreatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /budgets/{budgetKey}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /budgets/{budget-key}:
     get:
       tags:
-      - Budget
-      summary: Retrieve a specific Budget entity.
-      description: "Standard GET operation for /budgets/{budgetKey}"
-      operationId: getBudgetById
+      - Budgets
+      summary: Retrieve a single item scoped by a key Budget entities.
+      operationId: getBudgetByKey
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/BudgetKey"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: The requested Budget entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BudgetResponse"
+          $ref: "#/components/responses/BudgetSingleResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -180,43 +154,44 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     put:
       tags:
-      - Budget
-      summary: Replace a Budget entity.
-      description: replace Budget
-      operationId: replaceBudget
+      - Budgets
+      summary: Replace values in a single item scoped by a key Budget entities.
+      operationId: replaceBudgetByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/BudgetKey"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Budget"
+              $ref: "#/components/schemas/BudgetUpdate"
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Budget"
+          $ref: "#/components/responses/BudgetUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -229,21 +204,39 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     delete:
       tags:
-      - Budget
-      summary: Delete a Budget entity
-      description: Marks the Budget entity as inactive or removes ...
-      operationId: deleteBudgetEntity
+      - Budgets
+      description: delete a Budget
+      operationId: deleteBudget
       parameters:
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/ReasonQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/BudgetKey"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       responses:
+        "200":
+          $ref: "#/components/responses/BudgetSingleResponse"
         "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/NoContentSuccess"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
@@ -252,24 +245,35 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     patch:
       tags:
-      - Budget
-      summary: Partially update a Budget entity.
-      description: Partially update a Budget
-      operationId: updatePartialBudget
+      - Budgets
+      summary: Update a single item scoped by a key Budget
+      description: update a single item
+      operationId: updateBudgetByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/BudgetKey"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: Included Fields to be updated will be modified.
         content:
           application/merge-patch+json:
             schema:
@@ -277,18 +281,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Budget"
+          $ref: "#/components/responses/BudgetUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -301,2041 +294,49 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the specific Budget.
-      required: true
-      schema:
-        type: string
-        example: KEY78v
-  /budgets/{budgetKey}/money:
-    get:
-      tags:
-      - Money
-      summary: Retrieve a list of Money entities scoped by bud...
-      description: list Money By BudgetKey
-      operationId: listMoneyByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Money entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Money"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/money/{moneyKey}:
-    get:
-      tags:
-      - Money
-      summary: Retrieve a specific Money entity.
-      description: "Standard GET operation for /budgets/{budgetKey}/money/{moneyKey}"
-      operationId: getMoneyById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Money entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Money"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: moneyKey
-      in: path
-      description: The unique identifier for the specific Money.
-      required: true
-      schema:
-        type: string
-        example: KEY78v9
-  /budgets/{budgetKey}/general-ledger-references:
-    get:
-      tags:
-      - GeneralLedgerReference
-      summary: Retrieve a list of GeneralLedgerReference entit...
-      description: list GeneralLedgerReference By BudgetKey
-      operationId: listGeneralLedgerReferenceByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of GeneralLedgerReference entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/GeneralLedgerReference"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - GeneralLedgerReference
-      summary: Create a new GeneralLedgerReference entity.
-      description: Create GeneralLedgerReference
-      operationId: createGeneralLedgerReference
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: GeneralLedgerReference data to create the new r...
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GeneralLedgerReferenceCreate"
-        required: true
-      responses:
-        "201":
-          description: GeneralLedgerReference created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets{budgetKey}general-ledger-references/KEY78sGq"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralLedgerReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}:
-    get:
-      tags:
-      - GeneralLedgerReference
-      summary: Retrieve a specific GeneralLedgerReference entity.
-      description: "Standard GET operation for /budgets/{budgetKey}/general-ledger-references/{generalLedgerReferenceKey}"
-      operationId: getGeneralLedgerReferenceById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested GeneralLedgerReference entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralLedgerReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - GeneralLedgerReference
-      summary: Replace a GeneralLedgerReference entity.
-      description: replace GeneralLedgerReference
-      operationId: replaceGeneralLedgerReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GeneralLedgerReference"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralLedgerReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - GeneralLedgerReference
-      summary: Delete a GeneralLedgerReference entity
-      description: Marks the GeneralLedgerReference entity as inac...
-      operationId: deleteGeneralLedgerReferenceEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - GeneralLedgerReference
-      summary: Partially update a GeneralLedgerReference entity.
-      description: Partially update a GeneralLedgerReference
-      operationId: updatePartialGeneralLedgerReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/GeneralLedgerReferenceUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralLedgerReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: generalLedgerReferenceKey
-      in: path
-      description: The unique identifier for the specific GeneralLedgerReference.
-      required: true
-      schema:
-        type: string
-        example: KEY78v96
-  /budgets/{budgetKey}/identifiers:
-    get:
-      tags:
-      - Identifier
-      summary: Retrieve a list of Identifier entities scoped b...
-      description: list Identifier By BudgetKey
-      operationId: listIdentifierByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Identifier entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Identifier"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - Identifier
-      summary: Create a new Identifier entity.
-      description: Create Identifier
-      operationId: createIdentifier
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Identifier data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/IdentifierCreate"
-        required: true
-      responses:
-        "201":
-          description: Identifier created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets{budgetKey}identifiers/KEY78sGqW"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/identifiers/{identifierKey}:
-    get:
-      tags:
-      - Identifier
-      summary: Retrieve a specific Identifier entity.
-      description: "Standard GET operation for /budgets/{budgetKey}/identifiers/{identifierKey}"
-      operationId: getIdentifierById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Identifier entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - Identifier
-      summary: Replace a Identifier entity.
-      description: replace Identifier
-      operationId: replaceIdentifier
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Identifier"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - Identifier
-      summary: Delete a Identifier entity
-      description: Marks the Identifier entity as inactive or remo...
-      operationId: deleteIdentifierEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - Identifier
-      summary: Partially update a Identifier entity.
-      description: Partially update a Identifier
-      operationId: updatePartialIdentifier
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/IdentifierUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: identifierKey
-      in: path
-      description: The unique identifier for the specific Identifier.
-      required: true
-      schema:
-        type: string
-        example: KEY78v96K
-  /budgets/{budgetKey}/budget-items:
-    get:
-      tags:
-      - BudgetItem
-      summary: Retrieve a list of BudgetItem entities scoped b...
-      description: list BudgetItem By BudgetKey
-      operationId: listBudgetItemByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of BudgetItem entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/BudgetItem"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - BudgetItem
-      summary: Create a new BudgetItem entity.
-      description: Create BudgetItem
-      operationId: createBudgetItem
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: BudgetItem data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BudgetItemCreate"
-        required: true
-      responses:
-        "201":
-          description: BudgetItem created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets{budgetKey}budget-items/KEY78sGqWc"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BudgetItem"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/budget-items/{budgetItemKey}:
-    get:
-      tags:
-      - BudgetItem
-      summary: Retrieve a specific BudgetItem entity.
-      description: "Standard GET operation for /budgets/{budgetKey}/budget-items/{budgetItemKey}"
-      operationId: getBudgetItemById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested BudgetItem entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BudgetItem"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - BudgetItem
-      summary: Replace a BudgetItem entity.
-      description: replace BudgetItem
-      operationId: replaceBudgetItem
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BudgetItem"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BudgetItem"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - BudgetItem
-      summary: Delete a BudgetItem entity
-      description: Marks the BudgetItem entity as inactive or remo...
-      operationId: deleteBudgetItemEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - BudgetItem
-      summary: Partially update a BudgetItem entity.
-      description: Partially update a BudgetItem
-      operationId: updatePartialBudgetItem
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/BudgetItemUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BudgetItem"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: budgetItemKey
-      in: path
-      description: The unique identifier for the specific BudgetItem.
-      required: true
-      schema:
-        type: string
-        example: KEY78v96KP
-  /budgets/{budgetKey}/accounting-periods:
-    get:
-      tags:
-      - AccountingPeriod
-      summary: Retrieve a list of AccountingPeriod entities sc...
-      description: list AccountingPeriod By BudgetKey
-      operationId: listAccountingPeriodByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of AccountingPeriod entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/AccountingPeriod"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - AccountingPeriod
-      summary: Create a new AccountingPeriod entity.
-      description: Create AccountingPeriod
-      operationId: createAccountingPeriod
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: AccountingPeriod data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AccountingPeriodCreate"
-        required: true
-      responses:
-        "201":
-          description: AccountingPeriod created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets{budgetKey}accounting-periods/KEY78sGqWch"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountingPeriod"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}:
-    get:
-      tags:
-      - AccountingPeriod
-      summary: Retrieve a specific AccountingPeriod entity.
-      description: "Standard GET operation for /budgets/{budgetKey}/accounting-periods/{accountingPeriodKey}"
-      operationId: getAccountingPeriodById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested AccountingPeriod entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountingPeriod"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - AccountingPeriod
-      summary: Replace a AccountingPeriod entity.
-      description: replace AccountingPeriod
-      operationId: replaceAccountingPeriod
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AccountingPeriod"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountingPeriod"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - AccountingPeriod
-      summary: Delete a AccountingPeriod entity
-      description: Marks the AccountingPeriod entity as inactive o...
-      operationId: deleteAccountingPeriodEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - AccountingPeriod
-      summary: Partially update a AccountingPeriod entity.
-      description: Partially update a AccountingPeriod
-      operationId: updatePartialAccountingPeriod
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/AccountingPeriodUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountingPeriod"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: accountingPeriodKey
-      in: path
-      description: The unique identifier for the specific AccountingPeriod.
-      required: true
-      schema:
-        type: string
-        example: KEY78v96KPs
-  /budgets/{budgetKey}/control-account-references:
-    get:
-      tags:
-      - ControlAccountReference
-      summary: Retrieve a list of ControlAccountReference enti...
-      description: list ControlAccountReference By BudgetKey
-      operationId: listControlAccountReferenceByBudgetKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of ControlAccountReference entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ControlAccountReference"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - ControlAccountReference
-      summary: Create a new ControlAccountReference entity.
-      description: Create ControlAccountReference
-      operationId: createControlAccountReference
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: ControlAccountReference data to create the new ...
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ControlAccountReferenceCreate"
-        required: true
-      responses:
-        "201":
-          description: ControlAccountReference created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets{budgetKey}control-account-references/KEY78sGqWchB"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ControlAccountReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}:
-    get:
-      tags:
-      - ControlAccountReference
-      summary: Retrieve a specific ControlAccountReference ent...
-      description: "Standard GET operation for /budgets/{budgetKey}/control-account-references/{controlAccountReferenceKey}"
-      operationId: getControlAccountReferenceById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested ControlAccountReference entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ControlAccountReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - ControlAccountReference
-      summary: Replace a ControlAccountReference entity.
-      description: replace ControlAccountReference
-      operationId: replaceControlAccountReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ControlAccountReference"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ControlAccountReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - ControlAccountReference
-      summary: Delete a ControlAccountReference entity
-      description: Marks the ControlAccountReference entity as ina...
-      operationId: deleteControlAccountReferenceEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - ControlAccountReference
-      summary: Partially update a ControlAccountReference entity.
-      description: Partially update a ControlAccountReference
-      operationId: updatePartialControlAccountReference
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/ControlAccountReferenceUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ControlAccountReference"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: budgetKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: controlAccountReferenceKey
-      in: path
-      description: The unique identifier for the specific ControlAccountReference.
-      required: true
-      schema:
-        type: string
-        example: KEY78v96KPs3
-  /budgets/health:
-    get:
-      tags:
-      - Default
-      summary: Health Check
-      description: Public endpoint to verify service availability.
-      operationId: getBudgetHealth
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: Service is healthy
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - status
-                - version
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: UP
-                    enum:
-                    - UP
-                    - DOWN
-                    - MAINTENANCE
-                  version:
-                    type: string
-                    description: The version of the ontology implemented by this service.
-                    example: 1.0.0
-                  timestamp:
-                    type: string
-                    description: Server time in ISO-8601 format.
-                    format: date-time
-                    example: 2025-12-21T23:00:00Z
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
       security:
-      - {}
-  /budgets/batch:
-    post:
-      tags:
-      - Default
-      summary: Bulk create budgets
-      description: Bulk Create of Budget
-      operationId: createBudgetBatch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                items:
-                  maxItems: 100
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/BudgetCreate"
-      responses:
-        "200":
-          description: Batch processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /budgets/batch/7741558175539370629
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  succeeded:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Budget"
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        index:
-                          type: integer
-                          format: int32
-                        error:
-                          $ref: "#/components/schemas/ErrorDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-  /budgets/exports:
-    post:
-      tags:
-      - Default
-      summary: Initiate a bulk Budget export
-      description: Standard POST operation for /budgets/exports
-      operationId: initiateBudgetExport
-      parameters:
-      - name: Idempotency-Key
-        in: header
-        description: Unique string to prevent duplicate export jobs for the same request
-        required: false
-        schema:
-          type: string
-          format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                format:
-                  type: string
-                  example: ' ef68c8f2'
-                  default: PARQUET
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                  - TOON
-                date_range:
-                  type: object
-                  properties:
-                    start:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                    end:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                data_contract_key:
-                  type: string
-                  description: "The identifier of the specific data contract/projection\
-                    \ (e.g., 'customer_contact_v1')"
-                  example: contact_details_only
-                compression:
-                  type: string
-                  description: "The compression algorithm to apply. ZSTD is recommended\
-                    \ for \nbalancing high compression ratios with blazing decompression\
-                    \ speeds."
-                  example: ZSTD
-                  default: ZSTD
-                  enum:
-                  - SNAPPY
-                  - GZIP
-                  - LZO
-                  - ZSTD
-                compression_level:
-                  maximum: 22
-                  minimum: 1
-                  type: string
-                  description: "Tunable intensity for ZSTD. Use lower levels (1-3)\
-                    \ for speed, higher levels (19+) for expensive bandwidth scenarios."
-                  default: "3"
-                destination:
-                  type: object
-                  properties:
-                    retrieval_url:
-                      type: string
-                      description: The URL where the user intends to receive or pull
-                        the data
-                      format: uri
-                  description: Configuration for file retrieval
-                notification:
-                  type: object
-                  properties:
-                    webhook_url:
-                      type: string
-                      format: uri
-                      example: https://client-system.com/callbacks/exports
-                    signature_key:
-                      type: string
-                      description: A secret key used to sign the webhook payload for
-                        security
-                  description: "Optional: Callback configuration for completion alerts"
-                dry_run:
-                  type: boolean
-                  description: "If true, the system validates the request and returns\
-                    \ potential violations or metadata (like estimated size) without\
-                    \ starting the job."
-                  example: false
-                  default: false
-              example: PARQUET
-      responses:
-        "200":
-          description: "Dry run results: validation and cost estimation metadata."
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /budgets/exports/6007593588810462458
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: VALIDATED
-                  estimated_metrics:
-                    type: object
-                    properties:
-                      record_count:
-                        type: integer
-                        format: int32
-                        example: 1250000
-                      estimated_uncompressed_gb:
-                        type: number
-                        example: 4.2
-                      estimated_compressed_gb:
-                        type: number
-                        description: "Prediction based on the chosen compression (e.g.,\
-                          \ ZSTD)"
-                        example: 0.85
-                      estimated_processing_time_ms:
-                        type: integer
-                        format: int32
-                        example: 45000
-                    description: Predicted impact of the export job
-                  validation_results:
-                    type: object
-                    properties:
-                      is_executable:
-                        type: boolean
-                        example: true
-                      warnings:
-                        type: array
-                        example:
-                        - "Large export detected: ensure destination storage exceeds\
-                          \ 1GB"
-                        items:
-                          type: string
-                      violations:
-                        type: array
-                        description: Business rule or data contract violations
-                        items:
-                          $ref: "#/components/schemas/ProblemDetail"
-                  suggested_optimizations:
-                    type: array
-                    description: Feedback for the agent to improve request efficiency
-                    items:
-                      type: string
-                      example: Switch to PARQUET for 30% faster processing of this
-                        specific data contract
-                description: "Metadata returned when dry_run is true, allowing agentic\
-                  \ pre-flight reasoning."
-        "202":
-          description: Export job successfully created and accepted.
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions.
-              schema:
-                type: string
-                example: "</exports/capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created export resource.
-              schema:
-                type: string
-                example: /accounting-periods/exports/2379845498403762952
-        "409":
-          description: "Conflict: Job with this Idempotency-Key already exists"
-        "422":
-          description: Unprocessable Entity - Business Rule Violation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-      callbacks:
-        onExportCompleted:
-          '{$request.body#/notification/webhook_url}':
-            post:
-              description: Sent when the export job reaches a terminal state (COMPLETED
-                or FAILED)
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/ExportNotification"
-              responses:
-                "200":
-                  description: Webhook received
-  /budgets/exports/{exportId}:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /budgets/{budget-key}/general-ledger-references:
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budgets/{budget-key}/general-ledger-references/{general-ledger-reference-key}:
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budgets/{budget-key}/budget-items:
     get:
       tags:
-      - Default
-      summary: Get export status
-      description: Get Export Status of Budget
-      operationId: getBudgetExportStatus
+      - BudgetItems
+      summary: Returns a paginated list of budget item
+      description: a list of BudgetItem
+      operationId: listBudgetItemsByBudget-key
       parameters:
-      - name: exportId
-        in: path
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Current status and file URLs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExportJob"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-  /budgets/{budgetKey}/commands:
-    post:
-      tags:
-      - Default
-      summary: Execute a business workflow on Budget
-      description: Single entry point for all Budget state-changing intents.
-      operationId: executeBudgetCommand
-      parameters:
-      - name: budgetKey
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Command intent and parameters
-        content:
-          application/json:
-            schema:
-              required:
-              - type
-              - method
-              - params
-              - id
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: jsonrpc
-                  default: jsonrpc
-                jsonrpc:
-                  type: string
-                  example: "2.0"
-                  default: "2.0"
-                method:
-                  type: string
-                  description: star.order.update)
-                id:
-                  type: string
-                  description: "match the response with request. If omitted, Notification\
-                    \ the server will not respond."
-                version:
-                  type: string
-                  description: "2.0"
-                workflow_state:
-                  type: string
-                  description: "The intent of the command (e.g., CREATED, DELETED)"
-                  enum:
-                  - CREATED
-                  - DELETED
-                context:
-                  type: object
-                  additionalProperties: true
-                  description: context payload required for this specific command
-                    type
-                params:
-                  $ref: "#/components/schemas/Budget"
-      responses:
-        "200":
-          description: Commands processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/budgets/{budgetKey}/commands/8902667385334095335"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The execution status of the command
-                    example: SUCCESS
-                    enum:
-                    - SUCCESS
-                    - FAILED
-                    - PENDING
-                    - PROCESSING
-                    - VALIDATION_ERROR
-                    - PARTIAL_SUCCESS
-                    - REQUIRES_ACTION
-                    - MITIGATION_APPLIED
-                  message:
-                    type: string
-                    description: A human-readable summary or error detail
-                    example: "Invoice #5fbfc6af has been successfully cancelled."
-                  command_id:
-                    type: string
-                    description: The tracking ID for this specific command execution
-                    format: identifier
-                  code:
-                    type: string
-                    description: detailed code for workflow business processing
-                    example: e3618799
-                  retry_after:
-                    type: string
-                    description: "For PENDING or PROCESSING statuses, retry_after\
-                      \ (integer, seconds) "
-                  retryable:
-                    type: boolean
-                    description: "If true, the agent can attempt this command again\
-                      \ immediately"
-                    example: false
+          $ref: "#/components/responses/BudgetItemCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -2344,128 +345,189 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /budgets/{budgetKey}/commands/{commandId}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budgets/{budget-key}/budget-items/{budget-item-key}:
     get:
       tags:
-      - Default
-      summary: Poll Budget command status
-      description: Check the progress or result of a previously submitted command.
-      operationId: getBudgetCommandStatus
+      - BudgetItems
+      summary: Retrieve a single item scoped by a key BudgetItem entities.
+      operationId: getBudgetItemByKey
       parameters:
-      - name: budgetKey
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
-      - name: commandId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/BudgetItemKey"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Current status of the command
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  command_id:
-                    type: string
-                    description: The unique identifier for the command being tracked
-                    format: uuid
-                    readOnly: true
-                  status:
-                    type: string
-                    description: The current lifecycle state of the command
-                    enum:
-                    - PENDING
-                    - PROCESSING
-                    - SUCCESS
-                    - FAILED
-                    - REQUIRES_ACTION
-                  progress:
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                    description: Percentage of completion (0-100)
-                    format: int32
-                  message:
-                    type: string
-                    description: Status update or error message
-                  result:
-                    type: object
-                    additionalProperties: true
-                    description: The final output of the command (only populated on
-                      SUCCESS)
-                  errors:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ErrorDetail"
+          $ref: "#/components/responses/BudgetItemSingleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /budgets/capabilities:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budgets/{budget-key}/accounting-periods:
     get:
       tags:
-      - Default
-      summary: Discover Budget Capabilities
-      description: Standard GET operation for /budgets/capabilities
-      operationId: getBudgetCapabilities
+      - AccountingPeriods
+      summary: Returns a paginated list of accounting period
+      description: a list of AccountingPeriod
+      operationId: listAccountingPeriodsByBudget-key
       parameters:
-      - name: include
-        in: query
-        description: "Comma-separated list of sections to include (e.g., 'commands,exports,constraints')"
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - COMMANDS
-            - EXPORTS
-            - CONSTRAINTS
-      - name: role
-        in: query
-        description: Filter capabilities by the agent's current role(s)
-        schema:
-          type: string
-          example: ACCOUNTANT
-      - name: state
-        in: query
-        description: Filter commands and constraints relevant only to a specific aggregate
-          state
-        required: true
-        schema:
-          type: string
-          example: ACTIVE
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Successful discovery response (may be partial based on filters)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Capabilities"
+          $ref: "#/components/responses/AccountingPeriodCollectionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budgets/{budget-key}/accounting-periods/{accounting-period-key}:
+    get:
+      tags:
+      - AccountingPeriods
+      summary: Retrieve a single item scoped by a key AccountingPeriod entities.
+      operationId: getAccountingPeriodByKey
+      parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AccountingPeriodKey"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/AccountingPeriodSingleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/BudgetKey"
+  /budget/health:
+    get:
+      tags:
+      - Health
+      summary: Health Check
+      description: Returns the health status of the Budget root node.
+      operationId: healthBudget
+      parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/HealthStatusResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
 components:
   schemas:
     AccountingPeriod:
@@ -2475,116 +537,79 @@ components:
           $ref: "#/components/schemas/Identifiers"
         period_desc:
           type: string
-          description: Descriptive name for the accounting peri...
-          example: ' b284b380'
+          description: Detailed narrative description of the period's scope.
+          example: Third Quarter Fiscal Year 2026 - North American Operations
         accounting_period_id:
           type: string
-          description: Business key for the accounting period (...
-          readOnly: true
-          example: ' b9c863d0'
+          description: System-level unique identifier for the period record.
+          example: ap-2026-07-v1
         accounting_period_key:
           type: string
-          description: Business key for the accounting period (...
-          example: ' 1894cf31'
+          description: Business-logical key following the chronological YYYYMM format.
+          example: "202607"
         period_name:
           type: string
-          description: Display name of the accounting period.
-          example: ' 70444346'
+          description: Short-hand display name for the period.
+          example: July 2026
         start_date:
           type: string
-          description: The beginning date of the accounting per...
+          description: The inclusive start date of the period in ISO-8601 format.
           format: date
-          example: 2026-01-14
+          example: 2026-04-28
         end_date:
           type: string
-          description: The ending date of the accounting period...
+          description: The inclusive end date of the period in ISO-8601 format.
           format: date
-          example: 2026-01-14
+          example: 2026-05-03
         accounting_period_status_type:
           $ref: "#/components/schemas/AccountingPeriodStatusTypes"
         fiscal_year:
           type: integer
-          description: The fiscal year this period belongs to.
+          description: The 4-digit fiscal year designation.
           format: int32
-          example: 1
-      description: accounting.period.desc
-    AccountingPeriodCreate:
-      required:
-      - accounting_period_key
-      type: object
-      description: AccountingPeriod Create for Post
-      allOf:
-      - $ref: "#/components/schemas/AccountingPeriod"
+          example: 2026
+      description: "Defines a fiscal period, including its unique identifiers, start\
+        \ and end dates, and current status."
     AccountingPeriodStatusTypes:
       type: string
       description: types of accounting period status.
       enum:
+      - FUTURE
       - OPEN
       - ADJUSTMENT
-      - CLOSED
-      - FUTURE
       - PENDING_CLOSURE
+      - CLOSED
       - LOCKED
       - OTHER
-    AccountingPeriodUpdate:
-      type: object
-      properties:
-        end_date:
-          type: string
-          description: The ending date of the accounting period...
-          format: date
-          example: 2026-01-14
-        period_desc:
-          type: string
-          description: Descriptive name for the accounting peri...
-          example: ' b284b380'
-        fiscal_year:
-          type: integer
-          description: The fiscal year this period belongs to.
-          format: int32
-          example: 1
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        accounting_period_status_type:
-          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
-        period_name:
-          type: string
-          description: Display name of the accounting period.
-          example: ' 70444346'
-        start_date:
-          type: string
-          description: The beginning date of the accounting per...
-          format: date
-          example: 2026-01-14
-      description: AccountingPeriod Update for Patch and Put
     Budget:
       type: object
       properties:
         budget_key:
           type: string
-          description: The unique key for the Budget.
-          example: ' 91113d89'
+          description: "Unique business-logical key for the Budget, often used for\
+            \ cross-system integration."
+          example: BGT-2026-OP-ATL-01
         budget_id:
           type: string
-          description: The unique ID for the Budget.
-          readOnly: true
-          example: ' e0c2f90e'
+          description: System-generated unique identifier for the Budget record.
+          example: bgt-7721-q8x
         name:
           type: string
-          description: "The name given to the budget (e.g., \"202..."
-          example: ' 4429f3a3'
+          description: Formal name of the budget plan.
+          example: 2026 Q1 Regional Operating Budget
         accounting_period:
           $ref: "#/components/schemas/AccountingPeriod"
         status:
           $ref: "#/components/schemas/BudgetStatusTypes"
         approval_date:
           type: string
-          description: The date the budget was approved.
+          description: The timestamp indicating when the budget was formally authorized.
           format: date
-          example: 2026-01-14
+          example: 2026-04-21
         budget_items:
           $ref: "#/components/schemas/BudgetItems"
-      description: budget.desc
+      description: Represents an approved financial budget for a specific accounting
+        period.
     BudgetCreate:
       required:
       - budget_key
@@ -2597,13 +622,14 @@ components:
       properties:
         budget_item_key:
           type: string
-          description: The unique key for the BudgetItem.
-          example: ' d4f0b4d8'
+          description: "Unique business-logical key for the budget line item, often\
+            \ used to map to external ERP lines."
+          example: BGT-ITEM-2026-MKTG-001
         budget_item_id:
           type: string
-          description: The unique ID for the BudgetItem.
-          readOnly: true
-          example: ' e2c0d55a'
+          description: System-generated unique identifier for the specific budget
+            line record.
+          example: bitm-4421-k9p
         general_ledger_account:
           $ref: "#/components/schemas/GeneralLedgerReference"
         control_account:
@@ -2612,34 +638,12 @@ components:
           $ref: "#/components/schemas/FinancialCategoryTypes"
         budgeted_amount:
           $ref: "#/components/schemas/Money"
-      description: budget.item.desc
-    BudgetItemCreate:
-      required:
-      - budget_item_key
-      type: object
-      description: BudgetItem Create for Post
-      allOf:
-      - $ref: "#/components/schemas/BudgetItem"
-    BudgetItemUpdate:
-      type: object
-      properties:
-        budgeted_amount:
-          $ref: "#/components/schemas/Money"
-        financial_category:
-          $ref: "#/components/schemas/FinancialCategoryTypes"
-        general_ledger_account:
-          $ref: "#/components/schemas/GeneralLedgerReference"
-        control_account:
-          $ref: "#/components/schemas/ControlAccountReference"
-      description: BudgetItem Update for Patch and Put
+      description: "Represents a single line item within a financial budget, detailing\
+        \ the forecasted expenditure or revenue."
     BudgetItems:
       type: array
       items:
         $ref: "#/components/schemas/BudgetItem"
-    BudgetResponse:
-      allOf:
-      - $ref: "#/components/schemas/Budget"
-      - $ref: "#/components/schemas/BudgetWorkflowMetadata"
     BudgetStatusTypes:
       type: string
       description: types of budget status.
@@ -2660,284 +664,53 @@ components:
       properties:
         approval_date:
           type: string
-          description: The date the budget was approved.
+          description: The timestamp indicating when the budget was formally authorized.
           format: date
-          example: 2026-01-14
+          example: 2026-04-24
         budget_items:
           $ref: "#/components/schemas/BudgetItems"
         name:
           type: string
-          description: "The name given to the budget (e.g., \"202..."
-          example: ' 4429f3a3'
+          description: Formal name of the budget plan.
+          example: 2026 Q1 Regional Operating Budget
         accounting_period:
           $ref: "#/components/schemas/AccountingPeriod"
         status:
           $ref: "#/components/schemas/BudgetStatusTypes"
       description: Budget Update for Patch and Put
-    BudgetWorkflowMetadata:
+    Code:
       type: object
       properties:
-        current_state:
+        code_id:
+          maxLength: 50
+          minLength: 5
           type: string
-          description: The current lifecycle phase of this entity.
-          example: ' 6d1e9387'
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
-    Capabilities:
-      type: object
-      properties:
-        aggregate:
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
           type: string
-          example: Budget
-        version:
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
           type: string
-          example: 1.2.0
-        current_state:
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
           type: string
-          description: The state used to filter these capabilities
-          example: PENDING_APPROVAL
-        transitions:
-          type: array
-          items:
-            type: object
-            properties:
-              action:
-                type: string
-                example: APPROVE_INVOICE
-              from_states:
-                type: array
-                example:
-                - PENDING_APPROVAL
-                items:
-                  type: string
-              to_state:
-                type: string
-                example: ISSUED
-              required_roles:
-                type: array
-                description: Roles authorized to trigger this transition
-                example:
-                - MANAGER
-                - FINANCE_VP
-                items:
-                  type: string
-              links:
-                type: object
-                properties:
-                  execute:
-                    type: string
-                    description: The relative or absolute URL to POST the command
-                      to
-                    example: "/budgets/{key}/commands/approve"
-                  method:
-                    type: string
-                    example: POST
-                    enum:
-                    - POST
-                    - PUT
-                    - PATCH
-                  schema_ref:
-                    type: string
-                    description: Reference to the input payload schema for this action
-                    example: "#/components/schemas/BudgetCommand"
-                description: HATEOAS-style links to execute the transition or fetch
-                  related metadata
-              _self:
-                type: string
-                description: Link to the specific transition documentation or detail
-                example: /metadata/capabilities/Budget/transitions/approve
-              instructions:
-                type: array
-                description: Step-by-step checklist the agent must verify before execution
-                example:
-                - Verify credit limit is sufficient
-                - Confirm tax jurisdiction matches customer address
-                - Ensure currency matches original purchase order
-                items:
-                  type: string
-              parameters_ref:
-                type: string
-                example: "#/components/schemas/Budget"
-        available_exports:
-          type: array
-          items:
-            type: object
-            properties:
-              data_contract_key:
-                type: string
-                example: customer_contact_v1
-              description:
-                type: string
-                example: Optimized view containing only non-sensitive contact details.
-              supported_formats:
-                type: array
-                example:
-                - PARQUET
-                - CSV
-                items:
-                  type: string
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                default: PARQUET
-              columns:
-                type: array
-                example:
-                - first_name
-                - last_name
-                - email
-                items:
-                  type: string
-              retention_policy:
-                type: object
-                properties:
-                  retention_period:
-                    type: string
-                    description: ISO-8601 duration the file remains available for
-                      download
-                    example: P7D
-                  is_pii_sensitive:
-                    type: boolean
-                    description: Indicates export contains PII
-                    example: false
-                  access_tier:
-                    type: string
-                    description: The security clearance required for this contract
-                    example: INTERNAL
-                    enum:
-                    - PUBLIC
-                    - INTERNAL
-                    - RESTRICTED
-                    - CONFIDENTIAL
-              constraints:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    rule_id:
-                      type: string
-                      description: Unique identifier for the business rule
-                      readOnly: true
-                      example: IDENTITY_LOCK_STATE
-                    constraint_type:
-                      type: string
-                      enum:
-                      - RANGE_LIMIT
-                      - SIZE_LIMIT
-                      - FORMAT_INCOMPATIBILITY
-                      - PATTERN_MISMATCH
-                      - PERMISSION_LOCK
-                      - MANDATORY_MISSING
-                      - STATE_TRANSITION_ERROR
-                      - IMMUTABILITY_VIOLATION
-                      - RELATIONAL_DEPENDENCY
-                      - CONFLICT_DETECTION
-                      - AGGREGATE_LIMIT
-                      - ORPHAN_PREVENTION
-                    target_fields:
-                      type: array
-                      description: The specific fields or attributes this constraint
-                        applies to
-                      example:
-                      - first_name
-                      - last_name
-                      - ssn
-                      items:
-                        type: string
-                    rule_context:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: Key-value pairs representing the 'facts' of the
-                        current state
-                      example:
-                        count: "45"
-                        item_type: Inventory
-                        limit: "0"
-                    rule_constraints:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: "Key-value pairs for simple UI-driven validation\
-                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
-                        \ checks."
-                      example:
-                        value: "31"
-                        min: "1"
-                        unit: days
-                    limit_rule:
-                      type: string
-                      description: A Prolog-based predicate defining the valid boundary
-                        for this constraint.
-                      example: "allow_export(Format, Days) :- Format == 'parquet',\
-                        \ Days =< 31; Format == 'csv', Days =< 90."
-                    estimated_size:
-                      type: string
-                      description: approximate size of
-                      example: 10gig
-                    estimated_time_min:
-                      type: string
-                      description: approximate amount of minutes to run
-                      example: "12.3"
-                    complexity:
-                      type: string
-                      description: complexity score 1-100
-                      example: "34"
-                    mitigation_hint:
-                      type: string
-                      description: Conflict Resolution Hints
-                      example: "To resolve this PERMISSION_LOCK, you must first call\
-                        \ the /unlock endpoint."
-                    message:
-                      type: string
-                      description: Human-readable explanation for UI/Logs
-                      example: Identity fields cannot be modified while in PENDING_APPROVAL
-                        state.
-                    severity:
-                      type: string
-                      enum:
-                      - ERROR
-                      - WARNING
-                    link:
-                      type: string
-                      description: Link to documentation regarding this rule
-                      format: uri
-        documentation_ref:
-          type: string
-          description: Link to full business documentation for this aggregate
-          format: uri
-          example: /documentation/budgets
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
-    CommandOption:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
-          type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
-          type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
+        $ref: "#/components/schemas/Code"
     ControlAccountReference:
       type: object
       properties:
@@ -2946,24 +719,23 @@ components:
           minLength: 5
           type: string
           description: Unique identifier value
-          readOnly: true
-          example: ' 0b88f471'
+          example: "839868802927951872"
         control_account_reference_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Unique identifier value
-          example: ' 583c7341'
+          example: "839868802932146176"
         control_account_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Unique identifier value
-          example: ' 18468200'
+          example: "839868802932146177"
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 81a694d2'
+          example: FINANCE
         system_codes:
           $ref: "#/components/schemas/Codes"
         control_account:
@@ -2972,32 +744,46 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-01-14T12:00:00Z
-      description: control.account.reference.desc
-    ControlAccountReferenceCreate:
-      required:
-      - control_account_reference_key
-      type: object
-      description: ControlAccountReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/ControlAccountReference"
-    ControlAccountReferenceUpdate:
+          example: 2026-05-06T14:09:07Z
+      description: External system identifier
+    CurrencyExchange:
       type: object
       properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        context:
+        currency_exchange_id:
           type: string
-          description: Context or domain of the identifier
-          example: ' 81a694d2'
-        control_account:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
           type: string
-          description: The date and time the event occurred.
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-          example: 2026-01-14T12:00:00Z
-      description: ControlAccountReference Update for Patch and Put
+          example: 2026-05-06T14:09:07Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     ErrorDetail:
       required:
       - category
@@ -3017,7 +803,8 @@ components:
           example: Personnel Record with ID PR-1234567 was not found.
         category:
           type: string
-          description: Classifies the error to help clients determine ...
+          description: Classifies the error to help clients determine high-level retry
+            or handling logic.
           example: DATA_INTEGRITY
           enum:
           - VALIDATION
@@ -3034,16 +821,17 @@ components:
         trace_id:
           type: string
           description: A unique identifier for this specific request.
-          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
-          description: A URL leading to the documentation page for thi...
+          description: A URL leading to the documentation page for this specific error
+            code.
           format: uri
           example: https://api.docs.com/errors/NOT_FOUND_PR
         details:
           type: array
-          description: Field-level validation errors or granular diagn...
+          description: Field-level validation errors or granular diagnostic information.
+          example: Invalid request parameter.
           items:
             type: object
             properties:
@@ -3059,101 +847,8 @@ components:
                 type: string
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
-      description: Standardized error response for the entire API ...
-    ExportFile:
-      type: object
-      properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-          example: 1
-        download_url:
-          type: string
-          format: uri
-          example: https://api.example.com
-        format:
-          type: string
-          example: ' ef68c8f2'
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-          - TOON
-        expires_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        checksum_sha256:
-          type: string
-          example: ' 6fac417d'
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-          example: ' 3f597be8'
-        status:
-          type: string
-          example: ' 30097f7b'
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-          example: 1
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
-          type: string
-          example: EXPORT_COMPLETED
-          enum:
-          - EXPORT_COMPLETED
-          - EXPORT_FAILED
-        occurred_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-              readOnly: true
-              example: f288fcfa
-            aggregate:
-              type: string
-              example: Budget
-            data_product_id:
-              type: string
-              readOnly: true
-            status:
-              type: string
-              example: FAILED
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
+      description: Standardized error response for the entire API ecosystem. Follows
+        RFC 7807 principles for problem details to ensure consistency across microservices.
     FinancialCategoryTypes:
       type: string
       description: types of financial categorys.
@@ -3179,24 +874,23 @@ components:
           minLength: 5
           type: string
           description: Unique reference value
-          readOnly: true
-          example: ' fc8eb005'
+          example: "839868802932146178"
         general_ledger_reference_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Unique reference value
-          example: ' ac2e9ba7'
+          example: "839868802932146179"
         general_ledger_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Unique reference value
-          example: ' cd35bd6f'
+          example: "839868802932146180"
         context:
           type: string
           description: Context or domain of the reference
-          example: ' b27bf9b3'
+          example: FINANCE
         system_codes:
           $ref: "#/components/schemas/Codes"
         general_ledger_identifier:
@@ -3205,32 +899,20 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-01-14T12:00:00Z
-      description: general.ledger.reference.desc
-    GeneralLedgerReferenceCreate:
-      required:
-      - general_ledger_reference_key
-      type: object
-      description: GeneralLedgerReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/GeneralLedgerReference"
-    GeneralLedgerReferenceUpdate:
+          example: 2026-05-06T14:09:07Z
+      description: External system reference
+    HealthStatus:
       type: object
       properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        general_ledger_identifier:
-          $ref: "#/components/schemas/Identifier"
-        context:
+        status:
           type: string
-          description: Context or domain of the reference
-          example: ' b27bf9b3'
-        occurrence_date_time:
+          description: Current health status of the service.
+          example: UP
+        version:
           type: string
-          description: The date and time the event occurred.
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-      description: GeneralLedgerReference Update for Patch and Put
+          description: Version of the deployed service.
+          example: 2.0.0
+      description: Standard health check response body
     Identifier:
       type: object
       properties:
@@ -3239,65 +921,32 @@ components:
           minLength: 5
           type: string
           description: Unique identifier value
-          readOnly: true
-          example: ' c957793f'
+          example: "839868802932146181"
         identifier_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Business key for the identifier
-          readOnly: true
-          example: ' bea3f2bd'
+          example: "839868802932146182"
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 2af6b4be'
+          example: FINANCE
         value:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' df7b747b'
+          description: The monetary or hours-based value of the event.
+          example: user@example.com
         detail:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' 2367a39c'
+          description: The monetary or hours-based value of the event.
+          example: Primary identifier
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' eccef3a2'
+          description: The monetary or hours-based value of the event.
+          example: identifier_type value
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' eccef3a2'
-        context:
-          type: string
-          description: Context or domain of the identifier
-          example: ' 2af6b4be'
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-          example: ' 2367a39c'
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-          example: ' df7b747b'
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -3307,131 +956,1171 @@ components:
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
-          example: ' 1e12efba'
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
-          readOnly: true
-          example: ' 452d21a6'
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
-          example: ' bf5292fe'
+          description: money.currency.code.desc
+          example: USD
         display_value:
           type: string
-          description: The locale-specific display format for t...
-          example: ' 5fa8c81f'
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
-          example: ' 339e335a'
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
-          example: ' 79fcac11'
-      description: money.desc
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     ProblemDetail:
       type: object
       properties:
         type:
           type: string
+          description: A URI reference that identifies the problem type. Provides
+            human-readable documentation for the error.
           format: uri
           example: https://api.yourdomain.com/errors/validation-failed
         title:
           type: string
+          description: "A short, human-readable summary of the problem type. It should\
+            \ not change from occurrence to occurrence."
           example: Intent Validation Failed
         status:
           type: integer
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
           format: int32
           example: 422
         detail:
           type: string
+          description: "A human-readable explanation specific to this occurrence of\
+            \ the problem, providing context on the failure."
           example: The export request could not be processed due to business constraints.
         instance:
           type: string
+          description: "A URI reference that identifies the specific occurrence of\
+            \ the problem (e.g., the specific resource path)."
           format: uri
           example: https://api.yourdomain.com/money/exports
         intent:
           type: string
+          description: The specific agentic or business intent that was being processed
+            when the error occurred.
           example: InitiateMoneyExport
+        error_code:
+          type: string
+          description: "A stable, machine-readable string code for the error."
+          example: INSUFFICIENT_FUNDS_FOR_EXPORT
+        pointer:
+          type: string
+          description: A JSON Pointer to the field in the request body that caused
+            the violation.
+          example: "#/plate_number"
         violations:
           type: array
+          description: "A collection of specific validation failures, including field\
+            \ paths and localized messages."
+          example: "[{field=postal_code, message=Invalid format}]"
           items:
             type: object
             properties:
-              rule:
+              pointer:
                 type: string
-                example: INSUFFICIENT_FUNDS
+                description: A JSON Pointer (RFC 6901) referencing the specific field
+                  in the request body that caused the violation.
+                example: "#/vehicle_license/plate_number"
+              code:
+                type: string
+                description: "A stable, machine-readable string identifying the specific\
+                  \ validation rule that was breached."
+                example: PATTERN_MISMATCH
               message:
                 type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
+                description: "A localized, human-readable description of the validation\
+                  \ error."
+                example: The plate number must be alphanumeric and between 1 and 20
+                  characters.
+              severity:
                 type: string
-                example: date_range.start
+                description: The impact level of this violation. ERROR blocks execution;
+                  WARNING is advisory.
+                example: ERROR
+                enum:
+                - ERROR
+                - WARNING
+                - INFO
               metadata:
                 type: object
                 additionalProperties:
                   type: string
+                description: "Contextual key-value pairs to help the agent resolve\
+                  \ the error (e.g., actual vs. expected limits)."
+                example:
+                  regex: "^[A-Z0-9]{1,20}$"
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              path:
+                type: string
+                example: date_range.start
+            description: "An individual validation failure within a request, providing\
+              \ a direct map to the offending field."
+      description: "A standardized error response based on RFC 7807, extended with\
+        \ domain-specific intent and validation violations."
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
   responses:
-    ForbiddenError:
-      description: The authenticated user does not have the necess...
+    BudgetCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of Budgets entities.
+                items:
+                  $ref: "#/components/schemas/Budget"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
     ConflictError:
-      description: The request could not be completed because it c...
+      description: The request could not be completed because it conflicts with the
+        current state of the resource.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: An unexpected error occurred on the server whil...
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorDetail"
-    PreconditionFailedError:
-      description: The request was not processed because the 'If-M...
+      description: An unexpected error occurred on the server while processing the
+        request.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     NotFoundError:
       description: The requested resource was not found.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     BadRequestError:
-      description: "The request was malformed, failed validation, o..."
+      description: "The request was malformed, failed validation, or contained invalid\
+        \ parameters."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: Authentication failed. The access token is miss...
+      description: "Authentication failed. The access token is missing, expired, or\
+        \ invalid."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    TooManyRequestsError:
+      description: Rate Limit Error. Too Many Requests
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    HealthStatusResponse:
+      description: Service is Operational
+      headers:
+        Transaction-Id:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HealthStatus"
+    NotAcceptableError:
+      description: The client requested a format (via Accept header) the server can't
+        provide
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ServiceUnavailableError:
+      description: Unable to serve request.  Service is unavailable
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    GatewayTimeout:
+      description: Timeout serving request
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    UnsupportedMediaTypeError:
+      description: The request could not be completed because of missing or invalid
+        content type
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    NoContentSuccess:
+      description: "No Content: The resource was successfully updated."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    AccountingPeriodSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccountingPeriod"
+    ForbiddenError:
+      description: The authenticated user does not have the necessary permissions.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    BudgetCreatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        Location:
+          $ref: "#/components/headers/LocationHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Budget"
+    PreconditionFailedError:
+      description: The request was not processed because the 'If-Match' header provided
+        does not match the current ETag.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    UnprocessableEntity:
+      description: "Unprocessable Content: Semantic logic error."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
+    BudgetUpdatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Budget"
+    BudgetItemCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of BudgetItems entities.
+                items:
+                  $ref: "#/components/schemas/BudgetItem"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
+    AccountingPeriodCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of AccountingPeriods entities.
+                items:
+                  $ref: "#/components/schemas/AccountingPeriod"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
+    BudgetSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Budget"
+    BudgetItemSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BudgetItem"
   parameters:
-    StandardsVersionHeader:
-      name: standards-version
+    ReasonQuery:
+      name: reason
+      in: query
+      description: Reason parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "duplicate,soft_delete"
+    OrgVersionHeader:
+      name: Org-Version
+      in: header
+      description: "The version of the api for the organization that this request\
+        \ adheres to (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    CacheControlHeader:
+      name: Cache-Control
+      in: header
+      description: Tells the client and intermediary caches how to store the response.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "max-age=300, private"
+    SourceSystemHeader:
+      name: Source-System
+      in: header
+      description: The system originating the transaction pulse.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 25
+        minLength: 2
+        type: string
+        example: GM_GLOBAL_NVS
+    FilterQuery:
+      name: filter
+      in: query
+      description: Filter parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "sdate:2026-02-09,edate:2026-02-09"
+    CreatorCodeHeader:
+      name: Creator-Code
+      in: header
+      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 8
+        minLength: 2
+        type: string
+        example: CDK
+    PreferHeader:
+      name: Prefer
+      in: header
+      description: JSON context for field selection and error logging behavior.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
+    LocaleHeader:
+      name: Locale
       in: header
       required: true
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: en-US
+    IfMatchHeader:
+      name: If-Match
+      in: header
+      description: Used for optimistic concurrency control. The request will fail
+        (412) if the current ETag does not match this value.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    IfNoneMatchHeader:
+      name: If-None-Match
+      in: header
+      description: Used for conditional GETs. The operation is executed only if the
+        stored ETag does not match this value. Prevents 'Lost Updates' in high-concurrency
+        Service Bounded Contexts.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: "^\"?[a-f0-9]+\"?$|^\\*$"
+        type: string
+        example: '"686897696a7c876b7e"'
+    CountryCodeHeader:
+      name: Country-Code
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "1"
+    CorrelationIDHeader:
+      name: Correlation-ID
+      in: header
+      description: A unique identifier spanning the entire business lifecycle. Essential
+        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
+        Domain.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+    AgentHeader:
+      name: Agent
+      in: header
+      description: "The URI profile of the calling Agent. Used to negotiate supported\
+        \ Industry Extensions (e.g., ) via the protocol."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://xxx.com/agent/v1
+    BudgetItemKey:
+      name: budget-item-key
+      in: path
+      description: The unique identifier for an BudgetItem entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839866371903266818"
+    SortQuery:
+      name: sort
+      in: query
+      description: Sort parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "name,country"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      description: A unique identifier sent by the client to allow the server to prevent
+        duplicate processing of the same request.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    AccountingPeriodKey:
+      name: accounting-period-key
+      in: path
+      description: The unique identifier for an AccountingPeriod entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839866371903266819"
+    OffsetQuery:
+      name: offset
+      in: query
+      description: The number of entities to skip before starting to collect the result
+        set. Used in conjunction with 'limit' for traditional page-based navigation.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 234
+    LimitQuery:
+      name: limit
+      in: query
+      description: The maximum number of entities to return in a single response page.
+        Limits the 'data' array size to prevent payload bloat.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        format: int32
+        example: 100
+    RegionHeader:
+      name: Region
+      in: header
+      description: The geographic or business region code.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 2
+        type: string
+        example: NE-01
+    StandardsVersionHeader:
+      name: Standards-Version
+      in: header
+      description: "The version of the STAR REST Standard this request adheres to\
+        \ (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    TransactionIDHeader:
+      name: Transaction-ID
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+    BrandHeader:
+      name: Brand
+      in: header
+      description: The automotive brand context for the RDR.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: TOYOTA
+        default: TOYOTA
+        enum:
+        - TOYOTA
+        - LEXUS
+    SubscriberCodeHeader:
+      name: Subscriber-Code
+      in: header
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
+    DealerIdHeader:
+      name: Dealer-Id
+      in: header
+      description: Unique 5-digit Dealer Identifier.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+        example: "42278"
+    PreferenceAppliedHeader:
+      name: Preference-Applied
+      in: header
+      description: Indicates which client preferences (from the 'Prefer' request header)
+        were honored by the server.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: return=minimal
+    BudgetKey:
+      name: budget-key
+      in: path
+      description: The unique identifier for an Budget entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839866371903266817"
   headers:
-    StandardsVersionResponse:
-      description: Standards Version
+    CacheControlHeader:
+      description: Tells the client and intermediary caches how to store the response.
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: "max-age=300, private"
+    VaryHeader:
+      description: Instructs downstream caches that the response varies based on the
+        Agent's profile or media type. Critical for Extension-based responses.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "Accept, UCP-Agent"
+        default: "Accept, UCP-Agent"
+    ExpiresHeader:
+      description: The timestamp after which the resource state is considered stale.
+        Vital for volatile QQQ/SQQQ market data or real-time Inventory availability.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T16:00:00Z
+    LinkHeader:
+      description: "RFC 8288 compliant links providing discovery for related resources\
+        \ and 'Service Primitives' (e.g., :cancel, :execute). Essential for non-linear\
+        \ state transitions across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: "^<[^>]+>;\\s*rel=\"[^\"]+\"(,\\s*<[^>]+>;\\s*rel=\"[^\"]+\")*$"
+        type: string
+        example: "<https://api.ai-sage.com/labor-operations/123:cancel>; rel=\"cancel\"\
+          , <https://api.ai-sage.com/labor-operations/123>; rel=\"self\""
+    LocationHeader:
+      description: "The absolute URI of the newly created resource or the status monitor\
+        \ for an asynchronous 'Service Primitive' (e.g., :execute). Used to follow\
+        \ the state of a Transaction across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789
+    ContentLocationHeader:
+      description: The URI of the specific representation returned in the payload.
+        Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
+        multi-format or versioned Bounded Contexts.
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789/versions/v2
+    TransactionIDHeader:
+      description: Echoes the unique identifier for the specific atomic unit of work
+        processed by the server.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    CorrelationIDHeader:
+      description: Echoes the unique identifier spanning the entire business lifecycle
+        for cross-context tracing.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    StandardsVersionHeader:
+      description: The version of the STAR REST Standard the response adheres to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    OrgVersionHeader:
+      description: The version of the organization schema and API the response adheres
+        to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    AgentHeader:
+      description: The unique identifier of the agent or user executing this method.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    ETagHeader:
+      description: An entity tag (ETag) is an identifier for a specific version of
+        a resource.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    LastModifiedHeader:
+      description: The ISO 8601 timestamp at which the resource was last modified
+        in the underlying Postgres/Saga store.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T15:47:17Z
+    RateLimitLimitHeader:
+      description: The maximum number of requests allowed in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 1000
+    RateLimitRemainingHeader:
+      description: The number of requests remaining in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 999
+    RateLimitResetHeader:
+      description: The number of seconds until the current rate limit window resets.
+        Using 'Delta Seconds' avoids clock-skew issues between distributed systems.
+      style: simple
+      explode: false
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 60
+    RateLimitPolicyHeader:
+      description: "The quota policy for the current user/agent. Format: 'limit;w=window'.\
+        \ E.g., '1000;w=3600' means 1000 requests per hour."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^\d+;w=\d+(;burst=\d+)?$
+        type: string
+        example: 1000;w=3600
   securitySchemes:
     industry-oauth:
       type: oauth2
@@ -3448,5 +2137,18 @@ components:
     bearer-auth:
       type: http
       description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyHeader:
+      type: apiKey
+      description: "A unique member-specific identifier used for API routing, quota\
+        \ management, and rate limiting. This key does not replace the Authorization\
+        \ bearer token for identity."
+      name: X-API-Key
+      in: header
+    AuthorizationHeader:
+      type: http
+      description: Standard OIDC/OAuth 2.0 Bearer Token
+      name: Authorization
       scheme: bearer
       bearerFormat: JWT

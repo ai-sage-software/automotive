@@ -1,0 +1,413 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - BudgetVarianceReport
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    AccountingPeriod:
+      type: object
+      properties:
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        period_desc:
+          type: string
+          description: Detailed narrative description of the period's scope.
+          example: Third Quarter Fiscal Year 2026 - North American Operations
+        accounting_period_id:
+          type: string
+          description: System-level unique identifier for the period record.
+          example: ap-2026-07-v1
+        accounting_period_key:
+          type: string
+          description: Business-logical key following the chronological YYYYMM format.
+          example: "202607"
+        period_name:
+          type: string
+          description: Short-hand display name for the period.
+          example: July 2026
+        start_date:
+          type: string
+          description: The inclusive start date of the period in ISO-8601 format.
+          format: date
+        end_date:
+          type: string
+          description: The inclusive end date of the period in ISO-8601 format.
+          format: date
+        accounting_period_status_type:
+          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
+        fiscal_year:
+          type: integer
+          description: The 4-digit fiscal year designation.
+          format: int32
+          example: 2026
+      description: "Defines a fiscal period, including its unique identifiers, start\
+        \ and end dates, and current status."
+    AccountingPeriodStatusTypes:
+      type: string
+      description: types of accounting period status.
+      enum:
+      - FUTURE
+      - OPEN
+      - ADJUSTMENT
+      - PENDING_CLOSURE
+      - CLOSED
+      - LOCKED
+      - OTHER
+    BudgetVarianceLineItem:
+      type: object
+      properties:
+        budget_variance_line_item_id:
+          type: string
+          description: The unique ID for the report line item.
+        budget_variance_line_item_key:
+          type: string
+          description: The unique ID for the report line item.
+        general_ledger_account:
+          $ref: "#/components/schemas/GeneralLedgerReference"
+        control_account:
+          $ref: "#/components/schemas/ControlAccountReference"
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        budgeted_amount:
+          $ref: "#/components/schemas/Money"
+        actual_amount:
+          $ref: "#/components/schemas/Money"
+        variance_detail:
+          $ref: "#/components/schemas/VarianceDetail"
+      description: "A line item within a Budget Variance Report, comparing budgeted\
+        \ versus actual amounts for a specific account/category."
+    BudgetVarianceReport:
+      type: object
+      properties:
+        budget_variance_report_id:
+          type: string
+          description: The unique ID for the generated report.
+        budget_variance_report_key:
+          type: string
+          description: The unique ID for the generated report.
+        budget_variance_report_criteria:
+          $ref: "#/components/schemas/BudgetVarianceReportCriteria"
+        report_date:
+          type: string
+          description: The date and time the report was generated.
+          format: date
+        accounting_period:
+          $ref: "#/components/schemas/AccountingPeriod"
+        line_items:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/BudgetVarianceLineItem"
+      description: A financial report summarizing the differences between budgeted
+        and actual financial performance for a given period.
+    BudgetVarianceReportCriteria:
+      type: object
+      properties:
+        budget_variance_report_criteria_id:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        budget_variance_report_criteria_key:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        accounting_period_key:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        gl_account_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        control_account_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        financial_categories:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/FinancialCategoryTypes"
+        organization_id:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        min_variance_percentage:
+          type: string
+          description: "Minimum absolute variance percentage to include a line item\
+            \ (e.g., only show lines where variance is > 5%)."
+      description: Defines the criteria and scope for generating a Budget Variance
+        Report.
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    ControlAccountReference:
+      type: object
+      properties:
+        control_account_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        control_account_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        control_account_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        context:
+          type: string
+          description: Context or domain of the identifier
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        control_account:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-05-06T14:48:57Z
+      description: External system identifier
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-06T14:48:57Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+    GeneralLedgerReference:
+      type: object
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        context:
+          type: string
+          description: Context or domain of the reference
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-05-06T14:48:57Z
+      description: External system reference
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
+    List:
+      type: array
+      items:
+        type: string
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
+        currency_code:
+          type: string
+          description: money.currency.code.desc
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        value:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    VarianceDetail:
+      type: object
+      properties:
+        variance_amount:
+          $ref: "#/components/schemas/Money"
+        variance_percentage:
+          type: string
+          description: The variance expressed as a percentage of the budgeted amount.
+        favorable_indicator:
+          type: boolean
+          description: "Indicator if the variance is favorable (e.g., lower expenses,\
+            \ higher revenue) relative to the budget."
+          example: false
+      description: Details the calculated variance between an actual amount and a
+        budgeted amount.
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

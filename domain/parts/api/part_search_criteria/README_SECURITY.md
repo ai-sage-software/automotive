@@ -1,6 +1,6 @@
-# 🚗 STAR Security Contract for NotificationReference API
-This README provides an overview of the security architecture and implementation requirements for the **Automotive Retail Systems NotificationReference API**.
-All developers and integrators must adhere to these standards to ensure the integrity and confidentiality of automotive retail NotificationReference data.
+# 🚗 STAR Security Contract for PartSearchCriteria API
+This README provides an overview of the security architecture and implementation requirements for the **Automotive Retail Systems PartSearchCriteria API**.
+All developers and integrators must adhere to these standards to ensure the integrity and confidentiality of automotive retail PartSearchCriteria data.
 
 ---
 
@@ -40,7 +40,7 @@ The API applies security following an **"OR" logic** for global requirements, wi
 
 ### Global Security
 
-Most endpoints (e.g., `/notification-references`, `/notification-references/batch`) require authentication. A request is considered authorized if it satisfies **either** the OAuth2 requirements **or** provides a valid Member API Key:
+Most endpoints (e.g., `/part-search-criteria`, `/part-search-criteria/batch`) require authentication. A request is considered authorized if it satisfies **either** the OAuth2 requirements **or** provides a valid Member API Key:
 
 ```yaml
 security:
@@ -54,7 +54,7 @@ security:
 
 The following endpoints are explicitly marked as public (no security required) to allow for infrastructure monitoring and discovery:
 
-* `GET /notification-references/health`: Used by load balancers and uptime monitors.
+* `GET /part-search-criteria/health`: Used by load balancers and uptime monitors.
 
 ---
 
@@ -72,7 +72,7 @@ In addition to authentication tokens, all requests must include the following he
 
 ## 4. Webhook Security (Callbacks)
 
-When using the `/notification-references/exports` endpoint, the system sends a POST notification to your `webhook_url`. To secure this communication:
+When using the `/part-search-criteria/exports` endpoint, the system sends a POST notification to your `webhook_url`. To secure this communication:
 
 1. **Signature Key:** You must provide a `signature_key` in the initial request.
 2. **Verification:** The API will use this key to sign the payload. Your listener must verify this signature to ensure the notification originated from the Automotive Retail System and hasn't been tampered with.

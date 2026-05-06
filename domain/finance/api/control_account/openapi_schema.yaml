@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - ControlAccount
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,36 +9,71 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     ControlAccount:
       type: object
       properties:
+        control_account_id:
+          type: string
+          description: Unique identifier for the control account.
+        control_account_key:
+          type: string
+          description: Business key for the control account.
+        account_number:
+          type: string
+          description: Business key for the control account.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         control_account_desc:
           type: string
           description: Description of the control account.
-        control_account_id:
-          type: string
-          description: Unique identifier for the control accoun...
-        control_account_key:
-          type: string
-          description: Business key for the control account.
         control_account_name:
           type: string
           description: Display name of the control account.
@@ -46,13 +81,14 @@ components:
           $ref: "#/components/schemas/ControlAccountTypes"
         control_type_id:
           type: string
-          description: Identifier for the control type of the a...
+          description: Identifier for the control type of the account.
         bank_account_id:
           type: string
           description: Associated bank account identifier.
         is_counted:
           type: boolean
-          description: Indicates if the account is a counted ac...
+          description: "Indicates if the account is a counted account (e.g., for inventory)."
+          example: false
         prefix:
           type: string
           description: The prefix of the account number.
@@ -62,7 +98,21 @@ components:
           $ref: "#/components/schemas/ControlAccountStatusTypes"
         financial_category_type:
           $ref: "#/components/schemas/FinancialCategoryTypes"
-      description: control.account.desc
+        total_debit_balance:
+          $ref: "#/components/schemas/Money"
+        total_credit_balance:
+          $ref: "#/components/schemas/Money"
+        net_balance:
+          $ref: "#/components/schemas/Money"
+        last_reconciliation_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-05-06T14:08:56Z
+        subsidiary_ledger_type:
+          $ref: "#/components/schemas/SubsidiaryLedgerTypes"
+      description: "Journal entry for general ledger, capturing control account details\
+        \ including identifiers, type, and descriptive fields."
     ControlAccountRoleTypes:
       type: string
       description: types of control account roles.
@@ -123,6 +173,44 @@ components:
       - PARTS_SALES_ORDER
       - PACKAGE
       - REFERENCE
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-06T14:08:56Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     FinancialCategoryTypes:
       type: string
       description: types of financial categorys.
@@ -158,17 +246,68 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: External system identifier
     Identifiers:
       type: array
       items:
         $ref: "#/components/schemas/Identifier"
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
+        currency_code:
+          type: string
+          description: money.currency.code.desc
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        value:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    SubsidiaryLedgerTypes:
+      type: string
+      description: types of subsidiary ledgers.
+      enum:
+      - ACCOUNTS_RECEIVABLE
+      - ACCOUNTS_PAYABLE
+      - VEHICLE_INVENTORY
+      - PARTS_INVENTORY
+      - FIXED_ASSETS
+      - PAYROLL
+      - SERVICE_WORK_IN_PROGRESS
+      - OEM_INCENTIVES
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - PartSearch
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,22 +9,54 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     Identifier:
       type: object
       properties:
@@ -43,16 +75,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: Unique identification key for the record.
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -82,13 +114,13 @@ components:
       properties:
         part_identifier_key:
           type: string
-          description: Unique key identifying the part identifi...
+          description: Unique key identifying the part identifier
         part_identifier_id:
           type: string
-          description: Unique identifier ID for the part identi...
+          description: Unique identifier ID for the part identifier
         part_source:
           type: string
-          description: Unique identifier ID for the source of t...
+          description: Unique identifier ID for the source of the part
         part_identifier_type:
           $ref: "#/components/schemas/PartIdentifierTypes"
         part_identifier_value:
@@ -96,7 +128,7 @@ components:
           description: Value of the part identifier
         description:
           type: string
-          description: Optional description for the part identi...
+          description: Optional description for the part identifier
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         part_names:
@@ -189,11 +221,13 @@ components:
       properties:
         part_price_criteria_id:
           type: string
-          description: Descriptive name or keyword for the part...
+          description: "Descriptive name or keyword for the part (e.g., 'Brake Rotor',\
+            \ 'Oil Filter')."
           example: Front Brake Rotor
         part_price_criteria_key:
           type: string
-          description: Descriptive name or keyword for the part...
+          description: "Descriptive name or keyword for the part (e.g., 'Brake Rotor',\
+            \ 'Oil Filter')."
           example: Front Brake Rotor
         min_price:
           type: string
@@ -205,11 +239,12 @@ components:
           example: "100.00"
         currency:
           type: string
-          description: "Currency for price filtering (e.g., 'USD..."
+          description: "Currency for price filtering (e.g., 'USD', 'EUR')."
           example: USD
         core_charge_applicable:
           type: boolean
-          description: "If true, only parts with an applicable c..."
+          description: "If true, only parts with an applicable core charge are returned.\
+            \ If false, parts without core charge."
           example: true
         warranty_types:
           maxItems: 255
@@ -225,7 +260,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PriceTypes"
-      description: The logic used to determine part pricing.
+      description: Criteria for filtering by commercial terms and logistics details.
     PartSearch:
       type: object
       properties:
@@ -247,32 +282,37 @@ components:
           example: SUCCESS
         results_count:
           type: integer
-          description: The number of PartSearchResult items ret...
+          description: The number of PartSearchResult items returned.
           format: int32
           example: 1
         part_search_results:
           $ref: "#/components/schemas/PartSearchResults"
         warehouses:
           $ref: "#/components/schemas/Identifiers"
-      description: The action or record of searching for parts.
+      description: "The final  object for a part search query, containing status and\
+        \ a list of matching part records."
     PartSearchResult:
       type: object
       properties:
         part_search_result_id:
           type: string
-          description: Unique identifier for the part (can be m...
+          description: Unique identifier for the part (can be master ID or a specific
+            inventory ID).
           example: PM_45678
         part_search_result_key:
           type: string
-          description: Unique identifier for the part (can be m...
+          description: Unique identifier for the part (can be master ID or a specific
+            inventory ID).
           example: PM_45678
         part_key:
           type: string
-          description: Unique identifier for the part (can be m...
+          description: Unique identifier for the part (can be master ID or a specific
+            inventory ID).
           example: PM_45678
         is_master_record:
           type: boolean
-          description: Indicates if this result represents the ...
+          description: Indicates if this result represents the foundational Part Master
+            record.
           example: true
         part_identifiers:
           maxItems: 255
@@ -292,7 +332,8 @@ components:
           $ref: "#/components/schemas/PartConditionTypes"
         quantity_available:
           type: integer
-          description: The total quantity available across all ...
+          description: The total quantity available across all matching logistics/inventory
+            records.
           format: int32
           example: 1700
         primary_warehouse:
@@ -305,14 +346,15 @@ components:
           $ref: "#/components/schemas/PartStatusTypes"
         estimated_availability_date:
           type: string
-          description: The earliest date/time this part is expe...
+          description: The earliest date/time this part is expected to be available
+            from the matched location.
           format: date
         origin_latitude:
           type: string
-          description: Latitude of the part's physical location...
+          description: Latitude of the part's physical location or aggregation point.
         origin_longitude:
           type: string
-          description: Longitude of the part's physical locatio...
+          description: Longitude of the part's physical location or aggregation point.
         shipping_method_types:
           maxItems: 255
           minItems: 1
@@ -320,7 +362,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ShippingMethodTypes"
-      description: The output generated from a part search.
+      description: "A consolidated record representing a single part found by the\
+        \ search criteria, including master data and aggregated inventory/price details."
     PartSearchResults:
       type: array
       items:
@@ -387,24 +430,51 @@ components:
       - RETAIL
       - MSRP
       - WHOLESALE
-      - DEALER
+      - DEALER_COST
+      - TOTAL_DEALER_COST
+      - TOTAL_DEALER_OPTION_COST
+      - TOTAL_DEALER_OPTION_SELLING_PRICE
+      - RECONDITIONING_COST
+      - RESIDUAL_VALUE
+      - TDA
+      - FUEL
+      - TOTAL_HOLD_BACK
+      - PPO_HOLD_BACK
+      - WRF
       - TRADE
       - CORE
       - LANDED
+      - FREIGHT_CHARGE
+      - MONEY
+      - INTERNET
+      - BALANCE
+      - BASE
+      - BASE_MSRP
+      - TOTAL_MSRP
+      - TOTAL_OPTION_MSRP
+      - PRODUCT_TOTAL
+      - FINANCE_TOTAL
+      - APPLIED_REWARD_TOTAL
+      - UPFRONT_PAYMENT_TOTAL
+      - REMOVED_EQUIPT_TOTAL
+      - ADJUSTED_MSRP
+      - GROSS_SALE
+      - NET_SALE
+      - NET_SALE_REDUCTION_PRICE
+      - DISCOUNT_TOTAL
+      - DISCOUNT_PACKAGES_TOTAL
+      - CREDIT_TOTAL
+      - FEE_TOTAL
+      - REBATE_TOTAL
+      - TAX_TOTAL
+      - TRADE_IN_TOTAL
+      - TRADE_IN_EQUITY_TOTAL
       - PROMOTIONAL
       - DISCOUNT
       - CONTRACT
       - SALE
-      - CUSTOMER
-      - AFFILIATE
-      - ONLINE
-      - STORE
-      - REGION
-      - LOCATION
-      - ESTIMATED
-      - NET
-      - PURCHASE
-      - MONEY
+      - PREMIUM_TOTAL
+      - DISABILITY_PREMIUM_TOTAL
       - TAXABLE
       - NONTAXABLE
       - TOTAL
@@ -412,6 +482,15 @@ components:
       - TOTAL_COST
       - UNIT_COST
       - TAX
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
       - OTHER
     ShippingMethodTypes:
       type: string

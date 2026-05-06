@@ -1,11 +1,17 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
-  description: A standardized interface for Automotive Retail ...
+  title: Automotive Retail Systems API - NotificationReference
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -20,6 +26,9 @@ security:
   - standard:read
 - member-api-key: []
 - {}
+tags:
+- name: NotificationReference
+  description: 'NotificationReference '
 paths:
   /notification-references:
     get:
@@ -38,8 +47,12 @@ paths:
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
       - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
           $ref: "#/components/responses/NotificationReferenceCollectionResponse"
@@ -61,6 +74,9 @@ paths:
           $ref: "#/components/responses/ServiceUnavailableError"
         "504":
           $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     post:
       tags:
       - NotificationReferences
@@ -75,6 +91,7 @@ paths:
       - $ref: "#/components/parameters/AgentHeader"
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
         content:
           application/json:
@@ -96,15 +113,22 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "415":
           $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
   /notification-references/{notification-reference-key}:
     get:
       tags:
       - NotificationReferences
-      summary: Retrieve a single item scoped by a key Notifica...
+      summary: Retrieve a single item scoped by a key NotificationReference entities.
       operationId: getNotificationReferenceByKey
       parameters:
       - $ref: "#/components/parameters/TransactionIDHeader"
@@ -112,15 +136,13 @@ paths:
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
       - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IfNoneMatchHeader"
-      - name: notification-reference-key
-        in: path
-        description: The unique identifier for an NotificationRefere...
-        required: true
-        schema:
-          type: string
-          example: "830096743986466817"
+      - $ref: "#/components/parameters/NotificationReferenceKey"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
           $ref: "#/components/responses/NotificationReferenceSingleResponse"
@@ -142,10 +164,14 @@ paths:
           $ref: "#/components/responses/ServiceUnavailableError"
         "504":
           $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     put:
       tags:
       - NotificationReferences
-      summary: Replace values in a single item scoped by a key...
+      summary: Replace values in a single item scoped by a key NotificationReference
+        entities.
       operationId: replaceNotificationReferenceByKey
       parameters:
       - $ref: "#/components/parameters/TransactionIDHeader"
@@ -156,13 +182,8 @@ paths:
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IdempotencyKeyHeader"
       - $ref: "#/components/parameters/IfMatchHeader"
-      - name: notification-reference-key
-        in: path
-        description: The unique identifier for an NotificationRefere...
-        required: true
-        schema:
-          type: string
-          example: "830096743986466820"
+      - $ref: "#/components/parameters/NotificationReferenceKey"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
         content:
           application/json:
@@ -186,8 +207,15 @@ paths:
           $ref: "#/components/responses/PreconditionFailedError"
         "415":
           $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     delete:
       tags:
       - NotificationReferences
@@ -195,6 +223,7 @@ paths:
       operationId: deleteNotificationReference
       parameters:
       - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/ReasonQuery"
       - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
@@ -202,14 +231,11 @@ paths:
       - $ref: "#/components/parameters/AgentHeader"
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IfMatchHeader"
-      - name: notification-reference-key
-        in: path
-        description: The unique identifier for an NotificationRefere...
-        required: true
-        schema:
-          type: string
-          example: "830096743986466821"
+      - $ref: "#/components/parameters/NotificationReferenceKey"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       responses:
+        "200":
+          $ref: "#/components/responses/NotificationReferenceSingleResponse"
         "204":
           $ref: "#/components/responses/NoContentSuccess"
         "401":
@@ -222,14 +248,19 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     patch:
       tags:
       - NotificationReferences
-      summary: Update a single item scoped by a key Notificati...
+      summary: Update a single item scoped by a key NotificationReference
       description: update a single item
       operationId: updateNotificationReferenceByKey
       parameters:
@@ -241,20 +272,8 @@ paths:
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/IdempotencyKeyHeader"
       - $ref: "#/components/parameters/IfMatchHeader"
-      - name: notification-reference-key
-        in: path
-        description: The unique identifier for an NotificationRefere...
-        required: true
-        schema:
-          type: string
-          example: "830096743986466818"
-      - name: notification-reference-key
-        in: path
-        description: The unique identifier for an NotificationRefere...
-        required: true
-        schema:
-          type: string
-          example: "830096743986466819"
+      - $ref: "#/components/parameters/NotificationReferenceKey"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
         content:
           application/merge-patch+json:
@@ -278,16 +297,15 @@ paths:
           $ref: "#/components/responses/PreconditionFailedError"
         "415":
           $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: notification-reference-key
-      in: path
-      description: The unique identifier for the specific NotificationReferences
-      required: true
-      schema:
-        type: string
-        example: 830096743986466816u
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
   /notification-reference/health:
     get:
       tags:
@@ -299,6 +317,7 @@ paths:
       - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/CorrelationIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       - $ref: "#/components/parameters/AgentHeader"
       - $ref: "#/components/parameters/CountryCodeHeader"
       - $ref: "#/components/parameters/LocaleHeader"
@@ -313,8 +332,44 @@ paths:
           $ref: "#/components/responses/ServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
 components:
   schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
     ErrorDetail:
       required:
       - category
@@ -362,6 +417,7 @@ components:
         details:
           type: array
           description: Field-level validation errors or granular diagnostic information.
+          example: Invalid request parameter.
           items:
             type: object
             properties:
@@ -390,41 +446,91 @@ components:
       properties:
         status:
           type: string
+          description: Current health status of the service.
           example: UP
         version:
           type: string
+          description: Version of the deployed service.
           example: 2.0.0
       description: Standard health check response body
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+          example: "837882552561852416"
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+          example: "837882552561852417"
+        context:
+          type: string
+          description: Context or domain of the identifier
+          example: FINANCE
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+          example: user@example.com
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+          example: Primary identifier
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+          example: identifier_type value
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
     NotificationReference:
       type: object
       properties:
         notification_reference_id:
           type: string
           description: Unique identifier value for the reference record.
+          example: "837882552570241024"
         notification_reference_key:
           type: string
           description: Unique key value for the reference record.
+          example: "837882552570241025"
         source_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the referenced PartO...
+          description: The unique key identifying the referenced PartOrder aggregate.
+          example: "837882552570241026"
         source_actor:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the referenced PartO...
+          description: The unique key identifying the referenced PartOrder aggregate.
+          example: ADVISOR
         context:
           type: string
-          description: "Context or domain of the identifier (e.g., 'CRM..."
+          description: "Context or domain of the identifier (e.g., 'CRM', 'ERP')."
+          example: FINANCE
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
         occurrence_date_time:
           type: string
-          description: The date and time the reference was created or ...
+          description: The date and time the reference was created or last updated.
           format: date-time
-          example: 2026-04-09T15:08:06Z
+          example: 2026-05-01T02:45:34Z
         event_type:
           $ref: "#/components/schemas/EventTypes"
-      description: "Reference to a PartOrder Aggregate Root, often ..."
+      description: "Reference to a PartOrder Aggregate Root, often used by external\
+        \ systems."
     NotificationReferenceCreate:
       required:
       - notification_reference_key
@@ -435,21 +541,27 @@ components:
     NotificationReferenceUpdate:
       type: object
       properties:
+        system_codes:
+          $ref: "#/components/schemas/Codes"
         event_type:
           $ref: "#/components/schemas/EventTypes"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
         context:
           type: string
-          description: "Context or domain of the identifier (e.g., 'CRM..."
+          description: "Context or domain of the identifier (e.g., 'CRM', 'ERP')."
+          example: FINANCE
         source_actor:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the referenced PartO...
+          description: The unique key identifying the referenced PartOrder aggregate.
+          example: ADVISOR
         occurrence_date_time:
           type: string
-          description: The date and time the reference was created or ...
+          description: The date and time the reference was created or last updated.
           format: date-time
-          example: 2026-04-09T15:08:06Z
+          example: 2026-05-01T02:45:34Z
       description: NotificationReference Update for Patch and Put
     ProblemDetail:
       type: object
@@ -500,6 +612,7 @@ components:
           type: array
           description: "A collection of specific validation failures, including field\
             \ paths and localized messages."
+          example: "[{field=postal_code, message=Invalid format}]"
           items:
             type: object
             properties:
@@ -556,24 +669,30 @@ components:
           $ref: "#/components/headers/CorrelationIDHeader"
         Agent:
           $ref: "#/components/headers/AgentHeader"
-        RateLimit-Remaining:
-          $ref: "#/components/headers/RateLimitRemainingHeader"
         RateLimit-Reset:
           $ref: "#/components/headers/RateLimitResetHeader"
-        Cache-Control:
-          $ref: "#/components/headers/CacheControlHeader"
         RateLimit-Policy:
           $ref: "#/components/headers/RateLimitPolicyHeader"
-        ETag:
-          $ref: "#/components/headers/ETagHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
-        Vary:
-          $ref: "#/components/headers/VaryHeader"
         Last-Modified:
           $ref: "#/components/headers/LastModifiedHeader"
         RateLimit-Limit:
           $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
       content:
         application/json:
           schema:
@@ -606,6 +725,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -622,6 +743,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -637,6 +760,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -650,24 +775,28 @@ components:
           $ref: "#/components/headers/CorrelationIDHeader"
         Agent:
           $ref: "#/components/headers/AgentHeader"
-        RateLimit-Remaining:
-          $ref: "#/components/headers/RateLimitRemainingHeader"
         RateLimit-Reset:
           $ref: "#/components/headers/RateLimitResetHeader"
-        Cache-Control:
-          $ref: "#/components/headers/CacheControlHeader"
         RateLimit-Policy:
           $ref: "#/components/headers/RateLimitPolicyHeader"
-        ETag:
-          $ref: "#/components/headers/ETagHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
-        Vary:
-          $ref: "#/components/headers/VaryHeader"
         Last-Modified:
           $ref: "#/components/headers/LastModifiedHeader"
         RateLimit-Limit:
           $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -684,6 +813,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -700,6 +831,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -715,6 +848,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
     HealthStatusResponse:
       description: Service is Operational
       headers:
@@ -722,6 +857,8 @@ components:
           $ref: "#/components/headers/TransactionIDHeader"
         Standards-Version:
           $ref: "#/components/headers/StandardsVersionHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
         Correlation-ID:
@@ -744,6 +881,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
     ServiceUnavailableError:
       description: Unable to serve request.  Service is unavailable
       headers:
@@ -755,6 +894,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
     GatewayTimeout:
       description: Timeout serving request
       headers:
@@ -766,6 +907,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
     UnsupportedMediaTypeError:
       description: The request could not be completed because of missing or invalid
         content type
@@ -778,6 +921,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -793,6 +938,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
     ForbiddenError:
       description: The authenticated user does not have the necessary permissions.
       headers:
@@ -804,6 +951,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -820,6 +969,8 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
@@ -835,10 +986,12 @@ components:
           $ref: "#/components/headers/AgentHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: "#/components/schemas/ProblemDetail"
     NotificationReferenceCreatedResponse:
       description: Success
       headers:
@@ -858,6 +1011,8 @@ components:
           $ref: "#/components/headers/ContentLocationHeader"
         Transaction-ID:
           $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
         RateLimit-Limit:
           $ref: "#/components/headers/RateLimitLimitHeader"
         Location:
@@ -889,6 +1044,8 @@ components:
           $ref: "#/components/headers/TransactionIDHeader"
         Last-Modified:
           $ref: "#/components/headers/LastModifiedHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
         RateLimit-Limit:
           $ref: "#/components/headers/RateLimitLimitHeader"
       content:
@@ -896,207 +1053,88 @@ components:
           schema:
             $ref: "#/components/schemas/NotificationReference"
   parameters:
+    ReasonQuery:
+      name: reason
+      in: query
+      description: Reason parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "duplicate,soft_delete"
+    OrgVersionHeader:
+      name: Org-Version
+      in: header
+      description: "The version of the api for the organization that this request\
+        \ adheres to (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
     CacheControlHeader:
       name: Cache-Control
       in: header
       description: Tells the client and intermediary caches how to store the response.
-      schema:
-        type: string
-        example: "max-age=300, private"
-    BrandHeader:
-      name: Brand
-      in: header
-      description: The automotive brand context for the RDR.
       required: false
       style: simple
       explode: false
       schema:
         type: string
-        example: toyota
-        default: toyota
-        enum:
-        - toyota
-        - lexus
-    DealerIdHeader:
-      name: Dealer-Id
-      in: header
-      description: Unique 5-digit Dealer Identifier.
-      required: false
-      schema:
-        maxLength: 5
-        minLength: 5
-        type: string
-        example: "42278"
-    CreatorCodeHeader:
-      name: Creator-Code
-      in: header
-      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
-      required: false
-      schema:
-        maxLength: 8
-        minLength: 2
-        type: string
-        example: CDK
-    SubscriberCodeHeader:
-      name: Subscriber-Code
-      in: header
-      required: false
-      schema:
-        type: string
-        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
-    PreferHeader:
-      name: Prefer
-      in: header
-      description: JSON context for field selection and error logging behavior.
-      required: false
-      schema:
-        type: string
-        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
+        example: "max-age=300, private"
     SourceSystemHeader:
       name: Source-System
       in: header
       description: The system originating the transaction pulse.
       required: true
+      style: simple
+      explode: false
       schema:
         maxLength: 25
         minLength: 2
         type: string
         example: GM_GLOBAL_NVS
-    PreferenceAppliedHeader:
-      name: Preference-Applied
-      in: header
-      description: Indicates which client preferences (from the 'Prefer' request header)
-        were honored by the server.
-      required: true
-      schema:
-        type: string
-        example: return=minimal
-    UnitIdQuery:
-      name: unit_id
+    FilterQuery:
+      name: filter
       in: query
-      description: Vehicle UnitId
-      required: false
-      schema:
-        type: integer
-        description: Vehicle UnitId
-        format: int32
-        example: 129375127
-    VINQuery:
-      name: vin
-      in: query
-      description: Vehicle Identification Number
-      required: false
-      schema:
-        type: string
-        description: Vehicle Identification Number
-        example: 5TFHY5F13KX799310
-    StatusQuery:
-      name: status
-      in: query
-      description: Status of RDR to filter for
-      required: false
-      schema:
-        type: string
-        description: Status of RDR to filter for
-        example: Approved
-    StartDateQuery:
-      name: start_date
-      in: query
-      description: The start date (YYYY-MM-DD). Defaults to current date if omitted.
+      description: Filter parameters
       required: false
       style: form
       explode: true
       schema:
-        maxLength: 10
-        minLength: 10
-        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        maxLength: 100
+        minLength: 0
         type: string
-        format: date
-        example: 2026-02-09
-    EndDateQuery:
-      name: end_date
-      in: query
-      description: The end date (YYYY-MM-DD). Defaults to current date + 14 days.
+        example: "sdate:2026-02-09,edate:2026-02-09"
+    CreatorCodeHeader:
+      name: Creator-Code
+      in: header
+      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
       required: false
-      style: form
-      explode: true
+      style: simple
+      explode: false
       schema:
-        maxLength: 10
-        minLength: 10
-        pattern: "^\\d{4}-\\d{2}-\\d{2}$"
-        type: string
-        format: date
-        example: 2026-02-09
-    IdempotencyKeyHeader:
-      name: Idempotency-Key
-      in: header
-      description: A unique identifier sent by the client to allow the server to prevent
-        duplicate processing of the same request.
-      required: false
-      schema:
-        type: string
-        format: uuid
-        example: 123e4567-e89b-12d3-a456-426614174000
-    CorrelationIDHeader:
-      name: Correlation-ID
-      in: header
-      description: A unique identifier spanning the entire business lifecycle. Essential
-        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
-        Domain.
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 550e8400-e29b-41d4-a716-446655440000
-    AgentHeader:
-      name: Agent
-      in: header
-      description: "The URI profile of the calling Agent. Used to negotiate supported\
-        \ Industry Extensions (e.g., ) via the protocol."
-      required: false
-      schema:
-        pattern: ^https?://.+
-        type: string
-        format: uri
-        example: https://xxx.com/agent/v1
-    StandardsVersionHeader:
-      name: Standards-Version
-      in: header
-      description: "The version of the STAR REST Standard this request adheres to\
-        \ (e.g., 2026.01)."
-      required: true
-      schema:
-        maxLength: 12
-        minLength: 7
-        pattern: "^\\d{4}\\.\\d{2}$"
-        type: string
-        example: "2026.01"
-    TransactionIDHeader:
-      name: Transaction-ID
-      in: header
-      required: true
-      schema:
-        type: string
-        example: 550e8400-e29b-41d4-a716-446655440000
-    RegionHeader:
-      name: Region
-      in: header
-      description: The geographic or business region code.
-      required: false
-      schema:
-        maxLength: 10
+        maxLength: 8
         minLength: 2
         type: string
-        example: NE-01
-    CountryCodeHeader:
-      name: Country-Code
+        example: CDK
+    PreferHeader:
+      name: Prefer
       in: header
-      required: true
+      description: JSON context for field selection and error logging behavior.
+      required: false
       style: simple
       explode: false
       schema:
         type: string
-        example: "1"
+        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
     LocaleHeader:
       name: Locale
       in: header
@@ -1106,55 +1144,14 @@ components:
       schema:
         type: string
         example: en-US
-    LimitQuery:
-      name: limit
-      in: query
-      description: The maximum number of entities to return in a single response page.
-        Limits the 'data' array size to prevent payload bloat.
-      required: false
-      schema:
-        maximum: 100
-        minimum: 1
-        type: integer
-        format: int32
-        example: 100
-    OffsetQuery:
-      name: offset
-      in: query
-      description: The number of entities to skip before starting to collect the result
-        set. Used in conjunction with 'limit' for traditional page-based navigation.
-      required: false
-      schema:
-        minimum: 0
-        type: integer
-        format: int32
-        example: 234
-    FilterQuery:
-      name: filter
-      in: query
-      description: Filter parameters
-      required: false
-      schema:
-        maxLength: 100
-        minLength: 0
-        type: string
-        example: "sdate:2026-02-09,edate:2026-02-09"
-    SortQuery:
-      name: sort
-      in: query
-      description: Sort parameters
-      required: false
-      schema:
-        maxLength: 100
-        minLength: 0
-        type: string
-        example: "name,country"
     IfMatchHeader:
       name: If-Match
       in: header
       description: Used for optimistic concurrency control. The request will fail
         (412) if the current ETag does not match this value.
       required: false
+      style: simple
+      explode: false
       schema:
         type: string
         example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
@@ -1165,19 +1162,202 @@ components:
         stored ETag does not match this value. Prevents 'Lost Updates' in high-concurrency
         Service Bounded Contexts.
       required: false
+      style: simple
+      explode: false
       schema:
         pattern: "^\"?[a-f0-9]+\"?$|^\\*$"
         type: string
         example: '"686897696a7c876b7e"'
+    CountryCodeHeader:
+      name: Country-Code
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "1"
+    CorrelationIDHeader:
+      name: Correlation-ID
+      in: header
+      description: A unique identifier spanning the entire business lifecycle. Essential
+        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
+        Domain.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+    AgentHeader:
+      name: Agent
+      in: header
+      description: "The URI profile of the calling Agent. Used to negotiate supported\
+        \ Industry Extensions (e.g., ) via the protocol."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://xxx.com/agent/v1
+    SortQuery:
+      name: sort
+      in: query
+      description: Sort parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "name,country"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      description: A unique identifier sent by the client to allow the server to prevent
+        duplicate processing of the same request.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    OffsetQuery:
+      name: offset
+      in: query
+      description: The number of entities to skip before starting to collect the result
+        set. Used in conjunction with 'limit' for traditional page-based navigation.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 234
+    NotificationReferenceKey:
+      name: notification-reference-key
+      in: path
+      description: The unique identifier for an NotificationReference entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "837882411634745345"
+    LimitQuery:
+      name: limit
+      in: query
+      description: The maximum number of entities to return in a single response page.
+        Limits the 'data' array size to prevent payload bloat.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        format: int32
+        example: 100
+    RegionHeader:
+      name: Region
+      in: header
+      description: The geographic or business region code.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 2
+        type: string
+        example: NE-01
+    StandardsVersionHeader:
+      name: Standards-Version
+      in: header
+      description: "The version of the STAR REST Standard this request adheres to\
+        \ (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    TransactionIDHeader:
+      name: Transaction-ID
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+    BrandHeader:
+      name: Brand
+      in: header
+      description: The automotive brand context for the RDR.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: TOYOTA
+        default: TOYOTA
+        enum:
+        - TOYOTA
+        - LEXUS
+    SubscriberCodeHeader:
+      name: Subscriber-Code
+      in: header
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
+    DealerIdHeader:
+      name: Dealer-Id
+      in: header
+      description: Unique 5-digit Dealer Identifier.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+        example: "42278"
+    PreferenceAppliedHeader:
+      name: Preference-Applied
+      in: header
+      description: Indicates which client preferences (from the 'Prefer' request header)
+        were honored by the server.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: return=minimal
   headers:
     CacheControlHeader:
       description: Tells the client and intermediary caches how to store the response.
+      style: simple
+      explode: false
       schema:
         type: string
         example: "max-age=300, private"
     VaryHeader:
       description: Instructs downstream caches that the response varies based on the
         Agent's profile or media type. Critical for Extension-based responses.
+      style: simple
+      explode: false
       schema:
         type: string
         example: "Accept, UCP-Agent"
@@ -1185,6 +1365,8 @@ components:
     ExpiresHeader:
       description: The timestamp after which the resource state is considered stale.
         Vital for volatile QQQ/SQQQ market data or real-time Inventory availability.
+      style: simple
+      explode: false
       schema:
         type: string
         format: date-time
@@ -1193,6 +1375,8 @@ components:
       description: "RFC 8288 compliant links providing discovery for related resources\
         \ and 'Service Primitives' (e.g., :cancel, :execute). Essential for non-linear\
         \ state transitions across Bounded Contexts."
+      style: simple
+      explode: false
       schema:
         pattern: "^<[^>]+>;\\s*rel=\"[^\"]+\"(,\\s*<[^>]+>;\\s*rel=\"[^\"]+\")*$"
         type: string
@@ -1202,6 +1386,8 @@ components:
       description: "The absolute URI of the newly created resource or the status monitor\
         \ for an asynchronous 'Service Primitive' (e.g., :execute). Used to follow\
         \ the state of a Transaction across Bounded Contexts."
+      style: simple
+      explode: false
       schema:
         pattern: ^https?://.+
         type: string
@@ -1211,6 +1397,8 @@ components:
       description: The URI of the specific representation returned in the payload.
         Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
         multi-format or versioned Bounded Contexts.
+      style: simple
+      explode: false
       schema:
         pattern: ^https?://.+
         type: string
@@ -1219,48 +1407,73 @@ components:
     TransactionIDHeader:
       description: Echoes the unique identifier for the specific atomic unit of work
         processed by the server.
+      style: simple
+      explode: false
       schema:
         type: string
         format: uuid
     CorrelationIDHeader:
       description: Echoes the unique identifier spanning the entire business lifecycle
         for cross-context tracing.
+      style: simple
+      explode: false
       schema:
         type: string
         format: uuid
     StandardsVersionHeader:
       description: The version of the STAR REST Standard the response adheres to.
+      style: simple
+      explode: false
       schema:
-        pattern: "^\\d{4}\\.\\d{2}$"
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    OrgVersionHeader:
+      description: The version of the organization schema and API the response adheres
+        to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
         type: string
         example: "2026.01"
     AgentHeader:
       description: The unique identifier of the agent or user executing this method.
+      style: simple
+      explode: false
       schema:
-        pattern: "^\\d{4}\\.\\d{2}$"
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
         type: string
         example: "2026.01"
     ETagHeader:
       description: An entity tag (ETag) is an identifier for a specific version of
         a resource.
+      style: simple
+      explode: false
       schema:
         type: string
         example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
     LastModifiedHeader:
       description: The ISO 8601 timestamp at which the resource was last modified
         in the underlying Postgres/Saga store.
+      style: simple
+      explode: false
       schema:
         type: string
         format: date-time
         example: 2026-04-06T15:47:17Z
     RateLimitLimitHeader:
       description: The maximum number of requests allowed in the current time window.
+      style: simple
+      explode: false
       schema:
         type: integer
         format: int32
         example: 1000
     RateLimitRemainingHeader:
       description: The number of requests remaining in the current time window.
+      style: simple
+      explode: false
       schema:
         type: integer
         format: int32
@@ -1268,6 +1481,8 @@ components:
     RateLimitResetHeader:
       description: The number of seconds until the current rate limit window resets.
         Using 'Delta Seconds' avoids clock-skew issues between distributed systems.
+      style: simple
+      explode: false
       schema:
         minimum: 0
         type: integer
@@ -1276,6 +1491,8 @@ components:
     RateLimitPolicyHeader:
       description: "The quota policy for the current user/agent. Format: 'limit;w=window'.\
         \ E.g., '1000;w=3600' means 1000 requests per hour."
+      style: simple
+      explode: false
       schema:
         pattern: ^\d+;w=\d+(;burst=\d+)?$
         type: string
@@ -1296,5 +1513,18 @@ components:
     bearer-auth:
       type: http
       description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyHeader:
+      type: apiKey
+      description: "A unique member-specific identifier used for API routing, quota\
+        \ management, and rate limiting. This key does not replace the Authorization\
+        \ bearer token for identity."
+      name: X-API-Key
+      in: header
+    AuthorizationHeader:
+      type: http
+      description: Standard OIDC/OAuth 2.0 Bearer Token
+      name: Authorization
       scheme: bearer
       bearerFormat: JWT

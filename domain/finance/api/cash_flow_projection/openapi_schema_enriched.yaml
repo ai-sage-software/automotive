@@ -1,0 +1,417 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - CashFlowProjection
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    AccountingPeriod:
+      type: object
+      properties:
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        period_desc:
+          type: string
+          description: Detailed narrative description of the period's scope.
+          example: Third Quarter Fiscal Year 2026 - North American Operations
+        accounting_period_id:
+          type: string
+          description: System-level unique identifier for the period record.
+          example: ap-2026-07-v1
+        accounting_period_key:
+          type: string
+          description: Business-logical key following the chronological YYYYMM format.
+          example: "202607"
+        period_name:
+          type: string
+          description: Short-hand display name for the period.
+          example: July 2026
+        start_date:
+          type: string
+          description: The inclusive start date of the period in ISO-8601 format.
+          format: date
+        end_date:
+          type: string
+          description: The inclusive end date of the period in ISO-8601 format.
+          format: date
+        accounting_period_status_type:
+          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
+        fiscal_year:
+          type: integer
+          description: The 4-digit fiscal year designation.
+          format: int32
+          example: 2026
+      description: "Defines a fiscal period, including its unique identifiers, start\
+        \ and end dates, and current status."
+    AccountingPeriodStatusTypes:
+      type: string
+      description: types of accounting period status.
+      enum:
+      - FUTURE
+      - OPEN
+      - ADJUSTMENT
+      - PENDING_CLOSURE
+      - CLOSED
+      - LOCKED
+      - OTHER
+    CashFlowLineItem:
+      type: object
+      properties:
+        cash_flow_line_item_id:
+          type: string
+          description: The unique key for the Cash Flow LineItem document.
+        cash_flow_line_item_key:
+          type: string
+          description: The unique key for the Cash Flow LineItem document.
+        period_start_date:
+          type: string
+          description: The start date of the reporting period for this line item.
+          format: date
+        period_end_date:
+          type: string
+          description: The end date of the reporting period for this line item (inclusive).
+          format: date
+        cash_inflow_total:
+          $ref: "#/components/schemas/Money"
+        cash_outflow_total:
+          $ref: "#/components/schemas/Money"
+        net_cash_flow:
+          $ref: "#/components/schemas/Money"
+        cash_balance_closing:
+          $ref: "#/components/schemas/Money"
+        source_category:
+          type: string
+          description: "The source type or category for this flow (e.g., AR Collections,\
+            \ Payroll, Taxes)."
+      description: "Represents the aggregated expected cash flow for a single time\
+        \ period (e.g., one week) within a projection."
+    CashFlowLineItems:
+      type: array
+      items:
+        $ref: "#/components/schemas/CashFlowLineItem"
+    CashFlowProjection:
+      type: object
+      properties:
+        cash_flow_projection_key:
+          type: string
+          description: The unique key for the Cash Flow Projection document.
+        cash_flow_projection_id:
+          type: string
+          description: The unique key for the Cash Flow Projection document.
+        cash_flow_projection_criteria:
+          $ref: "#/components/schemas/CashFlowProjectionCriteria"
+        projection_date:
+          type: string
+          description: The date the projection was generated.
+          format: date
+        cash_balance_opening:
+          $ref: "#/components/schemas/Money"
+        scenario:
+          $ref: "#/components/schemas/CashFlowScenario"
+        accounting_period:
+          $ref: "#/components/schemas/AccountingPeriod"
+        line_items:
+          $ref: "#/components/schemas/CashFlowLineItems"
+      description: The final generated report representing the projected future cash
+        position based on a specific scenario and time horizon.
+    CashFlowProjectionCreate:
+      required:
+      - cash_flow_projection_key
+      type: object
+      description: CashFlowProjection Create for Post
+      allOf:
+      - $ref: "#/components/schemas/CashFlowProjection"
+    CashFlowProjectionCriteria:
+      type: object
+      properties:
+        budget_variance_report_request_id:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        budget_variance_report_request_key:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        period_granularity_type:
+          $ref: "#/components/schemas/UomTimeTypes"
+        scenario_key:
+          type: string
+          description: Optional key of a pre-defined CashFlowScenario to use for assumptions.
+        accounting_period_key:
+          type: string
+          description: "The Accounting Period Key for which the report should be generated\
+            \ (e.g., '2025Q1')."
+        gl_account_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        control_account_keys:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        organization_id:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        start_date:
+          type: string
+          description: The start date for the forecast period (inclusive).
+          format: date
+        end_date:
+          type: string
+          description: The end date for the forecast period (inclusive).
+          format: date
+        opening_cash_balance:
+          $ref: "#/components/schemas/Money"
+      description: Defines the criteria and scope for generating a Budget Variance
+        Report.
+    CashFlowProjectionUpdate:
+      type: object
+      properties:
+        scenario:
+          $ref: "#/components/schemas/CashFlowScenario"
+        cash_balance_opening:
+          $ref: "#/components/schemas/Money"
+        cash_flow_projection_criteria:
+          $ref: "#/components/schemas/CashFlowProjectionCriteria"
+        line_items:
+          $ref: "#/components/schemas/CashFlowLineItems"
+        accounting_period:
+          $ref: "#/components/schemas/AccountingPeriod"
+        projection_date:
+          type: string
+          description: The date the projection was generated.
+          format: date
+      description: CashFlowProjection Update for Patch and Put
+    CashFlowScenario:
+      type: object
+      properties:
+        scenario_key:
+          type: string
+          description: The unique key for the Cash Flow Scenario.
+        name:
+          type: string
+          description: "A user-friendly name for the scenario (e.g., 'Worst Case',\
+            \ 'Base Case')."
+        ar_collection_delay_days:
+          type: integer
+          description: The average number of days past due date customers are expected
+            to pay (affects Accounts Receivable inflow timing).
+          format: int32
+          example: 0
+        ap_payment_hold_days:
+          type: integer
+          description: The average number of days the business is expected to wait
+            before paying bills (affects Accounts Payable outflow timing).
+          format: int32
+          example: 0
+        description:
+          type: string
+          description: A description of the assumptions used in the scenario.
+      description: not nullable
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-06T14:08:12Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
+        currency_code:
+          type: string
+          description: money.currency.code.desc
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        value:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    UomTimeTypes:
+      type: string
+      description: types of uom times.
+      enum:
+      - NANOSECOND
+      - MICROSECOND
+      - MILLISECOND
+      - SECOND
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+      - DECADE
+      - CENTURY
+      - MILLENNIUM
+      - PERCENTAGE_OF_HOUR
+      - DURATION
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - CUSTOM
+      - OTHER
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

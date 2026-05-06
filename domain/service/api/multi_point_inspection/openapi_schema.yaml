@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - MultiPointInspection
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,9 +9,9 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -30,7 +30,7 @@ components:
         address_reference_key:
           type: string
           description: A unique key for the address reference.
-        address_reference_value:
+        address_reference_id:
           type: string
           description: The unique value of the address reference.
         address_types:
@@ -95,6 +95,8 @@ components:
       - RESIDENCE
       - WORK
       - BUSINESS
+      - OFFICE
+      - PO_BOX
       - LEGAL
       - SERVICE
       - DEALER
@@ -153,7 +155,7 @@ components:
           type: string
           description: The date and time the appointment occurred.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
       description: nullable
     AppointmentReferences:
       type: array
@@ -187,27 +189,29 @@ components:
       - SERVICE
       - WARRANTY_REPAIR
       - VEHICLE_PICKUP
-    Authorization:
+    AuthorizationLevel:
       type: object
       properties:
         update_date_time:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
             granted
           example: false
-        authorization_key:
+        authorization_level_key:
           type: string
           description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
       description: Establish authorization level
-    Authorizations:
+    AuthorizationLevels:
       type: array
       items:
-        $ref: "#/components/schemas/Authorization"
+        $ref: "#/components/schemas/AuthorizationLevel"
     BillOfMaterialReference:
       type: object
       properties:
@@ -231,7 +235,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         captured_financial_split:
           $ref: "#/components/schemas/FinancialSplitReference"
       description: External system identifier
@@ -287,6 +291,10 @@ components:
           type: string
           description: "The value of the communication channel (e.g., an email address\
             \ or phone number)."
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
         value_extension:
           type: string
           description: "An optional extension for the communication channel's value\
@@ -302,14 +310,9 @@ components:
             channel.
           example: false
         preferences:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/TimeSlot"
-        authorizations:
-          $ref: "#/components/schemas/Authorizations"
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
       description: "Represents a communication channel, such as an email address or\
         \ phone number, with associated preferences and authorizations."
     CommunicationChannelTypes:
@@ -343,6 +346,9 @@ components:
       type: string
       description: The ISO 3116-1 alpha-2 country code of the issuing jurisdiction.
       example: US
+    CurrencyCode:
+      type: string
+      description: The three-letter ISO 4217 currency code used for financial transactions.
     CurrencyExchange:
       type: object
       properties:
@@ -378,7 +384,7 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
     DaysOfWeekTypes:
@@ -401,9 +407,9 @@ components:
       - DESKTOP
       - SMART_TV
       - OTHER
-    DurationUOMTypes:
+    DurationUomTypes:
       type: string
-      description: types of duration u o ms.
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -444,22 +450,22 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
           pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
           description: The length of the period expressed in ISO 8601 duration format.
           example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
           description: Number of times the period repeats. Use -1 for infinite.
@@ -475,8 +481,6 @@ components:
           description: Flag indicating if this period repeats based on the defined
             criteria.
           example: true
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
       description: "Defines a temporal range and recurrence logic for business validity,\
         \ such as license expirations or service intervals."
     EventMessage:
@@ -507,7 +511,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         event_message_group:
           type: string
           description: The group to which the eventMessage belongs.
@@ -585,7 +589,7 @@ components:
           description: The date and time the financialSplit was associated with the
             order.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
       description: Reference to a Payment FinancialSplit Aggregate Root.
     GeographicBoundaryReference:
       type: object
@@ -609,7 +613,7 @@ components:
           type: string
           description: The date and time the schedule was associated with the order.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
       description: Reference to a Payment Schedule Aggregate Root.
     GeographicBoundaryReferences:
       type: array
@@ -665,7 +669,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         inspection_category:
           type: string
           description: The unique ID for the inspection report.
@@ -790,7 +794,7 @@ components:
           type: string
           description: The precise date and time the event occurred.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         previous_status_type:
           $ref: "#/components/schemas/LaborOperationStatusTypes"
         new_status_type:
@@ -908,7 +912,7 @@ components:
           description: The high-precision timestamp when the event actually occurred
             in the source system.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         actor_name:
           type: string
           description: "The identity of the user, service, or system agent that triggered\
@@ -951,6 +955,13 @@ components:
           type: string
           description: "A unique, human-readable string key used for configuration\
             \ lookups and mapping."
+        locale_name:
+          type: string
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
+        description:
+          type: string
+          description: A detailed description of the alert message.
         language_code:
           type: string
           description: ISO 639-1 two-letter language code.
@@ -958,22 +969,22 @@ components:
           type: string
           description: ISO 3166-1 alpha-2 country code.
         currency_code:
-          type: string
-          description: The three-letter ISO 4217 currency code used for financial
-            transactions.
+          $ref: "#/components/schemas/CurrencyCode"
         currency_symbol:
           type: string
           description: The graphical symbol used for the currency.
         timezone:
           type: string
           description: The IANA Time Zone database ID for regional time calculations.
+        number_format:
+          type: string
+          description: Regional pattern for decimal and thousands separators.
         location_code:
           type: string
           description: The code of the inventory location or branch from which this
             part is sourced.
           example: WH001
-      description: "comprehensive locale configuration for currency, language, and\
-        \ regional formatting."
+      description: not nullable
     Manifest:
       type: object
       properties:
@@ -1058,7 +1069,7 @@ components:
           type: string
           description: The date and time the media was created or captured.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         name:
           type: string
           description: A hyperlink to the media's content.
@@ -1110,7 +1121,7 @@ components:
           description: The ISO 8601 date and time when the media was dispatched to
             the recipient.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         media_keys:
           $ref: "#/components/schemas/Codes"
         media_access_metrics:
@@ -1306,10 +1317,11 @@ components:
           type: string
           description: System-generated unique identifier for the money record.
           example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: Three-letter ISO-4217 currency code.
-          example: USD
+          description: money.currency.code.desc
         display_value:
           type: string
           description: Formatted monetary string including symbol and separators based
@@ -1356,7 +1368,7 @@ components:
           type: string
           description: The date and time of the last status code update.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         multi_point_inspection_duration:
           $ref: "#/components/schemas/EffectivePeriod"
         vehicle_identifier:
@@ -1636,8 +1648,10 @@ components:
           type: string
           description: The formal display name of the Party at the time of reference.
           example: Northside Chevrolet Service Center
-        contact_name:
+        individual_name:
           $ref: "#/components/schemas/PersonName"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
         authorization_code:
           type: string
           description: Security or permission code granting access to this party's
@@ -1673,7 +1687,12 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
       description: External system identifier
     PartyReferences:
       type: array
@@ -1804,6 +1823,31 @@ components:
       - TRANSACTION_TO
       - REMOVE
       - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
     PayTypes:
       type: string
       description: types of pays.
@@ -1845,7 +1889,7 @@ components:
       properties:
         alias:
           type: string
-          description: Alternative or informal name.
+          description: Alternative or informal name or role.
           example: AJ
         family_name:
           type: string
@@ -1888,6 +1932,10 @@ components:
           type: string
           description: Unique person name key.
           example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
         preferred_name:
           type: string
           description: Preferred name used in informal situations.
@@ -1954,7 +2002,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         geographic_boundaries:
           $ref: "#/components/schemas/GeographicBoundaryReferences"
         captured_financial_split:
@@ -2121,7 +2169,7 @@ components:
           type: string
           description: The date and time the staff member was assigned.
           format: date-time
-          example: 2026-04-13T15:03:05Z
+          example: 2026-04-30T00:27:53Z
         role_types:
           maxItems: 255
           minItems: 1
@@ -2291,8 +2339,6 @@ components:
           type: boolean
           description: Indicates if this time slot is part of a repeating pattern.
           example: true
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -2301,13 +2347,7 @@ components:
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
+          $ref: "#/components/schemas/Codes"
       description: "Defines a specific window of time, often within a recurring schedule,\
         \ used for service availability or appointment booking."
     TimeSlots:
@@ -2359,12 +2399,7 @@ components:
           description: The dealer's internal stock or inventory number.
           example: STK100293
         identifiers:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         license:
           $ref: "#/components/schemas/VehicleLicense"
         make:
@@ -2408,12 +2443,7 @@ components:
         vin:
           $ref: "#/components/schemas/VIN"
         nicknames:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
+          $ref: "#/components/schemas/Codes"
         tags:
           $ref: "#/components/schemas/Codes"
         model_detail:
@@ -2440,3 +2470,7 @@ components:
           $ref: "#/components/schemas/EffectivePeriod"
       description: "Represents the legal registration and license information for\
         \ a vehicle, including plate details and issuing jurisdiction."
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - Warehouse
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,15 +9,18 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
@@ -30,40 +33,37 @@ components:
           maxLength: 10
           minLength: 1
           type: string
-          description: Priority indicator for address usage (e....
+          description: "Priority indicator for address usage (e.g., billing, shipping)."
+          example: "1"
         city_code:
           maxLength: 20
           minLength: 1
           type: string
           description: Standardized city code.
         address_key:
-          maximum: 100
-          minimum: 0
           maxLength: 50
           minLength: 5
           type: string
           description: Unique business key for the address.
         address_id:
-          maximum: 100
-          minimum: 0
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier for the address record...
+          description: Unique identifier for the address record.
         address_input:
           maxLength: 255
           minLength: 1
           type: string
-          description: Raw input provided for address processin...
+          description: Raw input provided for address processing or validation.
         address_line1:
           maxLength: 100
           minLength: 1
           type: string
-          description: "Primary address line (Street, PO Box, et..."
+          description: "Primary address line (Street, PO Box, etc)."
         address_line2:
           maxLength: 100
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line3:
           maxLength: 100
           type: string
@@ -83,8 +83,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AddressTypes"
-        authorizations:
-          $ref: "#/components/schemas/Authorizations"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
         city:
           maxLength: 100
           minLength: 1
@@ -93,7 +93,7 @@ components:
         city_subdivision:
           maxLength: 100
           type: string
-          description: "Subdivision within the city (e.g., neigh..."
+          description: "Subdivision within the city (e.g., neighborhood, district)."
         country:
           maxLength: 100
           minLength: 2
@@ -129,21 +129,18 @@ components:
           description: "Extended postal code (e.g., ZIP+4)."
         preferred_indicator:
           type: boolean
-          description: Flag indicating if this address is the p...
+          description: Flag indicating if this address is the preferred address.
+          example: false
         region:
           maxLength: 50
           type: string
-          description: "Administrative region (e.g., province, s..."
+          description: "Administrative region (e.g., province, state)."
         state:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-        locale:
-          maxLength: 10
-          minLength: 2
-          type: string
-          description: Locale code associated with this address...
-      description: address.desc
+      description: Address represents a physical or mailing location associated with
+        a party or warehouse.
     AddressLocale:
       type: object
       properties:
@@ -152,10 +149,10 @@ components:
           description: Business key for the address locale.
         address_locale_id:
           type: string
-          description: Unique identifier for the address locale...
+          description: Unique identifier for the address locale.
         region_code:
           type: string
-          description: Code representing the region for the loc...
+          description: Code representing the region for the locale.
         region_name:
           type: string
           description: Name of the region for the locale.
@@ -163,7 +160,7 @@ components:
           $ref: "#/components/schemas/Codes"
         location_type:
           $ref: "#/components/schemas/LocationTypes"
-      description: address.locale.desc
+      description: External system address locale including region and location type.
     AddressLocales:
       type: array
       items:
@@ -180,6 +177,8 @@ components:
       - RESIDENCE
       - WORK
       - BUSINESS
+      - OFFICE
+      - PO_BOX
       - LEGAL
       - SERVICE
       - DEALER
@@ -205,28 +204,62 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Address"
-    Authorization:
+    AuthorizationLevel:
       type: object
       properties:
         update_date_time:
           type: string
-          description: Timestamp of the last update to this aut...
+          description: Timestamp of the last update to this authorization
           format: date-time
+          example: 2026-05-06T01:57:11Z
         authorized_indicator:
           type: boolean
-          description: Indicates whether the authorization is c...
-        authorization_key:
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
           type: string
-          description: Business key uniquely identifying the au...
-      description: authorization.desc
-    Authorizations:
+          description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
       type: array
       items:
-        $ref: "#/components/schemas/Authorization"
+        $ref: "#/components/schemas/AuthorizationLevel"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     Identifier:
       type: object
       properties:
@@ -245,16 +278,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -324,8 +357,7 @@ components:
           maxLength: 20
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: "Standardized code for the county. Pattern: ^[a-zA-Z0-9_]+$\
-            \ (Alphanumeric and underscores allowed)"
+          description: Standardized code for the county.
         position_codes:
           maxItems: 255
           minItems: 1
@@ -333,7 +365,7 @@ components:
           type: array
           items:
             type: string
-      description: position.desc
+      description: "position meta-data that includes postal code, and lat/long"
     Warehouse:
       type: object
       properties:
@@ -342,7 +374,7 @@ components:
           description: Unique identifier for the warehouse.
         warehouse_key:
           type: string
-          description: Business key used for external integrati...
+          description: Business key used for external integrations or references.
         warehouse_code:
           type: string
           description: Code of the warehouse.
@@ -351,7 +383,8 @@ components:
           description: Descriptive name of the warehouse.
         party_id:
           type: string
-          description: Identifier of the party (organization or...
+          description: Identifier of the party (organization or individual) that owns
+            or manages the warehouse.
         identifiers:
           $ref: "#/components/schemas/Identifiers"
         warehouse_types:
@@ -370,7 +403,8 @@ components:
             type: string
         addresses:
           $ref: "#/components/schemas/Addresses"
-      description: warehouse.desc
+      description: Warehouse represents a physical or virtual storage location for
+        inventory and assets.
     WarehouseTypes:
       type: string
       description: types of warehouses.

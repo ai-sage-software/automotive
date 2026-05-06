@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - Shipment
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,15 +9,18 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
@@ -27,9 +30,9 @@ components:
         address_reference_key:
           type: string
           description: A unique key for the address reference.
-        address_reference_value:
+        address_reference_id:
           type: string
-          description: The unique value of the address referenc...
+          description: The unique value of the address reference.
         address_types:
           maxItems: 255
           minItems: 1
@@ -39,19 +42,19 @@ components:
             $ref: "#/components/schemas/AddressTypes"
         address_line1:
           type: string
-          description: "Primary address line (Street, PO Box, et..."
+          description: "Primary address line (Street, PO Box, etc)."
         address_line2:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line3:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line4:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         address_line5:
           type: string
-          description: "Secondary address line (Suite, Apt, etc)..."
+          description: "Secondary address line (Suite, Apt, etc)."
         city:
           type: string
           description: Name of the city.
@@ -74,7 +77,8 @@ components:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-      description: address.reference.desc
+      description: "A reference to an address, including its unique key and a list\
+        \ of its usage types."
     AddressReferences:
       type: array
       items:
@@ -91,6 +95,8 @@ components:
       - RESIDENCE
       - WORK
       - BUSINESS
+      - OFFICE
+      - PO_BOX
       - LEGAL
       - SERVICE
       - DEALER
@@ -112,10 +118,125 @@ components:
       - PRODUCT
       - ARCHIVE
       - OTHER
+    AuthorizationLevel:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-05-05T17:36:18Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuthorizationLevel"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
+    CommunicationChannel:
+      type: object
+      properties:
+        communication_channel_key:
+          type: string
+          description: The unique key for the communication channel record.
+        communication_channel_id:
+          type: string
+          description: The unique ID for the communication channel.
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        value:
+          type: string
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
+        value_extension:
+          type: string
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
+        label:
+          type: string
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
+        locale:
+          $ref: "#/components/schemas/Locale"
+        preferred_indicator:
+          type: boolean
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
+          example: false
+        preferences:
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+      description: "Represents a communication channel, such as an email address or\
+        \ phone number, with associated preferences and authorizations."
+    CommunicationChannelTypes:
+      type: string
+      description: types of communication channels.
+      enum:
+      - PHONE
+      - CELL
+      - SMS
+      - VOICE
+      - VIDEO
+      - EMAIL
+      - APP
+      - SOCIAL_MEDIA
+      - URL
+      - BROADCAST
+      - DIRECT_MAIL
+      - PDA
+      - OTHER
+    CommunicationChannels:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationChannel"
+    CurrencyCode:
+      type: string
+      description: The three-letter ISO 4217 currency code used for financial transactions.
     DaysOfWeekTypes:
       type: string
       description: types of days of weeks.
@@ -127,68 +248,6 @@ components:
       - THURS
       - FRI
       - SAT
-    DurationUOMTypes:
-      type: string
-      description: types of duration u o ms.
-      enum:
-      - MINUTES
-      - HOURS
-      - DAYS
-      - DAY_OF_MONTH
-      - WEEKS
-      - BI_WEEKS
-      - SEMI_MONTHS
-      - MONTHS
-      - QUARTERS
-      - SEMI_YEARS
-      - YEARS
-      - MULTI_YEARS
-      - CUSTOM
-      - OCCURRENCE
-      - UNLIMITED
-      - NONE
-      - OTHER
-    EffectivePeriod:
-      type: object
-      properties:
-        effective_period_key:
-          type: string
-          description: Unique key identifying the effective per...
-        active_indicator:
-          type: boolean
-          description: Indicator if the period is currently act...
-        exclusive_indicator:
-          type: boolean
-          description: Indicator if the period is exclusive
-        start_date_time:
-          type: string
-          description: Start date and time of the effective per...
-          format: date-time
-        complete_date_time:
-          type: string
-          description: Completion date and time of the effectiv...
-          format: date-time
-        duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
-        duration_value:
-          type: string
-          description: Value of the duration
-        recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
-        recur_count:
-          type: string
-          description: Count of recurrence
-        recur_values:
-          $ref: "#/components/schemas/Codes"
-        recur_criteria:
-          type: string
-          description: Criteria defining recurrence
-        recur_indicator:
-          type: boolean
-          description: Indicator if recurrence is enabled
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
-      description: effective.period.desc
     Identifier:
       type: object
       properties:
@@ -207,40 +266,48 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
+      description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
     InvoiceReference:
       type: object
       properties:
         invoice_reference_id:
           type: string
-          description: Unique identifier value for the invoice ...
+          description: Unique identifier value for the invoice reference record.
         invoice_reference_key:
           type: string
-          description: Unique key value for the invoice referen...
+          description: Unique key value for the invoice reference record.
         invoice_key:
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced Invoice aggregate.
         context:
           type: string
-          description: "Context or domain of the invoice (e.g., ..."
+          description: "Context or domain of the invoice (e.g., 'ACCOUNTS_PAYABLE',\
+            \ 'SALES_INVOICE')."
         identifier:
           $ref: "#/components/schemas/Identifier"
         occurrence_date_time:
           type: string
-          description: The date and time the invoice was create...
+          description: The date and time the invoice was created or linked to this
+            record.
           format: date-time
+          example: 2026-05-05T17:36:18Z
         invoice_type:
           $ref: "#/components/schemas/InvoiceTypes"
-      description: invoice.reference.desc
+      description: "Reference to an Invoice Aggregate Root, representing a financial\
+        \ obligation."
     InvoiceReferences:
       type: array
       items:
@@ -250,6 +317,9 @@ components:
       description: types of invoices.
       enum:
       - INVOICE
+      - SERVICE_INVOICE
+      - PART_INVOICE
+      - LOAN
       - STANDARD
       - CREDIT_MEMO
       - DEBIT_MEMO
@@ -265,28 +335,141 @@ components:
       - STATEMENT
       - ADVANCE
       - FINAL
+      - REPAIR
+      - FUEL
+      - RENTAL
+      - SUBSCRIPTION
     List:
       type: array
       items:
         type: string
+    Locale:
+      type: object
+      properties:
+        locale_key:
+          type: string
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
+        locale_name:
+          type: string
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
+        description:
+          type: string
+          description: A detailed description of the alert message.
+        language_code:
+          type: string
+          description: ISO 639-1 two-letter language code.
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        currency_symbol:
+          type: string
+          description: The graphical symbol used for the currency.
+        timezone:
+          type: string
+          description: The IANA Time Zone database ID for regional time calculations.
+        number_format:
+          type: string
+          description: Regional pattern for decimal and thousands separators.
+        location_code:
+          type: string
+          description: The code of the inventory location or branch from which this
+            part is sourced.
+          example: WH001
+      description: not nullable
+    PartReference:
+      type: object
+      properties:
+        part_reference_id:
+          type: string
+          description: Unique identifier value
+        part_reference_key:
+          type: string
+          description: Unique identifier value
+        name:
+          type: string
+          description: Product Name.
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        part_key:
+          type: string
+          description: Unique identifier value
+        part_master_key:
+          type: string
+          description: Unique identifier value
+        manufacturer:
+          type: string
+          description: Context or domain of the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        product_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductTypes"
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-05-05T17:36:18Z
+        unit_of_measure:
+          $ref: "#/components/schemas/UnitOfMeasure"
+      description: External system identifier
+    PartReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartReference"
     PartyReference:
       type: object
       properties:
         party_reference_id:
           type: string
-          description: Unique identifier value
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
         party_reference_key:
           type: string
-          description: Unique identifier value
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
         party_key:
           type: string
-          description: Unique identifier value
-        party_reference_type:
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        party_name:
           type: string
-          description: Unique identifier value
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        individual_name:
+          $ref: "#/components/schemas/PersonName"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
+        authorization_code:
+          type: string
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
+        source_system_code:
+          type: string
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
         context:
           type: string
-          description: Context or domain of the identifier
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
+        account_number:
+          type: string
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
         party_relationship_types:
           maxItems: 255
           minItems: 1
@@ -294,19 +477,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PartyRelationshipTypes"
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        rule_codes:
-          $ref: "#/components/schemas/Codes"
-        party:
+        snapshot_detail:
           $ref: "#/components/schemas/Identifier"
+        address_references:
+          $ref: "#/components/schemas/AddressReferences"
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
         occurrence_date_time:
           type: string
-          description: The date and time the event occurred.
+          description: Timestamp indicating when this specific reference was established.
           format: date-time
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-      description: party.reference.desc
+          example: 2026-05-05T17:36:18Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
+      description: External system identifier
     PartyReferences:
       type: array
       items:
@@ -325,6 +512,7 @@ components:
       - DEALERSHIP
       - THIRD_PARTY
       - VENDOR
+      - MERCHANT
       - SUPPLIER
       - PARTNER_ORGANIZATION
       - AFFILIATE
@@ -345,6 +533,11 @@ components:
       - JOINT_VENTURE
       - AUDITOR
       - ACTOR
+      - OEM
+      - PRIMARY_OEM
+      - DRIVER
+      - LIEN_HOLDER
+      - PROVIDER
       - ACCOUNTABLE
       - RESPONSIBLE
       - CONSULT
@@ -353,6 +546,22 @@ components:
       - PART_OF
       - MEMBERSHIP
       - COMPOSED_IN
+      - GEN_MGR
+      - SALES_MGR
+      - CLOSING_MGR
+      - FI_MGR
+      - CONCIERGE_MGR
+      - SERVICE_MGR
+      - SALES_ASSOC
+      - BUSINESS_DEVELOPMENT
+      - SPECIALIST
+      - ADVISOR
+      - SERVICE_TECH
+      - CONCIERGE_STAFF
+      - VALET
+      - STAFF
+      - FINANCE
+      - PASSENGER
       - CUSTOMER
       - CO_SIGNER
       - SPOUSE
@@ -381,6 +590,8 @@ components:
       - TRUSTEE_PERSON
       - REFERENCE_PERSONAL
       - REFERENCE_PROFESSIONAL
+      - APPLICANT
+      - CO_APPLICANT
       - AGENT
       - BENEFICIARY
       - GUARANTOR
@@ -412,6 +623,122 @@ components:
       - TRANSACTION_TO
       - REMOVE
       - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
+    PersonName:
+      type: object
+      properties:
+        alias:
+          type: string
+          description: Alternative or informal name or role.
+          example: AJ
+        family_name:
+          type: string
+          description: Family or last name.
+          example: Smith
+        full_name:
+          type: string
+          description: Complete name as one string.
+          example: Alice Jane Smith
+        given_name:
+          type: string
+          description: First or given name.
+          example: Alice
+        identifiers_href:
+          type: string
+          description: Reference to external identifiers.
+          format: href
+          example: /identifiers/12345
+        maiden_name:
+          type: string
+          description: Previous family name before marriage.
+          example: Johnson
+        middle_name:
+          type: string
+          description: Middle name(s).
+          example: Jane
+        name_suffix:
+          type: string
+          description: "Suffix such as Jr., Sr., III."
+          example: Jr.
+        party_key:
+          type: string
+          description: External party key.
+          example: PARTY-KEY-123
+        person_key:
+          type: string
+          description: External person key.
+          example: PERSON-KEY-789
+        person_name_key:
+          type: string
+          description: Unique person name key.
+          example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
+        preferred_name:
+          type: string
+          description: Preferred name used in informal situations.
+          example: Ali
+        salutation:
+          type: string
+          description: "Salutation or title such as Mr., Ms., Dr."
+          example: Dr.
+        honorific_prefix:
+          type: string
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
+          example: Dr.
+        honorific_suffix:
+          type: string
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
+          example: Jr.
+        locale:
+          type: string
+          description: Locale or language region associated with the person.
+          example: en-US
+        phonetic_family_name:
+          type: string
+          description: Phonetic representation of the family name.
+          example: FAM-nee
+        phonetic_given_name:
+          type: string
+          description: Phonetic representation of the given name.
+          example: GA-vin
+        phonetic_middle_name:
+          type: string
+          description: Phonetic representation of the middle name.
+          example: MI-chal
+        nationality:
+          type: string
+          description: Nationality of the person.
+          example: Canadian
+      description: a Name for a person
     Position:
       type: object
       properties:
@@ -447,8 +774,7 @@ components:
           maxLength: 20
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
-          description: "Standardized code for the county. Pattern: ^[a-zA-Z0-9_]+$\
-            \ (Alphanumeric and underscores allowed)"
+          description: Standardized code for the county.
         position_codes:
           maxItems: 255
           minItems: 1
@@ -456,17 +782,41 @@ components:
           type: array
           items:
             type: string
-      description: position.desc
+      description: "position meta-data that includes postal code, and lat/long"
+    ProductTypes:
+      type: string
+      description: types of products.
+      enum:
+      - VEHICLE
+      - INFORMATION
+      - DURABLE_GOODS
+      - SOFTWARE
+      - APP
+      - INSURANCE
+      - FINANCE
+      - SERVICE
+      - PART
+      - ACCESSORY
+      - F_N_I_PRODUCT
+      - SERVICE_PACKAGE
+      - DEALER_PRODUCT
+      - EQUIPMENT
+      - PACKAGE_GOODS
+      - SERVICE_PLAN
+      - WARRANTY_PLAN
+      - SUBSCRIPTION
+      - OTHER
     Shipment:
       type: object
       properties:
         shipment_id:
           type: string
-          description: Unique identifier for this specific part...
+          description: Unique identifier for this specific parts invoice line item.
           example: pii_abc123xyz
         shipment_key:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         shipping_carriers:
           $ref: "#/components/schemas/PartyReferences"
@@ -479,7 +829,7 @@ components:
           description: Full name of the country.
         tracking_number:
           type: string
-          description: Tracking number provided by the shipping...
+          description: Tracking number provided by the shipping carrier.
           example: 1Z999AA99999999999
         packing_slip_number:
           type: string
@@ -487,7 +837,7 @@ components:
           example: PS-2025-54321
         bill_of_lading_number:
           type: string
-          description: The Bill of Lading number for freight sh...
+          description: The Bill of Lading number for freight shipments.
           example: BOL-XYZ-9876
         reference_key:
           type: string
@@ -508,10 +858,13 @@ components:
             $ref: "#/components/schemas/Identifier"
         invoice_number:
           type: string
-          description: The unique identifier of the parent invo...
+          description: The unique identifier of the parent invoice to which this shipment
+            belongs.
           example: inv_789def456
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
+        part_references:
+          $ref: "#/components/schemas/PartReferences"
         shipment_status_type:
           $ref: "#/components/schemas/ShipmentStateTypes"
         shipping_method_type:
@@ -525,17 +878,20 @@ components:
           $ref: "#/components/schemas/AddressReferences"
         shipment_events:
           $ref: "#/components/schemas/ShipmentEvents"
-      description: shipment.desc
+        tracking_information:
+          $ref: "#/components/schemas/TrackingInformations"
+      description: A single line item for a Parts Invoice.
     ShipmentEvent:
       type: object
       properties:
         shipment_event_id:
           type: string
-          description: Unique identifier for this specific part...
+          description: Unique identifier for this specific parts invoice line item.
           example: pii_abc123xyz
         shipment_event_key:
           type: string
-          description: A unique key for the parts invoice line ...
+          description: "A unique key for the parts invoice line item, often used for\
+            \ external systems integration."
           example: PARTINVITEM-2023-001-A
         location:
           $ref: "#/components/schemas/Position"
@@ -544,12 +900,14 @@ components:
           description: A description of the event.
         occurrence_date_time:
           type: string
-          description: The date and time the event physically o...
+          description: The date and time the event physically occurred.
           format: date-time
+          example: 2026-05-05T17:36:18Z
         effective_date_time:
           type: string
-          description: The date and time the event's status or ...
+          description: The date and time the event's status or state becomes effective.
           format: date-time
+          example: 2026-05-05T17:36:18Z
         shipment_state_types:
           maxItems: 255
           minItems: 1
@@ -618,31 +976,36 @@ components:
       properties:
         time_slot_id:
           type: string
-          description: Unique identifier for the time slot reco...
+          description: Technical unique identifier (GUID) for the time slot record.
+          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
           type: string
-          description: Unique business key for the time slot.
+          description: Natural business key for the time slot within its specific
+            context.
+          example: TS-MON-MORNING-SHIFT
         time_slot_source:
           type: string
-          description: Unique identifier for the time slot sour...
+          description: The originating system or calendar providing this availability
+            data.
           example: GOOGLE_CALENDAR
-        end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        end_time:
-          type: string
-          description: End time in HH:mm format.
-          format: date-time
-        recurring_indicator:
-          type: boolean
-          description: Indicates if the time slot is recurring.
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: Start time in HH:mm format.
+          description: The local start time in 24-hour ISO 8601 format.
           format: date-time
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local end time in 24-hour ISO 8601 format.
+          format: date-time
+        recurring_indicator:
+          type: boolean
+          description: Indicates if this time slot is part of a repeating pattern.
+          example: true
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -651,14 +1014,13 @@ components:
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
-      description: time.slot.desc
+          $ref: "#/components/schemas/Codes"
+      description: "Defines a specific window of time, often within a recurring schedule,\
+        \ used for service availability or appointment booking."
+    TimeSlots:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeSlot"
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.
@@ -669,9 +1031,71 @@ components:
       - BETWEEN
       - BLOCK
       - UNKNOWN
-    UOMQuantityCategoryTypes:
+    TrackingInformation:
+      type: object
+      properties:
+        tracking_information_key:
+          type: string
+          description: Unique key identifying this specific tracking information entry.
+          example: track_info_abc123
+        tracking_information_id:
+          type: string
+          description: "Identifier for this specific tracking information entry, often\
+            \ an external ID from the carrier."
+          example: TRACK-UPDATE-20250812-001
+        tracking_number:
+          type: string
+          description: The unique tracking number provided by the carrier.
+          example: 1Z9999999999999999
+        tracking_date_time:
+          type: string
+          description: Date and time when this specific tracking update was recorded.
+          format: date-time
+          example: 2026-05-05T17:36:18Z
+        tracking_status:
+          $ref: "#/components/schemas/ShipmentStateTypes"
+        status_description:
+          type: string
+          description: A human-readable description of the tracking status.
+          example: Package is currently in transit to destination facility.
+        current_location:
+          $ref: "#/components/schemas/Position"
+        shipment_events:
+          $ref: "#/components/schemas/ShipmentEvents"
+        notes:
+          type: string
+          description: Any additional notes related to this specific tracking update.
+          example: Weather delay in Kansas City.
+      description: Details capturing tracking milestones and estimated delivery information
+        for a shipment related to a receipt.
+    TrackingInformations:
+      type: array
+      items:
+        $ref: "#/components/schemas/TrackingInformation"
+    UnitOfMeasure:
+      type: object
+      properties:
+        unit_of_measure_key:
+          type: string
+          description: Unit of Measure Value
+        unit_name:
+          type: string
+          description: Unit of Measure
+        uom_value:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Unit of Measure Value
+        uom_quantity_category_type:
+          $ref: "#/components/schemas/UomQuantityCategoryTypes"
+      description: value price with unit of measure
+    UnitOfMeasures:
+      type: array
+      items:
+        $ref: "#/components/schemas/UnitOfMeasure"
+    UomQuantityCategoryTypes:
       type: string
-      description: types of u o m quantity categorys.
+      description: types of uom quantity categorys.
       enum:
       - COUNT
       - WEIGHT
@@ -710,24 +1134,3 @@ components:
       - EXPIRATION_DATE
       - MIN_PAYMENT_PERCENT
       - MIN_PAYMENT_AMOUNT
-    UnitOfMeasure:
-      type: object
-      properties:
-        unit_of_measure_key:
-          type: string
-          description: Unit of Measure Value
-        unit_name:
-          type: string
-          description: Unit of Measure
-        uom_value:
-          maxLength: 100
-          minLength: 1
-          type: string
-          description: Unit of Measure Value
-        uom_quantity_category_type:
-          $ref: "#/components/schemas/UOMQuantityCategoryTypes"
-      description: unit.of.measure.desc
-    UnitOfMeasures:
-      type: array
-      items:
-        $ref: "#/components/schemas/UnitOfMeasure"

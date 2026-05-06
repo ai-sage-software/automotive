@@ -1,17 +1,26 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
-  description: A standardized interface for Automotive Retail ...
+  title: Automotive Retail Systems API - PayrollCycle
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: //v1_0_0
+- url: https://api.starstandard.org/v1/v1_0_0
+  description: Production server
+- url: https://sandbox.starstandard.org/v1/v1_0_0
+  description: Sandbox for testing
 security:
 - industry-oauth:
   - standard:read
@@ -19,78 +28,34 @@ security:
 - {}
 tags:
 - name: PayrollCycle
-  description: Operations related to PayrollCycle
-- name: Identifier
-  description: Operations related to Identifier
-- name: EffectivePeriod
-  description: Operations related to EffectivePeriod
-- name: TimeSlot
-  description: Operations related to TimeSlot
-- name: Default
-  description: Operations related to Default
+  description: PayrollCycle Controlled Root
 paths:
   /payroll-cycles:
     get:
       tags:
-      - PayrollCycle
-      summary: Retrieve a list of PayrollCycle entities.
-      description: list PayrollCycle By
-      operationId: listPayrollCycle
+      - PayrollCycles
+      summary: Returns a paginated list of payroll cycle
+      description: a list of PayrollCycle
+      operationId: listPayrollCycles
       parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: A list of PayrollCycle entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PayrollCycle"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: true
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
+          $ref: "#/components/responses/PayrollCycleCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -99,18 +64,35 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     post:
       tags:
-      - PayrollCycle
-      summary: Create a new PayrollCycle entity.
-      description: Create PayrollCycle
+      - PayrollCycles
+      summary: create payroll cycle
+      description: create PayrollCycle
       operationId: createPayrollCycle
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
       requestBody:
-        description: PayrollCycle data to create the new resource.
         content:
           application/json:
             schema:
@@ -118,54 +100,52 @@ paths:
         required: true
       responses:
         "201":
-          description: PayrollCycle created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /payroll-cycles/KEY78S
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PayrollCycle"
+          $ref: "#/components/responses/PayrollCycleCreatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /payroll-cycles/{payrollCycleKey}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /payroll-cycles/{payroll-cycle-key}:
     get:
       tags:
-      - PayrollCycle
-      summary: Retrieve a specific PayrollCycle entity.
-      description: "Standard GET operation for /payroll-cycles/{payrollCycleKey}"
-      operationId: getPayrollCycleById
+      - PayrollCycles
+      summary: Retrieve a single item scoped by a key PayrollCycle entities.
+      operationId: getPayrollCycleByKey
       parameters:
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PayrollCycleKey"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: The requested PayrollCycle entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PayrollCycleResponse"
+          $ref: "#/components/responses/PayrollCycleSingleResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -174,43 +154,44 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     put:
       tags:
-      - PayrollCycle
-      summary: Replace a PayrollCycle entity.
-      description: replace PayrollCycle
-      operationId: replacePayrollCycle
+      - PayrollCycles
+      summary: Replace values in a single item scoped by a key PayrollCycle entities.
+      operationId: replacePayrollCycleByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PayrollCycleKey"
       requestBody:
-        description: Full entity data to replace the existing resource.
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PayrollCycle"
+              $ref: "#/components/schemas/PayrollCycleUpdate"
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PayrollCycle"
+          $ref: "#/components/responses/PayrollCycleUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -223,21 +204,39 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     delete:
       tags:
-      - PayrollCycle
-      summary: Delete a PayrollCycle entity
-      description: Marks the PayrollCycle entity as inactive or re...
-      operationId: deletePayrollCycleEntity
+      - PayrollCycles
+      description: delete a PayrollCycle
+      operationId: deletePayrollCycle
       parameters:
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/ReasonQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PayrollCycleKey"
       responses:
+        "200":
+          $ref: "#/components/responses/PayrollCycleSingleResponse"
         "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
+          $ref: "#/components/responses/NoContentSuccess"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
@@ -246,24 +245,35 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "409":
           $ref: "#/components/responses/ConflictError"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
     patch:
       tags:
-      - PayrollCycle
-      summary: Partially update a PayrollCycle entity.
-      description: Partially update a PayrollCycle
-      operationId: updatePartialPayrollCycle
+      - PayrollCycles
+      summary: Update a single item scoped by a key PayrollCycle
+      description: update a single item
+      operationId: updatePayrollCycleByKey
       parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
       - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IdempotencyKeyHeader"
+      - $ref: "#/components/parameters/IfMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PayrollCycleKey"
       requestBody:
-        description: Included Fields to be updated will be modified.
         content:
           application/merge-patch+json:
             schema:
@@ -271,18 +281,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PayrollCycle"
+          $ref: "#/components/responses/PayrollCycleUpdatedResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -295,1007 +294,43 @@ paths:
           $ref: "#/components/responses/ConflictError"
         "412":
           $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the specific PayrollCycle.
-      required: true
-      schema:
-        type: string
-        example: KEY78m
-  /payroll-cycles/{payrollCycleKey}/identifiers:
-    get:
-      tags:
-      - Identifier
-      summary: Retrieve a list of Identifier entities scoped b...
-      description: list Identifier By PayrollCycleKey
-      operationId: listIdentifierByPayrollCycleKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of Identifier entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Identifier"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    post:
-      tags:
-      - Identifier
-      summary: Create a new Identifier entity.
-      description: Create Identifier
-      operationId: createIdentifier
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Identifier data to create the new resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/IdentifierCreate"
-        required: true
-      responses:
-        "201":
-          description: Identifier created successfully.
-          headers:
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/payroll-cycles{payrollCycleKey}identifiers/KEY78SU"
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}:
-    get:
-      tags:
-      - Identifier
-      summary: Retrieve a specific Identifier entity.
-      description: "Standard GET operation for /payroll-cycles/{payrollCycleKey}/identifiers/{identifierKey}"
-      operationId: getIdentifierById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested Identifier entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    put:
-      tags:
-      - Identifier
-      summary: Replace a Identifier entity.
-      description: replace Identifier
-      operationId: replaceIdentifier
-      parameters:
-      - name: If-Match
-        in: header
-        description: The ETag of the resource to be replaced.
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Full entity data to replace the existing resource.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Identifier"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the replaced resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    delete:
-      tags:
-      - Identifier
-      summary: Delete a Identifier entity
-      description: Marks the Identifier entity as inactive or remo...
-      operationId: deleteIdentifierEntity
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "204":
-          description: Entity successfully deleted (or deactivated).
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    patch:
-      tags:
-      - Identifier
-      summary: Partially update a Identifier entity.
-      description: Partially update a Identifier
-      operationId: updatePartialIdentifier
-      parameters:
-      - name: If-Match
-        in: header
-        description: ETag of the resource being updated. update=succ...
-        required: true
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      requestBody:
-        description: Included Fields to be updated will be modified.
-        content:
-          application/merge-patch+json:
-            schema:
-              $ref: "#/components/schemas/IdentifierUpdate"
-        required: true
-      responses:
-        "200":
-          description: Entity updated successfully. Returns the update...
-          headers:
-            ETag:
-              description: The new ETag of the updated resource.
-              schema:
-                type: string
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Identifier"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: identifierKey
-      in: path
-      description: The unique identifier for the specific Identifier.
-      required: true
-      schema:
-        type: string
-        example: KEY78m1
-  /payroll-cycles/{payrollCycleKey}/effective-periods:
-    get:
-      tags:
-      - EffectivePeriod
-      summary: Retrieve a list of EffectivePeriod entities sco...
-      description: list EffectivePeriod By PayrollCycleKey
-      operationId: listEffectivePeriodByPayrollCycleKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of EffectivePeriod entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/EffectivePeriod"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: false
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /payroll-cycles/{payrollCycleKey}/effective-periods/{effectivePeriodKey}:
-    get:
-      tags:
-      - EffectivePeriod
-      summary: Retrieve a specific EffectivePeriod entity.
-      description: "Standard GET operation for /payroll-cycles/{payrollCycleKey}/effective-periods/{effectivePeriodKey}"
-      operationId: getEffectivePeriodById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested EffectivePeriod entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EffectivePeriod"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: effectivePeriodKey
-      in: path
-      description: The unique identifier for the specific EffectivePeriod.
-      required: true
-      schema:
-        type: string
-        example: KEY78m1x
-  /payroll-cycles/{payrollCycleKey}/time-slots:
-    get:
-      tags:
-      - TimeSlot
-      summary: Retrieve a list of TimeSlot entities scoped by ...
-      description: list TimeSlot By PayrollCycleKey
-      operationId: listTimeSlotByPayrollCycleKey
-      parameters:
-      - name: sort
-        in: query
-        description: Sort Order of Result
-        schema:
-          type: string
-      - name: filter
-        in: query
-        description: Filter Result
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum number of entities to return.
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          default: 50
-      - name: cursor
-        in: query
-        description: starting point for next set of results
-        schema:
-          type: string
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: A list of TimeSlot entities.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - data
-                - has_more
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/TimeSlot"
-                  next_cursor:
-                    type: string
-                    description: Opaque cursor for the next page. Null if no more
-                      results.
-                  has_more:
-                    type: boolean
-                    description: Whether additional results exist beyond this page.
-                    example: true
-                  total_count:
-                    type: integer
-                    description: "Total entities matching the query (optional, may\
-                      \ be expensive)."
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-  /payroll-cycles/{payrollCycleKey}/time-slots/{timeSlotKey}:
-    get:
-      tags:
-      - TimeSlot
-      summary: Retrieve a specific TimeSlot entity.
-      description: "Standard GET operation for /payroll-cycles/{payrollCycleKey}/time-slots/{timeSlotKey}"
-      operationId: getTimeSlotById
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: The requested TimeSlot entity.
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TimeSlot"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-    parameters:
-    - name: payrollCycleKey
-      in: path
-      description: The unique identifier for the parent resource.
-      required: true
-      schema:
-        type: string
-    - name: timeSlotKey
-      in: path
-      description: The unique identifier for the specific TimeSlot.
-      required: true
-      schema:
-        type: string
-        example: KEY78m1xv
-  /payroll-cycles/health:
-    get:
-      tags:
-      - Default
-      summary: Health Check
-      description: Public endpoint to verify service availability.
-      operationId: getPayrollCycleHealth
-      parameters:
-      - $ref: "#/components/parameters/StandardsVersionHeader"
-      responses:
-        "200":
-          description: Service is healthy
-          headers:
-            standards-version:
-              $ref: "#/components/headers/StandardsVersionResponse"
-          content:
-            application/json:
-              schema:
-                required:
-                - status
-                - version
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: UP
-                    enum:
-                    - UP
-                    - DOWN
-                    - MAINTENANCE
-                  version:
-                    type: string
-                    description: The version of the ontology implemented by this service.
-                    example: 1.0.0
-                  timestamp:
-                    type: string
-                    description: Server time in ISO-8601 format.
-                    format: date-time
-                    example: 2025-12-21T23:00:00Z
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
       security:
-      - {}
-  /payroll-cycles/batch:
-    post:
-      tags:
-      - Default
-      summary: Bulk create payroll-cycles
-      description: Bulk Create of PayrollCycle
-      operationId: createPayrollCycleBatch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                items:
-                  maxItems: 100
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/PayrollCycleCreate"
-      responses:
-        "200":
-          description: Batch processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /payroll-cycles/batch/3911349890816107172
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  succeeded:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/PayrollCycle"
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        index:
-                          type: integer
-                          format: int32
-                        error:
-                          $ref: "#/components/schemas/ErrorDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-  /payroll-cycles/exports:
-    post:
-      tags:
-      - Default
-      summary: Initiate a bulk PayrollCycle export
-      description: Standard POST operation for /payroll-cycles/exports
-      operationId: initiatePayrollCycleExport
-      parameters:
-      - name: Idempotency-Key
-        in: header
-        description: Unique string to prevent duplicate export jobs for the same request
-        required: false
-        schema:
-          type: string
-          format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                format:
-                  type: string
-                  example: ' bb9d0cc1'
-                  default: PARQUET
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                  - TOON
-                date_range:
-                  type: object
-                  properties:
-                    start:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                    end:
-                      type: string
-                      format: date
-                      example: 2026-01-14
-                data_contract_key:
-                  type: string
-                  description: "The identifier of the specific data contract/projection\
-                    \ (e.g., 'customer_contact_v1')"
-                  example: contact_details_only
-                compression:
-                  type: string
-                  description: "The compression algorithm to apply. ZSTD is recommended\
-                    \ for \nbalancing high compression ratios with blazing decompression\
-                    \ speeds."
-                  example: ZSTD
-                  default: ZSTD
-                  enum:
-                  - SNAPPY
-                  - GZIP
-                  - LZO
-                  - ZSTD
-                compression_level:
-                  maximum: 22
-                  minimum: 1
-                  type: string
-                  description: "Tunable intensity for ZSTD. Use lower levels (1-3)\
-                    \ for speed, higher levels (19+) for expensive bandwidth scenarios."
-                  default: "3"
-                destination:
-                  type: object
-                  properties:
-                    retrieval_url:
-                      type: string
-                      description: The URL where the user intends to receive or pull
-                        the data
-                      format: uri
-                  description: Configuration for file retrieval
-                notification:
-                  type: object
-                  properties:
-                    webhook_url:
-                      type: string
-                      format: uri
-                      example: https://client-system.com/callbacks/exports
-                    signature_key:
-                      type: string
-                      description: A secret key used to sign the webhook payload for
-                        security
-                  description: "Optional: Callback configuration for completion alerts"
-                dry_run:
-                  type: boolean
-                  description: "If true, the system validates the request and returns\
-                    \ potential violations or metadata (like estimated size) without\
-                    \ starting the job."
-                  example: false
-                  default: false
-              example: PARQUET
-      responses:
-        "200":
-          description: "Dry run results: validation and cost estimation metadata."
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: /payroll-cycles/exports/3344775428972441827
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: VALIDATED
-                  estimated_metrics:
-                    type: object
-                    properties:
-                      record_count:
-                        type: integer
-                        format: int32
-                        example: 1250000
-                      estimated_uncompressed_gb:
-                        type: number
-                        example: 4.2
-                      estimated_compressed_gb:
-                        type: number
-                        description: "Prediction based on the chosen compression (e.g.,\
-                          \ ZSTD)"
-                        example: 0.85
-                      estimated_processing_time_ms:
-                        type: integer
-                        format: int32
-                        example: 45000
-                    description: Predicted impact of the export job
-                  validation_results:
-                    type: object
-                    properties:
-                      is_executable:
-                        type: boolean
-                        example: true
-                      warnings:
-                        type: array
-                        example:
-                        - "Large export detected: ensure destination storage exceeds\
-                          \ 1GB"
-                        items:
-                          type: string
-                      violations:
-                        type: array
-                        description: Business rule or data contract violations
-                        items:
-                          $ref: "#/components/schemas/ProblemDetail"
-                  suggested_optimizations:
-                    type: array
-                    description: Feedback for the agent to improve request efficiency
-                    items:
-                      type: string
-                      example: Switch to PARQUET for 30% faster processing of this
-                        specific data contract
-                description: "Metadata returned when dry_run is true, allowing agentic\
-                  \ pre-flight reasoning."
-        "202":
-          description: Export job successfully created and accepted.
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions.
-              schema:
-                type: string
-                example: "</exports/capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created export resource.
-              schema:
-                type: string
-                example: /accounting-periods/exports/2379845498403762952
-        "409":
-          description: "Conflict: Job with this Idempotency-Key already exists"
-        "422":
-          description: Unprocessable Entity - Business Rule Violation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-      callbacks:
-        onExportCompleted:
-          '{$request.body#/notification/webhook_url}':
-            post:
-              description: Sent when the export job reaches a terminal state (COMPLETED
-                or FAILED)
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      $ref: "#/components/schemas/ExportNotification"
-              responses:
-                "200":
-                  description: Webhook received
-  /payroll-cycles/exports/{exportId}:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+  /payroll-cycles/{payroll-cycle-key}/payment-transactions:
     get:
       tags:
-      - Default
-      summary: Get export status
-      description: Get Export Status of PayrollCycle
-      operationId: getPayrollCycleExportStatus
+      - PaymentTransactions
+      summary: Returns a paginated list of payment transaction
+      description: a list of PaymentTransaction
+      operationId: listPaymentTransactionsByPayroll-cycle-key
       parameters:
-      - name: exportId
-        in: path
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/FilterQuery"
+      - $ref: "#/components/parameters/LimitQuery"
+      - $ref: "#/components/parameters/OffsetQuery"
+      - $ref: "#/components/parameters/SortQuery"
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Current status and file URLs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExportJob"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/ServerError"
-  /payroll-cycles/{payrollCycleKey}/commands:
-    post:
-      tags:
-      - Default
-      summary: Execute a business workflow on PayrollCycle
-      description: Single entry point for all PayrollCycle state-changing intents.
-      operationId: executePayrollCycleCommand
-      parameters:
-      - name: payrollCycleKey
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Command intent and parameters
-        content:
-          application/json:
-            schema:
-              required:
-              - type
-              - method
-              - params
-              - id
-              type: object
-              properties:
-                type:
-                  type: string
-                  description: jsonrpc
-                  default: jsonrpc
-                jsonrpc:
-                  type: string
-                  example: "2.0"
-                  default: "2.0"
-                method:
-                  type: string
-                  description: star.order.update)
-                id:
-                  type: string
-                  description: "match the response with request. If omitted, Notification\
-                    \ the server will not respond."
-                version:
-                  type: string
-                  description: "2.0"
-                workflow_state:
-                  type: string
-                  description: "The intent of the command (e.g., CREATED, DELETED)"
-                  enum:
-                  - CREATED
-                  - DELETED
-                context:
-                  type: object
-                  additionalProperties: true
-                  description: context payload required for this specific command
-                    type
-                params:
-                  $ref: "#/components/schemas/PayrollCycle"
-      responses:
-        "200":
-          description: Commands processing complete
-          headers:
-            Link:
-              description: HATEOAS link to discover state-aware transitions and business
-                constraints.
-              schema:
-                type: string
-                example: "</capabilities{?state,role}>; rel=\"capabilities\""
-            Location:
-              description: The URI of the newly created resource.
-              schema:
-                type: string
-                example: "/payroll-cycles/{payrollCycleKey}/commands/3520486901745728976"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The execution status of the command
-                    example: SUCCESS
-                    enum:
-                    - SUCCESS
-                    - FAILED
-                    - PENDING
-                    - PROCESSING
-                    - VALIDATION_ERROR
-                    - PARTIAL_SUCCESS
-                    - REQUIRES_ACTION
-                    - MITIGATION_APPLIED
-                  message:
-                    type: string
-                    description: A human-readable summary or error detail
-                    example: "Invoice #c099e1af has been successfully cancelled."
-                  command_id:
-                    type: string
-                    description: The tracking ID for this specific command execution
-                    format: identifier
-                  code:
-                    type: string
-                    description: detailed code for workflow business processing
-                    example: eff0ed04
-                  retry_after:
-                    type: string
-                    description: "For PENDING or PROCESSING statuses, retry_after\
-                      \ (integer, seconds) "
-                  retryable:
-                    type: boolean
-                    description: "If true, the agent can attempt this command again\
-                      \ immediately"
-                    example: false
+          $ref: "#/components/responses/PaymentTransactionCollectionResponse"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -1304,376 +339,372 @@ paths:
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
-        "409":
-          $ref: "#/components/responses/ConflictError"
-        "412":
-          $ref: "#/components/responses/PreconditionFailedError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /payroll-cycles/{payrollCycleKey}/commands/{commandId}:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/PayrollCycleKey"
+  /payroll-cycles/{payroll-cycle-key}/payment-transactions/{payment-transaction-key}:
     get:
       tags:
-      - Default
-      summary: Poll PayrollCycle command status
-      description: Check the progress or result of a previously submitted command.
-      operationId: getPayrollCycleCommandStatus
+      - PaymentTransactions
+      summary: Retrieve a single item scoped by a key PaymentTransaction entities.
+      operationId: getPaymentTransactionByKey
       parameters:
-      - name: payrollCycleKey
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
-      - name: commandId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: string
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CacheControlHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/IfNoneMatchHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/PaymentTransactionKey"
+      - $ref: "#/components/parameters/PreferHeader"
+      - $ref: "#/components/parameters/PreferenceAppliedHeader"
       responses:
         "200":
-          description: Current status of the command
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  command_id:
-                    type: string
-                    description: The unique identifier for the command being tracked
-                    format: uuid
-                    readOnly: true
-                  status:
-                    type: string
-                    description: The current lifecycle state of the command
-                    enum:
-                    - PENDING
-                    - PROCESSING
-                    - SUCCESS
-                    - FAILED
-                    - REQUIRES_ACTION
-                  progress:
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                    description: Percentage of completion (0-100)
-                    format: int32
-                  message:
-                    type: string
-                    description: Status update or error message
-                  result:
-                    type: object
-                    additionalProperties: true
-                    description: The final output of the command (only populated on
-                      SUCCESS)
-                  errors:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/ErrorDetail"
+          $ref: "#/components/responses/PaymentTransactionSingleResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
         "404":
           $ref: "#/components/responses/NotFoundError"
+        "406":
+          $ref: "#/components/responses/NotAcceptableError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
         "500":
           $ref: "#/components/responses/ServerError"
-  /payroll-cycles/capabilities:
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+        "504":
+          $ref: "#/components/responses/GatewayTimeout"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
+    parameters:
+    - $ref: "#/components/parameters/PayrollCycleKey"
+  /payroll-cycle/health:
     get:
       tags:
-      - Default
-      summary: Discover PayrollCycle Capabilities
-      description: Standard GET operation for /payroll-cycles/capabilities
-      operationId: getPayrollCycleCapabilities
+      - Health
+      summary: Health Check
+      description: Returns the health status of the PayrollCycle root node.
+      operationId: healthPayrollCycle
       parameters:
-      - name: include
-        in: query
-        description: "Comma-separated list of sections to include (e.g., 'commands,exports,constraints')"
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - COMMANDS
-            - EXPORTS
-            - CONSTRAINTS
-      - name: role
-        in: query
-        description: Filter capabilities by the agent's current role(s)
-        schema:
-          type: string
-          example: ACCOUNTANT
-      - name: state
-        in: query
-        description: Filter commands and constraints relevant only to a specific aggregate
-          state
-        required: true
-        schema:
-          type: string
-          example: ACTIVE
+      - $ref: "#/components/parameters/TransactionIDHeader"
+      - $ref: "#/components/parameters/CorrelationIDHeader"
+      - $ref: "#/components/parameters/StandardsVersionHeader"
+      - $ref: "#/components/parameters/OrgVersionHeader"
+      - $ref: "#/components/parameters/AgentHeader"
+      - $ref: "#/components/parameters/CountryCodeHeader"
+      - $ref: "#/components/parameters/LocaleHeader"
       responses:
         "200":
-          description: Successful discovery response (may be partial based on filters)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Capabilities"
+          $ref: "#/components/responses/HealthStatusResponse"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/ForbiddenError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
         "500":
           $ref: "#/components/responses/ServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailableError"
+      security:
+      - ApiKeyHeader: []
+      - AuthorizationHeader: []
 components:
   schemas:
-    Capabilities:
+    AddressReference:
       type: object
       properties:
-        aggregate:
+        address_reference_key:
           type: string
-          example: PayrollCycle
-        version:
+          description: A unique key for the address reference.
+          example: "839851241199796224"
+        address_reference_id:
           type: string
-          example: 1.2.0
-        current_state:
-          type: string
-          description: The state used to filter these capabilities
-          example: PENDING_APPROVAL
-        transitions:
+          description: The unique value of the address reference.
+          example: "839851241203990528"
+        address_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
           type: array
+          description: address_types list
+          example:
+          - BILLING
+          - SHIPPING
+          - MAILING
           items:
-            type: object
-            properties:
-              action:
-                type: string
-                example: APPROVE_INVOICE
-              from_states:
-                type: array
-                example:
-                - PENDING_APPROVAL
-                items:
-                  type: string
-              to_state:
-                type: string
-                example: ISSUED
-              required_roles:
-                type: array
-                description: Roles authorized to trigger this transition
-                example:
-                - MANAGER
-                - FINANCE_VP
-                items:
-                  type: string
-              links:
-                type: object
-                properties:
-                  execute:
-                    type: string
-                    description: The relative or absolute URL to POST the command
-                      to
-                    example: "/payroll-cycles/{key}/commands/approve"
-                  method:
-                    type: string
-                    example: POST
-                    enum:
-                    - POST
-                    - PUT
-                    - PATCH
-                  schema_ref:
-                    type: string
-                    description: Reference to the input payload schema for this action
-                    example: "#/components/schemas/PayrollCycleCommand"
-                description: HATEOAS-style links to execute the transition or fetch
-                  related metadata
-              _self:
-                type: string
-                description: Link to the specific transition documentation or detail
-                example: /metadata/capabilities/PayrollCycle/transitions/approve
-              instructions:
-                type: array
-                description: Step-by-step checklist the agent must verify before execution
-                example:
-                - Verify credit limit is sufficient
-                - Confirm tax jurisdiction matches customer address
-                - Ensure currency matches original purchase order
-                items:
-                  type: string
-              parameters_ref:
-                type: string
-                example: "#/components/schemas/PayrollCycle"
-        available_exports:
-          type: array
-          items:
-            type: object
-            properties:
-              data_contract_key:
-                type: string
-                example: customer_contact_v1
-              description:
-                type: string
-                example: Optimized view containing only non-sensitive contact details.
-              supported_formats:
-                type: array
-                example:
-                - PARQUET
-                - CSV
-                items:
-                  type: string
-                  enum:
-                  - XML
-                  - JSON
-                  - AVRO
-                  - PARQUET
-                  - CSV
-                default: PARQUET
-              columns:
-                type: array
-                example:
-                - first_name
-                - last_name
-                - email
-                items:
-                  type: string
-              retention_policy:
-                type: object
-                properties:
-                  retention_period:
-                    type: string
-                    description: ISO-8601 duration the file remains available for
-                      download
-                    example: P7D
-                  is_pii_sensitive:
-                    type: boolean
-                    description: Indicates export contains PII
-                    example: false
-                  access_tier:
-                    type: string
-                    description: The security clearance required for this contract
-                    example: INTERNAL
-                    enum:
-                    - PUBLIC
-                    - INTERNAL
-                    - RESTRICTED
-                    - CONFIDENTIAL
-              constraints:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    rule_id:
-                      type: string
-                      description: Unique identifier for the business rule
-                      readOnly: true
-                      example: IDENTITY_LOCK_STATE
-                    constraint_type:
-                      type: string
-                      enum:
-                      - RANGE_LIMIT
-                      - SIZE_LIMIT
-                      - FORMAT_INCOMPATIBILITY
-                      - PATTERN_MISMATCH
-                      - PERMISSION_LOCK
-                      - MANDATORY_MISSING
-                      - STATE_TRANSITION_ERROR
-                      - IMMUTABILITY_VIOLATION
-                      - RELATIONAL_DEPENDENCY
-                      - CONFLICT_DETECTION
-                      - AGGREGATE_LIMIT
-                      - ORPHAN_PREVENTION
-                    target_fields:
-                      type: array
-                      description: The specific fields or attributes this constraint
-                        applies to
-                      example:
-                      - first_name
-                      - last_name
-                      - ssn
-                      items:
-                        type: string
-                    rule_context:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: Key-value pairs representing the 'facts' of the
-                        current state
-                      example:
-                        count: "45"
-                        item_type: Inventory
-                        limit: "0"
-                    rule_constraints:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      description: "Key-value pairs for simple UI-driven validation\
-                        \ (e.g., min, max, unit). Use this for 'Fast Path' client-side\
-                        \ checks."
-                      example:
-                        value: "31"
-                        min: "1"
-                        unit: days
-                    limit_rule:
-                      type: string
-                      description: A Prolog-based predicate defining the valid boundary
-                        for this constraint.
-                      example: "allow_export(Format, Days) :- Format == 'parquet',\
-                        \ Days =< 31; Format == 'csv', Days =< 90."
-                    estimated_size:
-                      type: string
-                      description: approximate size of
-                      example: 10gig
-                    estimated_time_min:
-                      type: string
-                      description: approximate amount of minutes to run
-                      example: "12.3"
-                    complexity:
-                      type: string
-                      description: complexity score 1-100
-                      example: "34"
-                    mitigation_hint:
-                      type: string
-                      description: Conflict Resolution Hints
-                      example: "To resolve this PERMISSION_LOCK, you must first call\
-                        \ the /unlock endpoint."
-                    message:
-                      type: string
-                      description: Human-readable explanation for UI/Logs
-                      example: Identity fields cannot be modified while in PENDING_APPROVAL
-                        state.
-                    severity:
-                      type: string
-                      enum:
-                      - ERROR
-                      - WARNING
-                    link:
-                      type: string
-                      description: Link to documentation regarding this rule
-                      format: uri
-        documentation_ref:
+            $ref: "#/components/schemas/AddressTypes"
+        address_line1:
           type: string
-          description: Link to full business documentation for this aggregate
-          format: uri
-          example: /documentation/payroll-cycles
+          description: "Primary address line (Street, PO Box, etc)."
+          example: 123 Main St
+        address_line2:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Suite 400
+        address_line3:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Building A
+        address_line4:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: Mail Stop 22
+        address_line5:
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+          example: "Attention: Accounts Payable"
+        city:
+          type: string
+          description: Name of the city.
+          example: Atlanta
+        country_code:
+          type: string
+          description: Full name of the country.
+          example: US
+        district:
+          type: string
+          description: Name of the district.
+          example: North District
+        label:
+          maxLength: 50
+          type: string
+          description: Label or display name for the address.
+          example: Work Email
+        postal_code:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: Primary postal or ZIP code.
+          example: "30303"
+        state_province:
+          maxLength: 50
+          type: string
+          description: State or equivalent subdivision.
+          example: GA
+      description: "A reference to an address, including its unique key and a list\
+        \ of its usage types."
+    AddressReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/AddressReference"
+    AddressTypes:
+      type: string
+      description: types of address.
+      enum:
+      - BILLING
+      - SHIPPING
+      - MAILING
+      - POSTAL
+      - HOME
+      - RESIDENCE
+      - WORK
+      - BUSINESS
+      - OFFICE
+      - PO_BOX
+      - LEGAL
+      - SERVICE
+      - DEALER
+      - CONTRACT
+      - AR_ADDRESS
+      - RECIPIENT
+      - DELIVERY
+      - DESTINATION
+      - ORIGINAL
+      - CURRENT
+      - PREVIOUS
+      - TEMPORARY
+      - VACATION
+      - GARAGE
+      - EMERGENCY
+      - REBATE
+      - SERVICE_CONTRACT
+      - INSURANCE
+      - PRODUCT
+      - ARCHIVE
+      - OTHER
+    AuthorizationLevel:
+      type: object
+      properties:
+        update_date_time:
+          type: string
+          description: Timestamp of the last update to this authorization
+          format: date-time
+          example: 2026-05-06T13:06:49Z
+        authorized_indicator:
+          type: boolean
+          description: Indicates whether the authorization is currently active or
+            granted
+          example: false
+        authorization_level_key:
+          type: string
+          description: Business key uniquely identifying the authorization
+          example: "839851241203990529"
+        auth_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Establish authorization level
+    AuthorizationLevels:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuthorizationLevel"
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
-    CommandOption:
+        $ref: "#/components/schemas/Code"
+    CommunicationChannel:
       type: object
       properties:
-        type:
+        communication_channel_key:
           type: string
-          description: The command name to send to the /commands endpoint
-          example: Approve
-        description:
+          description: The unique key for the communication channel record.
+          example: "839851241203990530"
+        communication_channel_id:
           type: string
-          description: Guidance for the agent on when to use this command
-          example: Moves the invoice to ACTIVE state and triggers the payment gateway.
-        target_state:
+          description: The unique ID for the communication channel.
+          example: "839851241203990531"
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        value:
           type: string
-          description: The state the entity will transition to upon success
-          example: ACTIVE
+          description: "The value of the communication channel (e.g., an email address\
+            \ or phone number)."
+          example: user@example.com
+        verified_indicator:
+          type: boolean
+          description: A boolean indicator of whether the affiliate has been verified.
+          example: false
+        value_extension:
+          type: string
+          description: "An optional extension for the communication channel's value\
+            \ (e.g., an extension number)."
+          example: "{country_code=+1}"
+        label:
+          type: string
+          description: "A label for the communication channel (e.g., 'Home,' 'Work')."
+          example: Work Email
+        locale:
+          $ref: "#/components/schemas/Locale"
+        preferred_indicator:
+          type: boolean
+          description: A boolean indicator of whether this is the preferred communication
+            channel.
+          example: false
+        preferences:
+          $ref: "#/components/schemas/TimeSlots"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+      description: "Represents a communication channel, such as an email address or\
+        \ phone number, with associated preferences and authorizations."
+    CommunicationChannelTypes:
+      type: string
+      description: types of communication channels.
+      enum:
+      - PHONE
+      - CELL
+      - SMS
+      - VOICE
+      - VIDEO
+      - EMAIL
+      - APP
+      - SOCIAL_MEDIA
+      - URL
+      - BROADCAST
+      - DIRECT_MAIL
+      - PDA
+      - OTHER
+    CommunicationChannels:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationChannel"
+    CurrencyCode:
+      type: string
+      description: The three-letter ISO 4217 currency code used for financial transactions.
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-05-06T13:06:49Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     DaysOfWeekTypes:
       type: string
       description: types of days of weeks.
@@ -1685,9 +716,9 @@ components:
       - THURS
       - FRI
       - SAT
-    DurationUOMTypes:
+    DurationUomTypes:
       type: string
-      description: types of duration u o ms.
+      description: types of duration uoms.
       enum:
       - MINUTES
       - HOURS
@@ -1711,51 +742,56 @@ components:
       properties:
         effective_period_key:
           type: string
-          description: Unique key identifying the effective per...
-          example: ' 2f9f8477'
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
         active_indicator:
           type: boolean
-          description: Indicator if the period is currently act...
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
           example: true
         exclusive_indicator:
           type: boolean
-          description: Indicator if the period is exclusive
-          example: true
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
         start_date_time:
           type: string
-          description: Start date and time of the effective per...
+          description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
         complete_date_time:
           type: string
-          description: Completion date and time of the effectiv...
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
         duration_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
           type: string
-          description: Value of the duration
-          example: ' 5eca2928'
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
         recur_uom_type:
-          $ref: "#/components/schemas/DurationUOMTypes"
+          $ref: "#/components/schemas/DurationUomTypes"
         recur_count:
           type: string
-          description: Count of recurrence
-          example: ' 3c7b3854'
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
         recur_values:
           $ref: "#/components/schemas/Codes"
         recur_criteria:
           type: string
-          description: Criteria defining recurrence
-          example: ' 7dd5a68e'
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
         recur_indicator:
           type: boolean
-          description: Indicator if recurrence is enabled
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
           example: true
-        timeslot:
-          $ref: "#/components/schemas/TimeSlot"
-      description: effective.period.desc
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
     ErrorDetail:
       required:
       - category
@@ -1775,7 +811,8 @@ components:
           example: Personnel Record with ID PR-1234567 was not found.
         category:
           type: string
-          description: Classifies the error to help clients determine ...
+          description: Classifies the error to help clients determine high-level retry
+            or handling logic.
           example: DATA_INTEGRITY
           enum:
           - VALIDATION
@@ -1792,16 +829,17 @@ components:
         trace_id:
           type: string
           description: A unique identifier for this specific request.
-          readOnly: true
           example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
-          description: A URL leading to the documentation page for thi...
+          description: A URL leading to the documentation page for this specific error
+            code.
           format: uri
           example: https://api.docs.com/errors/NOT_FOUND_PR
         details:
           type: array
-          description: Field-level validation errors or granular diagn...
+          description: Field-level validation errors or granular diagnostic information.
+          example: Invalid request parameter.
           items:
             type: object
             properties:
@@ -1817,101 +855,20 @@ components:
                 type: string
                 description: The value that was sent and rejected (only if non-sensitive).
                 example: "12345"
-      description: Standardized error response for the entire API ...
-    ExportFile:
+      description: Standardized error response for the entire API ecosystem. Follows
+        RFC 7807 principles for problem details to ensure consistency across microservices.
+    HealthStatus:
       type: object
       properties:
-        sequence:
-          type: integer
-          description: Part number
-          format: int32
-          example: 1
-        download_url:
-          type: string
-          format: uri
-          example: https://api.example.com
-        format:
-          type: string
-          example: ' bb9d0cc1'
-          default: PARQUET
-          enum:
-          - XML
-          - JSON
-          - AVRO
-          - PARQUET
-          - CSV
-          - TOON
-        expires_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        checksum_sha256:
-          type: string
-          example: ' a48eb7e8'
-    ExportJob:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-          example: ' 8e99097e'
         status:
           type: string
-          example: ' 08bdc98b'
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-          - FAILED
-        progress_percentage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
-          example: 1
-        files:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExportFile"
-    ExportNotification:
-      type: object
-      properties:
-        event_type:
+          description: Current health status of the service.
+          example: UP
+        version:
           type: string
-          example: EXPORT_COMPLETED
-          enum:
-          - EXPORT_COMPLETED
-          - EXPORT_FAILED
-        occurred_at:
-          type: string
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        data:
-          type: object
-          properties:
-            job_id:
-              type: string
-              readOnly: true
-              example: f9f4e4a5
-            aggregate:
-              type: string
-              example: PayrollCycle
-            data_product_id:
-              type: string
-              readOnly: true
-            status:
-              type: string
-              example: FAILED
-              enum:
-              - COMPLETED
-              - FAILED
-            error_message:
-              type: string
-              description: Present only if status is FAILED
-            files:
-              type: array
-              items:
-                $ref: "#/components/schemas/ExportFile"
+          description: Version of the deployed service.
+          example: 2.0.0
+      description: Standard health check response body
     Identifier:
       type: object
       properties:
@@ -1920,111 +877,544 @@ components:
           minLength: 5
           type: string
           description: Unique identifier value
-          readOnly: true
-          example: ' 92f88761'
+          example: "839851241203990532"
         identifier_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Business key for the identifier
-          readOnly: true
-          example: ' 80c22ef4'
+          example: "839851241203990533"
         context:
           type: string
           description: Context or domain of the identifier
-          example: ' 3a691509'
+          example: FINANCE
         value:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' f4f9c13d'
+          description: The monetary or hours-based value of the event.
+          example: user@example.com
         detail:
           type: string
-          description: The monetary or hours-based value of the...
-          example: ' 5cfafe4e'
+          description: The monetary or hours-based value of the event.
+          example: Primary identifier
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' ec66baab'
+          description: The monetary or hours-based value of the event.
+          example: identifier_type value
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-          readOnly: true
-          example: ' ec66baab'
-        context:
-          type: string
-          description: Context or domain of the identifier
-          example: ' 3a691509'
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-          example: ' 5cfafe4e'
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-          example: ' f4f9c13d'
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
         $ref: "#/components/schemas/Identifier"
+    Locale:
+      type: object
+      properties:
+        locale_key:
+          type: string
+          description: "A unique, human-readable string key used for configuration\
+            \ lookups and mapping."
+          example: "839851241203990534"
+        locale_name:
+          type: string
+          description: The full IETF BCP 47 language tag or Java-style locale string
+            used for regional formatting.
+          example: English (US)
+        description:
+          type: string
+          description: A detailed description of the alert message.
+          example: Vehicle engine component.
+        language_code:
+          type: string
+          description: ISO 639-1 two-letter language code.
+          example: en
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+          example: US
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        currency_symbol:
+          type: string
+          description: The graphical symbol used for the currency.
+          example: $
+        timezone:
+          type: string
+          description: The IANA Time Zone database ID for regional time calculations.
+          example: America/New_York
+        number_format:
+          type: string
+          description: Regional pattern for decimal and thousands separators.
+          example: "###,###.##"
+        location_code:
+          type: string
+          description: The code of the inventory location or branch from which this
+            part is sourced.
+          example: WH001
+      description: not nullable
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
+        currency_code:
+          type: string
+          description: money.currency.code.desc
+          example: USD
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        value:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    PartyReference:
+      type: object
+      properties:
+        party_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        party_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and party context."
+          example: REF-SALE-2026-CUST-99
+        party_key:
+          type: string
+          description: The business key of the actual Party (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        party_name:
+          type: string
+          description: The formal display name of the Party at the time of reference.
+          example: Northside Chevrolet Service Center
+        individual_name:
+          $ref: "#/components/schemas/PersonName"
+        party_type:
+          $ref: "#/components/schemas/PartyTypes"
+        authorization_code:
+          type: string
+          description: Security or permission code granting access to this party's
+            data.
+          example: AUTH-992-SEC
+        source_system_code:
+          type: string
+          description: "The identifier of the system of record (e.g., DMS, CRM)."
+          example: CDK-GLOBAL
+        context:
+          type: string
+          description: The domain or operational context for the reference.
+          example: VEHICLE_SERVICE
+        account_number:
+          type: string
+          description: The specific account identifier for the party in the source
+            system.
+          example: ACT-771229-B
+        party_relationship_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          description: party_relationship_types list
+          example:
+          - CORPORATION
+          - GROUP
+          - STORE
+          items:
+            $ref: "#/components/schemas/PartyRelationshipTypes"
+        snapshot_detail:
+          $ref: "#/components/schemas/Identifier"
+        address_references:
+          $ref: "#/components/schemas/AddressReferences"
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-05-06T13:06:49Z
+        org_indicator:
+          type: boolean
+          description: Indicates if the party is an organization (true) or an individual
+            (false).
+          example: true
+      description: External system identifier
+    PartyReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartyReference"
+    PartyRelationshipTypes:
+      type: string
+      description: types of party relationships.
+      enum:
+      - CORPORATION
+      - GROUP
+      - STORE
+      - BRANCH
+      - DEPARTMENT
+      - SECTION
+      - TEAM
+      - DEALERSHIP
+      - THIRD_PARTY
+      - VENDOR
+      - MERCHANT
+      - SUPPLIER
+      - PARTNER_ORGANIZATION
+      - AFFILIATE
+      - DISTRIBUTOR
+      - MANUFACTURER
+      - SERVICE_PROVIDER
+      - EMPLOYER
+      - INTERNAL_ORGANIZATION
+      - COST_CENTER
+      - FREIGHT_FORWARDER
+      - BUYER
+      - REGULATOR
+      - GOVERNMENT_AGENCY
+      - NON_PROFIT
+      - FRANCHISE
+      - SUBSIDIARY
+      - DIVISION
+      - JOINT_VENTURE
+      - AUDITOR
+      - ACTOR
+      - OEM
+      - PRIMARY_OEM
+      - DRIVER
+      - LIEN_HOLDER
+      - PROVIDER
+      - ACCOUNTABLE
+      - RESPONSIBLE
+      - CONSULT
+      - NOTIFY
+      - EXECUTE
+      - PART_OF
+      - MEMBERSHIP
+      - COMPOSED_IN
+      - GEN_MGR
+      - SALES_MGR
+      - CLOSING_MGR
+      - FI_MGR
+      - CONCIERGE_MGR
+      - SERVICE_MGR
+      - SALES_ASSOC
+      - BUSINESS_DEVELOPMENT
+      - SPECIALIST
+      - ADVISOR
+      - SERVICE_TECH
+      - CONCIERGE_STAFF
+      - VALET
+      - STAFF
+      - FINANCE
+      - PASSENGER
+      - CUSTOMER
+      - CO_SIGNER
+      - SPOUSE
+      - PARENT
+      - CHILD
+      - SIBLING
+      - LEGAL_GUARDIAN
+      - DEPENDENT
+      - EMERGENCY_CONTACT
+      - FAMILY_MEMBER
+      - FRIEND
+      - ACQUAINTANCE
+      - ASSOCIATE
+      - EX_SPOUSE
+      - PROFESSIONAL_CONTACT
+      - MANAGER
+      - CO_WORKER
+      - FINANCIAL_ADVISOR
+      - SELF
+      - ROMANTIC_PARTNER
+      - OTHER_FAMILY
+      - CAREGIVER
+      - MENTOR
+      - MENTEE
+      - HEIR
+      - TRUSTEE_PERSON
+      - REFERENCE_PERSONAL
+      - REFERENCE_PROFESSIONAL
+      - APPLICANT
+      - CO_APPLICANT
+      - AGENT
+      - BENEFICIARY
+      - GUARANTOR
+      - EMPLOYEE
+      - CONTRACTOR
+      - OWNER
+      - BUSINESS_PARTNER
+      - SERVICE_CONSUMER
+      - POLITICAL_AFFILIATE
+      - ADVISOR_CONSULTANT
+      - PROXY
+      - SHAREHOLDER
+      - INVESTOR
+      - CUSTODIAN
+      - SOLD_TO
+      - SHIP_TO
+      - PAYER
+      - PAYEE
+      - GIFT_TO
+      - LOAN_PROVIDER
+      - CREDIT_CARD_PROVIDER
+      - LESSEE
+      - LESSOR
+      - INSURED
+      - INSURER
+      - UNDERWRITER
+      - RECIPIENT
+      - TRANSACTION_FROM
+      - TRANSACTION_TO
+      - REMOVE
+      - OTHER
+    PartyTypes:
+      type: string
+      description: types of partys.
+      enum:
+      - DEALER
+      - EMPLOYEE
+      - CUSTOMER
+      - ORGANIZATION
+      - VENDOR
+      - SUPPLIER
+      - PUBLIC
+      - TAX
+      - SERVICE
+      - PROSPECT
+      - PARTNER
+      - CONTRACTOR
+      - DEVICE
+      - FLEET
+      - DRIVER
+      - FINANCE
+      - GOVERNMENT
+      - PERSON
+      - GROUP
+      - RENTAL
+      - RESALE
+    PaymentAmountTypes:
+      type: string
+      description: types of payment amounts.
+      enum:
+      - PARTIAL_REFUND
+      - TOTAL_REFUND
+      - TOTAL_INTEREST
+      - TOTAL_PAYMENT
+      - TOTAL_PRINCIPAL
+      - TOTAL_FINANCED
+      - DOWN_PAYMENT
+      - TRADE_IN_ALLOWANCE
+      - CREDIT_CARD_PAYMENT
+      - CASH_PAYMENT
+      - CHECK_PAYMENT
+      - EFT_PAYMENT
+      - PAYMENT_EVENT
+      - SCHEDULED_PAYMENT_EVENT
+      - BASE_PAYMENT_EVENT
+      - DESIRED_PAYMENT
+      - ADMIN_FEE
+      - GOVERNMENT_FEE
+      - SERVICE_FEE
+      - LATE_FEE
+      - PAYROLL
+      - OTHER
+    PaymentMethodReference:
+      type: object
+      properties:
+        payment_method_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value for the reference record.
+          example: "839851241203990535"
+        payment_method_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique key value for the reference record.
+          example: "839851241203990536"
+        payment_method_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: The unique key identifying the referenced PaymentMethod (Party)
+            aggregate.
+          example: "839851241203990537"
+        context:
+          type: string
+          description: Context or domain of the reference.
+          example: FINANCE
+        payment_method_type:
+          $ref: "#/components/schemas/PaymentMethodTypes"
+        processor_options:
+          $ref: "#/components/schemas/Identifiers"
+        snapshot_details:
+          $ref: "#/components/schemas/Identifiers"
+        occurrence_date_time:
+          type: string
+          description: The date and time the paymentMethod was associated with the
+            order.
+          format: date-time
+          example: 2026-05-06T13:06:49Z
+      description: Reference to a PaymentMethod (Party) Aggregate Root for financing
+        details.
+    PaymentMethodTypes:
+      type: string
+      description: types of payment methods.
+      enum:
+      - CASH
+      - CHECK
+      - MONEY_ORDER
+      - CASH_ON_DELIVERY
+      - CREDIT_CARD
+      - DEBIT_CARD
+      - GIFT_CARD
+      - EFT
+      - ONLINE_BANK_TRANSFER
+      - MOBILE_WALLET
+      - CRYPTOCURRENCY
+      - ONLINE_PAYMENT_PLATFORM
+      - PAYROLL_DEDUCTION
+      - FINANCE
+      - LEASE
+      - RENTAL
+      - TERMS
+      - DUE_ON_RECEIPT
+      - TRADE_IN
+      - REWARD_POINTS
+      - STORE_CREDIT
+      - EXCHANGE
+      - OTHER
+      - NOT_APPLICABLE
+    PaymentTransaction:
+      type: object
+      properties:
+        payment_amount_key:
+          type: string
+          description: A unique key for the payment amount.
+          example: "839851241203990538"
+        payment_amount_id:
+          type: string
+          description: A unique key for the payment amount.
+          example: "839851241203990539"
+        payment_amount_type:
+          $ref: "#/components/schemas/PaymentAmountTypes"
+        payment_method_reference:
+          $ref: "#/components/schemas/PaymentMethodReference"
+        amount:
+          $ref: "#/components/schemas/Money"
+        payment_transaction_status_type:
+          $ref: "#/components/schemas/PaymentTransactionStatusTypes"
+      description: Represents the type and value of a payment amount.
+    PaymentTransactionStatusTypes:
+      type: string
+      description: types of payment transaction status.
+      enum:
+      - NONE
+      - EXPIRED
+      - CAPTURED
+      - CONFIRMATION
+      - VOID
+      - APPROVE
+      - REFUNDED
+      - PARTIALLY_REFUNDED
+      - AUTHORIZE
+      - PENDING_MERCHANT
+      - SUSPENDED
+      - OPEN
+      - PEND
+      - PROCESS
+      - DECLINE
+      - DUE
+      - INCURRED
+      - CUSTOM_CODE
+      - USER_HOLD
+      - ADMIN_HOLD
+      - ACTIVATED
+      - DEACTIVATE
+      - CANCEL
+      - CONFIRM
+      - CLOSE
+      - TRIAL
+      - SUBSCRIPTION
+      - OVERRIDE
+      - UPGRADE
+      - HOLD_ON_RENEWAL
+      - HOLD_ON_DATE
+      - PAYMENT
+      - DOWNGRADE
+    PaymentTransactions:
+      type: array
+      items:
+        $ref: "#/components/schemas/PaymentTransaction"
     PayrollCycle:
       type: object
       properties:
         payroll_cycle_id:
           type: string
-          description: A unique identifier for the payroll cycl...
-          readOnly: true
-          example: ' 0d9286b0'
+          description: A unique identifier for the payroll cycle.
+          example: "839851241203990540"
         payroll_cycle_key:
           type: string
-          description: A unique identifier for the payroll cycl...
-          example: ' 8fdf74cb'
+          description: A unique identifier for the payroll cycle.
+          example: "839851241203990541"
         payroll_run_refs:
           $ref: "#/components/schemas/Identifiers"
         primary_entity_id:
           type: string
           description: Primary Entity Id.
-          readOnly: true
           example: WH001
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
         pay_date_time:
           type: string
-          description: The date and time the payment was issued...
+          description: The date and time the payment was issued.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
         effective_period:
           $ref: "#/components/schemas/EffectivePeriod"
         occurrence_date_time:
           type: string
           description: The date and time the cycle occurred.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
+        payment_transactions:
+          $ref: "#/components/schemas/PaymentTransactions"
         identifiers:
           maxItems: 255
           minItems: 1
           uniqueItems: true
           type: array
-          readOnly: true
+          description: Identifiers associated with the vehicle.
+          example: "[{value=1HGCM82633A123456, identifier_type=VIN}]"
           items:
             $ref: "#/components/schemas/Identifier"
         payroll_cycle_frequency_type:
           $ref: "#/components/schemas/PayrollCycleFrequencyTypes"
-      description: payroll.cycle.desc
+      description: "Represents a single cycle that affects a staff member's payroll,\
+        \ such as hours worked or a bonus."
     PayrollCycleCreate:
       required:
       - payroll_cycle_key
@@ -2047,18 +1437,14 @@ components:
       - DAILY
       - OFF_CYCLE
       - ON_DEMAND
-    PayrollCycleResponse:
-      allOf:
-      - $ref: "#/components/schemas/PayrollCycle"
-      - $ref: "#/components/schemas/PayrollCycleWorkflowMetadata"
     PayrollCycleUpdate:
       type: object
       properties:
         pay_date_time:
           type: string
-          description: The date and time the payment was issued...
+          description: The date and time the payment was issued.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
         payroll_run_refs:
           $ref: "#/components/schemas/Identifiers"
         identifiers:
@@ -2066,131 +1452,266 @@ components:
           minItems: 1
           uniqueItems: true
           type: array
-          readOnly: true
+          description: Identifiers associated with the vehicle.
+          example: "[{value=1HGCM82633A123456, identifier_type=VIN}]"
           items:
             $ref: "#/components/schemas/Identifier"
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
         effective_period:
           $ref: "#/components/schemas/EffectivePeriod"
         occurrence_date_time:
           type: string
           description: The date and time the cycle occurred.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+          example: 2026-05-06T13:06:49Z
+        payment_transactions:
+          $ref: "#/components/schemas/PaymentTransactions"
         payroll_cycle_frequency_type:
           $ref: "#/components/schemas/PayrollCycleFrequencyTypes"
       description: PayrollCycle Update for Patch and Put
-    PayrollCycleWorkflowMetadata:
+    PersonName:
       type: object
       properties:
-        current_state:
+        alias:
           type: string
-          description: The current lifecycle phase of this entity.
-          example: ' cb14b8c8'
-          enum:
-          - CREATED
-          - ACTIVE
-          - DELETED
-          - ARCHIVED
-        allowed_commands:
-          type: array
-          description: Intents the agent can execute on this specific instance right
-            now.
-          items:
-            $ref: "#/components/schemas/CommandOption"
+          description: Alternative or informal name or role.
+          example: AJ
+        family_name:
+          type: string
+          description: Family or last name.
+          example: Smith
+        full_name:
+          type: string
+          description: Complete name as one string.
+          example: Alice Jane Smith
+        given_name:
+          type: string
+          description: First or given name.
+          example: Alice
+        identifiers_href:
+          type: string
+          description: Reference to external identifiers.
+          format: href
+          example: /identifiers/12345
+        maiden_name:
+          type: string
+          description: Previous family name before marriage.
+          example: Johnson
+        middle_name:
+          type: string
+          description: Middle name(s).
+          example: Jane
+        name_suffix:
+          type: string
+          description: "Suffix such as Jr., Sr., III."
+          example: Jr.
+        party_key:
+          type: string
+          description: External party key.
+          example: PARTY-KEY-123
+        person_key:
+          type: string
+          description: External person key.
+          example: PERSON-KEY-789
+        person_name_key:
+          type: string
+          description: Unique person name key.
+          example: NAME-KEY-456
+        person_name_id:
+          type: string
+          description: Unique person name id.
+          example: NAME-ID-456
+        preferred_name:
+          type: string
+          description: Preferred name used in informal situations.
+          example: Ali
+        salutation:
+          type: string
+          description: "Salutation or title such as Mr., Ms., Dr."
+          example: Dr.
+        honorific_prefix:
+          type: string
+          description: "Prefix title used before the person's name (e.g., Dr., Mr.,\
+            \ Ms.)."
+          example: Dr.
+        honorific_suffix:
+          type: string
+          description: "Suffix title used after the person's name (e.g., Jr., Sr.,\
+            \ III)."
+          example: Jr.
+        locale:
+          type: string
+          description: Locale or language region associated with the person.
+          example: en-US
+        phonetic_family_name:
+          type: string
+          description: Phonetic representation of the family name.
+          example: FAM-nee
+        phonetic_given_name:
+          type: string
+          description: Phonetic representation of the given name.
+          example: GA-vin
+        phonetic_middle_name:
+          type: string
+          description: Phonetic representation of the middle name.
+          example: MI-chal
+        nationality:
+          type: string
+          description: Nationality of the person.
+          example: Canadian
+      description: a Name for a person
     ProblemDetail:
       type: object
       properties:
         type:
           type: string
+          description: A URI reference that identifies the problem type. Provides
+            human-readable documentation for the error.
           format: uri
           example: https://api.yourdomain.com/errors/validation-failed
         title:
           type: string
+          description: "A short, human-readable summary of the problem type. It should\
+            \ not change from occurrence to occurrence."
           example: Intent Validation Failed
         status:
           type: integer
+          description: The HTTP status code generated by the origin server for this
+            occurrence of the problem.
           format: int32
           example: 422
         detail:
           type: string
+          description: "A human-readable explanation specific to this occurrence of\
+            \ the problem, providing context on the failure."
           example: The export request could not be processed due to business constraints.
         instance:
           type: string
+          description: "A URI reference that identifies the specific occurrence of\
+            \ the problem (e.g., the specific resource path)."
           format: uri
           example: https://api.yourdomain.com/money/exports
         intent:
           type: string
+          description: The specific agentic or business intent that was being processed
+            when the error occurred.
           example: InitiateMoneyExport
+        error_code:
+          type: string
+          description: "A stable, machine-readable string code for the error."
+          example: INSUFFICIENT_FUNDS_FOR_EXPORT
+        pointer:
+          type: string
+          description: A JSON Pointer to the field in the request body that caused
+            the violation.
+          example: "#/plate_number"
         violations:
           type: array
+          description: "A collection of specific validation failures, including field\
+            \ paths and localized messages."
+          example: "[{field=postal_code, message=Invalid format}]"
           items:
             type: object
             properties:
-              rule:
+              pointer:
                 type: string
-                example: INSUFFICIENT_FUNDS
+                description: A JSON Pointer (RFC 6901) referencing the specific field
+                  in the request body that caused the violation.
+                example: "#/vehicle_license/plate_number"
+              code:
+                type: string
+                description: "A stable, machine-readable string identifying the specific\
+                  \ validation rule that was breached."
+                example: PATTERN_MISMATCH
               message:
                 type: string
-                example: Export exceeds your monthly data tier limit.
-              path:
+                description: "A localized, human-readable description of the validation\
+                  \ error."
+                example: The plate number must be alphanumeric and between 1 and 20
+                  characters.
+              severity:
                 type: string
-                example: date_range.start
+                description: The impact level of this violation. ERROR blocks execution;
+                  WARNING is advisory.
+                example: ERROR
+                enum:
+                - ERROR
+                - WARNING
+                - INFO
               metadata:
                 type: object
                 additionalProperties:
                   type: string
+                description: "Contextual key-value pairs to help the agent resolve\
+                  \ the error (e.g., actual vs. expected limits)."
+                example:
+                  regex: "^[A-Z0-9]{1,20}$"
+              rule:
+                type: string
+                example: INSUFFICIENT_FUNDS
+              path:
+                type: string
+                example: date_range.start
+            description: "An individual validation failure within a request, providing\
+              \ a direct map to the offending field."
+      description: "A standardized error response based on RFC 7807, extended with\
+        \ domain-specific intent and validation violations."
     TimeSlot:
       type: object
       properties:
         time_slot_id:
           type: string
-          description: Unique identifier for the time slot reco...
-          readOnly: true
-          example: ' 9399e960'
+          description: Technical unique identifier (GUID) for the time slot record.
+          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
           type: string
-          description: Unique business key for the time slot.
-          example: ' 3416fafa'
+          description: Natural business key for the time slot within its specific
+            context.
+          example: TS-MON-MORNING-SHIFT
         time_slot_source:
           type: string
-          description: Unique identifier for the time slot sour...
+          description: The originating system or calendar providing this availability
+            data.
           example: GOOGLE_CALENDAR
-        end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        end_time:
-          type: string
-          description: End time in HH:mm format.
-          format: date-time
-          example: 2026-01-14T12:00:00Z
-        recurring_indicator:
-          type: boolean
-          description: Indicates if the time slot is recurring.
-          example: true
-        recurring_period:
-          $ref: "#/components/schemas/EffectivePeriod"
         start_day:
           $ref: "#/components/schemas/DaysOfWeekTypes"
         start_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: Start time in HH:mm format.
+          description: The local start time in 24-hour ISO 8601 format.
           format: date-time
-          example: 2026-01-14T12:00:00Z
+        end_day:
+          $ref: "#/components/schemas/DaysOfWeekTypes"
+        end_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: The local end time in 24-hour ISO 8601 format.
+          format: date-time
+        recurring_indicator:
+          type: boolean
+          description: Indicates if this time slot is part of a repeating pattern.
+          example: true
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
           type: array
+          description: timeslot_directive_types list
+          example:
+          - AFTER
+          - ANYTIME
+          - BEFORE
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
         week_of_date:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          format: date
-          items:
-            type: string
-      description: time.slot.desc
+          $ref: "#/components/schemas/Codes"
+      description: "Defines a specific window of time, often within a recurring schedule,\
+        \ used for service availability or appointment booking."
+    TimeSlots:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeSlot"
     TimeslotDirectiveTypes:
       type: string
       description: types of timeslot directives.
@@ -2201,65 +1722,946 @@ components:
       - BETWEEN
       - BLOCK
       - UNKNOWN
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
   responses:
-    ForbiddenError:
-      description: The authenticated user does not have the necess...
+    PaymentTransactionSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: "#/components/schemas/PaymentTransaction"
     ConflictError:
-      description: The request could not be completed because it c...
+      description: The request could not be completed because it conflicts with the
+        current state of the resource.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     ServerError:
-      description: An unexpected error occurred on the server whil...
+      description: An unexpected error occurred on the server while processing the
+        request.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
-    PreconditionFailedError:
-      description: The request was not processed because the 'If-M...
+    PayrollCycleUpdatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorDetail"
+            $ref: "#/components/schemas/PayrollCycle"
     NotFoundError:
       description: The requested resource was not found.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    PayrollCycleCreatedResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Content-Location:
+          $ref: "#/components/headers/ContentLocationHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        Location:
+          $ref: "#/components/headers/LocationHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PayrollCycle"
+    PaymentTransactionCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of PaymentTransactions entities.
+                items:
+                  $ref: "#/components/schemas/PaymentTransaction"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
     BadRequestError:
-      description: "The request was malformed, failed validation, o..."
+      description: "The request was malformed, failed validation, or contained invalid\
+        \ parameters."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
     UnauthorizedError:
-      description: Authentication failed. The access token is miss...
+      description: "Authentication failed. The access token is missing, expired, or\
+        \ invalid."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorDetail"
+    TooManyRequestsError:
+      description: Rate Limit Error. Too Many Requests
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    HealthStatusResponse:
+      description: Service is Operational
+      headers:
+        Transaction-Id:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HealthStatus"
+    NotAcceptableError:
+      description: The client requested a format (via Accept header) the server can't
+        provide
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    PayrollCycleCollectionResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+        Link:
+          $ref: "#/components/headers/LinkHeader"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: The list of PayrollCycles entities.
+                items:
+                  $ref: "#/components/schemas/PayrollCycle"
+              has_more:
+                type: boolean
+                description: Indicates if more results are available.
+              total_count:
+                maximum: 2147483647
+                minimum: 0
+                type: integer
+                description: The number of total entities.
+                format: int32
+                example: 2550
+    ServiceUnavailableError:
+      description: Unable to serve request.  Service is unavailable
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    GatewayTimeout:
+      description: Timeout serving request
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    UnsupportedMediaTypeError:
+      description: The request could not be completed because of missing or invalid
+        content type
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    NoContentSuccess:
+      description: "No Content: The resource was successfully updated."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+    ForbiddenError:
+      description: The authenticated user does not have the necessary permissions.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    PreconditionFailedError:
+      description: The request was not processed because the 'If-Match' header provided
+        does not match the current ETag.
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+    UnprocessableEntity:
+      description: "Unprocessable Content: Semantic logic error."
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
+    PayrollCycleSingleResponse:
+      description: Success
+      headers:
+        Standards-Version:
+          $ref: "#/components/headers/StandardsVersionHeader"
+        Correlation-ID:
+          $ref: "#/components/headers/CorrelationIDHeader"
+        Agent:
+          $ref: "#/components/headers/AgentHeader"
+        RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitResetHeader"
+        RateLimit-Policy:
+          $ref: "#/components/headers/RateLimitPolicyHeader"
+        Transaction-ID:
+          $ref: "#/components/headers/TransactionIDHeader"
+        Last-Modified:
+          $ref: "#/components/headers/LastModifiedHeader"
+        RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimitHeader"
+        RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemainingHeader"
+        Cache-Control:
+          $ref: "#/components/headers/CacheControlHeader"
+        ETag:
+          $ref: "#/components/headers/ETagHeader"
+        Vary:
+          $ref: "#/components/headers/VaryHeader"
+        Expires:
+          $ref: "#/components/headers/ExpiresHeader"
+        Org-Version:
+          $ref: "#/components/headers/OrgVersionHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PayrollCycle"
   parameters:
-    StandardsVersionHeader:
-      name: standards-version
+    ReasonQuery:
+      name: reason
+      in: query
+      description: Reason parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "duplicate,soft_delete"
+    OrgVersionHeader:
+      name: Org-Version
+      in: header
+      description: "The version of the api for the organization that this request\
+        \ adheres to (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    PaymentTransactionKey:
+      name: payment-transaction-key
+      in: path
+      description: The unique identifier for an PaymentTransaction entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839850695931142146"
+    CacheControlHeader:
+      name: Cache-Control
+      in: header
+      description: Tells the client and intermediary caches how to store the response.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "max-age=300, private"
+    SourceSystemHeader:
+      name: Source-System
+      in: header
+      description: The system originating the transaction pulse.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 25
+        minLength: 2
+        type: string
+        example: GM_GLOBAL_NVS
+    PayrollCycleKey:
+      name: payroll-cycle-key
+      in: path
+      description: The unique identifier for an PayrollCycle entity.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "839850695931142145"
+    FilterQuery:
+      name: filter
+      in: query
+      description: Filter parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "sdate:2026-02-09,edate:2026-02-09"
+    CreatorCodeHeader:
+      name: Creator-Code
+      in: header
+      description: "Source System Identifier (e.g., TY for Toyota, CDK for DMS)."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 8
+        minLength: 2
+        type: string
+        example: CDK
+    PreferHeader:
+      name: Prefer
+      in: header
+      description: JSON context for field selection and error logging behavior.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "{'logsLabel': {context: 'NNA_API', value: 'RDR API'}}"
+    LocaleHeader:
+      name: Locale
       in: header
       required: true
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: en-US
+    IfMatchHeader:
+      name: If-Match
+      in: header
+      description: Used for optimistic concurrency control. The request will fail
+        (412) if the current ETag does not match this value.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    IfNoneMatchHeader:
+      name: If-None-Match
+      in: header
+      description: Used for conditional GETs. The operation is executed only if the
+        stored ETag does not match this value. Prevents 'Lost Updates' in high-concurrency
+        Service Bounded Contexts.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: "^\"?[a-f0-9]+\"?$|^\\*$"
+        type: string
+        example: '"686897696a7c876b7e"'
+    CountryCodeHeader:
+      name: Country-Code
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "1"
+    CorrelationIDHeader:
+      name: Correlation-ID
+      in: header
+      description: A unique identifier spanning the entire business lifecycle. Essential
+        for tracing logic across the 13 Bounded Contexts of the Automotive Retail
+        Domain.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+    AgentHeader:
+      name: Agent
+      in: header
+      description: "The URI profile of the calling Agent. Used to negotiate supported\
+        \ Industry Extensions (e.g., ) via the protocol."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://xxx.com/agent/v1
+    SortQuery:
+      name: sort
+      in: query
+      description: Sort parameters
+      required: false
+      style: form
+      explode: true
+      schema:
+        maxLength: 100
+        minLength: 0
+        type: string
+        example: "name,country"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      description: A unique identifier sent by the client to allow the server to prevent
+        duplicate processing of the same request.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    OffsetQuery:
+      name: offset
+      in: query
+      description: The number of entities to skip before starting to collect the result
+        set. Used in conjunction with 'limit' for traditional page-based navigation.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 234
+    LimitQuery:
+      name: limit
+      in: query
+      description: The maximum number of entities to return in a single response page.
+        Limits the 'data' array size to prevent payload bloat.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+        format: int32
+        example: 100
+    RegionHeader:
+      name: Region
+      in: header
+      description: The geographic or business region code.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 10
+        minLength: 2
+        type: string
+        example: NE-01
+    StandardsVersionHeader:
+      name: Standards-Version
+      in: header
+      description: "The version of the STAR REST Standard this request adheres to\
+        \ (e.g., 2026.01)."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 20
+        minLength: 1
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    TransactionIDHeader:
+      name: Transaction-ID
+      in: header
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+    BrandHeader:
+      name: Brand
+      in: header
+      description: The automotive brand context for the RDR.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: TOYOTA
+        default: TOYOTA
+        enum:
+        - TOYOTA
+        - LEXUS
+    SubscriberCodeHeader:
+      name: Subscriber-Code
+      in: header
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 23a7d408-aed4-43f8-8af4-7a17f407m652
+    DealerIdHeader:
+      name: Dealer-Id
+      in: header
+      description: Unique 5-digit Dealer Identifier.
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 5
+        minLength: 5
+        type: string
+        example: "42278"
+    PreferenceAppliedHeader:
+      name: Preference-Applied
+      in: header
+      description: Indicates which client preferences (from the 'Prefer' request header)
+        were honored by the server.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: return=minimal
   headers:
-    StandardsVersionResponse:
-      description: Standards Version
+    CacheControlHeader:
+      description: Tells the client and intermediary caches how to store the response.
+      style: simple
+      explode: false
       schema:
-        pattern: ^\d+(\.\d+)*$
         type: string
-        example: "2026.1"
+        example: "max-age=300, private"
+    VaryHeader:
+      description: Instructs downstream caches that the response varies based on the
+        Agent's profile or media type. Critical for Extension-based responses.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: "Accept, UCP-Agent"
+        default: "Accept, UCP-Agent"
+    ExpiresHeader:
+      description: The timestamp after which the resource state is considered stale.
+        Vital for volatile QQQ/SQQQ market data or real-time Inventory availability.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T16:00:00Z
+    LinkHeader:
+      description: "RFC 8288 compliant links providing discovery for related resources\
+        \ and 'Service Primitives' (e.g., :cancel, :execute). Essential for non-linear\
+        \ state transitions across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: "^<[^>]+>;\\s*rel=\"[^\"]+\"(,\\s*<[^>]+>;\\s*rel=\"[^\"]+\")*$"
+        type: string
+        example: "<https://api.ai-sage.com/labor-operations/123:cancel>; rel=\"cancel\"\
+          , <https://api.ai-sage.com/labor-operations/123>; rel=\"self\""
+    LocationHeader:
+      description: "The absolute URI of the newly created resource or the status monitor\
+        \ for an asynchronous 'Service Primitive' (e.g., :execute). Used to follow\
+        \ the state of a Transaction across Bounded Contexts."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789
+    ContentLocationHeader:
+      description: The URI of the specific representation returned in the payload.
+        Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
+        multi-format or versioned Bounded Contexts.
+      style: simple
+      explode: false
+      schema:
+        pattern: ^https?://.+
+        type: string
+        format: uri
+        example: https://api.ai-sage.com/labor-operations/123-abc-789/versions/v2
+    TransactionIDHeader:
+      description: Echoes the unique identifier for the specific atomic unit of work
+        processed by the server.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    CorrelationIDHeader:
+      description: Echoes the unique identifier spanning the entire business lifecycle
+        for cross-context tracing.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+    StandardsVersionHeader:
+      description: The version of the STAR REST Standard the response adheres to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    OrgVersionHeader:
+      description: The version of the organization schema and API the response adheres
+        to.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    AgentHeader:
+      description: The unique identifier of the agent or user executing this method.
+      style: simple
+      explode: false
+      schema:
+        pattern: "^[a-zA-Z0-9\\.\\-]+$"
+        type: string
+        example: "2026.01"
+    ETagHeader:
+      description: An entity tag (ETag) is an identifier for a specific version of
+        a resource.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: '"33a64df551425fcc55e4d42a148795d9f25f89d4"'
+    LastModifiedHeader:
+      description: The ISO 8601 timestamp at which the resource was last modified
+        in the underlying Postgres/Saga store.
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+        example: 2026-04-06T15:47:17Z
+    RateLimitLimitHeader:
+      description: The maximum number of requests allowed in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 1000
+    RateLimitRemainingHeader:
+      description: The number of requests remaining in the current time window.
+      style: simple
+      explode: false
+      schema:
+        type: integer
+        format: int32
+        example: 999
+    RateLimitResetHeader:
+      description: The number of seconds until the current rate limit window resets.
+        Using 'Delta Seconds' avoids clock-skew issues between distributed systems.
+      style: simple
+      explode: false
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        example: 60
+    RateLimitPolicyHeader:
+      description: "The quota policy for the current user/agent. Format: 'limit;w=window'.\
+        \ E.g., '1000;w=3600' means 1000 requests per hour."
+      style: simple
+      explode: false
+      schema:
+        pattern: ^\d+;w=\d+(;burst=\d+)?$
+        type: string
+        example: 1000;w=3600
   securitySchemes:
     industry-oauth:
       type: oauth2
@@ -2276,5 +2678,18 @@ components:
     bearer-auth:
       type: http
       description: JWT token obtained from authentication service
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyHeader:
+      type: apiKey
+      description: "A unique member-specific identifier used for API routing, quota\
+        \ management, and rate limiting. This key does not replace the Authorization\
+        \ bearer token for identity."
+      name: X-API-Key
+      in: header
+    AuthorizationHeader:
+      type: http
+      description: Standard OIDC/OAuth 2.0 Bearer Token
+      name: Authorization
       scheme: bearer
       bearerFormat: JWT

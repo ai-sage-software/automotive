@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - Payment
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,9 +9,9 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -31,22 +31,27 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
         code_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key code
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
         code:
           maxLength: 50
-          minLength: 5
+          minLength: 1
           type: string
-          description: The unique key code
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
         description:
-          maxLength: 50
+          maxLength: 255
           minLength: 5
           type: string
-          description: The unique key code
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
       description: not nullable
     Codes:
       type: array
@@ -57,27 +62,37 @@ components:
       properties:
         currency_exchange_id:
           type: string
-          description: Unique system identifier for the currenc...
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
         currency_exchange_key:
           type: string
-          description: Natural key or business identifier for t...
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
         source_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
         target_currency:
           type: string
-          description: Human-readable display value for the sou...
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
         currency_exchange_desc:
           type: string
-          description: A descriptive title for the currencyExch...
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
         exchange_rate:
           type: string
-          description: Human-readable display value for the sou...
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
         rate_date_time:
           type: string
-          description: The date and time the rate was associate...
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-          example: 2026-03-25T12:21:35Z
+          example: 2026-05-06T14:08:26Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
     Identifier:
@@ -98,37 +113,51 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
       description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
     Money:
       type: object
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
+          description: money.currency.code.desc
         display_value:
           type: string
-          description: The locale-specific display format for t...
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
       description: "Represents a monetary value, including its currency, locale, and\
@@ -140,12 +169,12 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         target_amount:
@@ -157,9 +186,9 @@ components:
           description: Context or domain of the reference.
         occurrence_date_time:
           type: string
-          description: The date and time the payment was associ...
+          description: The date and time the payment was associated with the order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
+          example: 2026-05-06T14:08:26Z
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentAmountTypes:
@@ -202,31 +231,33 @@ components:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique identifier value for the referenc...
+          description: Unique identifier value for the reference record.
         payment_method_reference_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: Unique key value for the reference recor...
+          description: Unique key value for the reference record.
         payment_method_key:
           maxLength: 50
           minLength: 5
           type: string
-          description: The unique key identifying the reference...
+          description: The unique key identifying the referenced PaymentMethod (Party)
+            aggregate.
         context:
           type: string
           description: Context or domain of the reference.
         payment_method_type:
           $ref: "#/components/schemas/PaymentMethodTypes"
         processor_options:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         snapshot_details:
-          $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         occurrence_date_time:
           type: string
-          description: The date and time the paymentMethod was ...
+          description: The date and time the paymentMethod was associated with the
+            order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
+          example: 2026-05-06T14:08:26Z
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentMethodTypes:
@@ -298,13 +329,6 @@ components:
         payment_transaction_status_type:
           $ref: "#/components/schemas/PaymentTransactionStatusTypes"
       description: Represents the type and value of a payment amount.
-    PaymentTransactionCreate:
-      required:
-      - payment_transaction_key
-      type: object
-      description: PaymentTransaction Create for Post
-      allOf:
-      - $ref: "#/components/schemas/PaymentTransaction"
     PaymentTransactionStatusTypes:
       type: string
       description: types of payment transaction status.
@@ -342,18 +366,6 @@ components:
       - HOLD_ON_DATE
       - PAYMENT
       - DOWNGRADE
-    PaymentTransactionUpdate:
-      type: object
-      properties:
-        amount:
-          $ref: "#/components/schemas/Money"
-        payment_transaction_status_type:
-          $ref: "#/components/schemas/PaymentTransactionStatusTypes"
-        payment_method_reference:
-          $ref: "#/components/schemas/PaymentMethodReference"
-        payment_amount_type:
-          $ref: "#/components/schemas/PaymentAmountTypes"
-      description: PaymentTransaction Update for Patch and Put
     PaymentTransactions:
       type: array
       items:
@@ -368,11 +380,15 @@ components:
           description: Context or domain of the reference.
         occurrence_date_time:
           type: string
-          description: The date and time the payment was associ...
+          description: The date and time the payment was associated with the order.
           format: date-time
-          example: 2026-03-25T12:21:35Z
+          example: 2026-05-06T14:08:26Z
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         payment_status_type:
           $ref: "#/components/schemas/PaymentStatusTypes"
       description: Payment Update for Patch and Put
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD

@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Automotive Retail Systems API
+  title: Automotive Retail Systems API - Budget
   description: "A standardized interface for Automotive Retail operations, built upon\
     \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
     * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
@@ -9,15 +9,18 @@ info:
     \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
     \ environments and asynchronous batch processing."
   contact:
-    name: Platform Architecture Team
-    url: www.starstandard.org
-    email: pescobar@starstandard.org
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: /
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
 paths: {}
 components:
   schemas:
@@ -28,98 +31,76 @@ components:
           $ref: "#/components/schemas/Identifiers"
         period_desc:
           type: string
-          description: Descriptive name for the accounting peri...
+          description: Detailed narrative description of the period's scope.
+          example: Third Quarter Fiscal Year 2026 - North American Operations
         accounting_period_id:
           type: string
-          description: Business key for the accounting period (...
+          description: System-level unique identifier for the period record.
+          example: ap-2026-07-v1
         accounting_period_key:
           type: string
-          description: Business key for the accounting period (...
+          description: Business-logical key following the chronological YYYYMM format.
+          example: "202607"
         period_name:
           type: string
-          description: Display name of the accounting period.
+          description: Short-hand display name for the period.
+          example: July 2026
         start_date:
           type: string
-          description: The beginning date of the accounting per...
+          description: The inclusive start date of the period in ISO-8601 format.
           format: date
         end_date:
           type: string
-          description: The ending date of the accounting period...
+          description: The inclusive end date of the period in ISO-8601 format.
           format: date
         accounting_period_status_type:
           $ref: "#/components/schemas/AccountingPeriodStatusTypes"
         fiscal_year:
           type: integer
-          description: The fiscal year this period belongs to.
+          description: The 4-digit fiscal year designation.
           format: int32
-      description: accounting.period.desc
-    AccountingPeriodCreate:
-      required:
-      - accounting_period_key
-      type: object
-      description: AccountingPeriod Create for Post
-      allOf:
-      - $ref: "#/components/schemas/AccountingPeriod"
+          example: 2026
+      description: "Defines a fiscal period, including its unique identifiers, start\
+        \ and end dates, and current status."
     AccountingPeriodStatusTypes:
       type: string
       description: types of accounting period status.
       enum:
+      - FUTURE
       - OPEN
       - ADJUSTMENT
-      - CLOSED
-      - FUTURE
       - PENDING_CLOSURE
+      - CLOSED
       - LOCKED
       - OTHER
-    AccountingPeriodUpdate:
-      type: object
-      properties:
-        end_date:
-          type: string
-          description: The ending date of the accounting period...
-          format: date
-        period_desc:
-          type: string
-          description: Descriptive name for the accounting peri...
-        fiscal_year:
-          type: integer
-          description: The fiscal year this period belongs to.
-          format: int32
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        accounting_period_status_type:
-          $ref: "#/components/schemas/AccountingPeriodStatusTypes"
-        period_name:
-          type: string
-          description: Display name of the accounting period.
-        start_date:
-          type: string
-          description: The beginning date of the accounting per...
-          format: date
-      description: AccountingPeriod Update for Patch and Put
     Budget:
       type: object
       properties:
         budget_key:
           type: string
-          description: The unique key for the Budget.
+          description: "Unique business-logical key for the Budget, often used for\
+            \ cross-system integration."
+          example: BGT-2026-OP-ATL-01
         budget_id:
           type: string
-          description: The unique ID for the Budget.
+          description: System-generated unique identifier for the Budget record.
+          example: bgt-7721-q8x
         name:
           type: string
-          description: "The name given to the budget (e.g., \"202..."
+          description: Formal name of the budget plan.
+          example: 2026 Q1 Regional Operating Budget
         accounting_period:
           $ref: "#/components/schemas/AccountingPeriod"
         status:
           $ref: "#/components/schemas/BudgetStatusTypes"
         approval_date:
           type: string
-          description: The date the budget was approved.
+          description: The timestamp indicating when the budget was formally authorized.
           format: date
         budget_items:
           $ref: "#/components/schemas/BudgetItems"
-      description: budget.desc
+      description: Represents an approved financial budget for a specific accounting
+        period.
     BudgetCreate:
       required:
       - budget_key
@@ -132,10 +113,14 @@ components:
       properties:
         budget_item_key:
           type: string
-          description: The unique key for the BudgetItem.
+          description: "Unique business-logical key for the budget line item, often\
+            \ used to map to external ERP lines."
+          example: BGT-ITEM-2026-MKTG-001
         budget_item_id:
           type: string
-          description: The unique ID for the BudgetItem.
+          description: System-generated unique identifier for the specific budget
+            line record.
+          example: bitm-4421-k9p
         general_ledger_account:
           $ref: "#/components/schemas/GeneralLedgerReference"
         control_account:
@@ -144,26 +129,8 @@ components:
           $ref: "#/components/schemas/FinancialCategoryTypes"
         budgeted_amount:
           $ref: "#/components/schemas/Money"
-      description: budget.item.desc
-    BudgetItemCreate:
-      required:
-      - budget_item_key
-      type: object
-      description: BudgetItem Create for Post
-      allOf:
-      - $ref: "#/components/schemas/BudgetItem"
-    BudgetItemUpdate:
-      type: object
-      properties:
-        budgeted_amount:
-          $ref: "#/components/schemas/Money"
-        financial_category:
-          $ref: "#/components/schemas/FinancialCategoryTypes"
-        general_ledger_account:
-          $ref: "#/components/schemas/GeneralLedgerReference"
-        control_account:
-          $ref: "#/components/schemas/ControlAccountReference"
-      description: BudgetItem Update for Patch and Put
+      description: "Represents a single line item within a financial budget, detailing\
+        \ the forecasted expenditure or revenue."
     BudgetItems:
       type: array
       items:
@@ -188,22 +155,52 @@ components:
       properties:
         approval_date:
           type: string
-          description: The date the budget was approved.
+          description: The timestamp indicating when the budget was formally authorized.
           format: date
         budget_items:
           $ref: "#/components/schemas/BudgetItems"
         name:
           type: string
-          description: "The name given to the budget (e.g., \"202..."
+          description: Formal name of the budget plan.
+          example: 2026 Q1 Regional Operating Budget
         accounting_period:
           $ref: "#/components/schemas/AccountingPeriod"
         status:
           $ref: "#/components/schemas/BudgetStatusTypes"
       description: Budget Update for Patch and Put
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
     Codes:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/Code"
     ControlAccountReference:
       type: object
       properties:
@@ -233,29 +230,46 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: control.account.reference.desc
-    ControlAccountReferenceCreate:
-      required:
-      - control_account_reference_key
-      type: object
-      description: ControlAccountReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/ControlAccountReference"
-    ControlAccountReferenceUpdate:
+          example: 2026-05-06T14:09:07Z
+      description: External system identifier
+    CurrencyExchange:
       type: object
       properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        context:
+        currency_exchange_id:
           type: string
-          description: Context or domain of the identifier
-        control_account:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
           type: string
-          description: The date and time the event occurred.
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
           format: date-time
-      description: ControlAccountReference Update for Patch and Put
+          example: 2026-05-06T14:09:07Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
     FinancialCategoryTypes:
       type: string
       description: types of financial categorys.
@@ -302,29 +316,8 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-      description: general.ledger.reference.desc
-    GeneralLedgerReferenceCreate:
-      required:
-      - general_ledger_reference_key
-      type: object
-      description: GeneralLedgerReference Create for Post
-      allOf:
-      - $ref: "#/components/schemas/GeneralLedgerReference"
-    GeneralLedgerReferenceUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        general_ledger_identifier:
-          $ref: "#/components/schemas/Identifier"
-        context:
-          type: string
-          description: Context or domain of the reference
-        occurrence_date_time:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-      description: GeneralLedgerReference Update for Patch and Put
+          example: 2026-05-06T14:09:07Z
+      description: External system reference
     Identifier:
       type: object
       properties:
@@ -343,41 +336,16 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         detail:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the...
+          description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
-      description: identifier.desc
-    IdentifierCreate:
-      required:
-      - identifier_key
-      type: object
-      description: Identifier Create for Post
-      allOf:
-      - $ref: "#/components/schemas/Identifier"
-    IdentifierUpdate:
-      type: object
-      properties:
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier_type:
-          type: string
-          description: The monetary or hours-based value of the...
-        context:
-          type: string
-          description: Context or domain of the identifier
-        detail:
-          type: string
-          description: The monetary or hours-based value of the...
-        value:
-          type: string
-          description: The monetary or hours-based value of the...
-      description: Identifier Update for Patch and Put
+      description: External system identifier
     Identifiers:
       type: array
       items:
@@ -387,20 +355,37 @@ components:
       properties:
         money_key:
           type: string
-          description: The unique key for the monetary value.
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
         money_id:
           type: string
-          description: The unique ID for the monetary value.
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        vin:
+          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: "ISO currency code, e.g., 'USD'."
+          description: money.currency.code.desc
         display_value:
           type: string
-          description: The locale-specific display format for t...
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
         locale:
           type: string
-          description: "The locale code (e.g., en-US, fr-FR)."
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
         value:
           type: string
-          description: The monetary value.
-      description: money.desc
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    Vin:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
