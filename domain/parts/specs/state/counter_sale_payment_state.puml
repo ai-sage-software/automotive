@@ -1,48 +1,58 @@
 @startuml CounterSaleStateDiagram
 
-title Counter Sale (Immediate Payment)
+skinparam titleFontSize 20
+skinparam state {
+    BackgroundColor<<Initial>> AliceBlue
+    BackgroundColor<<Processing>> LightGoldenRodYellow
+    BackgroundColor<<Success>> LightGreen
+    BackgroundColor<<Failure>> LightCoral
+    BackgroundColor<<Neutral>> WhiteSmoke
+    BorderColor Gray
+}
+
+title Counter Sale (Immediate Payment) - Intent-Driven Flow
 
 ' Define the starting point
 [*] --> CREATED
 
 ' 1. Transaction Creation & Initiation
-state CREATED : Order/Ticket is opened
+state CREATED <<Initial>> : Order/Ticket is opened
 
 ' 2. Payment Attempt (Immediate)
-state PENDING
-state PROCESSING
-state REQUIRES_ACTION : Pin Pad / Signature
+state PENDING <<Processing>>
+state PROCESSING <<Processing>>
+state REQUIRES_ACTION <<Processing>> : Pin Pad / Signature
 
-CREATED --> PENDING : Payment method selected (e.g., Credit Card swipe)
-PENDING --> PROCESSING : Sending request to payment processor
-PROCESSING --> REQUIRES_ACTION : User input needed (PIN, tap, signature)
-REQUIRES_ACTION --> PROCESSING : User input received
+CREATED --> PENDING : Payment method selected
+PENDING --> PROCESSING : Sending request
+PROCESSING --> REQUIRES_ACTION : User input needed
+REQUIRES_ACTION --> PROCESSING : Input received
 
 ' 3. Authorization Gates
-state APPROVED
-state PAID : Funds are captured
-state SUCCEEDED
-state COMPLETED
+state APPROVED <<Success>>
+state PAID <<Success>> : Funds captured
+state SUCCEEDED <<Success>>
+state COMPLETED <<Success>>
 
-PROCESSING --> APPROVED : Authorization granted
-APPROVED --> PAID : Funds captured instantly (typical for counter sales)
-PAID --> SUCCEEDED : High-level success confirmation
-SUCCEEDED --> COMPLETED : Transaction closed and finalized
+PROCESSING --> APPROVED : Auth granted
+APPROVED --> PAID : Instant capture
+PAID --> SUCCEEDED : Success confirmed
+SUCCEEDED --> COMPLETED : Finalized
 
 ' 4. Failure & Reversal States
-state FAILED
-state DENIED
-state REJECTED
-state VOIDED
-state REFUNDED
+state FAILED <<Failure>>
+state DENIED <<Failure>>
+state REJECTED <<Failure>>
+state VOIDED <<Neutral>>
+state REFUNDED <<Neutral>>
 
-PROCESSING --> FAILED : General communication error
-PROCESSING --> DENIED : Card denied by bank
-PROCESSING --> REJECTED : Processor risk rejection
+PROCESSING --> FAILED : Error
+PROCESSING --> DENIED : Card denied
+PROCESSING --> REJECTED : Risk rejection
 
-' 5. Post-Completion Actions (Rare for parts, but possible)
-PAID --> VOIDED : Immediate void (e.g., mistaken charge)
-PAID --> REFUNDED : Subsequent return of part
+' 5. Post-Completion Actions
+PAID --> VOIDED : Immediate void
+PAID --> REFUNDED : Subsequent return
 
 ' 6. Terminal End States
 FAILED --> [*]
