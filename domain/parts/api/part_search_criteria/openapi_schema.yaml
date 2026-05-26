@@ -208,7 +208,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-05-07T17:19:35Z
+          example: 2026-05-26T13:25:47Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -320,9 +320,9 @@ components:
     CurrencyCode:
       type: string
       description: The three-letter ISO 4217 currency code used for financial transactions.
-    DaysOfWeekTypes:
+    DayOfWeekTypes:
       type: string
-      description: types of days of weeks.
+      description: types of day of weeks.
       enum:
       - SUN
       - MON
@@ -374,13 +374,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-05-07T17:19:35Z
+          example: 2026-05-26T13:25:47Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-05-07T17:19:35Z
+          example: 2026-05-26T13:25:47Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -568,6 +568,7 @@ components:
       - ENGINE_CODE
       - TRANSMISSION_CODE
       - DRAWING_NUMBER
+      - CAD_NUMBER
       - OTHER
     PartIdentifiers:
       type: array
@@ -714,9 +715,11 @@ components:
           $ref: "#/components/schemas/Codes"
         part_suffix:
           $ref: "#/components/schemas/Codes"
+        part_base:
+          $ref: "#/components/schemas/Codes"
         description:
           type: string
-          description: Description of the part name
+          description: "the Human Friendly name (e.g., Radiator Support Bolt)"
         language:
           $ref: "#/components/schemas/Codes"
         locale:
@@ -729,7 +732,7 @@ components:
           $ref: "#/components/schemas/Codes"
         part_name_type:
           $ref: "#/components/schemas/PartNameTypes"
-        part_number:
+        part_numbers:
           $ref: "#/components/schemas/Codes"
       description: nullable
     PartNameTypes:
@@ -1025,7 +1028,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-05-07T17:19:35Z
+          example: 2026-05-26T13:25:47Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1495,38 +1498,36 @@ components:
     TimeSlot:
       type: object
       properties:
-        time_slot_id:
-          type: string
-          description: Technical unique identifier (GUID) for the time slot record.
-          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
+          maxLength: 50
+          minLength: 1
           type: string
-          description: Natural business key for the time slot within its specific
-            context.
-          example: TS-MON-MORNING-SHIFT
-        time_slot_source:
-          type: string
-          description: The originating system or calendar providing this availability
-            data.
-          example: GOOGLE_CALENDAR
-        start_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
-          type: string
-          description: The local start time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Unique surrogate key for the specific time slot instance.
+          example: TS-KEY-99281A
         end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
+          $ref: "#/components/schemas/DayOfWeekTypes"
         end_time:
+          maxLength: 8
+          minLength: 5
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local end time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Time with format of HH:mm:ss
+          example: "52200"
         recurring_indicator:
           type: boolean
-          description: Indicates if this time slot is part of a repeating pattern.
+          description: Indicates whether the time slot repeats on a recurring cycle.
           example: true
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DayOfWeekTypes"
+        start_time:
+          maxLength: 8
+          minLength: 5
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -1534,10 +1535,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: The business identifier or code assigned to this generic time
+            block configuration.
+          example: MORNING_SHIFT_01
         week_of_date:
-          $ref: "#/components/schemas/Codes"
-      description: "Defines a specific window of time, often within a recurring schedule,\
-        \ used for service availability or appointment booking."
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          format: date
+          items:
+            type: string
+      description: Range of time for the appointment
     TimeSlots:
       type: array
       items:
@@ -1551,7 +1564,6 @@ components:
       - BEFORE
       - BETWEEN
       - BLOCK
-      - UNKNOWN
     UnitOfMeasure:
       type: object
       properties:
@@ -1679,7 +1691,7 @@ components:
           description: "The date and time the item was associated with this location\
             \ (e.g., received at this location)."
           format: date-time
-          example: 2026-05-07T17:19:35Z
+          example: 2026-05-26T13:25:47Z
       description: Reference to a Warehouse or Inventory Location Aggregate Root.
     WarehouseTypes:
       type: string
