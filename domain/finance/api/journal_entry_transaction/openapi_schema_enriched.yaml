@@ -117,6 +117,11 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
+      - RAMP
+      - RAIL
+      - PORT
+      - CONVOY
+      - HUB
       - OTHER
     AuthorizationLevel:
       type: object
@@ -125,7 +130,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -263,7 +268,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
       description: External system identifier
     ControlAccountReferences:
       type: array
@@ -307,12 +312,12 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
-    DaysOfWeekTypes:
+    DayOfWeekTypes:
       type: string
-      description: types of days of weeks.
+      description: types of day of weeks.
       enum:
       - SUN
       - MON
@@ -321,6 +326,82 @@ components:
       - THURS
       - FRI
       - SAT
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
+      enum:
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
+    EffectivePeriod:
+      type: object
+      properties:
+        effective_period_key:
+          type: string
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
+        active_indicator:
+          type: boolean
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
+        exclusive_indicator:
+          type: boolean
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
+        start_date_time:
+          type: string
+          description: The inclusive start point of the period in ISO 8601 format.
+          format: date-time
+          example: 2026-07-02T02:37:33Z
+        complete_date_time:
+          type: string
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
+          format: date-time
+          example: 2026-07-02T02:37:33Z
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
+          type: string
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        recur_count:
+          type: string
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: string
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
+        recur_indicator:
+          type: boolean
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
     EntryResourceTypes:
       type: string
       description: types of entry resources.
@@ -378,7 +459,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
         event_message_group:
           type: string
           description: The group to which the eventMessage belongs.
@@ -456,6 +537,23 @@ components:
       - NOT_ELIGIBLE
       - AUTHENTICATION_REQUIRED
       - APPLIED
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     GeneralLedgerReference:
       type: object
       properties:
@@ -485,7 +583,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
       description: External system reference
     GeneralLedgerReferences:
       type: array
@@ -517,6 +615,8 @@ components:
           type: string
           description: The monetary or hours-based value of the event.
         system_codes:
+          $ref: "#/components/schemas/Codes"
+        issuing_authority:
           $ref: "#/components/schemas/Codes"
       description: External system identifier
     Identifiers:
@@ -577,7 +677,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
         source_key:
           maxLength: 50
           minLength: 5
@@ -694,6 +794,88 @@ components:
       enum:
       - DEBIT
       - CREDIT
+    JurisdictionProfile:
+      type: object
+      properties:
+        jurisdiction_profile_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The persistent key representing the jurisdiction profile.
+          example: JURIS-PROF-US-GA-001
+        jurisdiction_profile_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The externally visible identifier representing the jurisdiction
+            profile.
+          example: JURIS-PROF-ID-US-GA
+        jurisdiction_profile_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The human-readable name of the jurisdiction profile.
+          example: United States - Georgia
+        description:
+          maxLength: 2000
+          minLength: 1
+          type: string
+          description: The description of the jurisdiction profile and the regulatory
+            context it represents.
+          example: "Jurisdiction profile for United States federal and Georgia state\
+            \ legal, privacy, tax, AI, and compliance constraints."
+        jurisdiction_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        privacy_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        ai_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        consumer_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tax_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        retention_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        data_residency_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The source system code identifying the system of record, governance\
+            \ catalog, legal registry, policy registry, or integration source for\
+            \ this jurisdiction profile."
+          example: GOVERNANCE_CATALOG
+        source_authority_indicator:
+          type: boolean
+          description: Indicates whether the source system is considered authoritative
+            for this jurisdiction profile.
+          example: true
+        source_version:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The version of the jurisdiction profile as provided by the\
+            \ source governance, legal, policy, or compliance system."
+          example: "2026.06"
+        source_last_synced_date_time:
+          type: string
+          description: "The date and time when this jurisdiction profile was last\
+            \ synchronized from the source governance, legal, policy, or compliance\
+            \ system."
+          format: date-time
+          example: 2026-07-02T02:37:33Z
+        occurrence_date_time:
+          type: string
+          description: "The date and time when the jurisdiction profile was observed,\
+            \ created, received, updated, or became effective."
+          format: date-time
+          example: 2026-07-02T02:37:33Z
+      description: nullable
     Locale:
       type: object
       properties:
@@ -730,6 +912,8 @@ components:
           description: The code of the inventory location or branch from which this
             part is sourced.
           example: WH001
+        jurisdiction_profile:
+          $ref: "#/components/schemas/JurisdictionProfile"
       description: not nullable
     Memo:
       type: array
@@ -747,11 +931,10 @@ components:
           type: string
           description: System-generated unique identifier for the money record.
           example: mny-5521-z99
-        vin:
-          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: money.currency.code.desc
+          description: Three-letter ISO-4217 currency code.
+          example: USD
         display_value:
           type: string
           description: Formatted monetary string including symbol and separators based
@@ -761,11 +944,8 @@ components:
           type: string
           description: Language and region identifier (BCP 47 format).
           example: en-US
-        value:
-          type: string
-          description: The raw decimal monetary amount stored as a string to prevent
-            floating-point errors.
-          example: "1234.56"
+        amount:
+          $ref: "#/components/schemas/GeneralAmount"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
       description: "Represents a monetary value, including its currency, locale, and\
@@ -830,7 +1010,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -991,6 +1171,8 @@ components:
       - GROUP
       - RENTAL
       - RESALE
+      - SHIP_TO
+      - SOLD_TO
     PersonName:
       type: object
       properties:
@@ -1086,24 +1268,35 @@ components:
       type: string
       description: types of staff roles.
       enum:
-      - SERVICE_TECHNICIAN
-      - TECHNICIAN
+      - DEALER_PRINCIPAL
+      - GENERAL_MANAGER
+      - GENERAL_SALES_MANAGER
+      - SALES_MANAGER
+      - SALES_PERSON
+      - BUSINESS_DEVELOPMENT_REPRESENTATIVE
+      - CUSTOMER_SERVICE_REPRESENTATIVE
+      - RECEPTIONIST
+      - FINANCE_AND_INSURANCE_MANAGER
+      - BUSINESS_MANAGER
+      - CLOSING_MANAGER
       - SERVICE_MANAGER
       - SERVICE_ADVISOR
-      - SALES_PERSON
-      - CUSTOMER_SERVICE
-      - SALES_MANAGER
-      - F_I_MANAGER
-      - CLOSING_MANAGER
-      - BUSINESS_MANAGER
-      - RECEPTIONIST
+      - SERVICE_TECHNICIAN
+      - SHOP_FOREMAN
+      - WARRANTY_ADMINISTRATOR
       - PARTS_MANAGER
       - PARTS_ADVISOR
-      - DETAILER
-      - DRIVER
-      - APPRAISER
-      - GENERAL_MANAGER
-      - UNKNOWN
+      - PARTS_SPECIALIST
+      - INVENTORY_MANAGER
+      - FLEET_MANAGER
+      - DETAIL_MANAGER
+      - DETAIL_TECHNICIAN
+      - ACCOUNTING_MANAGER
+      - CONTROLLER
+      - TITLE_CLERK
+      - OFFICE_MANAGER
+      - MARKETING_MANAGER
+      - OTHER
     SubsidiaryLedgerReference:
       type: object
       properties:
@@ -1130,44 +1323,42 @@ components:
           description: The date and time the Journal Entry referencing this transaction
             was created.
           format: date-time
-          example: 2026-05-07T17:18:11Z
+          example: 2026-07-02T02:37:33Z
       description: Immutable reference from a Journal Entry back to its source Subsidiary
         Ledger Transaction.
     TimeSlot:
       type: object
       properties:
-        time_slot_id:
-          type: string
-          description: Technical unique identifier (GUID) for the time slot record.
-          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
+          maxLength: 50
+          minLength: 1
           type: string
-          description: Natural business key for the time slot within its specific
-            context.
-          example: TS-MON-MORNING-SHIFT
-        time_slot_source:
-          type: string
-          description: The originating system or calendar providing this availability
-            data.
-          example: GOOGLE_CALENDAR
-        start_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
-          type: string
-          description: The local start time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Unique surrogate key for the specific time slot instance.
+          example: TS-KEY-99281A
         end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
+          $ref: "#/components/schemas/DayOfWeekTypes"
         end_time:
+          maxLength: 8
+          minLength: 5
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local end time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Time with format of HH:mm:ss
+          example: "52200"
         recurring_indicator:
           type: boolean
-          description: Indicates if this time slot is part of a repeating pattern.
+          description: Indicates whether the time slot repeats on a recurring cycle.
           example: true
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DayOfWeekTypes"
+        start_time:
+          maxLength: 8
+          minLength: 5
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -1175,10 +1366,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: The business identifier or code assigned to this generic time
+            block configuration.
+          example: MORNING_SHIFT_01
         week_of_date:
-          $ref: "#/components/schemas/Codes"
-      description: "Defines a specific window of time, often within a recurring schedule,\
-        \ used for service availability or appointment booking."
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          format: date
+          items:
+            type: string
+      description: Range of time for the appointment
     TimeSlots:
       type: array
       items:
@@ -1192,8 +1395,10 @@ components:
       - BEFORE
       - BETWEEN
       - BLOCK
+      - EXACT
+      - FLEXIBLE
+      - PREFERRED
+      - REQUIRED
+      - RESTRICTED
+      - OTHER
       - UNKNOWN
-    Vin:
-      type: string
-      description: Three-letter ISO-4217 currency code.
-      example: USD

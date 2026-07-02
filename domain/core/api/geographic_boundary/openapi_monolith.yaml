@@ -83,6 +83,9 @@ paths:
         "504":
           $ref: "#/components/responses/GatewayTimeout"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
     post:
@@ -145,6 +148,9 @@ paths:
         "504":
           $ref: "#/components/responses/GatewayTimeout"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
   /geographic-boundaries/{geographic-boundary-key}:
@@ -198,6 +204,9 @@ paths:
         "504":
           $ref: "#/components/responses/GatewayTimeout"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
     put:
@@ -266,6 +275,9 @@ paths:
         "406":
           $ref: "#/components/responses/NotAcceptableError"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
     delete:
@@ -318,13 +330,16 @@ paths:
           $ref: "#/components/responses/ServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailableError"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
         "504":
           $ref: "#/components/responses/GatewayTimeout"
         "406":
           $ref: "#/components/responses/NotAcceptableError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
     patch:
@@ -391,6 +406,9 @@ paths:
         "406":
           $ref: "#/components/responses/NotAcceptableError"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
   /geographic-boundary/health:
@@ -432,15 +450,18 @@ paths:
           $ref: "#/components/responses/ServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailableError"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "429":
-          $ref: "#/components/responses/TooManyRequestsError"
         "504":
           $ref: "#/components/responses/GatewayTimeout"
         "406":
           $ref: "#/components/responses/NotAcceptableError"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "429":
+          $ref: "#/components/responses/TooManyRequestsError"
       security:
+      - member-api-key: []
+      - industry-oauth:
+        - standard:read
       - ApiKeyHeader: []
       - AuthorizationHeader: []
 components:
@@ -453,13 +474,13 @@ components:
           minLength: 5
           type: string
           description: Unique system-specific internal identifier.
-          example: "847156371139514368"
+          example: cd-9902-v1
         code_key:
           maxLength: 50
           minLength: 5
           type: string
           description: Unique global internal or external business key.
-          example: "847156371139514369"
+          example: VEHICLE_STATUS_CODE
         code:
           maxLength: 50
           minLength: 1
@@ -471,7 +492,8 @@ components:
           minLength: 5
           type: string
           description: A human-readable explanation of what the code represents.
-          example: Vehicle engine component.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
       description: not nullable
     Codes:
       type: array
@@ -514,7 +536,7 @@ components:
         trace_id:
           type: string
           description: Unique system-specific internal identifier.
-          example: "847156371139514370"
+          example: 57c31110-859a-11ec-a8a3-0242ac120002
         doc_url:
           type: string
           description: A URL leading to the documentation page for this specific error
@@ -557,11 +579,11 @@ components:
         geographic_boundary_id:
           type: string
           description: Unique system-specific internal identifier.
-          example: "847156371168874526"
+          example: gb-7721-x88
         geographic_boundary_key:
           type: string
           description: Unique global internal or external business key.
-          example: "847156371168874527"
+          example: GEO-ATL-METRO-001
         geographic_codes:
           $ref: "#/components/schemas/Codes"
         locales:
@@ -583,7 +605,7 @@ components:
         name:
           type: string
           description: The common display name for the boundary.
-          example: Vehicle Image Side View
+          example: Alpharetta Service Area
         vertices:
           type: string
           description: "Comma-separated string of coordinate pairs (lat,long) defining\
@@ -592,7 +614,7 @@ components:
         description:
           type: string
           description: Detailed narrative of the boundary's purpose or coverage.
-          example: Vehicle engine component.
+          example: Primary sales territory for North Georgia.
         center_latitude:
           type: string
           description: Latitude of the boundary's centroid.
@@ -646,11 +668,11 @@ components:
         name:
           type: string
           description: The common display name for the boundary.
-          example: Vehicle Image Side View
+          example: Alpharetta Service Area
         description:
           type: string
           description: Detailed narrative of the boundary's purpose or coverage.
-          example: Vehicle engine component.
+          example: Primary sales territory for North Georgia.
       description: GeographicBoundary Update for Patch and Put
     HealthStatus:
       type: object
@@ -658,7 +680,7 @@ components:
         status:
           type: string
           description: Current health status of the service.
-          example: ACTIVE
+          example: UP
         version:
           type: string
           description: Version of the deployed service.
@@ -704,17 +726,20 @@ components:
           type: string
           description: "A short, human-readable summary of the problem type. It should\
             \ not change from occurrence to occurrence."
-          example: Resource Link
+          example: Intent Validation Failed
         status:
+          maximum: 599
+          minimum: 100
           type: integer
           description: The HTTP status code generated by the origin server for this
             occurrence of the problem.
+          format: int32
           example: 400
         detail:
           type: string
           description: "A human-readable explanation specific to this occurrence of\
             \ the problem, providing context on the failure."
-          example: Primary identifier
+          example: The export request could not be processed due to business constraints.
         instance:
           type: string
           description: A URI reference that identifies the specific occurrence of
@@ -754,23 +779,32 @@ components:
       enum:
       - MILES
       - KM
+      - METER
+      - INCH
+      - FEET
+      - YARD
+      - FATHOM
+      - NAUTICAL
       - GALLON
       - LITER
-      - METER
-      - QUARTER
       - OZ
       - LB
+      - KG
+      - WATT
+      - KWH
+      - AMPERE
+      - VOLT
+      - CELSIUS
+      - FAHRENHEIT
+      - KELVIN
+      - RANKINE
       - DATE_TIME
       - DATE
-      - KG
       - DURATION
-      - CURRENCY
-      - POINTS
       - MINUTES
       - HOURS
       - DAYS
       - WEEKS
-      - DAY_OF_MONTH
       - BI_WEEKS
       - SEMI_MONTHS
       - MONTHS
@@ -778,21 +812,14 @@ components:
       - SEMI_YEARS
       - YEARS
       - MULTI_YEARS
+      - DAY_OF_MONTH
       - OCCURRENCE
-      - CELSIUS
-      - FAHRENHEIT
-      - KELVIN
-      - RANKINE
-      - INCH
-      - FEET
-      - YARD
-      - FATHOM
-      - NAUTICAL
-      - BYTES
-      - CUSTOM
-      - UNLIMITED
-      - NONE
+      - CURRENCY
+      - POINTS
       - PERCENT
+      - UNIT
+      - ITEM
+      - BYTES
       - STATE
       - CITY
       - COUNTRY
@@ -804,11 +831,12 @@ components:
       - FEDERAL
       - COUNTY
       - DISTRICT
+      - CUSTOM
+      - UNLIMITED
+      - NONE
       - NA
-      - UNIT
-      - WATT
-      - ITEM
       - OTHER
+      - UNKNOWN
     Violation:
       type: object
       properties:
@@ -1477,7 +1505,7 @@ components:
       explode: false
       schema:
         type: string
-        example: "846853399854256129"
+        example: "860348165067374592"
     StandardsVersionHeader:
       name: Standards-Version
       in: header
@@ -1511,10 +1539,10 @@ components:
       schema:
         type: string
         example: TOYOTA
+        default: TOYOTA
         enum:
         - TOYOTA
         - LEXUS
-        default: TOYOTA
     SubscriberCodeHeader:
       name: Subscriber-Code
       in: header
@@ -1593,7 +1621,7 @@ components:
         pattern: ^/.+
         type: string
         format: uri-reference
-        example: /labor-operations/846853399858450432
+        example: /labor-operations/860348165088346112
     ContentLocationHeader:
       description: The URI of the specific representation returned in the payload.
         Used to disambiguate the 'Resource Identifier' from the 'Data Artifact' in
@@ -1604,7 +1632,7 @@ components:
         pattern: ^/.+
         type: string
         format: uri-reference
-        example: /labor-operations/846853399858450433
+        example: /labor-operations/860348165088346113
     TransactionIDHeader:
       description: Echoes the unique identifier for the specific atomic unit of work
         processed by the server.

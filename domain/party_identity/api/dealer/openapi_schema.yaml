@@ -24,15 +24,58 @@ servers:
 paths: {}
 components:
   schemas:
-    AddressReference:
+    Address:
       type: object
       properties:
-        address_reference_key:
+        address_locales:
+          $ref: "#/components/schemas/AddressLocales"
+        priority:
+          maxLength: 10
+          minLength: 1
           type: string
-          description: A unique key for the address reference.
-        address_reference_id:
+          description: "Priority indicator for address usage (e.g., billing, shipping)."
+          example: "1"
+        city_code:
+          maxLength: 20
+          minLength: 1
           type: string
-          description: The unique value of the address reference.
+          description: Standardized city code.
+        address_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business key for the address.
+        address_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier for the address record.
+        address_input:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: Raw input provided for address processing or validation.
+        address_line1:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: "Primary address line (Street, PO Box, etc)."
+        address_line2:
+          maxLength: 100
+          type: string
+          description: "Secondary address line (Suite, Apt, etc)."
+        address_line3:
+          maxLength: 100
+          type: string
+          description: Additional address line information.
+        address_line4:
+          maxLength: 100
+          type: string
+          description: Additional address line information.
+        address_line5:
+          maxLength: 100
+          type: string
+          description: Additional address line information.
         address_types:
           maxItems: 255
           minItems: 1
@@ -40,49 +83,89 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AddressTypes"
-        address_line1:
-          type: string
-          description: "Primary address line (Street, PO Box, etc)."
-        address_line2:
-          type: string
-          description: "Secondary address line (Suite, Apt, etc)."
-        address_line3:
-          type: string
-          description: "Secondary address line (Suite, Apt, etc)."
-        address_line4:
-          type: string
-          description: "Secondary address line (Suite, Apt, etc)."
-        address_line5:
-          type: string
-          description: "Secondary address line (Suite, Apt, etc)."
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
         city:
+          maxLength: 100
+          minLength: 1
           type: string
           description: Name of the city.
-        country_code:
+        city_subdivision:
+          maxLength: 100
+          type: string
+          description: "Subdivision within the city (e.g., neighborhood, district)."
+        country:
+          maxLength: 100
+          minLength: 2
           type: string
           description: Full name of the country.
-        district:
+        country_code:
+          maxLength: 2
+          minLength: 2
           type: string
-          description: Name of the district.
+          description: ISO 3166-1 Alpha-2 country code.
+        county:
+          maxLength: 100
+          type: string
+          description: Name of the county.
+          example: Dade
+        county_code:
+          maxLength: 20
+          type: string
+          description: Standardized code for the county.
         label:
           maxLength: 50
           type: string
           description: Label or display name for the address.
+        position:
+          $ref: "#/components/schemas/Position"
         postal_code:
           maxLength: 20
           minLength: 3
           type: string
           description: Primary postal or ZIP code.
-        state_province:
+        postal_code_ext:
+          maxLength: 10
+          type: string
+          description: "Extended postal code (e.g., ZIP+4)."
+        preferred_indicator:
+          type: boolean
+          description: Flag indicating if this address is the preferred address.
+          example: false
+        region:
+          maxLength: 50
+          type: string
+          description: "Administrative region (e.g., province, state)."
+        state:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
-      description: "A reference to an address, including its unique key and a list\
-        \ of its usage types."
-    AddressReferences:
+      description: Address represents a physical or mailing location associated with
+        a party or warehouse.
+    AddressLocale:
+      type: object
+      properties:
+        address_locale_key:
+          type: string
+          description: Business key for the address locale.
+        address_locale_id:
+          type: string
+          description: Unique identifier for the address locale.
+        region_code:
+          type: string
+          description: Code representing the region for the locale.
+        region_name:
+          type: string
+          description: Name of the region for the locale.
+        region_aliases:
+          $ref: "#/components/schemas/Codes"
+        location_type:
+          $ref: "#/components/schemas/LocationTypes"
+      description: External system address locale including region and location type.
+    AddressLocales:
       type: array
       items:
-        $ref: "#/components/schemas/AddressReference"
+        $ref: "#/components/schemas/AddressLocale"
     AddressTypes:
       type: string
       description: types of address.
@@ -117,7 +200,16 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
+      - RAMP
+      - RAIL
+      - PORT
+      - CONVOY
+      - HUB
       - OTHER
+    Addresses:
+      type: array
+      items:
+        $ref: "#/components/schemas/Address"
     AuthorizationLevel:
       type: object
       properties:
@@ -125,7 +217,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -234,6 +326,126 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/CommunicationChannel"
+    ControlAccount:
+      type: object
+      properties:
+        control_account_id:
+          type: string
+          description: Unique identifier for the control account.
+        control_account_key:
+          type: string
+          description: Business key for the control account.
+        account_number:
+          type: string
+          description: Business key for the control account.
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        control_account_desc:
+          type: string
+          description: Description of the control account.
+        control_account_name:
+          type: string
+          description: Display name of the control account.
+        control_account_type:
+          $ref: "#/components/schemas/ControlAccountTypes"
+        control_type_id:
+          type: string
+          description: Identifier for the control type of the account.
+        bank_account_id:
+          type: string
+          description: Associated bank account identifier.
+        is_counted:
+          type: boolean
+          description: "Indicates if the account is a counted account (e.g., for inventory)."
+          example: false
+        prefix:
+          type: string
+          description: The prefix of the account number.
+        control_account_role_type:
+          $ref: "#/components/schemas/ControlAccountRoleTypes"
+        control_account_status_types:
+          $ref: "#/components/schemas/ControlAccountStatusTypes"
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        total_debit_balance:
+          $ref: "#/components/schemas/Money"
+        total_credit_balance:
+          $ref: "#/components/schemas/Money"
+        net_balance:
+          $ref: "#/components/schemas/Money"
+        last_reconciliation_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-07-02T18:45:03Z
+        subsidiary_ledger_type:
+          $ref: "#/components/schemas/SubsidiaryLedgerTypes"
+      description: "Journal entry for general ledger, capturing control account details\
+        \ including identifiers, type, and descriptive fields."
+    ControlAccountRoleTypes:
+      type: string
+      description: types of control account roles.
+      enum:
+      - MASTER
+      - SUB
+      - SPLIT
+      - STANDARD
+      - OTHER
+    ControlAccountStatusTypes:
+      type: string
+      description: types of control account status.
+      enum:
+      - INITIALIZE
+      - CREATED
+      - ACTIVATE
+      - ACTIVE
+      - SUSPEND_FOR_REVIEW
+      - REACTIVATE
+      - SUSPENDED
+      - PERMANENTLY_CLOSED
+      - RETIRE
+      - TERMINATED
+    ControlAccountTypes:
+      type: string
+      description: types of control accounts.
+      enum:
+      - ASSETS
+      - FIXED_ASSETS
+      - CONTRA_ASSET
+      - LIABILITY
+      - LONG_TERM_LIABILITY
+      - EQUITY
+      - CLEARING
+      - PROVISION
+      - ROUNDING
+      - REVENUE
+      - OTHER_INCOME
+      - COGS
+      - EXPENSE
+      - DEPRECIATION
+      - TAX
+      - DISCOUNT
+      - REBATE
+      - FEE
+      - SERVICE
+      - CREDIT
+      - OTHER
+      - DEALER
+      - VEHICLE
+      - ACCESSORIES
+      - OPTION
+      - CUSTOMER
+      - VENDOR
+      - EMPLOYEE
+      - PRODUCT
+      - REPAIR_ORDER
+      - PARTS_SALES_ORDER
+      - PACKAGE
+      - REFERENCE
+    ControlAccounts:
+      type: array
+      items:
+        $ref: "#/components/schemas/ControlAccount"
     CurrencyCode:
       type: string
       description: The three-letter ISO 4217 currency code used for financial transactions.
@@ -272,12 +484,43 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
-    DaysOfWeekTypes:
+    DailyHour:
+      type: object
+      properties:
+        daily_hour_key:
+          type: string
+          description: A unique key for the daily hour record
+        start_day:
+          type: string
+          description: The starting day of the week for the hours
+        end_day:
+          type: string
+          description: The ending day of the week for the hours
+        opening_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
+        closing_time:
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
+        week_starting_date:
+          type: string
+          description: The starting date of the week
+          format: date
+        week_ending_date:
+          type: string
+          description: The ending date of the week
+          format: date
+      description: Daily Hours that the department is open
+    DayOfWeekTypes:
       type: string
-      description: types of days of weeks.
+      description: types of day of weeks.
       enum:
       - SUN
       - MON
@@ -343,12 +586,7 @@ components:
         service_center_codes:
           $ref: "#/components/schemas/Codes"
         identifiers:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Identifier"
+          $ref: "#/components/schemas/Identifiers"
         staff:
           $ref: "#/components/schemas/Staff"
         staff_href:
@@ -380,35 +618,68 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/DealerService"
-    DepartmentReference:
+    Department:
       type: object
       properties:
-        department_reference_id:
-          type: string
-          description: Unique identifier value
-        department_reference_key:
-          type: string
-          description: Unique identifier value
         department_key:
           type: string
-          description: Unique identifier value
-        department_type:
-          $ref: "#/components/schemas/DepartmentTypes"
-        context:
+          description: A unique key for the department.
+        department_id:
           type: string
-          description: Context or domain of the identifier
-        system_codes:
+          description: The unique ID for the department.
+        department_codes:
           $ref: "#/components/schemas/Codes"
-        department:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
+        department_name:
           type: string
-          description: The date and time the event occurred.
-          format: date-time
-          example: 2026-05-07T17:19:56Z
-        duration:
-          $ref: "#/components/schemas/EffectivePeriod"
-      description: External system identifier
+          description: The name of the department.
+        department_function:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        department_contact:
+          type: string
+          description: The contact name for the department.
+        comments:
+          type: string
+          description: General comments about the department.
+        special_remarks_description:
+          type: string
+          description: A description of special remarks about the department.
+        contact_methods_href:
+          type: string
+          description: A hyperlink to the department's contact methods.
+          format: href
+        departments_href:
+          type: string
+          description: A hyperlink to related departments.
+          format: href
+        daily_hours:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyHour"
+        links:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Link"
+        department_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/DepartmentTypes"
+        control_accounts:
+          $ref: "#/components/schemas/ControlAccounts"
+      description: Dealership Department
     DepartmentTypes:
       type: string
       description: types of departments.
@@ -467,13 +738,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -500,6 +771,63 @@ components:
           example: true
       description: "Defines a temporal range and recurrence logic for business validity,\
         \ such as license expirations or service intervals."
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+      - VEHICLE_INVOICE
+      - PARTS_INVOICE
+      - SERVICE_INVOICE
+      - PAYMENT
+      - DEPOSIT
+      - REFUND
+      - FEE
+      - CREDIT
+      - ADJUSTMENT
+      - WRITE_OFF
+      - CHARGEBACK
+      - JOURNAL_ENTRY
+      - FINANCE_CONTRACT
+    GenderTypes:
+      type: string
+      description: types of genders.
+      enum:
+      - MALE
+      - FEMALE
+      - UNKNOWN
+      - TRANS_MALE
+      - TRANS_FEMALE
+      - NA
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     Identifier:
       type: object
       properties:
@@ -527,11 +855,95 @@ components:
           description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
+        issuing_authority:
+          $ref: "#/components/schemas/Codes"
       description: External system identifier
     Identifiers:
       type: array
       items:
         $ref: "#/components/schemas/Identifier"
+    JurisdictionProfile:
+      type: object
+      properties:
+        jurisdiction_profile_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The persistent key representing the jurisdiction profile.
+          example: JURIS-PROF-US-GA-001
+        jurisdiction_profile_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The externally visible identifier representing the jurisdiction
+            profile.
+          example: JURIS-PROF-ID-US-GA
+        jurisdiction_profile_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The human-readable name of the jurisdiction profile.
+          example: United States - Georgia
+        description:
+          maxLength: 2000
+          minLength: 1
+          type: string
+          description: The description of the jurisdiction profile and the regulatory
+            context it represents.
+          example: "Jurisdiction profile for United States federal and Georgia state\
+            \ legal, privacy, tax, AI, and compliance constraints."
+        jurisdiction_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        privacy_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        ai_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        consumer_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tax_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        retention_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        data_residency_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The source system code identifying the system of record, governance\
+            \ catalog, legal registry, policy registry, or integration source for\
+            \ this jurisdiction profile."
+          example: GOVERNANCE_CATALOG
+        source_authority_indicator:
+          type: boolean
+          description: Indicates whether the source system is considered authoritative
+            for this jurisdiction profile.
+          example: true
+        source_version:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The version of the jurisdiction profile as provided by the\
+            \ source governance, legal, policy, or compliance system."
+          example: "2026.06"
+        source_last_synced_date_time:
+          type: string
+          description: "The date and time when this jurisdiction profile was last\
+            \ synchronized from the source governance, legal, policy, or compliance\
+            \ system."
+          format: date-time
+          example: 2026-07-02T18:45:03Z
+        occurrence_date_time:
+          type: string
+          description: "The date and time when the jurisdiction profile was observed,\
+            \ created, received, updated, or became effective."
+          format: date-time
+          example: 2026-07-02T18:45:03Z
+      description: nullable
     Link:
       type: object
       properties:
@@ -594,11 +1006,81 @@ components:
           description: The code of the inventory location or branch from which this
             part is sourced.
           example: WH001
+        jurisdiction_profile:
+          $ref: "#/components/schemas/JurisdictionProfile"
       description: not nullable
-    Memo:
+    LocationTypes:
+      type: string
+      description: types of locations.
+      enum:
+      - BOROUGH
+      - PARISH
+      - REGION
+      - BOUNDARY
+      - PROVINCE
+      - VILLAGE
+      - STATE
+      - CITY
+      - COUNTRY
+      - LOCALITY
+      - POSTAL
+      - STREET
+      - SUB_ADMIN_AREA
+      - SUB_LOCALITY
+      - FEDERAL
+      - COUNTY
+      - TELEMATICS
+      - ADDRESS
+      - NO_PREFERENCE
+      - GPS
+      - WAREHOUSE
+      - DISTRICT
+    MaritalStatusTypes:
+      type: string
+      description: types of marital status.
+      enum:
+      - SINGLE
+      - MARRIED
+      - COMMON_LAW
+      - SEPARATED
+      - DIVORCED
+      - WIDOWED
+      - ANNULLED
+      - OTHER
+      - UNKNOWN
+    MetricNameValue:
+      type: object
+      properties:
+        metric_name_value_key:
+          type: string
+          description: A unique key for the metric name value record.
+        metric_name_value_id:
+          type: string
+          description: The unique ID for the metric name value.
+        header_sequence:
+          type: string
+          description: The header sequence for the metric value.
+        uom:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        value:
+          type: string
+          description: The value of the metric.
+        value_category:
+          type: string
+          description: The category of the metric value.
+        value_description:
+          type: string
+          description: A description of the metric value.
+        value_name:
+          type: string
+          description: The name of the metric value.
+        codes:
+          $ref: "#/components/schemas/Codes"
+      description: A metric value with a name and unit of measure.
+    MetricNameValues:
       type: array
       items:
-        type: string
+        $ref: "#/components/schemas/MetricNameValue"
     Money:
       type: object
       properties:
@@ -611,11 +1093,10 @@ components:
           type: string
           description: System-generated unique identifier for the money record.
           example: mny-5521-z99
-        vin:
-          $ref: "#/components/schemas/Vin"
         currency_code:
           type: string
-          description: money.currency.code.desc
+          description: Three-letter ISO-4217 currency code.
+          example: USD
         display_value:
           type: string
           description: Formatted monetary string including symbol and separators based
@@ -625,210 +1106,94 @@ components:
           type: string
           description: Language and region identifier (BCP 47 format).
           example: en-US
-        value:
-          type: string
-          description: The raw decimal monetary amount stored as a string to prevent
-            floating-point errors.
-          example: "1234.56"
+        amount:
+          $ref: "#/components/schemas/GeneralAmount"
         currency_exchange:
           $ref: "#/components/schemas/CurrencyExchange"
       description: "Represents a monetary value, including its currency, locale, and\
         \ display format."
-    PartyReference:
-      type: object
-      properties:
-        party_reference_id:
-          type: string
-          description: Unique system identifier for the reference record itself.
-          example: pr-8821-x01
-        party_reference_key:
-          type: string
-          description: "Business-logical key for the reference, often combining the\
-            \ event and party context."
-          example: REF-SALE-2026-CUST-99
-        party_key:
-          type: string
-          description: The business key of the actual Party (Person or Org) being
-            referenced.
-          example: CUST-DEALER-4412
-        party_name:
-          type: string
-          description: The formal display name of the Party at the time of reference.
-          example: Northside Chevrolet Service Center
-        individual_name:
-          $ref: "#/components/schemas/PersonName"
-        party_type:
-          $ref: "#/components/schemas/PartyTypes"
-        authorization_code:
-          type: string
-          description: Security or permission code granting access to this party's
-            data.
-          example: AUTH-992-SEC
-        source_system_code:
-          type: string
-          description: "The identifier of the system of record (e.g., DMS, CRM)."
-          example: CDK-GLOBAL
-        context:
-          type: string
-          description: The domain or operational context for the reference.
-          example: VEHICLE_SERVICE
-        account_number:
-          type: string
-          description: The specific account identifier for the party in the source
-            system.
-          example: ACT-771229-B
-        party_relationship_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/PartyRelationshipTypes"
-        snapshot_detail:
-          $ref: "#/components/schemas/Identifier"
-        address_references:
-          $ref: "#/components/schemas/AddressReferences"
-        communication_channels:
-          $ref: "#/components/schemas/CommunicationChannels"
-        occurrence_date_time:
-          type: string
-          description: Timestamp indicating when this specific reference was established.
-          format: date-time
-          example: 2026-05-07T17:19:56Z
-        org_indicator:
-          type: boolean
-          description: Indicates if the party is an organization (true) or an individual
-            (false).
-          example: true
-      description: External system identifier
-    PartyReferences:
-      type: array
-      items:
-        $ref: "#/components/schemas/PartyReference"
-    PartyRelationshipTypes:
+    NarrativeUomTypes:
       type: string
-      description: types of party relationships.
+      description: types of narrative uoms.
       enum:
-      - CORPORATION
+      - BAR
+      - KPA
+      - PSI
+      - OZ
+      - LB
+      - KG
+      - GRAMS
+      - TONS
+      - LITER
+      - GALLON
+      - FLUID_OUNCE
+      - CUBIC_METER
+      - KM
+      - MILES
+      - MI
+      - INCH
+      - FEET
+      - YARD
+      - FATHOM
+      - NAUTICAL
+      - METER
+      - CENTIMETER
+      - MILLIMETER
+      - DURATION
+      - SECONDS
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - DATE_TIME
+      - DATE
+      - TIME
+      - CELSIUS
+      - FAHRENHEIT
+      - KELVIN
+      - RANKINE
+      - VOLT
+      - AMPERE
+      - OHM
+      - WATT
+      - KILOWATT_HOUR
+      - HP
+      - RPM
+      - G_FORCE
+      - DEGREES
+      - OCCURRENCE
       - GROUP
-      - STORE
-      - BRANCH
-      - DEPARTMENT
-      - SECTION
-      - TEAM
-      - DEALERSHIP
-      - THIRD_PARTY
-      - VENDOR
-      - MERCHANT
-      - SUPPLIER
-      - PARTNER_ORGANIZATION
-      - AFFILIATE
-      - DISTRIBUTOR
-      - MANUFACTURER
-      - SERVICE_PROVIDER
-      - EMPLOYER
-      - INTERNAL_ORGANIZATION
-      - COST_CENTER
-      - FREIGHT_FORWARDER
-      - BUYER
-      - REGULATOR
-      - GOVERNMENT_AGENCY
-      - NON_PROFIT
-      - FRANCHISE
-      - SUBSIDIARY
-      - DIVISION
-      - JOINT_VENTURE
-      - AUDITOR
-      - ACTOR
-      - OEM
-      - PRIMARY_OEM
-      - DRIVER
-      - LIEN_HOLDER
-      - PROVIDER
-      - ACCOUNTABLE
-      - RESPONSIBLE
-      - CONSULT
-      - NOTIFY
-      - EXECUTE
-      - PART_OF
-      - MEMBERSHIP
-      - COMPOSED_IN
-      - GEN_MGR
-      - SALES_MGR
-      - CLOSING_MGR
-      - FI_MGR
-      - CONCIERGE_MGR
-      - SERVICE_MGR
-      - SALES_ASSOC
-      - BUSINESS_DEVELOPMENT
-      - SPECIALIST
-      - ADVISOR
-      - SERVICE_TECH
-      - CONCIERGE_STAFF
-      - VALET
-      - STAFF
-      - FINANCE
-      - PASSENGER
-      - CUSTOMER
-      - CO_SIGNER
-      - SPOUSE
-      - PARENT
-      - CHILD
-      - SIBLING
-      - LEGAL_GUARDIAN
-      - DEPENDENT
-      - EMERGENCY_CONTACT
-      - FAMILY_MEMBER
-      - FRIEND
-      - ACQUAINTANCE
-      - ASSOCIATE
-      - EX_SPOUSE
-      - PROFESSIONAL_CONTACT
-      - MANAGER
-      - CO_WORKER
-      - FINANCIAL_ADVISOR
-      - SELF
-      - ROMANTIC_PARTNER
-      - OTHER_FAMILY
-      - CAREGIVER
-      - MENTOR
-      - MENTEE
-      - HEIR
-      - TRUSTEE_PERSON
-      - REFERENCE_PERSONAL
-      - REFERENCE_PROFESSIONAL
-      - APPLICANT
-      - CO_APPLICANT
-      - AGENT
-      - BENEFICIARY
-      - GUARANTOR
-      - EMPLOYEE
-      - CONTRACTOR
-      - OWNER
-      - BUSINESS_PARTNER
-      - SERVICE_CONSUMER
-      - POLITICAL_AFFILIATE
-      - ADVISOR_CONSULTANT
-      - PROXY
-      - SHAREHOLDER
-      - INVESTOR
-      - CUSTODIAN
-      - SOLD_TO
-      - SHIP_TO
-      - PAYER
-      - PAYEE
-      - GIFT_TO
-      - LOAN_PROVIDER
-      - CREDIT_CARD_PROVIDER
-      - LESSEE
-      - LESSOR
-      - INSURED
-      - INSURER
-      - UNDERWRITER
-      - RECIPIENT
-      - TRANSACTION_FROM
-      - TRANSACTION_TO
-      - REMOVE
+      - CODE
+      - CURRENCY
+      - POINTS
+      - CUSTOM
+      - UNLIMITED
+      - NONE
+      - LABEL
+      - PERCENT
+      - DESC
+      - TEXT
+      - KEY
+      - PROTECTED_TEXT
+      - BINARY
+      - STRING
+      - NUMBER
+      - INTEGER
+      - BOOLEAN
+      - ARRAY
+      - OBJECT
+      - FLOAT
+      - DOUBLE
+      - INT32
+      - INT64
       - OTHER
     PartyTypes:
       type: string
@@ -855,57 +1220,99 @@ components:
       - GROUP
       - RENTAL
       - RESALE
-    PayrollCycleFrequencyTypes:
-      type: string
-      description: types of payroll cycle frequencys.
-      enum:
-      - ANNUAL
-      - SEMI_ANNUAL
-      - QUARTERLY
-      - BI_MONTHLY
-      - MONTHLY
-      - SEMI_MONTHLY
-      - BI_WEEKLY
-      - WEEKLY
-      - DAILY
-      - OFF_CYCLE
-      - ON_DEMAND
-    PayrollRate:
+      - SHIP_TO
+      - SOLD_TO
+    Person:
       type: object
       properties:
-        payroll_rate_id:
+        person_id:
           type: string
-          description: A unique identifier for the payroll rate.
-        payroll_rate_key:
+          description: Unique person identifier.
+        person_key:
           type: string
-          description: A unique identifier for the payroll rate.
-        staff_member_key:
+          description: Business key for the person.
+          example: PER-12345
+        addresses:
+          $ref: "#/components/schemas/Addresses"
+        age:
+          maximum: 130
+          minimum: 0
+          type: integer
+          description: Age of the person in years.
+          format: int32
+          example: 35
+        birth_date:
           type: string
-          description: Business key or code for the staff member.
-          example: EMPLOYEE_001
-        party_references:
-          $ref: "#/components/schemas/PartyReferences"
-        payroll_cycle_type:
-          $ref: "#/components/schemas/PayrollCycleFrequencyTypes"
-        amount:
-          $ref: "#/components/schemas/Money"
-        effective_period:
-          $ref: "#/components/schemas/EffectivePeriod"
-        occurrence_date_time:
+          description: Birth date of the person.
+          format: date
+        comments:
           type: string
-          description: The date and time the rate occurred.
-          format: date-time
-          example: 2026-05-07T17:19:56Z
-        textual_details:
-          $ref: "#/components/schemas/TextualDetails"
-        staff_pay_type:
-          $ref: "#/components/schemas/StaffPayTypes"
-      description: "Represents a single rate that affects a staff member's payroll,\
-        \ such as hours worked or a bonus."
-    PayrollRates:
-      type: array
-      items:
-        $ref: "#/components/schemas/PayrollRate"
+          description: Additional comments about the person.
+          example: No known allergies.
+        communication_channels:
+          $ref: "#/components/schemas/CommunicationChannels"
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+          example: US
+        gender_type:
+          $ref: "#/components/schemas/GenderTypes"
+        birth_country:
+          type: string
+          description: ISO 3166-1 alpha-2 code for the country of birth.
+          example: US
+        citizenship_country:
+          type: string
+          description: ISO 3166-1 alpha-2 code for citizenship country.
+          example: US
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        identifiers_href:
+          type: string
+          description: Link to identifiers resource.
+          format: href
+        language_codes:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        marital_status_type:
+          $ref: "#/components/schemas/MaritalStatusTypes"
+        org_profiles_href:
+          type: string
+          description: Link to organizational profiles resource.
+          format: href
+        party_key:
+          type: string
+          description: Business key for the party.
+          example: PTY-12345
+        party_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/PartyTypes"
+        person_attributes:
+          $ref: "#/components/schemas/MetricNameValues"
+        preferred_language_code:
+          type: string
+          description: Preferred language code.
+          example: en-US
+        privacies:
+          $ref: "#/components/schemas/PrivacyItems"
+        privacies_href:
+          type: string
+          description: Link to privacy settings resource.
+          format: href
+        special_remarks_description:
+          type: string
+          description: Special remarks about the person.
+        person_name:
+          $ref: "#/components/schemas/PersonName"
+      description: a Base Person or Organization
     PersonName:
       type: object
       properties:
@@ -997,39 +1404,49 @@ components:
           description: Nationality of the person.
           example: Canadian
       description: a Name for a person
-    PersonReference:
+    Position:
       type: object
       properties:
-        person_reference_id:
+        position_id:
           type: string
-          description: Unique identifier value
-        person_reference_key:
+          description: Unique identifier for this position
+          example: pos-001
+        position_key:
           type: string
-          description: Unique identifier value
-        person_key:
+          description: Business key for this position record
+          example: POS-ATL-WEST
+        latitude:
           type: string
-          description: Unique identifier value
-        party_key:
+          description: Latitude of the location
+          example: "33.7490"
+        longitude:
           type: string
-          description: Unique identifier value
-        relationship_type:
-          $ref: "#/components/schemas/PartyRelationshipTypes"
-        context:
+          description: Longitude of the location
+          example: "-84.3880"
+        altitude:
           type: string
-          description: Context or domain of the identifier
-        fullname:
+          description: Altitude of the location
+          example: "320"
+        bearing:
           type: string
-          description: Context or domain of the identifier
-        system_codes:
-          $ref: "#/components/schemas/Codes"
-        identifier:
-          $ref: "#/components/schemas/Identifier"
-        occurrence_date_time:
+          description: Bearing direction (compass)
+          example: NW
+        postal_code:
           type: string
-          description: The date and time the event occurred.
-          format: date-time
-          example: 2026-05-07T17:19:56Z
-      description: External system identifier
+          description: Postal code of the location
+          example: "30303"
+        county_code:
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: string
+          description: Standardized code for the county.
+        position_codes:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      description: "position meta-data that includes postal code, and lat/long"
     PrivacyContextTypes:
       type: string
       description: types of privacy contexts.
@@ -1069,7 +1486,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
       description: "Represents a single event that affects a staff member's privacy,\
         \ such as hours worked or a bonus."
     PrivacyEvents:
@@ -1102,7 +1519,7 @@ components:
           type: string
           description: The date and time when the privacy record was last updated.
           format: date-time
-          example: 2026-05-07T17:19:56Z
+          example: 2026-07-02T18:45:03Z
       description: Represents a single piece of sensitive or personally identifiable
         information (PII) with its associated privacy controls.
     PrivacyItems:
@@ -1205,173 +1622,61 @@ components:
       - TOW_TRUCK
       - AUTONOMOUS_SYSTEM
       - SUBLET_VENDOR
-    SkillCategoryTypes:
-      type: string
-      description: types of skill categorys.
-      enum:
-      - MECHANICAL
-      - ELECTRICAL_EV
-      - AUTONOMOUS_SOFTWARE
-      - FLEET_LOGISTICS
-      - BODY_STRUCTURAL
     Staff:
       type: array
       items:
         $ref: "#/components/schemas/StaffMember"
-    StaffAffinity:
-      type: object
-      properties:
-        staff_affinity_id:
-          type: string
-          description: Unique identifier for the staff member affinity.
-          example: sm_123456
-        staff_affinity_key:
-          type: string
-          description: Unique identifier for the staff member affinity.
-          example: sm_123456
-        staff_member_key:
-          type: string
-          description: Business key or code for the staff member.
-          example: EMPLOYEE_001
-        party_key:
-          type: string
-          description: Party key linking to person or organization.
-          example: party_67890
-        status:
-          type: string
-          description: "confirmed, tentative, cancelled"
-        communication_styles:
-          $ref: "#/components/schemas/Codes"
-        product_affinities:
-          $ref: "#/components/schemas/Codes"
-        languages_spoken:
-          $ref: "#/components/schemas/Codes"
-        years_in_industry:
-          type: string
-          description: "10"
-        staff_performance_metrics:
-          $ref: "#/components/schemas/Identifiers"
-        last_assignment_at:
-          type: string
-          description: Timestamp of the last job assigned to this person.
-          format: date-time
-          example: 2026-05-07T17:19:56Z
-        lead_score_threshold:
-          type: string
-          description: "Minimum lead quality score required for this staff member\
-            \ (e.g., Seniors get high-value leads)."
-        is_eligible_for_assignment:
-          type: boolean
-          description: "Minimum lead quality score required for this staff member\
-            \ (e.g., Seniors get high-value leads)."
-          example: false
-        availablity:
-          $ref: "#/components/schemas/TimeSlots"
-        unavailablity:
-          $ref: "#/components/schemas/TimeSlots"
-      description: Dealership Staff Member
-    StaffCertification:
-      type: object
-      properties:
-        staff_certification_id:
-          type: string
-          description: Identifier of Staff Certification
-          example: ABC123
-        staff_certification_key:
-          type: string
-          description: Name of the certification.
-          example: Key123
-        certification_name:
-          type: string
-          description: Name of the certification.
-          example: ASE Master Technician
-        issuing_body:
-          type: string
-          description: Organization that issued the certification.
-          example: National Institute for Automotive Service Excellence
-        certification_number:
-          type: string
-          description: The unique number assigned to the certification.
-          example: CERT-998877
-        issue_date:
-          type: string
-          description: The date the certification was awarded.
-          format: date
-        expiration_date:
-          type: string
-          description: The date the certification expires.
-          format: date
-        status:
-          type: string
-          description: Current status of the certification.
-          example: Active
-      description: Staff Certification Details
-    StaffCertifications:
-      type: array
-      items:
-        $ref: "#/components/schemas/StaffCertification"
     StaffMember:
       type: object
       properties:
-        staff_member_id:
-          type: string
-          description: Unique identifier for the staff member.
-          example: sm_123456
-        staff_member_key:
-          type: string
-          description: Business key or code for the staff member.
-          example: EMPLOYEE_001
-        employee_key:
-          type: string
-          description: Employee key associated with the staff member.
-          example: E12345
-        party_key:
-          type: string
-          description: Party key linking to person or organization.
-          example: party_67890
-        person_reference:
-          $ref: "#/components/schemas/PersonReference"
-        skills:
-          $ref: "#/components/schemas/StaffSkills"
-        specialties:
-          $ref: "#/components/schemas/Codes"
-        certifications:
-          $ref: "#/components/schemas/StaffCertifications"
-        email:
-          type: string
-          description: Primary email address of the staff member.
-          example: jane.doe@example.com
-        state_license_number:
-          type: string
-          description: State license number if applicable.
-          example: SLN-987654
         active_indicator:
           type: boolean
-          description: Indicates if the staff member is currently active.
-          example: true
-        job_title:
+          description: staff.member.active.indicator.desc
+          example: false
+        comments:
           type: string
-          description: Job title of the staff member.
-          example: Sales Manager
-        department_name:
-          type: string
-          description: Name of the department the staff member belongs to.
-          example: Sales
-        department_reference:
-          $ref: "#/components/schemas/DepartmentReference"
-        team_id:
-          $ref: "#/components/schemas/Teams"
+          description: staff.member.comments.desc
         communication_channels:
           $ref: "#/components/schemas/CommunicationChannels"
         contact_methods_href:
           type: string
-          description: Reference URL to the contact methods for the staff member.
+          description: staff.member.contact.methods.href.desc
           format: href
-          example: /staff/123/contactMethods
-        comments:
+        department:
+          $ref: "#/components/schemas/Department"
+        department_href:
           type: string
-          description: Additional comments about the staff member.
-          example: Key sales staff member with 5 years experience.
+          description: staff.member.department.href.desc
+          format: href
+        department_name:
+          type: string
+          description: staff.member.department.name.desc
+        party_key:
+          type: string
+          description: staff.member.party.key.desc
+        email:
+          type: string
+          description: staff.member.email.desc
+        employee_key:
+          type: string
+          description: staff.member.employee.key.desc
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        job_title:
+          type: string
+          description: staff.member.job.title.desc
+        manager_key:
+          type: string
+          description: staff.member.manager.key.desc
+        manager_name:
+          type: string
+          description: staff.member.manager.name.desc
+        person:
+          $ref: "#/components/schemas/Person"
+        profile_href:
+          type: string
+          description: staff.member.profile.href.desc
+          format: href
         role_types:
           maxItems: 255
           minItems: 1
@@ -1379,195 +1684,70 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RoleTypes"
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        profile_href:
+        staff_member_id:
           type: string
-          description: URL reference to the staff member's profile.
-          format: href
-          example: /profiles/staff_12345
-        party_references:
-          $ref: "#/components/schemas/PartyReferences"
-        payroll_rates:
-          $ref: "#/components/schemas/PayrollRates"
-        privacy_items:
-          $ref: "#/components/schemas/PrivacyItems"
-        staff_affinity:
-          $ref: "#/components/schemas/StaffAffinity"
-        teams:
-          $ref: "#/components/schemas/Teams"
-      description: Dealership Staff Member
-    StaffPayTypes:
-      type: string
-      description: types of staff pays.
-      enum:
-      - HOURLY
-      - SALARIED
-      - COMMISSION
-      - CONTRACTOR
-      - SICK
-      - VACATION
-      - OVERTIME
-      - TECHNICIAN_HOURS
-      - BONUS
-      - ADJUSTMENT
-      - REGULAR
-      - OTHER
-    StaffSkill:
-      type: object
-      properties:
-        staff_skill_id:
+          description: staff.member.staff.member.id.desc
+        staff_member_key:
           type: string
-          description: Unique identifier for the staff skill.
-          example: sm_123456
-        staff_skill_key:
+          description: staff.member.staff.member.key.desc
+        state_license_number:
           type: string
-          description: Business key or code for the staff skill.
-          example: EMPLOYEE_001
-        staff_skill_code:
-          type: string
-          description: Staff Skill Code
-          example: EV_CERT_LVL3
-        staff_skill_name:
-          type: string
-          description: Staff Skill Code
-          example: EV Certification Level 3
-        staff_skill_description:
-          type: string
-          description: Staff Skill Code
-          example: EV Certification Level 3
-        proficiency_level:
-          type: string
-          description: "Level of expertise (e.g., Beginner, Intermediate, Expert,\
-            \ or 1-5 scale)."
-          example: Expert
-        skill_category_type:
-          $ref: "#/components/schemas/SkillCategoryTypes"
-        years_experience:
-          type: string
-          description: Number of years practicing this skill.
-          example: "8"
-      description: Dealership Staff Skill
-    StaffSkills:
-      type: array
-      items:
-        $ref: "#/components/schemas/StaffSkill"
-    Team:
-      type: object
-      properties:
-        team_key:
-          type: string
-          description: The unique key identifying the team aggregate root.
+          description: staff.member.state.license.number.desc
         team_id:
           type: string
-          description: The unique identifier for the team.
+          description: staff.member.team.id.desc
+        team_key:
+          type: string
+          description: staff.member.team.key.desc
         team_name:
           type: string
-          description: The human-readable name of the team.
-        department_key:
-          type: string
-          description: The unique key for the department this team belongs to.
-        department:
-          $ref: "#/components/schemas/DepartmentReference"
-        members:
-          $ref: "#/components/schemas/PartyReferences"
-      description: Represents an organizational group or functional unit within the
-        AI-SAGE framework.
-    Teams:
-      type: array
-      items:
-        $ref: "#/components/schemas/Team"
-    TextualDetail:
-      type: object
-      properties:
-        textual_detail_key:
-          type: string
-          description: Natural key or business-friendly key for textual detail.
-        textual_detail_id:
-          type: string
-          description: Unique identifier for textual detail.
-        comments:
-          $ref: "#/components/schemas/Memo"
-        locale_codes:
-          $ref: "#/components/schemas/Codes"
-        notes:
-          $ref: "#/components/schemas/Memo"
-        short_description:
-          type: string
-          description: Short description for the detail.
-        description:
-          type: string
-          description: Full description in memo format.
-        text_key:
-          type: string
-          description: Key reference for reusable text blocks.
-        name:
-          type: string
-          description: Name or title of the textual detail.
-        value:
-          type: string
-          description: Value associated with the textual detail.
-        identifiers:
-          $ref: "#/components/schemas/Identifiers"
-        groups:
-          $ref: "#/components/schemas/Codes"
-        label:
-          type: string
-          description: Label for UI representation.
-        alt_text:
-          type: string
-          description: Alternative text for accessibility or image descriptions.
-        textual_detail_code:
-          type: string
-          description: Code identifier for textual detail reference.
-        tags:
-          $ref: "#/components/schemas/Codes"
-        uom_display:
-          type: string
-          description: Unit of Measure display value.
-        uom_code:
-          type: string
-          description: "Unit of Measure code (e.g., EA, PR)."
-      description: not nullable
-    TextualDetails:
-      type: array
-      items:
-        $ref: "#/components/schemas/TextualDetail"
+          description: staff.member.team.name.desc
+      description: Dealership Staff Member
+    SubsidiaryLedgerTypes:
+      type: string
+      description: types of subsidiary ledgers.
+      enum:
+      - ACCOUNTS_RECEIVABLE
+      - ACCOUNTS_PAYABLE
+      - VEHICLE_INVENTORY
+      - PARTS_INVENTORY
+      - FIXED_ASSETS
+      - PAYROLL
+      - SERVICE_WORK_IN_PROGRESS
+      - OEM_INCENTIVES
     TimeSlot:
       type: object
       properties:
-        time_slot_id:
-          type: string
-          description: Technical unique identifier (GUID) for the time slot record.
-          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
+          maxLength: 50
+          minLength: 1
           type: string
-          description: Natural business key for the time slot within its specific
-            context.
-          example: TS-MON-MORNING-SHIFT
-        time_slot_source:
-          type: string
-          description: The originating system or calendar providing this availability
-            data.
-          example: GOOGLE_CALENDAR
-        start_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
-          type: string
-          description: The local start time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Unique surrogate key for the specific time slot instance.
+          example: TS-KEY-99281A
         end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
+          $ref: "#/components/schemas/DayOfWeekTypes"
         end_time:
+          maxLength: 8
+          minLength: 5
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local end time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Time with format of HH:mm:ss
+          example: "52200"
         recurring_indicator:
           type: boolean
-          description: Indicates if this time slot is part of a repeating pattern.
+          description: Indicates whether the time slot repeats on a recurring cycle.
           example: true
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DayOfWeekTypes"
+        start_time:
+          maxLength: 8
+          minLength: 5
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -1575,10 +1755,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: The business identifier or code assigned to this generic time
+            block configuration.
+          example: MORNING_SHIFT_01
         week_of_date:
-          $ref: "#/components/schemas/Codes"
-      description: "Defines a specific window of time, often within a recurring schedule,\
-        \ used for service availability or appointment booking."
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          format: date
+          items:
+            type: string
+      description: Range of time for the appointment
     TimeSlots:
       type: array
       items:
@@ -1592,8 +1784,10 @@ components:
       - BEFORE
       - BETWEEN
       - BLOCK
+      - EXACT
+      - FLEXIBLE
+      - PREFERRED
+      - REQUIRED
+      - RESTRICTED
+      - OTHER
       - UNKNOWN
-    Vin:
-      type: string
-      description: Three-letter ISO-4217 currency code.
-      example: USD

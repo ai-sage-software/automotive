@@ -24,6 +24,67 @@ servers:
 paths: {}
 components:
   schemas:
+    ActorReference:
+      type: object
+      properties:
+        actor_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        actor_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and actor context."
+          example: REF-SALE-2026-CUST-99
+        actor_key:
+          type: string
+          description: The business key of the actual Actor (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        actor_name:
+          type: string
+          description: The formal display name of the Actor at the time of reference.
+          example: Northside Chevrolet Service Center
+        actor_type:
+          $ref: "#/components/schemas/ActorTypes"
+        actor_href:
+          type: string
+          description: The URI to the actor resource.
+          format: href
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-07-02T02:37:47Z
+      description: External system identifier
+    ActorTypes:
+      type: string
+      description: types of actors.
+      enum:
+      - USER
+      - CUSTOMER
+      - EMPLOYEE
+      - DEALER
+      - VENDOR
+      - SUPPLIER
+      - ORGANIZATION
+      - SYSTEM
+      - SERVICE
+      - APPLICATION
+      - API
+      - AGENT
+      - AI_AGENT
+      - WORKFLOW
+      - RULE_ENGINE
+      - DEVICE
+      - SENSOR
+      - PARTNER
+      - CONTRACTOR
+      - GOVERNMENT
+      - PROCESS
+      - SCHEDULER
+      - EVENT_HANDLER
+      - UNKNOWN
     AddressReference:
       type: object
       properties:
@@ -117,6 +178,11 @@ components:
       - INSURANCE
       - PRODUCT
       - ARCHIVE
+      - RAMP
+      - RAIL
+      - PORT
+      - CONVOY
+      - HUB
       - OTHER
     AuthorizationLevel:
       type: object
@@ -125,7 +191,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -274,12 +340,12 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
-    DaysOfWeekTypes:
+    DayOfWeekTypes:
       type: string
-      description: types of days of weeks.
+      description: types of day of weeks.
       enum:
       - SUN
       - MON
@@ -333,13 +399,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -394,7 +460,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         event_message_group:
           type: string
           description: The group to which the eventMessage belongs.
@@ -468,7 +534,7 @@ components:
           description: The date and time the financialSplit was associated with the
             order.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: Reference to a Payment FinancialSplit Aggregate Root.
     FinancialSplitReferences:
       type: array
@@ -496,13 +562,30 @@ components:
           type: string
           description: The date and time the financial track entry was generated.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: "Reference to a Financial Track Aggregate Root (e.g., a Journal\
         \ Entry)."
     FinancialTrackReferences:
       type: array
       items:
         $ref: "#/components/schemas/FinancialTrackReference"
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     GeographicBoundaryReference:
       type: object
       properties:
@@ -525,7 +608,7 @@ components:
           type: string
           description: The date and time the schedule was associated with the order.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: Reference to a Payment Schedule Aggregate Root.
     Identifier:
       type: object
@@ -554,6 +637,8 @@ components:
           description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
+        issuing_authority:
+          $ref: "#/components/schemas/Codes"
       description: External system identifier
     Identifiers:
       type: array
@@ -568,11 +653,14 @@ components:
       - PART_INVOICE
       - LOAN
       - STANDARD
+      - ORIGINAL
+      - ADJUSTED
       - CREDIT_MEMO
       - DEBIT_MEMO
       - PRO_FORMA
       - COMMERCIAL
       - VEHICLE_SALE
+      - VEHICLE_INVOICE
       - SERVICE
       - PARTS
       - LEASE
@@ -586,6 +674,88 @@ components:
       - FUEL
       - RENTAL
       - SUBSCRIPTION
+    JurisdictionProfile:
+      type: object
+      properties:
+        jurisdiction_profile_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The persistent key representing the jurisdiction profile.
+          example: JURIS-PROF-US-GA-001
+        jurisdiction_profile_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The externally visible identifier representing the jurisdiction
+            profile.
+          example: JURIS-PROF-ID-US-GA
+        jurisdiction_profile_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The human-readable name of the jurisdiction profile.
+          example: United States - Georgia
+        description:
+          maxLength: 2000
+          minLength: 1
+          type: string
+          description: The description of the jurisdiction profile and the regulatory
+            context it represents.
+          example: "Jurisdiction profile for United States federal and Georgia state\
+            \ legal, privacy, tax, AI, and compliance constraints."
+        jurisdiction_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        privacy_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        ai_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        consumer_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tax_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        retention_policy_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        data_residency_identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The source system code identifying the system of record, governance\
+            \ catalog, legal registry, policy registry, or integration source for\
+            \ this jurisdiction profile."
+          example: GOVERNANCE_CATALOG
+        source_authority_indicator:
+          type: boolean
+          description: Indicates whether the source system is considered authoritative
+            for this jurisdiction profile.
+          example: true
+        source_version:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The version of the jurisdiction profile as provided by the\
+            \ source governance, legal, policy, or compliance system."
+          example: "2026.06"
+        source_last_synced_date_time:
+          type: string
+          description: "The date and time when this jurisdiction profile was last\
+            \ synchronized from the source governance, legal, policy, or compliance\
+            \ system."
+          format: date-time
+          example: 2026-07-02T02:37:47Z
+        occurrence_date_time:
+          type: string
+          description: "The date and time when the jurisdiction profile was observed,\
+            \ created, received, updated, or became effective."
+          format: date-time
+          example: 2026-07-02T02:37:47Z
+      description: nullable
     LifecycleEvent:
       type: object
       properties:
@@ -597,18 +767,8 @@ components:
           type: string
           description: The unique external key or business identifier used in integrations.
           example: LIFECYCLE-879234
-        actor_href:
-          type: string
-          description: The href of the actor who initiated the event.
-          format: href
-        actor_id:
-          type: string
-          description: The unique identifier of the actor who initiated the event.
-          example: USR-24681357
-        actor_name:
-          type: string
-          description: The name of the actor who initiated the event.
-          example: John Doe
+        actor:
+          $ref: "#/components/schemas/ActorReference"
         lifecycle_event_type:
           $ref: "#/components/schemas/LifecycleEventTypes"
         occurrence_date:
@@ -714,11 +874,44 @@ components:
           description: The code of the inventory location or branch from which this
             part is sourced.
           example: WH001
+        jurisdiction_profile:
+          $ref: "#/components/schemas/JurisdictionProfile"
       description: not nullable
     Memo:
       type: array
       items:
         type: string
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        currency_code:
+          type: string
+          description: Three-letter ISO-4217 currency code.
+          example: USD
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        amount:
+          $ref: "#/components/schemas/GeneralAmount"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
     OrderTypes:
       type: string
       description: types of orders.
@@ -780,7 +973,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         unit_of_measure:
           $ref: "#/components/schemas/UnitOfMeasure"
       description: External system identifier
@@ -848,7 +1041,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1009,6 +1202,8 @@ components:
       - GROUP
       - RENTAL
       - RESALE
+      - SHIP_TO
+      - SOLD_TO
     PayTypes:
       type: string
       description: types of pays.
@@ -1142,7 +1337,6 @@ components:
           description: Postal code of the location
           example: "30303"
         county_code:
-          maxLength: 20
           pattern: "^[a-zA-Z0-9_]+$"
           type: string
           description: Standardized code for the county.
@@ -1157,49 +1351,39 @@ components:
     Price:
       type: object
       properties:
-        display_value:
+        price_id:
           type: string
-          description: "Human-readable display value for the price, including currency\
-            \ symbol and proper decimal formatting."
-        locale:
-          type: string
-          description: Locale used for formatting display value.
-        value:
-          type: string
-          description: The numeric value of the price (before tax/cost breakdowns).
-        tax_value:
-          type: string
-          description: The calculated amount of tax applied to the price.
-        taxable_amount:
-          type: string
-          description: The portion of the price subject to tax.
-        non_taxable_amount:
-          type: string
-          description: The portion of the price not subject to tax.
-        total_amount:
-          type: string
-          description: The total final price including all components and tax.
-        total_cost_amount:
-          type: string
-          description: The total cost to the provider/seller.
-        unit_cost_amount:
-          type: string
-          description: The unit cost to the provider/seller.
-        price_description:
-          type: string
-          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
+          description: Unique system identifier for the price record.
         price_key:
           type: string
           description: Natural key or business identifier for the price entry.
+        display_amount:
+          type: string
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
+        amount:
+          $ref: "#/components/schemas/Money"
+        tax_amount:
+          $ref: "#/components/schemas/Money"
+        taxable_amount:
+          $ref: "#/components/schemas/Money"
+        non_taxable_amount:
+          $ref: "#/components/schemas/Money"
+        total_amount:
+          $ref: "#/components/schemas/Money"
+        total_cost_amount:
+          $ref: "#/components/schemas/Money"
+        unit_cost_amount:
+          $ref: "#/components/schemas/Money"
+        price_description:
+          type: string
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
         tax_included_indicator:
           type: boolean
           description: Indicates whether tax is included in the base price (value).
           example: false
         currency_code:
           $ref: "#/components/schemas/CurrencyCode"
-        price_id:
-          type: string
-          description: Unique system identifier for the price record.
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
         price_types:
@@ -1211,8 +1395,6 @@ components:
             $ref: "#/components/schemas/PriceTypes"
         pay_type:
           $ref: "#/components/schemas/PayTypes"
-        currency_exchange:
-          $ref: "#/components/schemas/CurrencyExchange"
       description: "Price that includes display value, currency, locale, and value,\
         \ along with tax and cost components."
     PriceTypes:
@@ -1242,6 +1424,7 @@ components:
       - MSRP
       - WHOLESALE
       - DEALER_COST
+      - INVOICE
       - TOTAL_DEALER_COST
       - TOTAL_DEALER_OPTION_COST
       - TOTAL_DEALER_OPTION_SELLING_PRICE
@@ -1280,6 +1463,7 @@ components:
       - TAX_TOTAL
       - TRADE_IN_TOTAL
       - TRADE_IN_EQUITY_TOTAL
+      - TOTAL_ACCESSORY
       - PROMOTIONAL
       - DISCOUNT
       - CONTRACT
@@ -1302,6 +1486,24 @@ components:
       - STORE
       - REGION
       - LOCATION
+      - BASE_INVOICE_AMOUNT
+      - DESTINATION_CHARGE
+      - ADVERTISING_ASSESSMENT
+      - HOLDBACK_AMOUNT
+      - WDA_AMOUNT
+      - TDA_AMOUNT
+      - FLOORPLAN_ASSISTANCE_AMOUNT
+      - DEALER_CASH_AMOUNT
+      - REGIONAL_ADJUSTMENT_AMOUNT
+      - PORT_INSTALLED_OPTION_AMOUNT
+      - FACTORY_OPTION_AMOUNT
+      - DEALER_INSTALLED_OPTION_AMOUNT
+      - FREIGHT_CHARGE_AMOUNT
+      - FUEL_CHARGE_AMOUNT
+      - PACKAGING_OPTION_AMOUNT
+      - OEM_INCENTIVE_AMOUNT
+      - DEALER_NET_AMOUNT
+      - LANDED_COST_AMOUNT
       - OTHER
     ProductTypes:
       type: string
@@ -1353,7 +1555,7 @@ components:
           type: string
           description: The date and time the purchase order was created or linked.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: Reference to a Purchase Order Aggregate Root.
     Receipt:
       type: object
@@ -1429,7 +1631,7 @@ components:
           type: string
           description: The date and time the credit occurred.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         event_message:
           $ref: "#/components/schemas/EventMessage"
         financial_splits:
@@ -1578,7 +1780,7 @@ components:
           type: string
           description: The date and time the credit occurred.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         receipt_status_type:
           $ref: "#/components/schemas/ReceiptStatusTypes"
         receipt_price:
@@ -1633,6 +1835,9 @@ components:
       - INSURANCE
       - WARRANTY
       - SERVICE
+      - VEHICLE_INVOICE
+      - PART_INVOICE
+      - SERVICE_INVOICE
       - APPOINTMENT
       - OTHER
     RoleTypes:
@@ -1691,41 +1896,76 @@ components:
       - MOBILE
       - LOGISTICS
       - QUICK_LUBE
+      - CLOUD_ASSISTED_DIAGNOSTIC
+      - FIELD_SERVICE_ACTION
+      - TECHNICAL_SERVICE_BULLETIN
+    ServiceLevelTypes:
+      type: string
+      description: types of service levels.
+      enum:
+      - STANDARD
+      - EXPEDITED
+      - SAME_DAY
+      - OVERNIGHT
+      - EMERGENCY
     ShipmentEvent:
       type: object
       properties:
-        shipment_event_id:
-          type: string
-          description: Unique identifier for this specific parts invoice line item.
-          example: pii_abc123xyz
         shipment_event_key:
+          maxLength: 60
+          minLength: 1
           type: string
-          description: "A unique key for the parts invoice line item, often used for\
-            \ external systems integration."
-          example: PARTINVITEM-2023-001-A
+          description: The immutable identifier representing a shipment lifecycle
+            event.
+          example: SHEVT-882211
+        shipment_event_id:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: "The external carrier, provider, or platform-generated shipment\
+            \ event identifier."
+          example: CARRIER-EVT-2026-001
+        shipment_event_type:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The business or operational type of shipment event.
+          example: PICKED_UP
+        shipment_state_type:
+          $ref: "#/components/schemas/ShipmentStateTypes"
+        previous_shipment_state_type:
+          $ref: "#/components/schemas/ShipmentStateTypes"
         location:
           $ref: "#/components/schemas/Position"
-        description:
-          type: string
-          description: A description of the event.
         occurrence_date_time:
           type: string
-          description: The date and time the event physically occurred.
+          description: The timestamp when the shipment event physically occurred.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
+        recorded_date_time:
+          type: string
+          description: The timestamp when the shipment event was recorded by the platform.
+          format: date-time
+          example: 2026-07-02T02:37:47Z
         effective_date_time:
           type: string
-          description: The date and time the event's status or state becomes effective.
+          description: The timestamp when the shipment event state becomes effective.
           format: date-time
-          example: 2026-05-07T17:18:25Z
-        shipment_state_types:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/ShipmentStateTypes"
-      description: not nullable
+          example: 2026-07-02T02:37:47Z
+        event_source:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: "The carrier, logistics provider, platform, user, or system\
+            \ that generated the shipment event."
+          example: UPS
+        description:
+          maxLength: 2000
+          minLength: 1
+          type: string
+          description: The human-readable description of the shipment event.
+          example: Shipment picked up by carrier.
+      description: nullable
     ShipmentEvents:
       type: array
       items:
@@ -1761,11 +2001,32 @@ components:
           description: The timestamp when the shipment was initiated or the record
             was created.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
-        estimated_delivery:
+        estimated_delivery_period:
           $ref: "#/components/schemas/DeliveryWindow"
+        shipment_state_type:
+          $ref: "#/components/schemas/ShipmentStateTypes"
+        carrier_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The display name of the carrier associated with the shipment
+            reference.
+          example: UPS
+        carrier_tracking_url:
+          maxLength: 2000
+          minLength: 1
+          type: string
+          description: The carrier-provided URL used to track the shipment.
+          example: https://carrier.example.com/track/TRK123456789
+        ship_from_party:
+          $ref: "#/components/schemas/PartyReference"
+        ship_to_party:
+          $ref: "#/components/schemas/PartyReference"
+        service_level_type:
+          $ref: "#/components/schemas/ServiceLevelTypes"
       description: Reference details for the logistics and shipment of a vehicle during
         the RDR process.
     ShipmentReferences:
@@ -1778,21 +2039,10 @@ components:
       enum:
       - OPEN
       - ACTIVE
-      - ESTIMATED_SHIP
-      - ACTUAL_SHIP
-      - UPDATING
-      - ESTIMATED_DELIVERY
-      - ACTUAL_DELIVERY
       - TRACKED
-      - CONFIRM
-      - PICKED_UP
       - DELIVERED
-      - MANIFEST_CREATED
-      - CLOSED
-      - RETURN_INITIATED
-      - RETURNED_TO_SENDER
-      - LOST_IN_TRANSIT
       - RETURNED_TO_WAREHOUSE
+      - LOST_IN_TRANSIT
     ShipmentTrackingNumber:
       type: string
       description: The external tracking number.
@@ -1832,7 +2082,7 @@ components:
           type: string
           description: The date and time the staff member was assigned.
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
         role_types:
           maxItems: 255
           minItems: 1
@@ -1850,24 +2100,35 @@ components:
       type: string
       description: types of staff roles.
       enum:
-      - SERVICE_TECHNICIAN
-      - TECHNICIAN
+      - DEALER_PRINCIPAL
+      - GENERAL_MANAGER
+      - GENERAL_SALES_MANAGER
+      - SALES_MANAGER
+      - SALES_PERSON
+      - BUSINESS_DEVELOPMENT_REPRESENTATIVE
+      - CUSTOMER_SERVICE_REPRESENTATIVE
+      - RECEPTIONIST
+      - FINANCE_AND_INSURANCE_MANAGER
+      - BUSINESS_MANAGER
+      - CLOSING_MANAGER
       - SERVICE_MANAGER
       - SERVICE_ADVISOR
-      - SALES_PERSON
-      - CUSTOMER_SERVICE
-      - SALES_MANAGER
-      - F_I_MANAGER
-      - CLOSING_MANAGER
-      - BUSINESS_MANAGER
-      - RECEPTIONIST
+      - SERVICE_TECHNICIAN
+      - SHOP_FOREMAN
+      - WARRANTY_ADMINISTRATOR
       - PARTS_MANAGER
       - PARTS_ADVISOR
-      - DETAILER
-      - DRIVER
-      - APPRAISER
-      - GENERAL_MANAGER
-      - UNKNOWN
+      - PARTS_SPECIALIST
+      - INVENTORY_MANAGER
+      - FLEET_MANAGER
+      - DETAIL_MANAGER
+      - DETAIL_TECHNICIAN
+      - ACCOUNTING_MANAGER
+      - CONTROLLER
+      - TITLE_CLERK
+      - OFFICE_MANAGER
+      - MARKETING_MANAGER
+      - OTHER
     StaffSkill:
       type: object
       properties:
@@ -1910,38 +2171,36 @@ components:
     TimeSlot:
       type: object
       properties:
-        time_slot_id:
-          type: string
-          description: Technical unique identifier (GUID) for the time slot record.
-          example: b2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7
         time_slot_key:
+          maxLength: 50
+          minLength: 1
           type: string
-          description: Natural business key for the time slot within its specific
-            context.
-          example: TS-MON-MORNING-SHIFT
-        time_slot_source:
-          type: string
-          description: The originating system or calendar providing this availability
-            data.
-          example: GOOGLE_CALENDAR
-        start_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
-        start_time:
-          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
-          type: string
-          description: The local start time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Unique surrogate key for the specific time slot instance.
+          example: TS-KEY-99281A
         end_day:
-          $ref: "#/components/schemas/DaysOfWeekTypes"
+          $ref: "#/components/schemas/DayOfWeekTypes"
         end_time:
+          maxLength: 8
+          minLength: 5
           pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
           type: string
-          description: The local end time in 24-hour ISO 8601 format.
-          format: date-time
+          description: Time with format of HH:mm:ss
+          example: "52200"
         recurring_indicator:
           type: boolean
-          description: Indicates if this time slot is part of a repeating pattern.
+          description: Indicates whether the time slot repeats on a recurring cycle.
           example: true
+        recurring_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        start_day:
+          $ref: "#/components/schemas/DayOfWeekTypes"
+        start_time:
+          maxLength: 8
+          minLength: 5
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$"
+          type: string
+          description: Time with format of HH:mm:ss
+          example: "52200"
         timeslot_directive_types:
           maxItems: 255
           minItems: 1
@@ -1949,10 +2208,22 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TimeslotDirectiveTypes"
+        time_slot_id:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: The business identifier or code assigned to this generic time
+            block configuration.
+          example: MORNING_SHIFT_01
         week_of_date:
-          $ref: "#/components/schemas/Codes"
-      description: "Defines a specific window of time, often within a recurring schedule,\
-        \ used for service availability or appointment booking."
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          format: date
+          items:
+            type: string
+      description: Range of time for the appointment
     TimeSlots:
       type: array
       items:
@@ -1966,6 +2237,12 @@ components:
       - BEFORE
       - BETWEEN
       - BLOCK
+      - EXACT
+      - FLEXIBLE
+      - PREFERRED
+      - REQUIRED
+      - RESTRICTED
+      - OTHER
       - UNKNOWN
     UnitOfMeasure:
       type: object
@@ -2053,5 +2330,5 @@ components:
           description: "The date and time the item was associated with this location\
             \ (e.g., received at this location)."
           format: date-time
-          example: 2026-05-07T17:18:25Z
+          example: 2026-07-02T02:37:47Z
       description: Reference to a Warehouse or Inventory Location Aggregate Root.
