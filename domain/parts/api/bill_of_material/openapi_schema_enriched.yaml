@@ -35,8 +35,8 @@ components:
           type: string
           description: Unique identifier for the Bill of Material.
           example: BOM-PROD-001-REV01
-        identifiers:
-          $ref: "#/components/schemas/PartIdentifiers"
+        part_identifier_references:
+          $ref: "#/components/schemas/PartIdentifierReferences"
         product_identifier:
           type: string
           description: Identifier for the finished product or assembly this BOM describes.
@@ -73,8 +73,8 @@ components:
           example: PROD-XYZ-ASSEMBLY
         components:
           $ref: "#/components/schemas/BomComponents"
-        identifiers:
-          $ref: "#/components/schemas/PartIdentifiers"
+        part_identifier_references:
+          $ref: "#/components/schemas/PartIdentifierReferences"
         effective_date:
           type: string
           description: The date from which this BOM revision becomes effective.
@@ -156,6 +156,41 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Code"
+    ConditionGradeTypes:
+      type: string
+      description: types of condition grades.
+      enum:
+      - EXCELLENT
+      - LIKE_NEW
+      - VERY_GOOD
+      - GOOD
+      - ACCEPTABLE
+      - FAIR
+      - POOR
+      - DAMAGED
+      - UNGRADED
+      - DAMAGED_MINOR
+      - DAMAGED_MAJOR
+      - DAMAGED_COSMETIC
+      - OTHER
+    ConditionTypes:
+      type: string
+      description: types of conditions.
+      enum:
+      - NEW
+      - NEW_OLD_STOCK
+      - REMANUFACTURED
+      - REBUILT
+      - REFURBISHED
+      - USED
+      - SALVAGE
+      - SCRAP
+      - COLLECTIBLE
+      - CERTIFIED_PREOWNED
+      - TOTAL_LOSS
+      - REQUIRES_INSPECTION
+      - UNKNOWN
+      - OTHER
     DurationUomTypes:
       type: string
       description: types of duration uoms.
@@ -199,13 +234,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-07-02T02:38:21Z
+          example: 2026-07-22T16:45:38Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-07-02T02:38:21Z
+          example: 2026-07-22T16:45:38Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -270,36 +305,6 @@ components:
       type: array
       items:
         type: string
-    PartConditionGradeTypes:
-      type: string
-      description: types of part condition grades.
-      enum:
-      - EXCELLENT
-      - LIKE_NEW
-      - VERY_GOOD
-      - GOOD
-      - ACCEPTABLE
-      - FAIR
-      - POOR
-      - DAMAGED
-      - UNGRADED
-      - OTHER
-    PartConditionTypes:
-      type: string
-      description: types of part conditions.
-      enum:
-      - NEW
-      - NEW_OLD_STOCK
-      - REMANUFACTURED
-      - REBUILT
-      - REFURBISHED
-      - USED
-      - SALVAGE
-      - DAMAGED_MINOR
-      - DAMAGED_COSMETIC
-      - SCRAP
-      - COLLECTIBLE
-      - OTHER
     PartIdentifier:
       type: object
       properties:
@@ -327,6 +332,80 @@ components:
         part_status_type:
           $ref: "#/components/schemas/PartStatusTypes"
       description: nullable
+    PartIdentifierReference:
+      type: object
+      properties:
+        part_identifier_reference_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The immutable enterprise technical ledger surrogate key for
+            this snapshot instance.
+          example: PIRK-77119933
+        part_identifier_reference_id:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The business or event payload instance identifier for this
+            reference metadata mapping.
+          example: PART-REF-01
+        part_number:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The raw catalog part number text explicitly captured during
+            the fulfillment or scan transaction.
+          example: 68218055AB
+        manufacturer_brand_code:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: "The originating OEM, supplier, or aftermarket manufacturer\
+            \ brand shorthand code to ensure isolation."
+          example: MOPAR
+        description_snapshot:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The point-in-time descriptive text captured from the master
+            part catalog for local physical document output mapping.
+          example: FENDER-FRONT RIGHT
+        item_classification_type:
+          $ref: "#/components/schemas/PartInvoiceItemTypes"
+        part_master_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The target persistent master catalog surrogate key pointing
+            to the full Part aggregate root.
+          example: PART-KEY-992211A
+        part_identifier_type:
+          $ref: "#/components/schemas/PartIdentifierTypes"
+        unit_of_measure_code:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "The standard unit of measure representation (e.g., EA, QT,\
+            \ GL) of the referenced catalog item."
+          example: EA
+        superseded_by_part_number:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The replacement part number if the current reference part has
+            been superseded by a newer engineering revision.
+          example: 68218055AC
+        core_charge_indicator:
+          type: boolean
+          description: "Denotes if this part reference implies a physical core return\
+            \ obligation (e.g., batteries, engines, alternators)."
+          example: false
+      description: "An immutable, point-in-time reference snapshot of a physical part's\
+        \ identity captured during a fulfillment lifecycle phase."
+    PartIdentifierReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartIdentifierReference"
     PartIdentifierTypes:
       type: string
       description: types of part identifiers.
@@ -364,6 +443,17 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/PartIdentifier"
+    PartInvoiceItemTypes:
+      type: string
+      description: types of part invoice items.
+      enum:
+      - STANDARD_CATALOG_PART
+      - KIT
+      - ASSEMBLY
+      - COMPONENT
+      - EXCHANGE_LINE
+      - RETURN_LINE
+      - OTHER
     PartName:
       type: object
       properties:
@@ -431,14 +521,14 @@ components:
           uniqueItems: true
           type: array
           items:
-            $ref: "#/components/schemas/PartConditionTypes"
+            $ref: "#/components/schemas/ConditionTypes"
         part_condition_grade_types:
           maxItems: 255
           minItems: 1
           uniqueItems: true
           type: array
           items:
-            $ref: "#/components/schemas/PartConditionGradeTypes"
+            $ref: "#/components/schemas/ConditionGradeTypes"
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
         identifiers:

@@ -24,6 +24,86 @@ servers:
 paths: {}
 components:
   schemas:
+    ActorReference:
+      type: object
+      properties:
+        actor_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        actor_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and actor context."
+          example: REF-SALE-2026-CUST-99
+        actor_key:
+          type: string
+          description: The business key of the actual Actor (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        actor_name:
+          type: string
+          description: The formal display name of the Actor at the time of reference.
+          example: Northside Chevrolet Service Center
+        actor_type:
+          $ref: "#/components/schemas/ActorTypes"
+        privacy_policy_rules:
+          $ref: "#/components/schemas/PrivacyPolicyRules"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-07-22T21:33:08Z
+      description: External system identifier
+    ActorTypes:
+      type: string
+      description: types of actors.
+      enum:
+      - USER
+      - CUSTOMER
+      - EMPLOYEE
+      - DEALER
+      - VENDOR
+      - SUPPLIER
+      - ORGANIZATION
+      - SYSTEM
+      - SERVICE
+      - APPLICATION
+      - API
+      - AGENT
+      - AI_AGENT
+      - WORKFLOW
+      - RULE_ENGINE
+      - DEVICE
+      - SENSOR
+      - PARTNER
+      - CONTRACTOR
+      - GOVERNMENT
+      - PROCESS
+      - SCHEDULER
+      - EVENT_HANDLER
+      - UNKNOWN
+    BusinessContext:
+      type: object
+      properties:
+        intent_code:
+          type: string
+          description: "The unique identifier code for the strategic intent (e.g.,\
+            \ IMPROVE_NET_OPERATING_VALUE)."
+        business_action_code:
+          type: string
+          description: "The unique identifier code for the specific business action\
+            \ (e.g., MINIMIZE_HOLDING_COSTS)."
+        correlation_id:
+          type: string
+          description: The correlation ID tracking back to the specific Monte Carlo
+            recommendation instance.
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "Represents the strategic lineage, intention, and operational state\
+        \ accompanying an execution vector or streaming lifecycle event."
     Code:
       type: object
       properties:
@@ -57,6 +137,106 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Code"
+    CurrencyCode:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+      - VEHICLE_INVOICE
+      - PARTS_INVOICE
+      - SERVICE_INVOICE
+      - PAYMENT
+      - DEPOSIT
+      - REFUND
+      - FEE
+      - CREDIT
+      - ADJUSTMENT
+      - WRITE_OFF
+      - CHARGEBACK
+      - JOURNAL_ENTRY
+      - FINANCE_CONTRACT
+    FinancialEventSnapshot:
+      type: object
+      properties:
+        financial_event_snapshot_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        general_ledger_reference:
+          $ref: "#/components/schemas/GeneralLedgerReference"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        unit_cost:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "A real-time aggregated financial report (P&L, Balance Sheet, or\
+        \ Trial Balance) generated as a view model for dashboards."
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    GeneralLedgerReference:
+      type: object
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        context:
+          type: string
+          description: Context or domain of the reference
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-07-22T21:33:08Z
+      description: External system reference
     Identifier:
       type: object
       properties:
@@ -87,6 +267,22 @@ components:
         issuing_authority:
           $ref: "#/components/schemas/Codes"
       description: External system identifier
+    MaskingStrategyTypes:
+      type: string
+      description: types of masking strategys.
+      enum:
+      - REDACT
+      - TOKENIZE
+      - HASH
+      - PSEUDONYMIZE
+      - PARTIAL_MASK
+      - BLOCK
+      - GENERALIZE
+      - PERTURB
+      - TRUNCATE
+      - NULLIFY
+      - GENERAL_ANONYMIZE
+      - NONE
     PaymentEvent:
       type: object
       properties:
@@ -117,7 +313,13 @@ components:
           description: The date and time the paymentMethod was associated with the
             order.
           format: date-time
-          example: 2026-07-02T02:37:40Z
+          example: 2026-07-22T21:33:08Z
+        actor:
+          $ref: "#/components/schemas/ActorReference"
+        business_context:
+          $ref: "#/components/schemas/BusinessContext"
+        financial_event_snapshot:
+          $ref: "#/components/schemas/FinancialEventSnapshot"
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentStatusTypes:
@@ -138,3 +340,106 @@ components:
       - CHARGEBACK
       - WRITTEN_OFF
       - OTHER
+    PrivacyAdapterTypes:
+      type: string
+      description: types of privacy adapters.
+      enum:
+      - LLM
+      - AI_AGENT
+      - EXTERNAL_API
+      - DATABASE
+      - MESSAGE_BROKER
+      - INTERNAL_API
+      - ALL
+    PrivacyPersonaTypes:
+      type: string
+      description: types of privacy personas.
+      enum:
+      - DEALER
+      - THIRD_PARTY
+      - MANUFACTURER
+      - CONSUMER
+      - REGULATOR
+      - UNKNOWN
+    PrivacyPolicyRule:
+      type: object
+      properties:
+        privacy_policy_rule_key:
+          type: string
+          description: The data classification type this rule targets.
+        privacy_policy_rule_id:
+          type: string
+          description: The data classification type this rule targets.
+        target_persona_type:
+          $ref: "#/components/schemas/PrivacyPersonaTypes"
+        target_data_category_type:
+          $ref: "#/components/schemas/PrivacyTypes"
+        adapter_type:
+          $ref: "#/components/schemas/PrivacyAdapterTypes"
+        default_strategy_type:
+          $ref: "#/components/schemas/MaskingStrategyTypes"
+        active_indicator:
+          type: boolean
+          description: Indicates if this macro policy rule is actively being enforced.
+          example: false
+      description: PrivacyPolicyRule
+    PrivacyPolicyRules:
+      type: array
+      items:
+        $ref: "#/components/schemas/PrivacyPolicyRule"
+    PrivacyTypes:
+      type: string
+      description: types of privacys.
+      enum:
+      - SOCIAL_SECURITY_NUMBER
+      - DATE_OF_BIRTH
+      - DRIVER_LICENSE_NUMBER
+      - PASSPORT_NUMBER
+      - PHONE_NUMBER
+      - EMAIL_ADDRESS
+      - HOME_ADDRESS
+      - MOTHER_MAIDEN_NAME
+      - TAX_ID_NUMBER
+      - UNION_GOVERNMENT_ID
+      - NATIONALITY_CITIZENSHIP
+      - ACCOUNT_CREDENTIALS
+      - GENERAL_PERSONAL
+      - CREDIT_CARD_NUMBER
+      - BANK_ACCOUNT_NUMBER
+      - ROUTING_NUMBER
+      - PAYPAL_ACCOUNT
+      - CRYPTO_WALLET_ADDRESS
+      - GENERAL_FINANCIAL
+      - HEALTH_INSURANCE_ID
+      - MEDICAL_RECORD_NUMBER
+      - PRESCRIPTION_DETAILS
+      - GENETIC_DATA
+      - SEX_LIFE_HEALTH
+      - GENERAL_MEDICAL
+      - FINGERPRINT
+      - FACE_SCAN
+      - VOICE_PRINT
+      - EMOTION_RECOGNITION_DATA
+      - GENERAL_BIO
+      - GENERAL_CONTACT
+      - SOCIAL_MEDIA_HANDLE
+      - SOCIAL_MEDIA_PROFILE
+      - IP_ADDRESS
+      - DEVICE_ID
+      - GEOLOCATION_DATA
+      - ONLINE_BEHAVIORAL_DATA
+      - GENERAL_SOCIAL
+      - POLITICAL_AFFILIATION
+      - RELIGIOUS_PHILOSOPHICAL_BELIEF
+      - SEXUAL_ORIENTATION
+      - RACIAL_ETHNIC_ORIGIN
+      - TRADE_UNION_MEMBERSHIP
+      - CRIMINAL_RECORD_HISTORY
+      - THIRD_PARTY_CUSTOMER_DATA
+      - THIRD_PARTY_BUSINESS_DATA
+      - GENERAL_BUSINESS
+      - GENERAL_OPERATIONAL
+      - GENERAL_DATA
+      - ALL_DATA
+      - CUSTOM
+      - UNKNOWN

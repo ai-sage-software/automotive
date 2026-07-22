@@ -24,6 +24,27 @@ servers:
 paths: {}
 components:
   schemas:
+    BusinessContext:
+      type: object
+      properties:
+        intent_code:
+          type: string
+          description: "The unique identifier code for the strategic intent (e.g.,\
+            \ IMPROVE_NET_OPERATING_VALUE)."
+        business_action_code:
+          type: string
+          description: "The unique identifier code for the specific business action\
+            \ (e.g., MINIMIZE_HOLDING_COSTS)."
+        correlation_id:
+          type: string
+          description: The correlation ID tracking back to the specific Monte Carlo
+            recommendation instance.
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "Represents the strategic lineage, intention, and operational state\
+        \ accompanying an execution vector or streaming lifecycle event."
     Code:
       type: object
       properties:
@@ -57,6 +78,106 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Code"
+    CurrencyCode:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+      - VEHICLE_INVOICE
+      - PARTS_INVOICE
+      - SERVICE_INVOICE
+      - PAYMENT
+      - DEPOSIT
+      - REFUND
+      - FEE
+      - CREDIT
+      - ADJUSTMENT
+      - WRITE_OFF
+      - CHARGEBACK
+      - JOURNAL_ENTRY
+      - FINANCE_CONTRACT
+    FinancialEventSnapshot:
+      type: object
+      properties:
+        financial_event_snapshot_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        general_ledger_reference:
+          $ref: "#/components/schemas/GeneralLedgerReference"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        unit_cost:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "A real-time aggregated financial report (P&L, Balance Sheet, or\
+        \ Trial Balance) generated as a view model for dashboards."
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    GeneralLedgerReference:
+      type: object
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        context:
+          type: string
+          description: Context or domain of the reference
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-07-22T21:24:23Z
+      description: External system reference
     Identifier:
       type: object
       properties:
@@ -84,6 +205,8 @@ components:
           description: The monetary or hours-based value of the event.
         system_codes:
           $ref: "#/components/schemas/Codes"
+        issuing_authority:
+          $ref: "#/components/schemas/Codes"
       description: External system identifier
     Identifiers:
       type: array
@@ -95,6 +218,8 @@ components:
       enum:
       - CREATED
       - UPDATED
+      - SKIPPED
+      - FULFILLED
       - DELETE_HARD
       - DELETE_SOFT
       - ACCESS_ALLOWED
@@ -117,6 +242,8 @@ components:
       - REJECTED
       - UNQUALIFIED
       - INCOMPLETE
+      - OTHER
+      - UNKNOWN
     LifecycleStatusEvent:
       type: object
       properties:
@@ -145,7 +272,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-05-07T17:17:24Z
+          example: 2026-07-22T21:24:23Z
         reason_codes:
           $ref: "#/components/schemas/Codes"
         transition_from:
@@ -162,4 +289,8 @@ components:
           example: RDR got approved by NVS
         identifiers:
           $ref: "#/components/schemas/Identifiers"
+        business_context:
+          $ref: "#/components/schemas/BusinessContext"
+        financial_event_snapshot:
+          $ref: "#/components/schemas/FinancialEventSnapshot"
       description: Lifecycle Status Event

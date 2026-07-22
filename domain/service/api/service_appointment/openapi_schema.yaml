@@ -53,7 +53,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
       description: External system identifier
     ActorTypes:
       type: string
@@ -217,7 +217,7 @@ components:
             for this scheduling event.
           example: BAY-04-EV
         bay_capability_type:
-          $ref: "#/components/schemas/BayAvailabilityTypes"
+          $ref: "#/components/schemas/BayCapabilityTypes"
         is_exclusive_allocation:
           type: boolean
           description: "Indicates if this bay is exclusively reserved for this time\
@@ -230,25 +230,6 @@ components:
             \ 3, single lift bays allow 1)."
           format: int32
           example: 1
-        historical_avg_bay_seconds:
-          type: integer
-          description: "The running historical average time, in seconds, that similar\
-            \ service profiles occupy this specific physical bay location."
-          format: int64
-          example: 3600
-        historical_bay_efficiency_ratio:
-          type: number
-          description: "The point-in-time calculation snapshot representing actual\
-            \ work time divided by total physical bay occupancy time (e.g., 0.85 =\
-            \ 85% of bay stay was active labor)."
-          format: double
-          example: 0.85
-        historical_sample_count:
-          type: integer
-          description: The total historical run sample size utilized by the analytical
-            engine to resolve the running duration and efficiency metrics.
-          format: int32
-          example: 250
       description: Represents the physical or virtual location details of an appointment.
     AppointmentLocations:
       type: array
@@ -279,20 +260,48 @@ components:
       type: string
       description: types of appointment status.
       enum:
-      - WAIT_LIST
       - TENTATIVE
-      - AVAILABLE
-      - SELECTED
-      - RESERVED
-      - PREFERRED
+      - CONFIRMATION_PENDING
       - CONFIRMED
+      - ALTERNATE_PROPOSED
+      - ALTERNATE_ACCEPTED
+      - ALTERNATE_DECLINED
+      - REMINDER_PENDING
+      - REMINDER_SENT
+      - REMINDER_ACKNOWLEDGED
+      - CHECK_IN_PENDING
       - ARRIVED
       - CHECKED_IN
+      - READY
+      - GRACE_PERIOD
+      - LATE_ARRIVAL
       - IN_PROGRESS
+      - ON_HOLD
+      - PARTIALLY_FULFILLED
       - FULFILLED
-      - ALTERNATE
+      - FOLLOW_UP_REQUIRED
+      - CLOSED
       - NO_SHOW
+      - NO_SHOW_REVIEW
+      - NO_SHOW_CONFIRMED
+      - NO_SHOW_RECOVERED
+      - RESCHEDULE_INITIATED
+      - RESCHEDULE_ACKNOWLEDGED
+      - RESCHEDULE_PROCESSING
+      - RESCHEDULE_PROPOSED
+      - RESCHEDULE_PENDING_AGREEMENT
+      - RESCHEDULE_AGREED
+      - RESCHEDULE_COMPLETED
+      - RESCHEDULE_DECLINED
+      - CANCELLATION_REQUESTED
+      - CANCELLATION_ACKNOWLEDGED
+      - CANCELLATION_PROCESSING
+      - CANCELLATION_DECLINED
       - CANCELLED
+      - EXPIRED
+      - DECLINED
+      - REJECTED
+      - FAILED
     AppointmentTypes:
       type: string
       description: types of appointments.
@@ -335,7 +344,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -353,9 +362,9 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/AuthorizationLevel"
-    BayAvailabilityTypes:
+    BayCapabilityTypes:
       type: string
-      description: types of bay availabilitys.
+      description: types of bay capabilitys.
       enum:
       - STANDARD_LIFT
       - HEAVY_DUTY_LIFT
@@ -421,6 +430,38 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Code"
+    ColorSummaries:
+      type: array
+      items:
+        $ref: "#/components/schemas/ColorSummary"
+    ColorSummary:
+      type: object
+      properties:
+        color_summary_id:
+          type: string
+          description: A unique id for the color detail.
+        color_summary_key:
+          type: string
+          description: A unique key for the color detail.
+        dealer_color:
+          type: string
+          description: The color as designated by the dealer.
+        desc_color:
+          type: string
+          description: A descriptive name for the color.
+        color_code:
+          type: string
+          description: The technical code of the color
+        oem_name:
+          type: string
+          description: The Original Equipment Manufacturer (OEM) name or code.
+        marketing_name:
+          type: string
+          description: The Marketing Name of the color
+        item_name:
+          type: string
+          description: The Marketing Name of the color
+      description: "Summarys for a specific color, including dealer and OEM codes."
     CommunicationChannel:
       type: object
       properties:
@@ -458,6 +499,8 @@ components:
           $ref: "#/components/schemas/TimeSlots"
         authorization_levels:
           $ref: "#/components/schemas/AuthorizationLevels"
+        last_communication_status_type:
+          $ref: "#/components/schemas/CommunicationStatusTypes"
       description: "Represents a communication channel, such as an email address or\
         \ phone number, with associated preferences and authorizations."
     CommunicationChannelTypes:
@@ -481,6 +524,41 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/CommunicationChannel"
+    CommunicationStatusTypes:
+      type: string
+      description: types of communication status.
+      enum:
+      - PENDING
+      - SCHEDULED
+      - IN_PROGRESS
+      - SENT
+      - DELIVERED
+      - READ
+      - FAILED
+      - BOUNCED
+      - REJECTED
+      - CANCELLED
+      - EXPIRED
+      - SUPPRESSED
+      - OPTED_OUT
+      - UNKNOWN
+    ConnectedVehicleStatusTypes:
+      type: string
+      description: types of connected vehicle status.
+      enum:
+      - CONNECTING
+      - ONLINE
+      - SLEEPING
+      - OFFLINE
+      - DISCONNECTED
+      - SUSPENDED
+      - DECOMMISSIONED
+      - OPTED_OUT
+      - PAIRING
+      - DEGRADED
+      - UNSUPPORTED
+      - UNKNOWN
+      - OTHER
     CurrencyCode:
       type: string
       description: The three-letter ISO 4217 currency code used for financial transactions.
@@ -498,7 +576,7 @@ components:
     DealerReference:
       type: object
       properties:
-        dealer_ref_key:
+        dealer_reference_key:
           type: string
           description: Unique transactional key identifying this specific reference
             instance.
@@ -514,6 +592,9 @@ components:
         dealer_bac:
           type: string
           description: The dealer's Business Associate Code (BAC) for OEM correlation.
+        franchise_code:
+          type: string
+          description: A business classification code for the dealership.
         business_code:
           type: string
           description: A business classification code for the dealership.
@@ -559,7 +640,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
       description: External system identifier
@@ -628,13 +709,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -709,6 +790,18 @@ components:
           $ref: "#/components/schemas/GeneralAmount"
       description: "A real-time aggregated financial report (P&L, Balance Sheet, or\
         \ Trial Balance) generated as a view model for dashboards."
+    FuelSummary:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The OEM or catalog fuel identifier code.
+          example: "6"
+        name:
+          type: string
+          description: The descriptive name of the fuel configuration.
+          example: ICE
+      description: A lightweight summary of the vehicle's fuel configuration.
     GeneralAmount:
       type: object
       properties:
@@ -755,7 +848,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
       description: External system reference
     GeographicContext:
       type: object
@@ -772,6 +865,8 @@ components:
           description: Flag indicating whether user consent has been explicitly given
             for data processing.
           example: false
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
         data_residency_requirement:
           $ref: "#/components/schemas/Codes"
         context_name:
@@ -889,13 +984,13 @@ components:
             \ synchronized from the source governance, legal, policy, or compliance\
             \ system."
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         occurrence_date_time:
           type: string
           description: "The date and time when the jurisdiction profile was observed,\
             \ created, received, updated, or became effective."
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
       description: nullable
     LifecycleEvent:
       type: object
@@ -957,6 +1052,8 @@ components:
       enum:
       - CREATED
       - UPDATED
+      - SKIPPED
+      - FULFILLED
       - DELETE_HARD
       - DELETE_SOFT
       - ACCESS_ALLOWED
@@ -979,6 +1076,8 @@ components:
       - REJECTED
       - UNQUALIFIED
       - INCOMPLETE
+      - OTHER
+      - UNKNOWN
     LifecycleEvents:
       type: array
       items:
@@ -1040,6 +1139,7 @@ components:
       - PERTURB
       - TRUNCATE
       - NULLIFY
+      - GENERAL_ANONYMIZE
       - NONE
     MediaFormatTypes:
       type: string
@@ -1121,6 +1221,12 @@ components:
           description: The direct hypermedia link pointing to the downstream physical
             binary or target REST resource.
           format: href
+        capture_stage_type:
+          type: string
+          description: "The operational service phase or workflow event during which\
+            \ the media was captured (e.g., VEHICLE_ARRIVAL, INITIAL_INSPECTION, TECHNICIAN_INSPECTION,\
+            \ SERVICE_COMPLETED, FINAL_INSPECTION, POLICE_INCIDENT, OTHER)."
+          example: INITIAL_INSPECTION
       description: media.reference.desc
     MediaReferences:
       type: array
@@ -1173,8 +1279,6 @@ components:
           type: boolean
           description: A boolean indicator for whether the media is hosted externally.
           example: false
-        media_schedule:
-          $ref: "#/components/schemas/ProductSchedule"
       description: "Represents the visibility and hosting details for media, such\
         \ as privacy settings and scheduling."
     Memo:
@@ -1214,6 +1318,27 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/MetricNameValue"
+    MetricValue:
+      type: object
+      properties:
+        metric_value_id:
+          type: string
+          description: The internal unique identifier for this metric record.
+          example: 8892-abc-123-metric
+        metric_value_key:
+          type: string
+          description: The natural business key for the metric value.
+          example: EXPIRATION_MILEAGE
+        value:
+          type: string
+          description: "The actual value of the metric (e.g., the amount or count)."
+          example: "100000"
+        uom:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        codes:
+          $ref: "#/components/schemas/Codes"
+      description: "Represents a quantitative measurement including its unit, value,\
+        \ and classification codes."
     Narrative:
       type: object
       properties:
@@ -1233,7 +1358,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         narrative_group:
           type: string
           description: The group to which the narrative belongs.
@@ -1454,7 +1579,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         unit_of_measure:
           $ref: "#/components/schemas/UnitOfMeasure"
       description: External system identifier
@@ -1505,6 +1630,27 @@ components:
           description: The specific account identifier for the party in the source
             system.
           example: ACT-771229-B
+        party_label:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: The human-readable display label or business name representing
+            the party entity within the bounded context.
+          example: Apex Automotive Group
+        party_description:
+          maxLength: 500
+          type: string
+          description: Detailed contextual narrative or organizational notes describing
+            the referenced party entity.
+          example: Primary regional dealership franchise operating across southeast
+            service territories.
+        primary_role_name:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The principal functional role or stakeholder classification
+            assigned to the party within this domain interaction.
+          example: DEALER_OPERATOR
         party_relationship_types:
           maxItems: 255
           minItems: 1
@@ -1522,7 +1668,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1597,6 +1743,11 @@ components:
       - VALET
       - STAFF
       - FINANCE
+      - SERVICE_ADVISOR
+      - SERVICE_TECHNICIAN
+      - SHOP_FOREMAN
+      - FLEET_MANAGER
+      - TRANSPORT_PROVIDER
       - PASSENGER
       - CUSTOMER
       - CO_SIGNER
@@ -1629,6 +1780,7 @@ components:
       - PRIMARY_CUSTOMER
       - PRIMARY_DRIVER
       - PRIMARY_OWNER
+      - VEHICLE_OWNER
       - APPLICANT
       - CO_APPLICANT
       - AGENT
@@ -1645,6 +1797,8 @@ components:
       - SHAREHOLDER
       - INVESTOR
       - CUSTODIAN
+      - PRIMARY_CONTACT
+      - APPROVER
       - SOLD_TO
       - SHIP_TO
       - PAYER
@@ -1823,6 +1977,17 @@ components:
           items:
             type: string
       description: "position meta-data that includes postal code, and lat/long"
+    PowertrainTypes:
+      type: string
+      description: types of powertrains.
+      enum:
+      - BEV
+      - FCEV
+      - HEV
+      - ICE
+      - MHEV
+      - OTHER
+      - PHEV
     PrivacyAdapterTypes:
       type: string
       description: types of privacy adapters.
@@ -1833,6 +1998,7 @@ components:
       - DATABASE
       - MESSAGE_BROKER
       - INTERNAL_API
+      - ALL
     PrivacyPersonaTypes:
       type: string
       description: types of privacy personas.
@@ -1922,37 +2088,9 @@ components:
       - GENERAL_BUSINESS
       - GENERAL_OPERATIONAL
       - GENERAL_DATA
+      - ALL_DATA
       - CUSTOM
       - UNKNOWN
-    ProductSchedule:
-      type: object
-      properties:
-        product_schedule_key:
-          type: string
-          description: Natural key or business-friendly key for the Product Schedule
-            record.
-        effective_period:
-          $ref: "#/components/schemas/EffectivePeriod"
-        schedule_type:
-          $ref: "#/components/schemas/ScheduleTypes"
-        schedule_codes:
-          $ref: "#/components/schemas/Codes"
-        supplier_codes:
-          $ref: "#/components/schemas/Codes"
-        start_quantity:
-          type: string
-          description: Starting quantity for which this schedule applies.
-        end_quantity:
-          type: string
-          description: Ending quantity for which this schedule applies.
-        geographic_boundaries:
-          $ref: "#/components/schemas/GeographicBoundaries"
-        in_service_distance:
-          type: string
-          description: Service distance constraint for the product schedule.
-        distance_uom_type:
-          $ref: "#/components/schemas/NarrativeUomTypes"
-      description: Contract details for this product
     ProductTypes:
       type: string
       description: types of products.
@@ -1976,6 +2114,27 @@ components:
       - WARRANTY_PLAN
       - SUBSCRIPTION
       - OTHER
+    RepairOrderInitiationTypes:
+      type: string
+      description: types of repair order initiations.
+      enum:
+      - CREATED_FROM_APPOINTMENT
+      - PRIMARY
+      - FOLLOW_UP
+      - SUPERSEDES
+      - WARRANTY
+      - INTERNAL
+      - SUBLET
+      - MULTI_POINT_INSPECTION_RECOMMENDATION
+      - DIAGNOSTIC_TROUBLE_CODE
+      - CONNECTED_VEHICLE_TELEMETRY
+      - OVER_THE_AIR_UPDATE_FAILURE
+      - SAFETY_RECALL
+      - SERVICE_CAMPAIGN
+      - ROADSIDE_ASSISTANCE
+      - MOBILE_SERVICE_DISPATCH
+      - COLLISION_ESTIMATE
+      - UNKNOWN
     RepairOrderReference:
       type: object
       properties:
@@ -2001,6 +2160,13 @@ components:
           type: string
           description: The date the repair order was opened.
           format: date
+        repair_order_initiation_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/RepairOrderInitiationTypes"
       description: repair.order.reference.desc
     RepairOrderReferences:
       type: array
@@ -2106,7 +2272,7 @@ components:
           type: string
           description: The date and time the appointment occurred.
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         time_slots:
           $ref: "#/components/schemas/TimeSlots"
         identifiers:
@@ -2125,10 +2291,18 @@ components:
           $ref: "#/components/schemas/PartyReferences"
         dealer_staff_preferences:
           $ref: "#/components/schemas/PartyReferences"
+        assigned_dealer_staff:
+          $ref: "#/components/schemas/PartyReferences"
         appointment_source_type:
           $ref: "#/components/schemas/AppointmentSourceTypes"
         repair_order_references:
           $ref: "#/components/schemas/RepairOrderReferences"
+        odometer_at_service_start:
+          $ref: "#/components/schemas/MetricValue"
+        odometer_at_service_complete:
+          $ref: "#/components/schemas/MetricValue"
+        telemetry_snapshots:
+          $ref: "#/components/schemas/VehicleTelemetrySnapshots"
       description: A single appointment record.
     ServiceConcernSeverityTypes:
       type: string
@@ -2330,6 +2504,18 @@ components:
       - RESTRICTED
       - OTHER
       - UNKNOWN
+    TransmissionSummary:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The OEM or catalog transmission identifier code.
+          example: "6"
+        name:
+          type: string
+          description: The descriptive name of the transmission configuration.
+          example: 6-Speed Automatic
+      description: A lightweight summary of the vehicle's transmission configuration.
     TransportEvent:
       type: object
       properties:
@@ -2363,7 +2549,7 @@ components:
           type: string
           description: transport.event.occurrence.date.time.desc
           format: date-time
-          example: 2026-07-16T17:21:18Z
+          example: 2026-07-22T17:24:58Z
         transport_event_type:
           $ref: "#/components/schemas/TransportEventTypes"
         vehicle_identifier:
@@ -2391,6 +2577,7 @@ components:
       - TOW_LINE
       - FLEET_CONVOY
       - THIRD_PARTY_CARRIER
+      - MOBILE
     TransportEvents:
       type: array
       items:
@@ -2491,19 +2678,17 @@ components:
           description: The latest known dealer or inventory stock number associated
             with the vehicle identity.
           example: F12345
+        fleet_vehicle_key:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The latest known dealer or inventory stock number associated
+            with the vehicle identity.
+          example: F12345
         license:
           $ref: "#/components/schemas/VehicleLicense"
         identifiers:
           $ref: "#/components/schemas/Identifiers"
-        nicknames:
-          maxItems: 255
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        tags:
-          $ref: "#/components/schemas/Codes"
         primary_make:
           maxLength: 80
           minLength: 1
@@ -2535,22 +2720,12 @@ components:
           description: Indicates whether the canonical vehicle identity remains active
             and valid within the enterprise registry.
           example: true
-        created_date_time:
-          type: string
-          description: The timestamp documenting when the canonical vehicle identity
-            was initially established.
-          format: date-time
-          example: 2026-07-16T17:21:18Z
-        last_updated_date_time:
-          type: string
-          description: The timestamp documenting the most recent update applied to
-            the canonical vehicle identity.
-          format: date-time
-          example: 2026-07-16T17:21:18Z
         vehicle_key:
           type: string
           description: The lightweight canonical reference linking the identity anchor
             to the authoritative normalized vehicle profile.
+        vehicle_summary:
+          $ref: "#/components/schemas/VehicleSummary"
       description: Vehicle Identifier
     VehicleLicense:
       type: object
@@ -2570,3 +2745,98 @@ components:
           type: string
           description: A unique identifier for the vehicle license record.
       description: License for vehicle
+    VehicleSummary:
+      type: object
+      properties:
+        vehicle_summary_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The immutable aggregate root identifier representing the canonical
+            enterprise vehicle identity anchor.
+          example: VID-00088211
+        vehicle_summary_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The persistent identifier representing the canonical vehicle
+            identity registry entry.
+          example: VEH-ID-993211
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        nicknames:
+          $ref: "#/components/schemas/Codes"
+        tags:
+          $ref: "#/components/schemas/Codes"
+        makes:
+          $ref: "#/components/schemas/Codes"
+        models:
+          $ref: "#/components/schemas/Codes"
+        engine:
+          type: string
+          description: vehicle.summary.engine.desc
+        transmission:
+          $ref: "#/components/schemas/TransmissionSummary"
+        power_train_type:
+          $ref: "#/components/schemas/PowertrainTypes"
+        colors:
+          $ref: "#/components/schemas/ColorSummaries"
+        fuel_summary:
+          $ref: "#/components/schemas/FuelSummary"
+        vehicle_description:
+          $ref: "#/components/schemas/Memo"
+        vehicle_notes:
+          $ref: "#/components/schemas/Narratives"
+        connected_vehicle_status_type:
+          $ref: "#/components/schemas/ConnectedVehicleStatusTypes"
+      description: Vehicle Identifier
+    VehicleTelemetryMetricTypes:
+      type: string
+      description: types of vehicle telemetry metrics.
+      enum:
+      - ODOMETER
+      - SPEED
+      - ENGINE_RPM
+      - FUEL_LEVEL
+      - BATTERY_LEVEL
+      - BATTERY_STATE_OF_CHARGE
+      - BATTERY_VOLTAGE
+      - TIRE_PRESSURE
+      - ENGINE_TEMPERATURE
+      - AMBIENT_TEMPERATURE
+      - HEADING
+      - ACCELERATION
+      - REMAINING_RANGE
+      - OIL_LIFE
+      - FLUID_LEVEL
+      - ODOMETER_AT_BOOKING
+      - ODOMETER_AT_ARRIVAL
+      - ODOMETER_AT_CHECK_IN
+      - ODOMETER_AT_VEHICLE_RELEASE
+      - FUEL_LEVEL_AT_ARRIVAL
+      - FUEL_LEVEL_AT_RELEASE
+      - BATTERY_SOC_AT_ARRIVAL
+      - BATTERY_SOC_AT_RELEASE
+      - UNKNOWN
+    VehicleTelemetrySnapshot:
+      type: object
+      properties:
+        metric_type:
+          $ref: "#/components/schemas/VehicleTelemetryMetricTypes"
+        metric_value:
+          $ref: "#/components/schemas/MetricValue"
+        recorded_date_time:
+          type: string
+          description: Exact timestamp when the telemetry reading was captured.
+          format: date-time
+          example: 2026-07-22T17:24:58Z
+        source:
+          type: string
+          description: "Origin of the telemetry data (e.g., MANUAL_ADVISOR_INPUT,\
+            \ TELEMATICS_DONGLE, OBD_SCANNER)."
+          example: OBD_SCANNER
+      description: vehicle.telemetry.snapshot.desc
+    VehicleTelemetrySnapshots:
+      type: array
+      items:
+        $ref: "#/components/schemas/VehicleTelemetrySnapshot"

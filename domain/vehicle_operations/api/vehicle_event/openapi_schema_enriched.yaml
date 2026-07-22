@@ -1,0 +1,889 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - VehicleEvent
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    ActorReference:
+      type: object
+      properties:
+        actor_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        actor_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and actor context."
+          example: REF-SALE-2026-CUST-99
+        actor_key:
+          type: string
+          description: The business key of the actual Actor (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        actor_name:
+          type: string
+          description: The formal display name of the Actor at the time of reference.
+          example: Northside Chevrolet Service Center
+        actor_type:
+          $ref: "#/components/schemas/ActorTypes"
+        privacy_policy_rules:
+          $ref: "#/components/schemas/PrivacyPolicyRules"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+      description: External system identifier
+    ActorTypes:
+      type: string
+      description: types of actors.
+      enum:
+      - USER
+      - CUSTOMER
+      - EMPLOYEE
+      - DEALER
+      - VENDOR
+      - SUPPLIER
+      - ORGANIZATION
+      - SYSTEM
+      - SERVICE
+      - APPLICATION
+      - API
+      - AGENT
+      - AI_AGENT
+      - WORKFLOW
+      - RULE_ENGINE
+      - DEVICE
+      - SENSOR
+      - PARTNER
+      - CONTRACTOR
+      - GOVERNMENT
+      - PROCESS
+      - SCHEDULER
+      - EVENT_HANDLER
+      - UNKNOWN
+    BusinessContext:
+      type: object
+      properties:
+        intent_code:
+          type: string
+          description: "The unique identifier code for the strategic intent (e.g.,\
+            \ IMPROVE_NET_OPERATING_VALUE)."
+        business_action_code:
+          type: string
+          description: "The unique identifier code for the specific business action\
+            \ (e.g., MINIMIZE_HOLDING_COSTS)."
+        correlation_id:
+          type: string
+          description: The correlation ID tracking back to the specific Monte Carlo
+            recommendation instance.
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "Represents the strategic lineage, intention, and operational state\
+        \ accompanying an execution vector or streaming lifecycle event."
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    CurrencyCode:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
+      enum:
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
+    EffectivePeriod:
+      type: object
+      properties:
+        effective_period_key:
+          type: string
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
+        active_indicator:
+          type: boolean
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
+        exclusive_indicator:
+          type: boolean
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
+        start_date_time:
+          type: string
+          description: The inclusive start point of the period in ISO 8601 format.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        complete_date_time:
+          type: string
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
+          type: string
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        recur_count:
+          type: string
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: string
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
+        recur_indicator:
+          type: boolean
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
+    FinancialCategoryTypes:
+      type: string
+      description: types of financial categorys.
+      enum:
+      - CAPEX
+      - OPEX
+      - HARDWARE
+      - SOFTWARE
+      - MAINTENANCE
+      - TRAVEL
+      - TRAINING
+      - UTILITIES
+      - RENT
+      - SALARY
+      - REVENUE
+      - TAX
+      - OTHER
+      - VEHICLE_INVOICE
+      - PARTS_INVOICE
+      - SERVICE_INVOICE
+      - PAYMENT
+      - DEPOSIT
+      - REFUND
+      - FEE
+      - CREDIT
+      - ADJUSTMENT
+      - WRITE_OFF
+      - CHARGEBACK
+      - JOURNAL_ENTRY
+      - FINANCE_CONTRACT
+    FinancialEventSnapshot:
+      type: object
+      properties:
+        financial_event_snapshot_key:
+          type: string
+          description: The unique ID for this generated snapshot instance.
+        financial_category_type:
+          $ref: "#/components/schemas/FinancialCategoryTypes"
+        general_ledger_reference:
+          $ref: "#/components/schemas/GeneralLedgerReference"
+        resulting_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        previous_balance:
+          $ref: "#/components/schemas/GeneralAmount"
+        unit_cost:
+          $ref: "#/components/schemas/GeneralAmount"
+      description: "A real-time aggregated financial report (P&L, Balance Sheet, or\
+        \ Trial Balance) generated as a view model for dashboards."
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    GeneralLedgerReference:
+      type: object
+      properties:
+        general_ledger_reference_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_reference_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        general_ledger_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique reference value
+        context:
+          type: string
+          description: Context or domain of the reference
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        general_ledger_identifier:
+          $ref: "#/components/schemas/Identifier"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+      description: External system reference
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        issuing_authority:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    MaskingStrategyTypes:
+      type: string
+      description: types of masking strategys.
+      enum:
+      - REDACT
+      - TOKENIZE
+      - HASH
+      - PSEUDONYMIZE
+      - PARTIAL_MASK
+      - BLOCK
+      - GENERALIZE
+      - PERTURB
+      - TRUNCATE
+      - NULLIFY
+      - GENERAL_ANONYMIZE
+      - NONE
+    MetricValue:
+      type: object
+      properties:
+        metric_value_id:
+          type: string
+          description: The internal unique identifier for this metric record.
+          example: 8892-abc-123-metric
+        metric_value_key:
+          type: string
+          description: The natural business key for the metric value.
+          example: EXPIRATION_MILEAGE
+        value:
+          type: string
+          description: "The actual value of the metric (e.g., the amount or count)."
+          example: "100000"
+        uom:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        codes:
+          $ref: "#/components/schemas/Codes"
+      description: "Represents a quantitative measurement including its unit, value,\
+        \ and classification codes."
+    NarrativeUomTypes:
+      type: string
+      description: types of narrative uoms.
+      enum:
+      - BAR
+      - KPA
+      - PSI
+      - OZ
+      - LB
+      - KG
+      - GRAMS
+      - TONS
+      - LITER
+      - GALLON
+      - FLUID_OUNCE
+      - CUBIC_METER
+      - KM
+      - MILES
+      - MI
+      - INCH
+      - FEET
+      - YARD
+      - FATHOM
+      - NAUTICAL
+      - METER
+      - CENTIMETER
+      - MILLIMETER
+      - DURATION
+      - SECONDS
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - DATE_TIME
+      - DATE
+      - TIME
+      - CELSIUS
+      - FAHRENHEIT
+      - KELVIN
+      - RANKINE
+      - VOLT
+      - AMPERE
+      - OHM
+      - WATT
+      - KILOWATT_HOUR
+      - HP
+      - RPM
+      - G_FORCE
+      - DEGREES
+      - OCCURRENCE
+      - GROUP
+      - CODE
+      - CURRENCY
+      - POINTS
+      - CUSTOM
+      - UNLIMITED
+      - NONE
+      - LABEL
+      - PERCENT
+      - DESC
+      - TEXT
+      - KEY
+      - PROTECTED_TEXT
+      - BINARY
+      - STRING
+      - NUMBER
+      - INTEGER
+      - BOOLEAN
+      - ARRAY
+      - OBJECT
+      - FLOAT
+      - DOUBLE
+      - INT32
+      - INT64
+      - COUNT
+      - RATIO
+      - SCORE
+      - OTHER
+    Position:
+      type: object
+      properties:
+        position_id:
+          type: string
+          description: Unique identifier for this position
+          example: pos-001
+        position_key:
+          type: string
+          description: Business key for this position record
+          example: POS-ATL-WEST
+        latitude:
+          type: string
+          description: Latitude of the location
+          example: "33.7490"
+        longitude:
+          type: string
+          description: Longitude of the location
+          example: "-84.3880"
+        altitude:
+          type: string
+          description: Altitude of the location
+          example: "320"
+        bearing:
+          type: string
+          description: Bearing direction (compass)
+          example: NW
+        postal_code:
+          type: string
+          description: Postal code of the location
+          example: "30303"
+        county_code:
+          pattern: "^[a-zA-Z0-9_]+$"
+          type: string
+          description: Standardized code for the county.
+        position_codes:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      description: "position meta-data that includes postal code, and lat/long"
+    PrivacyAdapterTypes:
+      type: string
+      description: types of privacy adapters.
+      enum:
+      - LLM
+      - AI_AGENT
+      - EXTERNAL_API
+      - DATABASE
+      - MESSAGE_BROKER
+      - INTERNAL_API
+      - ALL
+    PrivacyPersonaTypes:
+      type: string
+      description: types of privacy personas.
+      enum:
+      - DEALER
+      - THIRD_PARTY
+      - MANUFACTURER
+      - CONSUMER
+      - REGULATOR
+      - UNKNOWN
+    PrivacyPolicyRule:
+      type: object
+      properties:
+        privacy_policy_rule_key:
+          type: string
+          description: The data classification type this rule targets.
+        privacy_policy_rule_id:
+          type: string
+          description: The data classification type this rule targets.
+        target_persona_type:
+          $ref: "#/components/schemas/PrivacyPersonaTypes"
+        target_data_category_type:
+          $ref: "#/components/schemas/PrivacyTypes"
+        adapter_type:
+          $ref: "#/components/schemas/PrivacyAdapterTypes"
+        default_strategy_type:
+          $ref: "#/components/schemas/MaskingStrategyTypes"
+        active_indicator:
+          type: boolean
+          description: Indicates if this macro policy rule is actively being enforced.
+          example: false
+      description: PrivacyPolicyRule
+    PrivacyPolicyRules:
+      type: array
+      items:
+        $ref: "#/components/schemas/PrivacyPolicyRule"
+    PrivacyTypes:
+      type: string
+      description: types of privacys.
+      enum:
+      - SOCIAL_SECURITY_NUMBER
+      - DATE_OF_BIRTH
+      - DRIVER_LICENSE_NUMBER
+      - PASSPORT_NUMBER
+      - PHONE_NUMBER
+      - EMAIL_ADDRESS
+      - HOME_ADDRESS
+      - MOTHER_MAIDEN_NAME
+      - TAX_ID_NUMBER
+      - UNION_GOVERNMENT_ID
+      - NATIONALITY_CITIZENSHIP
+      - ACCOUNT_CREDENTIALS
+      - GENERAL_PERSONAL
+      - CREDIT_CARD_NUMBER
+      - BANK_ACCOUNT_NUMBER
+      - ROUTING_NUMBER
+      - PAYPAL_ACCOUNT
+      - CRYPTO_WALLET_ADDRESS
+      - GENERAL_FINANCIAL
+      - HEALTH_INSURANCE_ID
+      - MEDICAL_RECORD_NUMBER
+      - PRESCRIPTION_DETAILS
+      - GENETIC_DATA
+      - SEX_LIFE_HEALTH
+      - GENERAL_MEDICAL
+      - FINGERPRINT
+      - FACE_SCAN
+      - VOICE_PRINT
+      - EMOTION_RECOGNITION_DATA
+      - GENERAL_BIO
+      - GENERAL_CONTACT
+      - SOCIAL_MEDIA_HANDLE
+      - SOCIAL_MEDIA_PROFILE
+      - IP_ADDRESS
+      - DEVICE_ID
+      - GEOLOCATION_DATA
+      - ONLINE_BEHAVIORAL_DATA
+      - GENERAL_SOCIAL
+      - POLITICAL_AFFILIATION
+      - RELIGIOUS_PHILOSOPHICAL_BELIEF
+      - SEXUAL_ORIENTATION
+      - RACIAL_ETHNIC_ORIGIN
+      - TRADE_UNION_MEMBERSHIP
+      - CRIMINAL_RECORD_HISTORY
+      - THIRD_PARTY_CUSTOMER_DATA
+      - THIRD_PARTY_BUSINESS_DATA
+      - GENERAL_BUSINESS
+      - GENERAL_OPERATIONAL
+      - GENERAL_DATA
+      - ALL_DATA
+      - CUSTOM
+      - UNKNOWN
+    VehicleEvent:
+      type: object
+      properties:
+        vehicle_event_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The immutable identifier representing the lifecycle event within
+            the vehicle event ledger.
+          example: VEVT-882211
+        vehicle_event_id:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The external or provider-generated identifier associated with
+            the lifecycle event.
+          example: CARFAX-992211
+        event_sequence_num:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The ordered sequence number representing the relative chronological
+            placement of the lifecycle event.
+          example: "1045"
+        vehicle_event_type:
+          $ref: "#/components/schemas/VehicleEventTypes"
+        vehicle_event_category_type:
+          $ref: "#/components/schemas/VehicleEventCategoryTypes"
+        event_category:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The high-level grouping classification associated with the
+            lifecycle event.
+          example: OWNERSHIP
+        event_status:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The workflow or processing status associated with the lifecycle
+            event.
+          example: COMPLETED
+        event_source:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: "The originating provider, platform, dealership, OEM, government\
+            \ agency, or external system that generated the lifecycle event."
+          example: CARFAX
+        event_org_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The organization code associated with the entity that generated
+            or recorded the lifecycle event.
+          example: ATL-001
+        event_org_party_name:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: The human-readable organization name associated with the lifecycle
+            event source.
+          example: Atlanta Ford North
+        occurrence_date_time:
+          type: string
+          description: The timestamp documenting when the lifecycle event actually
+            occurred.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        recorded_date_time:
+          type: string
+          description: The timestamp documenting when the lifecycle event was persisted
+            into the enterprise event ledger.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        event_duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        event_detail:
+          maxLength: 4000
+          minLength: 1
+          type: string
+          description: The human-readable detailed narrative describing the lifecycle
+            event.
+          example: Vehicle transferred to customer ownership following retail sale.
+        odometer:
+          $ref: "#/components/schemas/MetricValue"
+        position:
+          $ref: "#/components/schemas/Position"
+        vehicle_event_codes:
+          $ref: "#/components/schemas/Codes"
+        event_confidence_score:
+          maxLength: 20
+          minLength: 1
+          type: string
+          description: The calculated confidence score representing trust in the lifecycle
+            event accuracy and source reliability.
+          example: "96.8"
+        event_hash:
+          maxLength: 128
+          minLength: 1
+          type: string
+          description: The deterministic or cryptographic hash representing the immutable
+            lifecycle event payload.
+          example: 9f86d081884c7d659a2feaa0c55ad015
+        actor:
+          $ref: "#/components/schemas/ActorReference"
+        business_context:
+          $ref: "#/components/schemas/BusinessContext"
+        financial_event_snapshot:
+          $ref: "#/components/schemas/FinancialEventSnapshot"
+      description: Vehicle Event
+    VehicleEventCategoryTypes:
+      type: string
+      description: types of vehicle event categorys.
+      enum:
+      - DOCUMENT_LIFECYCLE
+      - OWNERSHIP
+      - DAMAGE
+      - SERVICE
+      - ODOMETER
+      - USAGE
+      - INSURANCE
+      - MANUFACTURING
+      - INVENTORY
+      - LOGISTICS
+      - CONNECTIVITY
+      - MOBILITY
+      - SAFETY
+      - POWERTRAIN
+      - DIAGNOSTICS
+      - COMPLIANCE
+      - LEGAL
+      - FINANCIAL
+      - CUSTOMER
+      - REMOTE_OPERATIONS
+      - SOFTWARE
+      - GEOFENCING
+      - SECURITY
+      - REPUTATION
+      - PARTNER
+      - ENTERPRISE
+      - PUBLIC
+      - OTHER
+    VehicleEventCreate:
+      required:
+      - vehicle_event_key
+      type: object
+      description: VehicleEvent Create for Post
+      allOf:
+      - $ref: "#/components/schemas/VehicleEvent"
+    VehicleEventTypes:
+      type: string
+      description: types of vehicle events.
+      enum:
+      - OWNER_HISTORY
+      - MAJOR_ACCIDENT
+      - MINOR_ACCIDENT
+      - REPAIR_DAMAGE
+      - STRUCTURAL_DAMAGE
+      - ODOMETER_CHECK
+      - ODOMETER_ROLLBACK
+      - LEASE_USE
+      - NEW_TITLE
+      - UPDATED_TITLE
+      - CORRECTED_TITLE
+      - TOTAL_LOSS
+      - REBUILD
+      - MAINT_SERVICE
+      - RECALL_SERVICE
+      - AIRBAG_DEPLOY
+      - PERSONAL_USE
+      - RENTAL_USE
+      - COMMERCIAL_USE
+      - TAXI_USE
+      - POLICE_USE
+      - FLOOD_EVENT
+      - LEMON_TITLE
+      - SALE
+    VehicleEventUpdate:
+      type: object
+      properties:
+        vehicle_event_type:
+          $ref: "#/components/schemas/VehicleEventTypes"
+        event_confidence_score:
+          maxLength: 20
+          minLength: 1
+          type: string
+          description: The calculated confidence score representing trust in the lifecycle
+            event accuracy and source reliability.
+          example: "96.8"
+        odometer:
+          $ref: "#/components/schemas/MetricValue"
+        event_duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        event_source:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: "The originating provider, platform, dealership, OEM, government\
+            \ agency, or external system that generated the lifecycle event."
+          example: CARFAX
+        event_category:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The high-level grouping classification associated with the
+            lifecycle event.
+          example: OWNERSHIP
+        vehicle_event_codes:
+          $ref: "#/components/schemas/Codes"
+        event_org_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The organization code associated with the entity that generated
+            or recorded the lifecycle event.
+          example: ATL-001
+        actor:
+          $ref: "#/components/schemas/ActorReference"
+        event_detail:
+          maxLength: 4000
+          minLength: 1
+          type: string
+          description: The human-readable detailed narrative describing the lifecycle
+            event.
+          example: Vehicle transferred to customer ownership following retail sale.
+        event_hash:
+          maxLength: 128
+          minLength: 1
+          type: string
+          description: The deterministic or cryptographic hash representing the immutable
+            lifecycle event payload.
+          example: 9f86d081884c7d659a2feaa0c55ad015
+        vehicle_event_category_type:
+          $ref: "#/components/schemas/VehicleEventCategoryTypes"
+        event_sequence_num:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The ordered sequence number representing the relative chronological
+            placement of the lifecycle event.
+          example: "1045"
+        event_org_party_name:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: The human-readable organization name associated with the lifecycle
+            event source.
+          example: Atlanta Ford North
+        position:
+          $ref: "#/components/schemas/Position"
+        occurrence_date_time:
+          type: string
+          description: The timestamp documenting when the lifecycle event actually
+            occurred.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        recorded_date_time:
+          type: string
+          description: The timestamp documenting when the lifecycle event was persisted
+            into the enterprise event ledger.
+          format: date-time
+          example: 2026-07-22T16:47:03Z
+        event_status:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The workflow or processing status associated with the lifecycle
+            event.
+          example: COMPLETED
+        business_context:
+          $ref: "#/components/schemas/BusinessContext"
+        financial_event_snapshot:
+          $ref: "#/components/schemas/FinancialEventSnapshot"
+      description: VehicleEvent Update for Patch and Put

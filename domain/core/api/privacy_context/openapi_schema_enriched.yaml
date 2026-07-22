@@ -1,0 +1,304 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - PrivacyContext
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    GeographicContext:
+      type: object
+      properties:
+        jurisdiction_codes:
+          $ref: "#/components/schemas/Codes"
+        geographic_hierarchy_key:
+          type: string
+          description: "The geographical classification defined using dot-separated\
+            \ reverse DNS notation (e.g., 'global', 'eu.germany', 'us.georgia.alpharetta')."
+          example: us.georgia
+        consent_given:
+          type: boolean
+          description: Flag indicating whether user consent has been explicitly given
+            for data processing.
+          example: false
+        data_residency_requirement:
+          $ref: "#/components/schemas/Codes"
+        context_name:
+          type: string
+          description: "The human-readable profile name identifying this compliance\
+            \ profile configuration (e.g., 'EU_GDPR_Strict', 'GLOBAL_DEFAULT_BASELINE')."
+        privacy_policy_rules:
+          $ref: "#/components/schemas/PrivacyPolicyRules"
+      description: GeographicContext
+    MaskingStrategyTypes:
+      type: string
+      description: types of masking strategys.
+      enum:
+      - REDACT
+      - TOKENIZE
+      - HASH
+      - PSEUDONYMIZE
+      - PARTIAL_MASK
+      - BLOCK
+      - GENERALIZE
+      - PERTURB
+      - TRUNCATE
+      - NULLIFY
+      - NONE
+    PrivacyAdapterTypes:
+      type: string
+      description: types of privacy adapters.
+      enum:
+      - LLM
+      - AI_AGENT
+      - EXTERNAL_API
+      - DATABASE
+      - MESSAGE_BROKER
+      - INTERNAL_API
+    PrivacyContext:
+      type: object
+      properties:
+        privacy_context_key:
+          type: string
+          description: The unique internal tracking key for the generalized privacy
+            context entry.
+        privacy_context_id:
+          type: string
+          description: The business transaction identifier for this lifecycle execution
+            window.
+        correlation_id:
+          type: string
+          description: The correlation identifier used to trace this privacy boundary
+            event across distributed ecosystems.
+        adapter_type:
+          $ref: "#/components/schemas/PrivacyAdapterTypes"
+        target_destination_name:
+          type: string
+          description: "The identification metadata string of the destination target\
+            \ system (e.g., 'gpt-4o', 'CustomerDB_Cluster1', 'SendGrid_v3')."
+        raw_inbound_payload:
+          type: string
+          description: "The raw, unmodified text, query, or payload entering the privacy\
+            \ gateway."
+        sanitized_outbound_payload:
+          type: string
+          description: "The clean, masked, or anonymized version of the payload safely\
+            \ transmitted to the downstream system."
+        target_response_raw:
+          type: string
+          description: The raw incoming execution payload returned from the target
+            destination containing masked variables.
+        target_response_final:
+          type: string
+          description: "The final, re-hydrated or localized output safely delivered\
+            \ back to the system actor."
+        enforced_policy_codes:
+          $ref: "#/components/schemas/Codes"
+        privacy_items:
+          $ref: "#/components/schemas/PrivacyItems"
+        geographic_context:
+          $ref: "#/components/schemas/GeographicContext"
+      description: Represents a single piece of sensitive or personally identifiable
+        information (PII) with its associated privacy controls.
+    PrivacyContextCreate:
+      required:
+      - privacy_context_key
+      type: object
+      description: PrivacyContext Create for Post
+      allOf:
+      - $ref: "#/components/schemas/PrivacyContext"
+    PrivacyContextUpdate:
+      type: object
+      properties:
+        raw_inbound_payload:
+          type: string
+          description: "The raw, unmodified text, query, or payload entering the privacy\
+            \ gateway."
+        target_response_final:
+          type: string
+          description: "The final, re-hydrated or localized output safely delivered\
+            \ back to the system actor."
+        geographic_context:
+          $ref: "#/components/schemas/GeographicContext"
+        target_response_raw:
+          type: string
+          description: The raw incoming execution payload returned from the target
+            destination containing masked variables.
+        enforced_policy_codes:
+          $ref: "#/components/schemas/Codes"
+        sanitized_outbound_payload:
+          type: string
+          description: "The clean, masked, or anonymized version of the payload safely\
+            \ transmitted to the downstream system."
+        target_destination_name:
+          type: string
+          description: "The identification metadata string of the destination target\
+            \ system (e.g., 'gpt-4o', 'CustomerDB_Cluster1', 'SendGrid_v3')."
+        adapter_type:
+          $ref: "#/components/schemas/PrivacyAdapterTypes"
+        privacy_items:
+          $ref: "#/components/schemas/PrivacyItems"
+      description: PrivacyContext Update for Patch and Put
+    PrivacyItem:
+      type: object
+      properties:
+        privacy_id:
+          type: string
+          description: A unique key for the privacy record.
+        privacy_key:
+          type: string
+          description: A unique key for the privacy record.
+        target_persona:
+          $ref: "#/components/schemas/PrivacyPersonaTypes"
+        masking_strategy:
+          $ref: "#/components/schemas/MaskingStrategyTypes"
+        privacy_type:
+          $ref: "#/components/schemas/PrivacyTypes"
+      description: Represents a single piece of sensitive or personally identifiable
+        information (PII) with its associated privacy controls.
+    PrivacyItems:
+      type: array
+      items:
+        $ref: "#/components/schemas/PrivacyItem"
+    PrivacyPersonaTypes:
+      type: string
+      description: types of privacy personas.
+      enum:
+      - DEALER
+      - THIRD_PARTY
+      - MANUFACTURER
+      - CONSUMER
+      - REGULATOR
+      - UNKNOWN
+    PrivacyPolicyRule:
+      type: object
+      properties:
+        privacy_policy_rule_key:
+          type: string
+          description: The data classification type this rule targets.
+        privacy_policy_rule_id:
+          type: string
+          description: The data classification type this rule targets.
+        target_persona_type:
+          $ref: "#/components/schemas/PrivacyPersonaTypes"
+        target_data_category_type:
+          $ref: "#/components/schemas/PrivacyTypes"
+        adapter_type:
+          $ref: "#/components/schemas/PrivacyAdapterTypes"
+        default_strategy_type:
+          $ref: "#/components/schemas/MaskingStrategyTypes"
+        active_indicator:
+          type: boolean
+          description: Indicates if this macro policy rule is actively being enforced.
+          example: false
+      description: PrivacyPolicyRule
+    PrivacyPolicyRules:
+      type: array
+      items:
+        $ref: "#/components/schemas/PrivacyPolicyRule"
+    PrivacyTypes:
+      type: string
+      description: types of privacys.
+      enum:
+      - SOCIAL_SECURITY_NUMBER
+      - DATE_OF_BIRTH
+      - DRIVER_LICENSE_NUMBER
+      - PASSPORT_NUMBER
+      - PHONE_NUMBER
+      - EMAIL_ADDRESS
+      - HOME_ADDRESS
+      - MOTHER_MAIDEN_NAME
+      - TAX_ID_NUMBER
+      - UNION_GOVERNMENT_ID
+      - NATIONALITY_CITIZENSHIP
+      - ACCOUNT_CREDENTIALS
+      - GENERAL_PERSONAL
+      - CREDIT_CARD_NUMBER
+      - BANK_ACCOUNT_NUMBER
+      - ROUTING_NUMBER
+      - PAYPAL_ACCOUNT
+      - CRYPTO_WALLET_ADDRESS
+      - GENERAL_FINANCIAL
+      - HEALTH_INSURANCE_ID
+      - MEDICAL_RECORD_NUMBER
+      - PRESCRIPTION_DETAILS
+      - GENETIC_DATA
+      - SEX_LIFE_HEALTH
+      - GENERAL_MEDICAL
+      - FINGERPRINT
+      - FACE_SCAN
+      - VOICE_PRINT
+      - EMOTION_RECOGNITION_DATA
+      - GENERAL_BIO
+      - GENERAL_CONTACT
+      - SOCIAL_MEDIA_HANDLE
+      - SOCIAL_MEDIA_PROFILE
+      - IP_ADDRESS
+      - DEVICE_ID
+      - GEOLOCATION_DATA
+      - ONLINE_BEHAVIORAL_DATA
+      - GENERAL_SOCIAL
+      - POLITICAL_AFFILIATION
+      - RELIGIOUS_PHILOSOPHICAL_BELIEF
+      - SEXUAL_ORIENTATION
+      - RACIAL_ETHNIC_ORIGIN
+      - TRADE_UNION_MEMBERSHIP
+      - CRIMINAL_RECORD_HISTORY
+      - THIRD_PARTY_CUSTOMER_DATA
+      - THIRD_PARTY_BUSINESS_DATA
+      - GENERAL_BUSINESS
+      - GENERAL_OPERATIONAL
+      - GENERAL_DATA
+      - CUSTOM
+      - UNKNOWN
