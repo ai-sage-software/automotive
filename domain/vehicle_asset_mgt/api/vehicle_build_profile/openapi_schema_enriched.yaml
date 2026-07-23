@@ -1,0 +1,895 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - VehicleBuildProfile
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    CurrencyCode:
+      type: string
+      description: Three-letter ISO-4217 currency code.
+      example: USD
+    CurrencyExchange:
+      type: object
+      properties:
+        currency_exchange_id:
+          type: string
+          description: Unique system identifier for the currency exchange record.
+          example: xch-8812-k5k
+        currency_exchange_key:
+          type: string
+          description: Business-logical key identifying the specific conversion event
+            or pair.
+          example: USD-TO-CAD-2026-04-09
+        source_currency:
+          type: string
+          description: The origin currency code for the conversion (Base Currency).
+          example: USD
+        target_currency:
+          type: string
+          description: The destination currency code for the conversion (Quote Currency).
+          example: CAD
+        currency_exchange_desc:
+          type: string
+          description: "Narrative title defining the rate's source (e.g., 'Reuters\
+            \ Mid-Market', 'Internal Corporate Rate')."
+          example: Mid-Market Daily Rate
+        exchange_rate:
+          type: string
+          description: "The multiplier used to convert source to target, stored as\
+            \ a high-precision string."
+          example: "1.3542"
+        rate_date_time:
+          type: string
+          description: The specific UTC timestamp when this exchange rate was captured
+            or finalized.
+          format: date-time
+          example: 2026-07-23T17:19:02Z
+      description: "CurrencyExchange that includes display value, currency, locale,\
+        \ and value, along with tax and cost components."
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
+      enum:
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
+    EffectivePeriod:
+      type: object
+      properties:
+        effective_period_key:
+          type: string
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
+        active_indicator:
+          type: boolean
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
+        exclusive_indicator:
+          type: boolean
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
+        start_date_time:
+          type: string
+          description: The inclusive start point of the period in ISO 8601 format.
+          format: date-time
+          example: 2026-07-23T17:19:02Z
+        complete_date_time:
+          type: string
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
+          format: date-time
+          example: 2026-07-23T17:19:02Z
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
+          type: string
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        recur_count:
+          type: string
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: string
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
+        recur_indicator:
+          type: boolean
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
+    GeneralAmount:
+      type: object
+      properties:
+        general_amount_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        amount:
+          type: string
+          description: The raw decimal monetary amount stored as a string to prevent
+            floating-point errors.
+          example: "1234.56"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    Identifier:
+      type: object
+      properties:
+        identifier_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique identifier value
+        identifier_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Business key for the identifier
+        context:
+          type: string
+          description: Context or domain of the identifier
+        value:
+          type: string
+          description: The monetary or hours-based value of the event.
+        detail:
+          type: string
+          description: The monetary or hours-based value of the event.
+        identifier_type:
+          type: string
+          description: The monetary or hours-based value of the event.
+        system_codes:
+          $ref: "#/components/schemas/Codes"
+        issuing_authority:
+          $ref: "#/components/schemas/Codes"
+      description: External system identifier
+    Identifiers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Identifier"
+    Memo:
+      type: array
+      items:
+        type: string
+    MetricValue:
+      type: object
+      properties:
+        metric_value_id:
+          type: string
+          description: The internal unique identifier for this metric record.
+          example: 8892-abc-123-metric
+        metric_value_key:
+          type: string
+          description: The natural business key for the metric value.
+          example: EXPIRATION_MILEAGE
+        value:
+          type: string
+          description: "The actual value of the metric (e.g., the amount or count)."
+          example: "100000"
+        uom:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        codes:
+          $ref: "#/components/schemas/Codes"
+      description: "Represents a quantitative measurement including its unit, value,\
+        \ and classification codes."
+    Money:
+      type: object
+      properties:
+        money_key:
+          type: string
+          description: "Unique business key for the monetary entry, used for deterministic\
+            \ lookups."
+          example: MON-2026-EXP-001
+        money_id:
+          type: string
+          description: System-generated unique identifier for the money record.
+          example: mny-5521-z99
+        currency_code:
+          type: string
+          description: Three-letter ISO-4217 currency code.
+          example: USD
+        display_value:
+          type: string
+          description: Formatted monetary string including symbol and separators based
+            on locale.
+          example: "$1,234.56"
+        locale:
+          type: string
+          description: Language and region identifier (BCP 47 format).
+          example: en-US
+        amount:
+          $ref: "#/components/schemas/GeneralAmount"
+        currency_exchange:
+          $ref: "#/components/schemas/CurrencyExchange"
+      description: "Represents a monetary value, including its currency, locale, and\
+        \ display format."
+    NarrativeUomTypes:
+      type: string
+      description: types of narrative uoms.
+      enum:
+      - BAR
+      - KPA
+      - PSI
+      - OZ
+      - LB
+      - KG
+      - GRAMS
+      - TONS
+      - LITER
+      - GALLON
+      - FLUID_OUNCE
+      - CUBIC_METER
+      - KM
+      - MILES
+      - MI
+      - INCH
+      - FEET
+      - YARD
+      - FATHOM
+      - NAUTICAL
+      - METER
+      - CENTIMETER
+      - MILLIMETER
+      - DURATION
+      - SECONDS
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - DATE_TIME
+      - DATE
+      - TIME
+      - CELSIUS
+      - FAHRENHEIT
+      - KELVIN
+      - RANKINE
+      - VOLT
+      - AMPERE
+      - OHM
+      - WATT
+      - KILOWATT_HOUR
+      - HP
+      - RPM
+      - G_FORCE
+      - DEGREES
+      - OCCURRENCE
+      - GROUP
+      - CODE
+      - CURRENCY
+      - POINTS
+      - CUSTOM
+      - UNLIMITED
+      - NONE
+      - LABEL
+      - PERCENT
+      - DESC
+      - TEXT
+      - KEY
+      - PROTECTED_TEXT
+      - BINARY
+      - STRING
+      - NUMBER
+      - INTEGER
+      - BOOLEAN
+      - ARRAY
+      - OBJECT
+      - FLOAT
+      - DOUBLE
+      - INT32
+      - INT64
+      - COUNT
+      - RATIO
+      - SCORE
+      - OTHER
+    OptionDescription:
+      type: object
+      properties:
+        option_description_key:
+          type: string
+          description: A unique key for the option description.
+        option_description_id:
+          type: string
+          description: The unique ID for the option description.
+        option_description_group:
+          type: string
+          description: The group or category this option belongs to.
+        option_detail_descriptions:
+          $ref: "#/components/schemas/Memo"
+        option_description_label:
+          type: string
+          description: "A short, human-readable label for the option."
+      description: A description of a vehicle option or feature.
+    OptionDescriptions:
+      type: array
+      items:
+        $ref: "#/components/schemas/OptionDescription"
+    OptionInstallationTypes:
+      type: string
+      description: types of option installations.
+      enum:
+      - FACTORY_INSTALLED
+      - PORT_INSTALLED
+      - DEALER_INSTALLED
+      - SOFTWARE_UPDATE
+      - ACCESSORY_KIT
+      - CUSTOM_FABRICATION
+      - OWNER_INSTALLED
+      - THIRD_PARTY_INSTALLED
+      - UNKNOWN
+      - OTHER
+    OptionTypes:
+      type: string
+      description: types of options.
+      enum:
+      - PARTS
+      - ACCESSORY
+      - EQUIPMENT
+      - PACKAGE_GOODS
+      - SERVICE_PLAN
+      - WARRANTY_PLAN
+      - SUBSCRIPTION
+      - SOFTWARE
+      - CERTIFICATION
+      - APPEARANCE
+      - INCENTIVE
+      - COLOR
+      - FABRIC
+      - REBATE_INCENTIVE
+      - PORT_INSTALLED
+      - TELEMATICS
+      - OTHER
+    PayTypes:
+      type: string
+      description: types of pays.
+      enum:
+      - CUSTOMER_PAY
+      - WARRANTY
+      - INTERNAL
+      - SUBLET
+      - MANUFACTURER
+      - DEALER
+    Price:
+      type: object
+      properties:
+        price_id:
+          type: string
+          description: Unique system identifier for the price record.
+        price_key:
+          type: string
+          description: Natural key or business identifier for the price entry.
+        display_amount:
+          type: string
+          description: "Human-readable display value for the price, including currency\
+            \ symbol and proper decimal formatting."
+        amount:
+          $ref: "#/components/schemas/Money"
+        tax_amount:
+          $ref: "#/components/schemas/Money"
+        taxable_amount:
+          $ref: "#/components/schemas/Money"
+        non_taxable_amount:
+          $ref: "#/components/schemas/Money"
+        total_amount:
+          $ref: "#/components/schemas/Money"
+        total_cost_amount:
+          $ref: "#/components/schemas/Money"
+        unit_cost_amount:
+          $ref: "#/components/schemas/Money"
+        price_description:
+          type: string
+          description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
+        tax_included_indicator:
+          type: boolean
+          description: Indicates whether tax is included in the base price (value).
+          example: false
+        currency_code:
+          $ref: "#/components/schemas/CurrencyCode"
+        duration:
+          $ref: "#/components/schemas/EffectivePeriod"
+        price_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/PriceTypes"
+        pay_type:
+          $ref: "#/components/schemas/PayTypes"
+      description: "Price that includes display value, currency, locale, and value,\
+        \ along with tax and cost components."
+    PriceTypes:
+      type: string
+      description: types of prices.
+      enum:
+      - METERED
+      - SEAT
+      - FLAT
+      - ITEMIZED
+      - BUNDLE
+      - QUANTITY
+      - PER_UNIT
+      - PERCENT
+      - VOLUME
+      - USAGE
+      - STAIR_STEP
+      - SUBSCRIPTION
+      - CUSTOM
+      - STANDARD
+      - LICENSED
+      - TIER_VOLUME
+      - TIER_GRADUATED
+      - ACTUAL
+      - LIST
+      - RETAIL
+      - MSRP
+      - WHOLESALE
+      - DEALER_COST
+      - INVOICE
+      - TOTAL_DEALER_COST
+      - TOTAL_DEALER_OPTION_COST
+      - TOTAL_DEALER_OPTION_SELLING_PRICE
+      - RECONDITIONING_COST
+      - RESIDUAL_VALUE
+      - TDA
+      - FUEL
+      - TOTAL_HOLD_BACK
+      - PPO_HOLD_BACK
+      - WRF
+      - TRADE
+      - CORE
+      - LANDED
+      - FREIGHT_CHARGE
+      - MONEY
+      - INTERNET
+      - BALANCE
+      - BASE
+      - BASE_MSRP
+      - TOTAL_MSRP
+      - TOTAL_OPTION_MSRP
+      - PRODUCT_TOTAL
+      - FINANCE_TOTAL
+      - APPLIED_REWARD_TOTAL
+      - UPFRONT_PAYMENT_TOTAL
+      - REMOVED_EQUIPT_TOTAL
+      - ADJUSTED_MSRP
+      - GROSS_SALE
+      - NET_SALE
+      - NET_SALE_REDUCTION_PRICE
+      - DISCOUNT_TOTAL
+      - DISCOUNT_PACKAGES_TOTAL
+      - CREDIT_TOTAL
+      - FEE_TOTAL
+      - REBATE_TOTAL
+      - TAX_TOTAL
+      - TRADE_IN_TOTAL
+      - TRADE_IN_EQUITY_TOTAL
+      - TOTAL_ACCESSORY
+      - PROMOTIONAL
+      - DISCOUNT
+      - CONTRACT
+      - SALE
+      - PREMIUM_TOTAL
+      - DISABILITY_PREMIUM_TOTAL
+      - TAXABLE
+      - NONTAXABLE
+      - TOTAL
+      - UNIT
+      - TOTAL_COST
+      - UNIT_COST
+      - TAX
+      - ESTIMATED
+      - NET
+      - PURCHASE
+      - CUSTOMER
+      - AFFILIATE
+      - ONLINE
+      - STORE
+      - REGION
+      - LOCATION
+      - BASE_INVOICE_AMOUNT
+      - DESTINATION_CHARGE
+      - ADVERTISING_ASSESSMENT
+      - HOLDBACK_AMOUNT
+      - WDA_AMOUNT
+      - TDA_AMOUNT
+      - FLOORPLAN_ASSISTANCE_AMOUNT
+      - DEALER_CASH_AMOUNT
+      - REGIONAL_ADJUSTMENT_AMOUNT
+      - PORT_INSTALLED_OPTION_AMOUNT
+      - FACTORY_OPTION_AMOUNT
+      - DEALER_INSTALLED_OPTION_AMOUNT
+      - FREIGHT_CHARGE_AMOUNT
+      - FUEL_CHARGE_AMOUNT
+      - PACKAGING_OPTION_AMOUNT
+      - OEM_INCENTIVE_AMOUNT
+      - DEALER_NET_AMOUNT
+      - LANDED_COST_AMOUNT
+      - OTHER
+    Prices:
+      type: array
+      items:
+        $ref: "#/components/schemas/Price"
+    VehicleBuildProfile:
+      type: object
+      properties:
+        vehicle_build_profile_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The persistent key representing the vehicle build profile.
+          example: VBP-2026-000001
+        vehicle_build_profile_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The externally visible identifier representing the vehicle
+            build profile.
+          example: VBP-ID-884512
+        vehicle_order_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The dealer or customer-facing vehicle order number associated
+            with the vehicle order lifecycle.
+          example: ORD-2026-001245
+        vehicle_identifier_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The canonical enterprise vehicle identity anchor associated
+            with this denormalized vehicle reference.
+          example: VID-00088211
+        factory_order_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturer-assigned factory order number used to track
+            production and fulfillment activities.
+          example: FO-884512
+        reservation_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The reservation number assigned to a vehicle reservation prior
+            to order placement or production scheduling.
+          example: RSV-2026-004512
+        allocation_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The allocation number representing the manufacturer's inventory\
+            \ allocation assignment to a dealer, distributor, or fleet organization."
+          example: ALLOC-2026-00987
+        allocation_pool_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The allocation pool number identifying the manufacturer allocation\
+            \ program, distribution pool, or inventory assignment group associated\
+            \ with the vehicle."
+          example: POOL-SE-2026-015
+        build_batch_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturing batch number grouping vehicles scheduled
+            for assembly during the same production cycle.
+          example: BATCH-2026-0821
+        build_sequence_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturing build sequence number assigned during vehicle
+            assembly scheduling.
+          example: SEQ-10542
+        production_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The production tracking number assigned by the manufacturer
+            for vehicle assembly and plant operations.
+          example: PROD-778921
+        production_plant_code:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: The manufacturer-assigned production plant code identifying
+            the assembly facility where the vehicle was produced.
+          example: TMMK
+        build_status_type:
+          $ref: "#/components/schemas/VehicleBuildStatusTypes"
+        build_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        configuration_codes:
+          $ref: "#/components/schemas/Codes"
+        vehicle_options:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VehicleOption"
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tags:
+          $ref: "#/components/schemas/Codes"
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The source system code identifying the system of record or
+            integration source for the vehicle build profile.
+          example: OEM_ORDER_BANK
+        occurrence_date_time:
+          type: string
+          description: "The date and time when the vehicle build profile information\
+            \ was observed, created, received, or became effective."
+          format: date-time
+          example: 2026-07-23T17:19:02Z
+      description: "Comprehensive vehicle details including identifiers, configuration,\
+        \ and status."
+    VehicleBuildProfileCreate:
+      required:
+      - vehicle_build_profile_key
+      type: object
+      description: VehicleBuildProfile Create for Post
+      allOf:
+      - $ref: "#/components/schemas/VehicleBuildProfile"
+    VehicleBuildProfileUpdate:
+      type: object
+      properties:
+        production_plant_code:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: The manufacturer-assigned production plant code identifying
+            the assembly facility where the vehicle was produced.
+          example: TMMK
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        build_status_type:
+          $ref: "#/components/schemas/VehicleBuildStatusTypes"
+        tags:
+          $ref: "#/components/schemas/Codes"
+        configuration_codes:
+          $ref: "#/components/schemas/Codes"
+        build_batch_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturing batch number grouping vehicles scheduled
+            for assembly during the same production cycle.
+          example: BATCH-2026-0821
+        build_sequence_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturing build sequence number assigned during vehicle
+            assembly scheduling.
+          example: SEQ-10542
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The source system code identifying the system of record or
+            integration source for the vehicle build profile.
+          example: OEM_ORDER_BANK
+        vehicle_options:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VehicleOption"
+        production_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The production tracking number assigned by the manufacturer
+            for vehicle assembly and plant operations.
+          example: PROD-778921
+        vehicle_order_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The dealer or customer-facing vehicle order number associated
+            with the vehicle order lifecycle.
+          example: ORD-2026-001245
+        allocation_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The allocation number representing the manufacturer's inventory\
+            \ allocation assignment to a dealer, distributor, or fleet organization."
+          example: ALLOC-2026-00987
+        allocation_pool_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The allocation pool number identifying the manufacturer allocation\
+            \ program, distribution pool, or inventory assignment group associated\
+            \ with the vehicle."
+          example: POOL-SE-2026-015
+        build_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        factory_order_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The manufacturer-assigned factory order number used to track
+            production and fulfillment activities.
+          example: FO-884512
+        reservation_number:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The reservation number assigned to a vehicle reservation prior
+            to order placement or production scheduling.
+          example: RSV-2026-004512
+        occurrence_date_time:
+          type: string
+          description: "The date and time when the vehicle build profile information\
+            \ was observed, created, received, or became effective."
+          format: date-time
+          example: 2026-07-23T17:19:02Z
+      description: VehicleBuildProfile Update for Patch and Put
+    VehicleBuildStatusTypes:
+      type: string
+      description: types of vehicle build status.
+      enum:
+      - PENDING
+      - RESERVED
+      - ALLOCATED
+      - SCHEDULED
+      - IN_PRODUCTION
+      - BUILT
+      - QUALITY_INSPECTION
+      - RELEASED
+      - IN_TRANSIT
+      - DELIVERED
+      - ON_HOLD
+      - REWORK
+      - CANCELLED
+    VehicleOption:
+      type: object
+      properties:
+        vehicle_option_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The business or integration key that uniquely identifies the
+            vehicle option.
+        manufacturer_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: "The manufacturer, brand, or source responsible for producing\
+            \ or supplying the vehicle option."
+        option_category:
+          $ref: "#/components/schemas/Codes"
+        option_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "The manufacturer, OEM, or source system code assigned to the\
+            \ vehicle option."
+        option_descriptions:
+          $ref: "#/components/schemas/OptionDescriptions"
+        option_groups:
+          $ref: "#/components/schemas/Codes"
+        option_installation_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionInstallationTypes"
+        option_name:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The display name or business name of the vehicle option.
+        option_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionTypes"
+        quantity:
+          $ref: "#/components/schemas/MetricValue"
+        prices:
+          $ref: "#/components/schemas/Prices"
+        short_description:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A concise display description of the vehicle option.
+      description: options and options of a vehicle
