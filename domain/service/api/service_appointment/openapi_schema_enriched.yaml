@@ -53,7 +53,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
       description: External system identifier
     ActorTypes:
       type: string
@@ -136,6 +136,8 @@ components:
           maxLength: 50
           type: string
           description: State or equivalent subdivision.
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
       description: "A reference to an address, including its unique key and a list\
         \ of its usage types."
     AddressReferences:
@@ -260,6 +262,7 @@ components:
       type: string
       description: types of appointment status.
       enum:
+      - INITIATED
       - TENTATIVE
       - CONFIRMATION_PENDING
       - CONFIRMED
@@ -302,6 +305,7 @@ components:
       - DECLINED
       - REJECTED
       - FAILED
+      - UNKNOWN
     AppointmentTypes:
       type: string
       description: types of appointments.
@@ -344,7 +348,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -473,6 +477,9 @@ components:
           description: The unique ID for the communication channel.
         communication_channel_type:
           $ref: "#/components/schemas/CommunicationChannelTypes"
+        context:
+          type: string
+          description: Context or domain of the identifier
         value:
           type: string
           description: "The value of the communication channel (e.g., an email address\
@@ -559,9 +566,43 @@ components:
       - UNSUPPORTED
       - UNKNOWN
       - OTHER
+    ConsentStatusTypes:
+      type: string
+      description: types of consent status.
+      enum:
+      - NOT_REQUESTED
+      - REQUESTED
+      - GRANTED
+      - DENIED
+      - WITHDRAWN
+      - EXPIRED
+      - OTHER
     CurrencyCode:
       type: string
       description: The three-letter ISO 4217 currency code used for financial transactions.
+    Customer:
+      type: object
+      properties:
+        customer_key:
+          type: string
+          description: The unique key for the customer record.
+        customer_id:
+          type: string
+          description: The unique ID for the customer.
+        universal_id:
+          type: string
+          description: The universal ID for the customer.
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+      description: "Represents a customer, which can be a person or an organization.\
+        \ This class includes core personal information, contact methods, financial\
+        \ profiles, and related resources."
+    Customers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Customer"
     DayOfWeekTypes:
       type: string
       description: types of day of weeks.
@@ -640,7 +681,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         duration:
           $ref: "#/components/schemas/EffectivePeriod"
       description: External system identifier
@@ -709,13 +750,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -848,7 +889,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
       description: External system reference
     GeographicContext:
       type: object
@@ -984,13 +1025,13 @@ components:
             \ synchronized from the source governance, legal, policy, or compliance\
             \ system."
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         occurrence_date_time:
           type: string
           description: "The date and time when the jurisdiction profile was observed,\
             \ created, received, updated, or became effective."
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
       description: nullable
     LifecycleEvent:
       type: object
@@ -1354,7 +1395,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         narrative_group:
           type: string
           description: The group to which the narrative belongs.
@@ -1575,7 +1616,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         unit_of_measure:
           $ref: "#/components/schemas/UnitOfMeasure"
       description: External system identifier
@@ -1664,7 +1705,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1933,6 +1974,20 @@ components:
           type: string
           description: Nationality of the person.
           example: Canadian
+        person_label:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: The human-readable display label or business name representing
+            the party entity within the bounded context.
+          example: Apex Automotive Group
+        person_description:
+          maxLength: 500
+          type: string
+          description: Detailed contextual narrative or organizational notes describing
+            the referenced party entity.
+          example: Primary regional dealership franchise operating across southeast
+            service territories.
       description: a Name for a person
     Position:
       type: object
@@ -1999,6 +2054,82 @@ components:
       - MESSAGE_BROKER
       - INTERNAL_API
       - ALL
+    PrivacyConsent:
+      type: object
+      properties:
+        privacy_consent_id:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The persistent identifier representing the canonical privacy
+            consent entry.
+          example: PCT-883011
+        privacy_consent_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The immutable key for the privacy consent record.
+          example: PCK-00044122
+        consent_status_type:
+          $ref: "#/components/schemas/ConsentStatusTypes"
+        regulatory_framework_type:
+          $ref: "#/components/schemas/RegulatoryFrameworkTypes"
+        telemetry_data_consent_indicator:
+          type: boolean
+          description: "Indicates whether consent is granted for streaming vehicle\
+            \ telemetry, diagnostics, and sensor data."
+          example: true
+        location_data_consent_indicator:
+          type: boolean
+          description: Indicates whether explicit consent is granted for collecting
+            and sharing real-time spatial/GPS location data.
+          example: false
+        biometric_data_consent_indicator:
+          type: boolean
+          description: "Indicates whether consent is granted for in-cabin driver monitoring,\
+            \ facial recognition, or biometric processing."
+          example: false
+        third_party_sharing_consent_indicator:
+          type: boolean
+          description: "Indicates whether consent allows data distribution to external\
+            \ partners, insurance carriers, or OEMs."
+          example: true
+        marketing_consent_indicator:
+          type: boolean
+          description: Indicates whether consent is granted to utilize vehicle usage
+            metrics for personalized marketing and offers.
+          example: false
+        consenting_party_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The enterprise party reference key representing the legal entity
+            or driver who executed the consent.
+          example: PRT-992011
+        consent_version:
+          maxLength: 30
+          minLength: 1
+          type: string
+          description: The specific legal privacy policy version or terms of service
+            agreement accepted by the party.
+          example: v2026.1.0
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        granted_date_time:
+          type: string
+          description: The timestamp documenting when privacy consent was formally
+            executed.
+          format: date-time
+          example: 2026-07-24T01:34:31Z
+        revoked_date_time:
+          type: string
+          description: The timestamp documenting when privacy consent was explicitly
+            revoked or opted out.
+          format: date-time
+          example: 2026-07-24T01:34:31Z
+        consent_codes:
+          $ref: "#/components/schemas/Codes"
+      description: privacy.consent.desc
     PrivacyPersonaTypes:
       type: string
       description: types of privacy personas.
@@ -2030,6 +2161,8 @@ components:
           type: boolean
           description: Indicates if this macro policy rule is actively being enforced.
           example: false
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
       description: PrivacyPolicyRule
     PrivacyPolicyRules:
       type: array
@@ -2113,6 +2246,17 @@ components:
       - SERVICE_PLAN
       - WARRANTY_PLAN
       - SUBSCRIPTION
+      - OTHER
+    RegulatoryFrameworkTypes:
+      type: string
+      description: types of regulatory frameworks.
+      enum:
+      - GDPR
+      - CCPA
+      - CPRA
+      - HIPAA
+      - PCI_DSS
+      - LGPD
       - OTHER
     RepairOrderInitiationTypes:
       type: string
@@ -2286,7 +2430,7 @@ components:
           type: string
           description: The date and time the appointment occurred.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         time_slots:
           $ref: "#/components/schemas/TimeSlots"
         identifiers:
@@ -2295,14 +2439,14 @@ components:
           $ref: "#/components/schemas/ServiceRequests"
         transport_events:
           $ref: "#/components/schemas/TransportEvents"
-        vehicle_identifier:
-          $ref: "#/components/schemas/VehicleIdentifier"
+        vehicle_asset:
+          $ref: "#/components/schemas/VehicleAsset"
         appointment_locations:
           $ref: "#/components/schemas/AppointmentLocations"
         dealer_references:
           $ref: "#/components/schemas/DealerReferences"
         customers:
-          $ref: "#/components/schemas/PartyReferences"
+          $ref: "#/components/schemas/Customers"
         dealer_staff_preferences:
           $ref: "#/components/schemas/PartyReferences"
         assigned_dealer_staff:
@@ -2343,8 +2487,6 @@ components:
           $ref: "#/components/schemas/Locale"
         appointment_period:
           $ref: "#/components/schemas/EffectivePeriod"
-        vehicle_identifier:
-          $ref: "#/components/schemas/VehicleIdentifier"
         dealer_staff_preferences:
           $ref: "#/components/schemas/PartyReferences"
         appointment_status_type:
@@ -2356,7 +2498,7 @@ components:
         appointment_source_type:
           $ref: "#/components/schemas/AppointmentSourceTypes"
         customers:
-          $ref: "#/components/schemas/PartyReferences"
+          $ref: "#/components/schemas/Customers"
         odometer_at_service_complete:
           $ref: "#/components/schemas/MetricValue"
         service_appointment_events:
@@ -2365,6 +2507,8 @@ components:
           $ref: "#/components/schemas/Narratives"
         identifiers:
           $ref: "#/components/schemas/Identifiers"
+        vehicle_asset:
+          $ref: "#/components/schemas/VehicleAsset"
         appointment_source_code:
           type: string
           description: The source code for the appointment.
@@ -2380,7 +2524,7 @@ components:
           type: string
           description: The date and time the appointment occurred.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         dealer_references:
           $ref: "#/components/schemas/DealerReferences"
         assigned_dealer_staff:
@@ -2429,8 +2573,8 @@ components:
           $ref: "#/components/schemas/Narratives"
         identifiers:
           $ref: "#/components/schemas/Identifiers"
-        vehicle_identifier:
-          $ref: "#/components/schemas/VehicleIdentifier"
+        vehicle_asset:
+          $ref: "#/components/schemas/VehicleAsset"
         attached_medias:
           $ref: "#/components/schemas/MediaReferences"
         severity_type:
@@ -2633,7 +2777,7 @@ components:
           type: string
           description: transport.event.occurrence.date.time.desc
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         transport_event_type:
           $ref: "#/components/schemas/TransportEventTypes"
         vehicle_identifier:
@@ -2724,6 +2868,61 @@ components:
       - EXPIRATION_DATE
       - MIN_PAYMENT_PERCENT
       - MIN_PAYMENT_AMOUNT
+    VehicleAsset:
+      type: object
+      properties:
+        vehicle_asset_id:
+          type: string
+          description: The persistent identifier representing the canonical enterprise
+            vehicle asset.
+          example: AST-902811
+        vehicle_asset_key:
+          type: string
+          description: The immutable aggregate root key for the enterprise vehicle
+            asset.
+          example: VAK-00092188
+        vehicle_identifier_key:
+          type: string
+          description: The canonical vehicle identity anchor key linking this operational
+            asset to the enterprise identity registry.
+          example: VID-00088211
+        vehicle_reference:
+          $ref: "#/components/schemas/VehicleReference"
+        asset_status_type:
+          $ref: "#/components/schemas/VehicleStatusTypes"
+        telemetry_opt_in_indicator:
+          type: boolean
+          description: Indicates whether the asset active operational state permits
+            connected-car telematics and streaming data ingest.
+          example: true
+        location_sharing_indicator:
+          type: boolean
+          description: Indicates whether realtime GPS and location privacy rules allow
+            location transmission.
+          example: false
+        authorization_levels:
+          $ref: "#/components/schemas/AuthorizationLevels"
+        privacy_consent:
+          $ref: "#/components/schemas/PrivacyConsent"
+        party_references:
+          $ref: "#/components/schemas/PartyReferences"
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        commission_date_time:
+          type: string
+          description: The timestamp when the vehicle asset was formally commissioned
+            into service.
+          format: date-time
+          example: 2026-07-24T01:34:31Z
+        decommission_date_time:
+          type: string
+          description: The timestamp when the vehicle asset was decommissioned or
+            retired.
+          format: date-time
+          example: 2026-07-24T01:34:31Z
+        asset_codes:
+          $ref: "#/components/schemas/Codes"
+      description: vehicle.asset.desc
     VehicleIdentifier:
       type: object
       properties:
@@ -2829,6 +3028,115 @@ components:
           type: string
           description: A unique identifier for the vehicle license record.
       description: License for vehicle
+    VehicleReference:
+      type: object
+      properties:
+        vehicle_reference_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The unique lightweight reference key representing the denormalized
+            vehicle projection used across bounded contexts.
+          example: VREF-882211
+        vehicle_reference_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The unique identifier for the lightweight denormalized vehicle
+            reference projection.
+          example: VR-993821
+        vehicle_identifier_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The canonical enterprise vehicle identity anchor associated
+            with this denormalized vehicle reference.
+          example: VID-00088211
+        vin:
+          maxLength: 17
+          minLength: 11
+          type: string
+          description: The Vehicle Identification Number (VIN) associated with the
+            vehicle reference.
+          example: 1FT8W3BT6SEC12345
+        model_year:
+          maxLength: 4
+          minLength: 1
+          type: string
+          description: The OEM model year associated with the vehicle reference projection.
+          example: "2026"
+        make:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The manufacturer brand associated with the vehicle reference
+            projection.
+          example: Ford
+        model:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The OEM model associated with the vehicle reference projection.
+          example: F-350 Super Duty
+        trim:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The OEM trim designation associated with the vehicle reference
+            projection.
+          example: Lariat
+        display_name:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: "The human-readable formatted vehicle display name used for\
+            \ search results, dashboards, and UI rendering."
+          example: 2026 Ford F-350 Super Duty Lariat
+        stock_number:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The latest known dealer or inventory stock number associated
+            with the vehicle reference.
+          example: F12345
+        license_plate:
+          maxLength: 20
+          minLength: 1
+          type: string
+          description: The latest known government-issued vehicle license plate associated
+            with the vehicle reference.
+          example: ABC1234
+        dealer_code:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The latest known dealer organization code associated with the
+            vehicle reference.
+          example: ATL-001
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tags:
+          $ref: "#/components/schemas/Codes"
+      description: Vehicle Detail Create Information
+    VehicleStatusTypes:
+      type: string
+      description: types of vehicle status.
+      enum:
+      - PENDING_RESERVED
+      - RESERVED
+      - ACTIVE
+      - SOLD
+      - RECALL
+      - PROPOSED
+      - PENDING_ACQUISITION
+      - IN_RECEIVING
+      - IN_STOCK
+      - IN_SERVICE
+      - UNDER_MAINTENANCE
+      - RETIRED
+      - DISPOSED
+      - LOST_STOLEN
+      - OTHER
     VehicleSummary:
       type: object
       properties:
@@ -2867,6 +3175,12 @@ components:
           $ref: "#/components/schemas/ColorSummaries"
         fuel_summary:
           $ref: "#/components/schemas/FuelSummary"
+        body_style:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The baseline layout style design of the chassis structure shell.
+          example: Crew Cab Pickup
         vehicle_description:
           $ref: "#/components/schemas/Memo"
         vehicle_notes:
@@ -2920,7 +3234,7 @@ components:
           type: string
           description: Exact timestamp when the telemetry reading was captured.
           format: date-time
-          example: 2026-07-23T17:18:08Z
+          example: 2026-07-24T01:34:31Z
         source:
           type: string
           description: "Origin of the telemetry data (e.g., MANUAL_ADVISOR_INPUT,\
