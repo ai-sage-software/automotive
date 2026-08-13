@@ -24,6 +24,65 @@ servers:
 paths: {}
 components:
   schemas:
+    ActorReference:
+      type: object
+      properties:
+        actor_reference_id:
+          type: string
+          description: Unique system identifier for the reference record itself.
+          example: pr-8821-x01
+        actor_reference_key:
+          type: string
+          description: "Business-logical key for the reference, often combining the\
+            \ event and actor context."
+          example: REF-SALE-2026-CUST-99
+        actor_key:
+          type: string
+          description: The business key of the actual Actor (Person or Org) being
+            referenced.
+          example: CUST-DEALER-4412
+        actor_name:
+          type: string
+          description: The formal display name of the Actor at the time of reference.
+          example: Northside Chevrolet Service Center
+        actor_type:
+          $ref: "#/components/schemas/ActorTypes"
+        privacy_policy_rules:
+          $ref: "#/components/schemas/PrivacyPolicyRules"
+        occurrence_date_time:
+          type: string
+          description: Timestamp indicating when this specific reference was established.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+      description: External system identifier
+    ActorTypes:
+      type: string
+      description: types of actors.
+      enum:
+      - USER
+      - CUSTOMER
+      - EMPLOYEE
+      - DEALER
+      - VENDOR
+      - SUPPLIER
+      - ORGANIZATION
+      - SYSTEM
+      - SERVICE
+      - APPLICATION
+      - API
+      - AGENT
+      - AI_AGENT
+      - WORKFLOW
+      - RULE_ENGINE
+      - DEVICE
+      - SENSOR
+      - PARTNER
+      - CONTRACTOR
+      - GOVERNMENT
+      - PROCESS
+      - SCHEDULER
+      - EVENT_HANDLER
+      - UNKNOWN
     AddressReference:
       type: object
       properties:
@@ -132,7 +191,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -278,6 +337,8 @@ components:
         customer_id:
           type: string
           description: The unique ID for the customer.
+        customer_lifecycle_events:
+          $ref: "#/components/schemas/CustomerLifecycleEvents"
         universal_id:
           type: string
           description: The universal ID for the customer.
@@ -292,6 +353,13 @@ components:
           $ref: "#/components/schemas/Codes"
         occupations:
           $ref: "#/components/schemas/Codes"
+        fingerprint:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: A stable fingerprint used to identify semantically equivalent
+            evidence and prevent duplicate evidence records.
+          example: d8a31abdfd53aa787285751969600e2f21799be3a69e35878fcc30bf4324d500
         first_time_buyer_indicator:
           type: boolean
           description: A boolean indicator for whether the customer is a first-time
@@ -299,9 +367,154 @@ components:
           example: false
         identifiers:
           $ref: "#/components/schemas/Identifiers"
+        lead_sources:
+          $ref: "#/components/schemas/LeadSources"
+        garage:
+          $ref: "#/components/schemas/Garage"
+        document_date_time:
+          type: string
+          description: The date and time associated with the customer's request or
+            business interaction represented by this customer record. This is distinct
+            from the creation date and time of the transmitted file.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
       description: "Represents a customer, which can be a person or an organization.\
         \ This class includes core personal information, contact methods, financial\
         \ profiles, and related resources."
+    CustomerLifecycleEvent:
+      type: object
+      properties:
+        customer_lifecycle_event_id:
+          type: string
+          description: The unique ID for the lifecycle event.
+          example: EVT-99887766
+        customer_lifecycle_event_key:
+          type: string
+          description: The unique external key or business identifier used in integrations.
+          example: LIFECYCLE-879234
+        actor:
+          $ref: "#/components/schemas/ActorReference"
+        customer_lifecycle_event_type:
+          $ref: "#/components/schemas/CustomerLifecycleEventTypes"
+        occurrence_date_time:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+        resource_href:
+          type: string
+          description: The href of the resource associated with the event.
+          format: href
+        resource_identifier:
+          type: string
+          description: The unique identifier of the resource associated with the event.
+          example: RSC-88776655
+        detail_name:
+          type: string
+          description: The name of the event detail.
+          example: Order ID
+        detail_desc:
+          type: string
+          description: A description of the event detail.
+          example: The unique ID of the order being processed.
+        detail_value:
+          type: string
+          description: The value of the event detail.
+          example: ORD-44556677
+        detail_key:
+          type: string
+          description: The unique key for the event detail.
+          example: ORDER_ID
+        detail_code:
+          type: string
+          description: The code for the event detail.
+          example: ORDER_STATUS_CHANGED
+        resource_types:
+          $ref: "#/components/schemas/ResourceTypes"
+        previous_customer_status_type:
+          $ref: "#/components/schemas/CustomerStatusTypes"
+        resulting_customer_status_type:
+          $ref: "#/components/schemas/CustomerStatusTypes"
+        customer_update_type:
+          $ref: "#/components/schemas/CustomerUpdateTypes"
+      description: Lifecycle Event
+    CustomerLifecycleEventTypes:
+      type: string
+      description: types of customer lifecycle events.
+      enum:
+      - CREATED
+      - UPDATED
+      - DELETED
+      - ARCHIVED
+      - ACTIVATED
+      - DEACTIVATED
+      - STATUS_CHANGED
+      - SEARCHED
+      - VIEWED
+      - RETRIEVED
+      - VEHICLE_ASSOCIATED
+      - VEHICLE_DISASSOCIATED
+      - LEAD_RECEIVED
+      - LEAD_SOURCE_ADDED
+      - LEAD_SOURCE_UPDATED
+      - CONTACT_ATTEMPTED
+      - CONTACTED
+      - COMMUNICATION_SENT
+      - COMMUNICATION_RECEIVED
+      - REQUEST_RECEIVED
+      - REQUEST_UPDATED
+      - CONSENT_GRANTED
+      - CONSENT_UPDATED
+      - CONSENT_REVOKED
+      - PROFILE_UPDATED
+      - IDENTIFIER_ADDED
+      - IDENTIFIER_UPDATED
+      - IDENTIFIER_REMOVED
+      - ADDRESS_ADDED
+      - ADDRESS_UPDATED
+      - ADDRESS_REMOVED
+      - COMMUNICATION_CHANNEL_ADDED
+      - COMMUNICATION_CHANNEL_UPDATED
+      - COMMUNICATION_CHANNEL_REMOVED
+      - PARTY_RELATIONSHIP_ADDED
+      - PARTY_RELATIONSHIP_UPDATED
+      - PARTY_RELATIONSHIP_REMOVED
+      - MERGED
+      - DUPLICATE_IDENTIFIED
+      - DUPLICATE_RESOLVED
+      - DATA_VALIDATED
+      - DATA_CORRECTED
+      - EXPORTED
+      - IMPORTED
+      - SYNCHRONIZED
+      - OTHER
+    CustomerLifecycleEvents:
+      type: array
+      items:
+        $ref: "#/components/schemas/CustomerLifecycleEvent"
+    CustomerStatusTypes:
+      type: string
+      description: types of customer status.
+      enum:
+      - ACTIVE
+      - INACTIVE
+      - PROSPECT
+      - CUSTOMER
+      - DORMANT
+      - ARCHIVED
+      - DELETED
+      - MERGED
+      - UNKNOWN
+    CustomerUpdateTypes:
+      type: string
+      description: types of customer updates.
+      enum:
+      - INITIAL_DATA
+      - NEW_CUSTOMER
+      - CUSTOMER_UPDATED
+      - CUSTOMER_DELETED
+      - VEHICLE_ASSOCIATED
+      - VEHICLE_DISASSOCIATED
     DayOfWeekTypes:
       type: string
       description: types of day of weeks.
@@ -356,13 +569,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -389,6 +602,104 @@ components:
           example: true
       description: "Defines a temporal range and recurrence logic for business validity,\
         \ such as license expirations or service intervals."
+    Garage:
+      type: object
+      properties:
+        garage_id:
+          type: string
+          description: The synthetic identifier for the garage.
+        garage_key:
+          type: string
+          description: "The natural, immutable identifier for the garage."
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        garage_items:
+          $ref: "#/components/schemas/GarageItems"
+      description: Address
+    GarageItem:
+      type: object
+      properties:
+        garage_item_id:
+          type: string
+          description: A unique identifier for the garage item.
+        garage_item_key:
+          type: string
+          description: A unique key for the garage item.
+        vehicle_reference:
+          $ref: "#/components/schemas/VehicleReference"
+        vehicle_identifier_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The canonical vehicle identity anchor key used to associate
+            this aggregate with the enterprise vehicle identity registry.
+          example: VID-00088211
+        primary_driver_indicator:
+          type: boolean
+          description: Indicates whether this vehicle is primarily driven by a main
+            driver.
+          example: false
+        ownership_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        owners:
+          $ref: "#/components/schemas/PartyReferences"
+        drivers:
+          $ref: "#/components/schemas/PartyReferences"
+        garage_item_name:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: The user-defined name or label for the garage item.
+          example: Dad's Truck
+        garage_item_status_type:
+          $ref: "#/components/schemas/OwnershipStatusTypes"
+        primary_vehicle_indicator:
+          type: boolean
+          description: Indicates whether this vehicle is the primary vehicle in the
+            garage.
+          example: true
+        favorite_indicator:
+          type: boolean
+          description: Indicates whether the user marked this vehicle as a favorite.
+          example: false
+        garage_item_relationship_type:
+          $ref: "#/components/schemas/PartyRelationshipTypes"
+        garage_item_source:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: "The source system, user action, or provider that added the\
+            \ vehicle to the garage."
+          example: CUSTOMER_PORTAL
+        added_date_time:
+          type: string
+          description: The timestamp documenting when the vehicle was added to the
+            garage.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+        removed_date_time:
+          type: string
+          description: The timestamp documenting when the vehicle was removed from
+            the garage.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+        insurance_references:
+          $ref: "#/components/schemas/InsuranceReferences"
+        garage_item_codes:
+          $ref: "#/components/schemas/Codes"
+        garage_item_notes:
+          maxLength: 4000
+          minLength: 1
+          type: string
+          description: "User, owner, driver, or operational notes associated with\
+            \ the garage item."
+          example: Used primarily for weekend towing.
+      description: Represents a vehicle and its associated information within a customer's
+        garage.
+    GarageItems:
+      type: array
+      items:
+        $ref: "#/components/schemas/GarageItem"
     Identifier:
       type: object
       properties:
@@ -423,6 +734,81 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Identifier"
+    InsuranceReference:
+      type: object
+      properties:
+        insurance_reference_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The immutable lightweight insurance reference identifier.
+          example: IREF-882211
+        insurance_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The canonical insurance aggregate key.
+          example: INS-882211
+        insurance_policy_number:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The insurance policy number.
+          example: POL-882211
+        insurance_type:
+          $ref: "#/components/schemas/InsuranceTypes"
+        insurance_status_type:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The lifecycle status associated with the insurance policy.
+          example: ACTIVE
+        insurance_company:
+          $ref: "#/components/schemas/PartyReference"
+        coverage_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        vehicle_reference:
+          $ref: "#/components/schemas/VehicleReference"
+      description: Current Insurance for a customer.
+    InsuranceReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/InsuranceReference"
+    InsuranceTypes:
+      type: string
+      description: types of insurances.
+      enum:
+      - HEALTH
+      - AUTO
+      - HOMEOWNERS
+      - RENTERS
+      - LIFE
+      - DISABILITY
+      - UMBRELLA
+      - LONG_TERM_DISABILITY
+      - TERM_LIFE
+      - LONG_TERM_CARE
+      - IDENTITY_THEFT_PROTECTION
+      - PERSONAL
+      - PROPERTY
+      - MARINE
+      - FIRE
+      - LIABILITY
+      - GUARANTEE
+      - FLOOD
+      - WIND
+      - STORM
+      - OTHER
+      - PROFESSIONAL_LIABILITY
+      - COMMERCIAL_AUTO
+      - CYBER_LIABILITY
+      - WORKERS_COMPENSATION
+      - BUSINESS_INTERRUPTION
+      - RENT_GUARANTEE
+      - TITLE
+      - PET
+      - TRAVEL
+      - EVENT
     JurisdictionProfile:
       type: object
       properties:
@@ -497,14 +883,130 @@ components:
             \ synchronized from the source governance, legal, policy, or compliance\
             \ system."
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
         occurrence_date_time:
           type: string
           description: "The date and time when the jurisdiction profile was observed,\
             \ created, received, updated, or became effective."
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
       description: nullable
+    LeadSource:
+      type: object
+      properties:
+        lead_source_key:
+          type: string
+          description: The unique key for the lead source record.
+        lead_id:
+          type: string
+          description: The unique ID for the lead.
+        lead_source_id:
+          type: string
+          description: The unique ID for the lead source.
+        source_name:
+          type: string
+          description: The name of the lead source.
+        source_key:
+          type: string
+          description: The unique ID of the source.
+        source_level:
+          type: string
+          description: The level of the source.
+        up_type_code:
+          type: string
+          description: The UP type associated with the lead.
+        lead_source_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/LeadSourceTypes"
+        lead_source_codes:
+          $ref: "#/components/schemas/Codes"
+        contact_name:
+          type: string
+          description: The name of the contact.
+        contact_id:
+          type: string
+          description: The unique ID of the contact.
+        lead_priority_ranking:
+          type: string
+          description: The priority ranking of the lead.
+        lead_interest_codes:
+          $ref: "#/components/schemas/Codes"
+        lead_receipt_codes:
+          $ref: "#/components/schemas/Codes"
+        lead_source_status_type:
+          $ref: "#/components/schemas/LeadSourceStatusTypes"
+        lead_type_codes:
+          $ref: "#/components/schemas/Codes"
+        occurrence_date_time:
+          type: string
+          description: The date and time the lead event occurred.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+        lead_comments:
+          $ref: "#/components/schemas/Narratives"
+        lead_source_href:
+          type: string
+          description: The URI to the lead source resource.
+          format: href
+        lead_href:
+          type: string
+          description: The URI to the related lead resource.
+          format: href
+      description: Represents a lead from a specific source.
+    LeadSourceStatusTypes:
+      type: string
+      description: types of lead source status.
+      enum:
+      - PENDING
+      - OPENED
+      - ACTIVE
+      - CONTACTED
+      - QUALIFIED
+      - CONVERTED
+      - CLOSED
+      - DISQUALIFIED
+      - INVALID
+    LeadSourceTypes:
+      type: string
+      description: types of lead sources.
+      enum:
+      - SOCIAL_MEDIA
+      - EMAIL_MARKETING
+      - PHONE_MARKETING
+      - ORGANIC_SEARCH
+      - PAID_SOCIAL
+      - PAID_SEARCH
+      - REFERRAL
+      - DIRECT_TRAFFIC
+      - OFFLINE_SOURCE
+      - TRADITIONAL_ADVERTISING
+      - PUBLIC_RELATIONS
+      - DIRECT_MARKETING
+      - AFFILIATE_PROGRAM
+      - PARTNER_PROGRAM
+      - EVENT_SHOW
+      - EVENT_WEBINAR
+      - EVENT_SPEAKING
+      - NEW_CUSTOMER
+      - EXISTING_CUSTOMER
+      - WALK_IN
+      - RENEWAL
+      - RECALL
+      - WARRANTY
+      - WEB_FORM
+      - CHATBOT
+      - EMPLOYEE_REFERRAL
+      - PRINT_AD
+      - RADIO_AD
+      - OTHER_CAMPAIGNS
+    LeadSources:
+      type: array
+      items:
+        $ref: "#/components/schemas/LeadSource"
     List:
       type: array
       items:
@@ -564,6 +1066,270 @@ components:
       - NULLIFY
       - GENERAL_ANONYMIZE
       - NONE
+    Memo:
+      type: array
+      items:
+        type: string
+    MetricNameValue:
+      type: object
+      properties:
+        metric_name_value_key:
+          type: string
+          description: A unique key for the metric name value record.
+        metric_name_value_id:
+          type: string
+          description: The unique ID for the metric name value.
+        header_sequence:
+          type: string
+          description: The header sequence for the metric value.
+        uom:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        value:
+          type: string
+          description: The value of the metric.
+        value_category:
+          type: string
+          description: The category of the metric value.
+        value_description:
+          type: string
+          description: A description of the metric value.
+        value_name:
+          type: string
+          description: The name of the metric value.
+        codes:
+          $ref: "#/components/schemas/Codes"
+      description: A metric value with a name and unit of measure.
+    MetricNameValues:
+      type: array
+      items:
+        $ref: "#/components/schemas/MetricNameValue"
+    Narrative:
+      type: object
+      properties:
+        narrative_key:
+          type: string
+          description: A unique key for the narrative record.
+        narrative_id:
+          type: string
+          description: The unique ID for the narrative.
+        correlation_id:
+          type: string
+          description: The correlation ID tracking back to the specific Monte Carlo
+            recommendation instance.
+        actor:
+          $ref: "#/components/schemas/ActorReference"
+        event_actor_role_type:
+          $ref: "#/components/schemas/StaffRoleTypes"
+        event_content:
+          $ref: "#/components/schemas/Memo"
+        event_date_time:
+          type: string
+          description: The date and time of the event.
+          format: date-time
+          example: 2026-08-13T20:42:39Z
+        narrative_group:
+          type: string
+          description: The group to which the narrative belongs.
+        narrative_action:
+          $ref: "#/components/schemas/Memo"
+        narrative_desc:
+          type: string
+          description: A description for the narrative.
+        narrative_metrics:
+          $ref: "#/components/schemas/MetricNameValues"
+        narrative_type:
+          $ref: "#/components/schemas/NarrativeTypes"
+        narrative_name:
+          type: string
+          description: The name of the narrative.
+        narrative_code:
+          type: string
+          description: The code for the narrative.
+        narrative_value:
+          type: string
+          description: The value of the narrative.
+        narrative_uom_type:
+          $ref: "#/components/schemas/NarrativeUomTypes"
+        internal_indicator:
+          type: boolean
+          description: An indicator for whether the narrative is internal.
+          example: false
+      description: narrative of conversation
+    NarrativeTypes:
+      type: string
+      description: types of narratives.
+      enum:
+      - ALERT
+      - INFO
+      - ERROR
+      - AGGREGATE
+      - CASE
+      - DENIAL
+      - COMPLAINT
+      - SYMPTOM
+      - DIAGNOSTIC
+      - DIAGNOSTIC_PROCESS
+      - DIAGNOSTIC_METRICS
+      - CAUSE
+      - CORRECTION
+      - SERVICE
+      - MAINTENANCE
+      - INSPECTION
+      - PART
+      - FAILURE
+      - LABOR
+      - SUBLET
+      - RECALL
+      - WARRANTY
+      - SALE_NEW
+      - SALE_USED
+      - ESTIMATE
+      - INVOICE
+      - COMMUNICATION
+      - CUSTOMER_NOTE
+      - FINAL_REPORT
+      - REQUIREMENT_METRICS
+      - REPORTING_METRICS
+      - SERVICE_LIFECYCLE_MILESTONE
+      - WARRANTY_APPROVAL
+      - WARRANTY_DENIAL
+      - WARRANTY_APPEAL
+      - CLAIM
+      - FLEET
+      - TELEMETRY
+      - COMPLIANCE
+      - AUDIT
+      - SECURITY
+      - TRANSPORT
+      - DELIVERY
+      - INVENTORY
+      - SALES
+      - FINANCIAL
+      - SERVICE_PLAN
+      - VEHICLE_LIFECYCLE
+      - OWNERSHIP
+      - INSURANCE
+      - LOGISTICS
+      - QUALITY
+      - RISK
+      - CONSEQUENCE
+      - AI_RECOMMENDATION
+      - DECISION
+      - BUSINESS_RULE
+      - INTENT
+      - CAPABILITY
+      - CUSTOM_ORDER
+      - SPECIAL
+      - DISCLAIMER
+    NarrativeUomTypes:
+      type: string
+      description: types of narrative uoms.
+      enum:
+      - BAR
+      - KPA
+      - PSI
+      - OZ
+      - LB
+      - KG
+      - GRAMS
+      - TONS
+      - LITER
+      - GALLON
+      - FLUID_OUNCE
+      - CUBIC_METER
+      - KM
+      - MILES
+      - MI
+      - INCH
+      - FEET
+      - YARD
+      - FATHOM
+      - NAUTICAL
+      - METER
+      - CENTIMETER
+      - MILLIMETER
+      - DURATION
+      - SECONDS
+      - MINUTES
+      - HOURS
+      - DAYS
+      - WEEKS
+      - DAY_OF_MONTH
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - DATE_TIME
+      - DATE
+      - TIME
+      - CELSIUS
+      - FAHRENHEIT
+      - KELVIN
+      - RANKINE
+      - VOLT
+      - AMPERE
+      - OHM
+      - WATT
+      - KILOWATT_HOUR
+      - HP
+      - RPM
+      - G_FORCE
+      - DEGREES
+      - OCCURRENCE
+      - GROUP
+      - CODE
+      - CURRENCY
+      - POINTS
+      - CUSTOM
+      - UNLIMITED
+      - NONE
+      - LABEL
+      - PERCENT
+      - DESC
+      - TEXT
+      - KEY
+      - PROTECTED_TEXT
+      - BINARY
+      - STRING
+      - NUMBER
+      - INTEGER
+      - BOOLEAN
+      - ARRAY
+      - OBJECT
+      - FLOAT
+      - DOUBLE
+      - INT32
+      - INT64
+      - COUNT
+      - RATIO
+      - SCORE
+      - OTHER
+    Narratives:
+      type: array
+      items:
+        $ref: "#/components/schemas/Narrative"
+    OwnershipStatusTypes:
+      type: string
+      description: types of ownership status.
+      enum:
+      - CURRENT_OWNER
+      - PREVIOUS_OWNER
+      - CURRENT_LESSEE
+      - PREVIOUS_LESSEE
+      - HOUSEHOLD_OWNER
+      - HOUSEHOLD_LESSEE
+      - PENDING_PURCHASE
+      - PENDING_LEASE
+      - TRANSFER_PENDING
+      - TRADED_IN
+      - SOLD
+      - TOTAL_LOSS
+      - CONQUEST_OWNER
+      - LOYALTY_OWNER
+      - UNKNOWN
     PartyReference:
       type: object
       properties:
@@ -645,12 +1411,14 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-07-30T19:20:52Z
+          example: 2026-08-13T20:42:39Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
             (false).
           example: true
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
       description: External system identifier
     PartyReferences:
       type: array
@@ -760,7 +1528,10 @@ components:
       - REFERENCE_PROFESSIONAL
       - PRIMARY_CUSTOMER
       - PRIMARY_DRIVER
+      - SECONDARY_DRIVER
       - PRIMARY_OWNER
+      - SECONDARY_OWNER
+      - CO_OWNER
       - VEHICLE_OWNER
       - APPLICANT
       - CO_APPLICANT
@@ -1038,6 +1809,90 @@ components:
       - ALL_DATA
       - CUSTOM
       - UNKNOWN
+    ResourceTypes:
+      type: string
+      description: types of resources.
+      enum:
+      - SYSTEM
+      - WORKFLOW
+      - ACTIVITY
+      - FUNCTION
+      - PROCESS
+      - INCIDENT
+      - PARTY
+      - CUSTOMER
+      - APPLICANT
+      - VENDOR
+      - DEALER_STAFF
+      - DRIVER
+      - ADDRESS
+      - BILL_ADDRESS
+      - BILL_CONTACT
+      - COMM_CHANNEL
+      - ACCOUNT
+      - VEHICLE
+      - TRADE_IN
+      - PRODUCT
+      - MANUFACTURER
+      - LEAD
+      - OPPORTUNITY
+      - DEAL
+      - FINANCE
+      - INVOICE
+      - LINEITEM
+      - EXPENSE
+      - DISCOUNT
+      - TAX
+      - FEE
+      - INCENTIVE
+      - DEALERSHIP
+      - PART
+      - ACCESSORIES
+      - PURCHASE_ORDER
+      - VEHICLE_OPTION
+      - RENTAL
+      - SUBSCRIPTION
+      - INSURANCE
+      - WARRANTY
+      - SERVICE
+      - VEHICLE_INVOICE
+      - PART_INVOICE
+      - SERVICE_INVOICE
+      - APPOINTMENT
+      - OTHER
+    StaffRoleTypes:
+      type: string
+      description: types of staff roles.
+      enum:
+      - DEALER_PRINCIPAL
+      - GENERAL_MANAGER
+      - GENERAL_SALES_MANAGER
+      - SALES_MANAGER
+      - SALES_PERSON
+      - BUSINESS_DEVELOPMENT_REPRESENTATIVE
+      - CUSTOMER_SERVICE_REPRESENTATIVE
+      - RECEPTIONIST
+      - FINANCE_AND_INSURANCE_MANAGER
+      - BUSINESS_MANAGER
+      - CLOSING_MANAGER
+      - SERVICE_MANAGER
+      - SERVICE_ADVISOR
+      - SERVICE_TECHNICIAN
+      - SHOP_FOREMAN
+      - WARRANTY_ADMINISTRATOR
+      - PARTS_MANAGER
+      - PARTS_ADVISOR
+      - PARTS_SPECIALIST
+      - INVENTORY_MANAGER
+      - FLEET_MANAGER
+      - DETAIL_MANAGER
+      - DETAIL_TECHNICIAN
+      - ACCOUNTING_MANAGER
+      - CONTROLLER
+      - TITLE_CLERK
+      - OFFICE_MANAGER
+      - MARKETING_MANAGER
+      - OTHER
     TimeSlot:
       type: object
       properties:
@@ -1124,3 +1979,107 @@ components:
       - RESTRICTED
       - OTHER
       - UNKNOWN
+    VehicleReference:
+      type: object
+      properties:
+        vehicle_reference_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The unique lightweight reference key representing the denormalized
+            vehicle projection used across bounded contexts.
+          example: VREF-882211
+        vehicle_reference_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The unique identifier for the lightweight denormalized vehicle
+            reference projection.
+          example: VR-993821
+        vehicle_identifier_key:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: The canonical enterprise vehicle identity anchor associated
+            with this denormalized vehicle reference.
+          example: VID-00088211
+        vin:
+          maxLength: 17
+          minLength: 11
+          type: string
+          description: The Vehicle Identification Number (VIN) associated with the
+            vehicle reference.
+          example: 1FT8W3BT6SEC12345
+        model_year:
+          maxLength: 4
+          minLength: 1
+          type: string
+          description: The OEM model year associated with the vehicle reference projection.
+          example: "2026"
+        make:
+          maxLength: 80
+          minLength: 1
+          type: string
+          description: The manufacturer brand associated with the vehicle reference
+            projection.
+          example: Ford
+        model:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The OEM model associated with the vehicle reference projection.
+          example: F-350 Super Duty
+        trim:
+          maxLength: 120
+          minLength: 1
+          type: string
+          description: The OEM trim designation associated with the vehicle reference
+            projection.
+          example: Lariat
+        display_name:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: "The human-readable formatted vehicle display name used for\
+            \ search results, dashboards, and UI rendering."
+          example: 2026 Ford F-350 Super Duty Lariat
+        stock_number:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The latest known dealer or inventory stock number associated
+            with the vehicle reference.
+          example: F12345
+        license_plate:
+          maxLength: 20
+          minLength: 1
+          type: string
+          description: The latest known government-issued vehicle license plate associated
+            with the vehicle reference.
+          example: ABC1234
+        dealer_code:
+          maxLength: 40
+          minLength: 1
+          type: string
+          description: The latest known dealer organization code associated with the
+            vehicle reference.
+          example: ATL-001
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        tags:
+          $ref: "#/components/schemas/Codes"
+        body_style:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The baseline layout style design of the chassis structure shell.
+          example: Crew Cab Pickup
+        trim_codes:
+          $ref: "#/components/schemas/Codes"
+        trim_dd_codes:
+          $ref: "#/components/schemas/Codes"
+        final_assembly_point:
+          $ref: "#/components/schemas/Codes"
+        fleet_codes:
+          $ref: "#/components/schemas/Codes"
+      description: Vehicle Detail Create Information
