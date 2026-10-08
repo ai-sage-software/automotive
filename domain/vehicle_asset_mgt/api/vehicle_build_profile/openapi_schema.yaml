@@ -59,8 +59,7 @@ components:
         $ref: "#/components/schemas/Code"
     CurrencyCode:
       type: string
-      description: Three-letter ISO-4217 currency code.
-      example: USD
+      description: "ISO 4217 currency code, e.g., 'USD', 'EUR'."
     CurrencyExchange:
       type: object
       properties:
@@ -96,9 +95,13 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-07-30T19:24:04Z
+          example: 2026-10-08T05:53:39Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
+    CurrencyExchanges:
+      type: array
+      items:
+        $ref: "#/components/schemas/CurrencyExchange"
     DurationUomTypes:
       type: string
       description: types of duration uoms.
@@ -142,13 +145,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-07-30T19:24:04Z
+          example: 2026-10-08T05:53:39Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-07-30T19:24:04Z
+          example: 2026-10-08T05:53:39Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -175,23 +178,6 @@ components:
           example: true
       description: "Defines a temporal range and recurrence logic for business validity,\
         \ such as license expirations or service intervals."
-    GeneralAmount:
-      type: object
-      properties:
-        general_amount_key:
-          type: string
-          description: "Unique business key for the monetary entry, used for deterministic\
-            \ lookups."
-          example: MON-2026-EXP-001
-        currency_code:
-          $ref: "#/components/schemas/CurrencyCode"
-        amount:
-          type: string
-          description: The raw decimal monetary amount stored as a string to prevent
-            floating-point errors.
-          example: "1234.56"
-      description: "Represents a monetary value, including its currency, locale, and\
-        \ display format."
     Identifier:
       type: object
       properties:
@@ -255,37 +241,6 @@ components:
           $ref: "#/components/schemas/Codes"
       description: "Represents a quantitative measurement including its unit, value,\
         \ and classification codes."
-    Money:
-      type: object
-      properties:
-        money_key:
-          type: string
-          description: "Unique business key for the monetary entry, used for deterministic\
-            \ lookups."
-          example: MON-2026-EXP-001
-        money_id:
-          type: string
-          description: System-generated unique identifier for the money record.
-          example: mny-5521-z99
-        currency_code:
-          type: string
-          description: Three-letter ISO-4217 currency code.
-          example: USD
-        display_value:
-          type: string
-          description: Formatted monetary string including symbol and separators based
-            on locale.
-          example: "$1,234.56"
-        locale:
-          type: string
-          description: Language and region identifier (BCP 47 format).
-          example: en-US
-        amount:
-          $ref: "#/components/schemas/GeneralAmount"
-        currency_exchange:
-          $ref: "#/components/schemas/CurrencyExchange"
-      description: "Represents a monetary value, including its currency, locale, and\
-        \ display format."
     NarrativeUomTypes:
       type: string
       description: types of narrative uoms.
@@ -453,19 +408,26 @@ components:
           description: "Human-readable display value for the price, including currency\
             \ symbol and proper decimal formatting."
         amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The numeric value of the price (before tax/cost breakdowns).
         tax_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The calculated amount of tax applied to the price.
         taxable_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The portion of the price subject to tax.
         non_taxable_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The portion of the price not subject to tax.
         total_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The total final price including all components and tax.
         total_cost_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The total cost to the provider/seller.
         unit_cost_amount:
-          $ref: "#/components/schemas/Money"
+          type: string
+          description: The unit cost to the provider/seller.
         price_description:
           type: string
           description: "A descriptive title for the price (e.g., 'MSRP', 'Sale Price')."
@@ -486,8 +448,30 @@ components:
             $ref: "#/components/schemas/PriceTypes"
         pay_type:
           $ref: "#/components/schemas/PayTypes"
+        price_category_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/PriceCategoryTypes"
+        currency_exchanges:
+          $ref: "#/components/schemas/CurrencyExchanges"
       description: "Price that includes display value, currency, locale, and value,\
         \ along with tax and cost components."
+    PriceCategoryTypes:
+      type: string
+      description: types of price categorys.
+      enum:
+      - ADJUSTMENT
+      - FEE
+      - HOLD_BACK
+      - LINE_ITEM
+      - OPTION
+      - OTHER
+      - PLAN_PRICING
+      - TAX
+      - TOTAL
     PriceTypes:
       type: string
       description: types of prices.
@@ -595,6 +579,12 @@ components:
       - OEM_INCENTIVE_AMOUNT
       - DEALER_NET_AMOUNT
       - LANDED_COST_AMOUNT
+      - BASE_HOLDBACK_AMOUNT
+      - OPTIONS_HOLDBACK_AMOUNT
+      - TOTAL_HOLDBACK_AMOUNT
+      - INVOICE_AMOUNT
+      - MISC_TOTAL
+      - PROTECTED_INVOICE_AMOUNT
       - OTHER
     Prices:
       type: array
@@ -716,7 +706,7 @@ components:
           description: "The date and time when the vehicle build profile information\
             \ was observed, created, received, or became effective."
           format: date-time
-          example: 2026-07-30T19:24:04Z
+          example: 2026-10-08T05:53:39Z
       description: "Comprehensive vehicle details including identifiers, configuration,\
         \ and status."
     VehicleBuildStatusTypes:

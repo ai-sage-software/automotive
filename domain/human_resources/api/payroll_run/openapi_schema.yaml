@@ -278,7 +278,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -394,6 +394,113 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/CommunicationChannel"
+    CommunicationEvent:
+      type: object
+      properties:
+        communication_event_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: Persistent identifier assigned to the communication event.
+          example: COMM-EVT-ID-10001
+        communication_event_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Unique business key identifying the communication event.
+          example: COMM-EVT-10001
+        source_party:
+          $ref: "#/components/schemas/PartyReferences"
+        target_parties:
+          $ref: "#/components/schemas/PartyReferences"
+        communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        communication_channel_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Reference key identifying the specific communication channel
+            configuration or endpoint used.
+          example: CHANNEL-PHONE-001
+        communication_status_type:
+          $ref: "#/components/schemas/CommunicationStatusTypes"
+        occurrence_date_time:
+          type: string
+          description: Date and time when the communication attempt or interaction
+            occurred.
+          format: date-time
+          example: 2026-10-08T05:41:40Z
+        communication_direction_type:
+          type: string
+          description: "Direction of the communication relative to the dealership,\
+            \ such as INBOUND or OUTBOUND."
+          example: OUTBOUND
+        communication_purpose_type:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "Business purpose or classification of the communication, such\
+            \ as SALES_FOLLOW_UP, SERVICE_REMINDER, MARKETING, or CUSTOMER_SUPPORT."
+          example: SALES_FOLLOW_UP
+        communication_summary:
+          maxLength: 2000
+          type: string
+          description: Brief description of the communication attempt or interaction.
+            Sensitive personal information should not be included unless explicitly
+            authorized.
+          example: Sales advisor called customer regarding vehicle availability.
+        resource_type:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: "Business resource type associated with the communication event,\
+            \ such as LEAD, SALES_ORDER, SERVICE_APPOINTMENT, or REPAIR_ORDER."
+          example: LEAD
+        resource_identifier:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Identifier of the business resource associated with the communication
+            event.
+          example: LEAD-77881
+        correlation_id:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: "Correlation identifier linking related communication events,\
+            \ workflows, or business transactions."
+          example: CORR-20261007-10001
+        initiated_by:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: "Identifier of the dealership employee, application, automated\
+            \ process, or agent that initiated the communication."
+          example: USER-SALES-1001
+        permission_evaluated_indicator:
+          type: boolean
+          description: Indicates whether the applicable communication permissions
+            and consent requirements were evaluated before initiating the communication.
+          example: true
+        permission_granted_indicator:
+          type: boolean
+          description: Indicates whether the evaluated communication permissions authorized
+            the attempted interaction. A null value indicates that the authorization
+            result was not recorded.
+          example: true
+        source_system_code:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: Code identifying the system that originated or recorded the
+            communication event.
+          example: DEALER_CRM
+      description: "Communication event recording the channel, status, context, and\
+        \ outcome of a customer interaction."
+    CommunicationEvents:
+      type: array
+      items:
+        $ref: "#/components/schemas/CommunicationEvent"
     CommunicationStatusTypes:
       type: string
       description: types of communication status.
@@ -427,6 +534,8 @@ components:
           $ref: "#/components/schemas/CommunicationChannels"
         addresses:
           $ref: "#/components/schemas/Addresses"
+        customer_contact_profile:
+          $ref: "#/components/schemas/CustomerContactProfile"
       description: Contact Method details including communication channels and addresses.
     ContactMethods:
       type: array
@@ -470,9 +579,58 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
+    CustomerContactProfile:
+      type: object
+      properties:
+        customer_contact_profile_id:
+          maxLength: 60
+          minLength: 1
+          type: string
+          description: Persistent identifier of the customer contact profile.
+          example: CCP-10001
+        customer_contact_profile_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Business key uniquely identifying the customer contact profile.
+          example: CCP-CUST-10001
+        customer_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Business key of the customer associated with this contact profile.
+          example: CUST-10001
+        last_communication_channel_type:
+          $ref: "#/components/schemas/CommunicationChannelTypes"
+        last_communication_channel_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Business key identifying the specific communication channel
+            configuration or endpoint used for the most recent communication attempt.
+          example: CHANNEL-PHONE-001
+        last_communication_status_type:
+          $ref: "#/components/schemas/CommunicationStatusTypes"
+        last_communication_date_time:
+          type: string
+          description: Date and time when the most recent communication attempt occurred.
+          format: date-time
+          example: 2026-10-08T05:41:40Z
+        last_communication_event_key:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Business key referencing the most recent CommunicationEvent
+            record. Provides traceability between the current contact state and its
+            source event.
+          example: COMM-EVT-10001
+        communication_events:
+          $ref: "#/components/schemas/CommunicationEvents"
+      description: "Customer contact preferences, permissions, and latest communication\
+        \ activity."
     DayOfWeekTypes:
       type: string
       description: types of day of weeks.
@@ -527,13 +685,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -685,13 +843,13 @@ components:
             \ synchronized from the source governance, legal, policy, or compliance\
             \ system."
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         occurrence_date_time:
           type: string
           description: "The date and time when the jurisdiction profile was observed,\
             \ created, received, updated, or became effective."
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
       description: nullable
     List:
       type: array
@@ -886,7 +1044,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1137,7 +1295,7 @@ components:
           description: The date and time the paymentMethod was associated with the
             order.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
       description: Reference to a PaymentMethod (Party) Aggregate Root for financing
         details.
     PaymentMethodTypes:
@@ -1282,7 +1440,7 @@ components:
           description: The date and time when this specific payment schedule was generated
             or last updated.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         payment_transactions:
           $ref: "#/components/schemas/PaymentTransactions"
         payment_period:
@@ -1318,7 +1476,7 @@ components:
           type: string
           description: The scheduled date and time the payments will be issued.
           format: date-time
-          example: 2026-09-02T13:43:25Z
+          example: 2026-10-08T05:41:40Z
         effective_period:
           $ref: "#/components/schemas/EffectivePeriod"
         payroll_run_status_type:
