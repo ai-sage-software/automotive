@@ -1,0 +1,204 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - VehicleTransportSessionSearchCriteria
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
+      enum:
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
+    EffectivePeriod:
+      type: object
+      properties:
+        effective_period_key:
+          type: string
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
+        active_indicator:
+          type: boolean
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
+        exclusive_indicator:
+          type: boolean
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
+        start_date_time:
+          type: string
+          description: The inclusive start point of the period in ISO 8601 format.
+          format: date-time
+          example: 2026-10-19T08:14:08Z
+        complete_date_time:
+          type: string
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
+          format: date-time
+          example: 2026-10-19T08:14:08Z
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
+          type: string
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        recur_count:
+          type: string
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: string
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
+        recur_indicator:
+          type: boolean
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
+    List:
+      type: array
+      items:
+        $ref: "#/components/schemas/VehicleTransportSessionStatusTypes"
+    VehicleTransportSessionSearchCriteria:
+      type: object
+      properties:
+        vehicle_transport_session_search_criteria_id:
+          type: string
+          description: A unique identifier for the search criteria payload.
+          example: vtssc_112233445566
+        vehicle_transport_session_search_criteria_key:
+          type: string
+          description: A unique business key for the search criteria payload.
+          example: CRIT-KEY-2026-001
+        transfer_order_key:
+          type: string
+          description: Filter by associated vehicle transfer order business key.
+          example: VTO-KEY-88231
+        driver_key:
+          type: string
+          description: Filter by assigned driver key.
+          example: DRV-KEY-501
+        carrier_key:
+          type: string
+          description: Filter by assigned carrier key.
+          example: CAR-KEY-102
+        fleet_key:
+          type: string
+          description: Filter by assigned fleet key.
+          example: FLT-KEY-304
+        vehicle_key:
+          type: string
+          description: Filter by assigned vehicle key.
+          example: VEH-KEY-709
+        session_statuses:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VehicleTransportSessionStatusTypes"
+        origin_location_key:
+          type: string
+          description: Filter by origin location reference key.
+          example: LOC-ORIGIN-001
+        destination_location_key:
+          type: string
+          description: Filter by destination location reference key.
+          example: LOC-DEST-002
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        correlation_id:
+          type: string
+          description: Filter by correlation identifier for message trail auditing.
+          example: CORR-TX-88231
+      description: Criteria and query filter parameters for searching vehicle transport
+        sessions.
+    VehicleTransportSessionStatusTypes:
+      type: string
+      description: types of vehicle transport session status.
+      enum:
+      - PENDING
+      - DISPATCHED
+      - IN_TRANSIT
+      - ARRIVED
+      - COMPLETED
+      - ON_HOLD
+      - CANCELLED
