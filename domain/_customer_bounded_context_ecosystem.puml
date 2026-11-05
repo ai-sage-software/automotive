@@ -1,0 +1,76 @@
+@startuml Customer_Bounded_Context_Ecosystem
+' Customer bounded-context ecosystem, analogous to the Vehicle diagram
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 16
+skinparam defaultFontName Arial
+skinparam ArrowColor #A66A00
+skinparam ArrowThickness 1.6
+skinparam packageStyle rectangle
+skinparam rectangle {
+  BorderColor #C18A23
+  BackgroundColor #FFFDF8
+  FontColor #583400
+}
+skinparam note {
+  BackgroundColor #FFF8E8
+  BorderColor #C18A23
+}
+title CUSTOMER ECOSYSTEM — FEDERATED BOUNDED CONTEXTS\nOne trusted customer identity · Independent aggregates · Event-driven coordination
+
+rectangle "CUSTOMER CORE REGISTRY\n(The Identity Anchor)\n<b>Customer</b>\ncustomer_key, customer_type,\ncustomer_status, display_name" as CORE #FFF2D9
+
+rectangle "CUSTOMER REFERENCE\n(The Lightweight Contract)\n<b>CustomerReference</b>\ncustomer_key, customer_reference_key,\ndisplay_name, customer_type" as REF #FFF0C7
+
+rectangle "IDENTITY & VERIFICATION\n(The Trust)\n<b>CustomerIdentityProfile</b>\nIdentity evidence, verification status,\nKYC / fraud assessment" as ID
+rectangle "CONTACT & COMMUNICATION\n(The Reachability)\n<b>CustomerContactProfile</b>\nChannels, consent, preferences,\ncommunication events" as CONTACT
+rectangle "HOUSEHOLD & RELATIONSHIPS\n(The Parties)\n<b>CustomerRelationshipProfile</b>\nCo-buyers, household, guarantors,\norganizational relationships" as REL
+rectangle "RESIDENCE & EMPLOYMENT\n(The Background)\n<b>CustomerBackgroundProfile</b>\nResidence history, employment history,\nincome declarations" as BACK
+rectangle "SALES & PURCHASE\n(The Intent)\n<b>CustomerSalesProfile</b>\nLeads, preferences, purchase journey,\nvehicle / order references" as SALES
+rectangle "CREDIT & FINANCING\n(The Underwriting)\n<b>CustomerCreditProfile</b>\nApplications, decisions, lender references;\nrestricted credit evidence" as CREDIT
+rectangle "PAYMENTS & BILLING\n(The Settlement)\n<b>CustomerPaymentProfile</b>\nPayment tokens, billing preferences,\nauthorizations (no raw card data)" as PAY
+rectangle "LOYALTY & REWARDS\n(The Relationship Value)\n<b>CustomerLoyaltyProfile</b>\nMembership, tier, points, rewards" as LOYAL
+rectangle "SUBSCRIPTIONS & ENTITLEMENTS\n(The Ongoing Service)\n<b>CustomerSubscriptionProfile</b>\nPlans, enrollments, entitlements,\nrenewal and cancellation" as SUB
+rectangle "CUSTOMER ACTIVITY LEDGER\n(The Universal History)\n<b>CustomerActivityLedger</b>\nAppend-only events, provenance,\nactor, timestamp, correlation ID" as LEDGER
+
+CORE -down-> REF : publishes stable identity
+REF ..> ID : resolves by customer_key
+REF ..> CONTACT : resolves by customer_key
+REF ..> REL : resolves by customer_key
+REF ..> BACK : resolves by customer_key
+REF ..> SALES : resolves by customer_key
+REF ..> CREDIT : resolves by customer_key
+REF ..> PAY : resolves by customer_key
+REF ..> LOYAL : resolves by customer_key
+REF ..> SUB : resolves by customer_key
+
+SALES ..> CREDIT : finance application requested\n(Event)
+CREDIT ..> PAY : approved funding terms\n(Event / reference)
+SALES ..> LOYAL : purchase completed\n(Event)
+SALES ..> SUB : entitlement activated\n(Event)
+CONTACT ..> LEDGER : contact attempt / consent change\n(Event)
+ID ..> LEDGER : verification decision\n(Event)
+CREDIT ..> LEDGER : credit decision metadata\n(Event)
+PAY ..> LEDGER : payment authorization result\n(Event)
+SALES ..> LEDGER : lead / order lifecycle\n(Event)
+LOYAL ..> LEDGER : points earned / redeemed\n(Event)
+SUB ..> LEDGER : subscription lifecycle\n(Event)
+BACK ..> LEDGER : evidence updated\n(Event)
+REL ..> LEDGER : relationship changed\n(Event)
+
+note bottom of REF
+  <b>Contract rule:</b> No embedded credit, identity documents,
+  payment credentials, employment history, or full contact records.
+  Other domains store CustomerReference, not a deep Customer graph.
+end note
+note bottom of LEDGER
+  Store references, event metadata and permitted projections;
+  not raw sensitive identity, credit or payment payloads.
+end note
+legend bottom
+  <b>Solid arrow</b> = identity publication / canonical reference
+  <b>Dashed arrow</b> = association or domain event
+  Each profile is owned by its bounded context; no god object.
+endlegend
+@enduml
