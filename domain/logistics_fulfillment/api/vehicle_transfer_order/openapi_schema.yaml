@@ -53,7 +53,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
       description: External system identifier
     ActorTypes:
       type: string
@@ -191,7 +191,7 @@ components:
           type: string
           description: Timestamp of the last update to this authorization
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         authorized_indicator:
           type: boolean
           description: Indicates whether the authorization is currently active or
@@ -291,7 +291,7 @@ components:
           description: The date and time when the carrier reference was created or
             became effective.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
       description: Criteria for filtering by specific part attributes and technical
         specifications.
     Code:
@@ -454,7 +454,7 @@ components:
           description: The specific UTC timestamp when this exchange rate was captured
             or finalized.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
       description: "CurrencyExchange that includes display value, currency, locale,\
         \ and value, along with tax and cost components."
     CurrencyExchanges:
@@ -474,6 +474,15 @@ components:
       - SAT
     DeliveryWindow:
       $ref: "#/components/schemas/EffectivePeriod"
+    DeviceTypes:
+      type: string
+      description: types of devices.
+      enum:
+      - MOBILE
+      - TABLET
+      - DESKTOP
+      - SMART_TV
+      - OTHER
     DurationUomTypes:
       type: string
       description: types of duration uoms.
@@ -517,13 +526,13 @@ components:
           type: string
           description: The inclusive start point of the period in ISO 8601 format.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         complete_date_time:
           type: string
           description: The exclusive end point of the period (completion) in ISO 8601
             format.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         duration_uom_type:
           $ref: "#/components/schemas/DurationUomTypes"
         duration_value:
@@ -595,6 +604,22 @@ components:
           $ref: "#/components/schemas/FareLineItems"
         price_summary:
           $ref: "#/components/schemas/PriceSummary"
+        fare_option_criteria:
+          $ref: "#/components/schemas/FareOptionCriteria"
+        quote_effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        fare_status_type:
+          $ref: "#/components/schemas/FareStatusTypes"
+        repricing_required_indicator:
+          type: boolean
+          description: Indicates whether changes to the originally priced criteria
+            require the fare to be recalculated.
+          example: false
+        superseded_fare_key:
+          type: string
+          description: Business key of the previous fare replaced by this revised
+            fare.
+          example: FARE-2026-1001
       description: "Represents a specific transport fare option, including service\
         \ levels, costs, line items, and pricing summaries."
     FareLineItem:
@@ -623,6 +648,100 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/FareLineItem"
+    FareOptionCriteria:
+      type: object
+      properties:
+        fare_option_criteria_id:
+          type: string
+          description: A unique identifier for the fare option criteria.
+        fare_option_criteria_key:
+          type: string
+          description: A unique business key for the fare option criteria.
+        source_address:
+          $ref: "#/components/schemas/AddressReference"
+        destination_address:
+          $ref: "#/components/schemas/AddressReference"
+        vehicles:
+          $ref: "#/components/schemas/VehicleReferences"
+        preferred_service_levels:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceLevelTypes"
+        preferred_transport_methods:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TransportMethodTypes"
+        transfer_order_number:
+          type: string
+          description: Associated transfer order reference number.
+        requesting_party:
+          $ref: "#/components/schemas/PartyReference"
+        source_party:
+          $ref: "#/components/schemas/PartyReference"
+        destination_party:
+          $ref: "#/components/schemas/PartyReference"
+        transfer_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        fare_route_stop_criterias:
+          $ref: "#/components/schemas/FareRouteStopCriterias"
+      description: Criteria and parameters used to query and evaluate available transport
+        fare options.
+    FareRouteStopCriteria:
+      type: object
+      properties:
+        fare_route_stop_criteria_key:
+          type: string
+          description: Stable key for the stop across quote revisions.
+          example: STOP-001
+        stop_sequence:
+          type: integer
+          description: Requested sequence of the stop within the quoted route.
+          format: int32
+          example: 1
+        stop_type:
+          type: string
+          description: "Role of the stop: PICKUP, DELIVERY, HANDOFF, or INTERMEDIATE."
+          example: PICKUP
+        address_reference:
+          $ref: "#/components/schemas/AddressReference"
+        party_reference:
+          $ref: "#/components/schemas/PartyReference"
+        vehicles:
+          $ref: "#/components/schemas/VehicleReferences"
+        requested_stop_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        transport_group_key:
+          type: string
+          description: Optional grouping key for vehicles priced together.
+          example: GROUP-001
+        special_handling_instructions:
+          type: string
+          description: Pricing-relevant handling requirements at this stop.
+      description: "Quoted requirements for a single ordered pickup, delivery, handoff,\
+        \ or intermediate transportation stop."
+    FareRouteStopCriterias:
+      type: array
+      items:
+        $ref: "#/components/schemas/FareRouteStopCriteria"
+    FareStatusTypes:
+      type: string
+      description: types of fare status.
+      enum:
+      - DRAFT
+      - REQUESTED
+      - OFFERED
+      - ACCEPTED
+      - REPRICING_REQUIRED
+      - SUPERSEDED
+      - EXPIRED
+      - DECLINED
+      - WITHDRAWN
     Fares:
       type: array
       items:
@@ -721,7 +840,7 @@ components:
           type: string
           description: The date and time the event occurred.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
       description: External system reference
     Identifier:
       type: object
@@ -741,22 +860,37 @@ components:
           description: Context or domain of the identifier
         value:
           type: string
-          description: The monetary or hours-based value of the event.
+          description: The value of the identifier.
         detail:
           type: string
-          description: The monetary or hours-based value of the event.
+          description: The detail information for the identifier
         identifier_type:
           type: string
-          description: The monetary or hours-based value of the event.
+          description: The identifier type
         system_codes:
           $ref: "#/components/schemas/Codes"
         issuing_authority:
           $ref: "#/components/schemas/Codes"
+        occurrence_date:
+          type: string
+          description: The date and time the event occurred.
+          format: date
       description: External system identifier
     Identifiers:
       type: array
       items:
         $ref: "#/components/schemas/Identifier"
+    InspectionStatusTypes:
+      type: string
+      description: types of inspection status.
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - ON_HOLD
+      - STAGED
+      - COMPLETED
+      - REJECTED
+      - CANCELLED
     JurisdictionProfile:
       type: object
       properties:
@@ -831,13 +965,13 @@ components:
             \ synchronized from the source governance, legal, policy, or compliance\
             \ system."
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         occurrence_date_time:
           type: string
           description: "The date and time when the jurisdiction profile was observed,\
             \ created, received, updated, or became effective."
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
       description: nullable
     List:
       type: array
@@ -898,6 +1032,286 @@ components:
       - NULLIFY
       - GENERAL_ANONYMIZE
       - NONE
+    Media:
+      type: object
+      properties:
+        media_key:
+          type: string
+          description: A unique key for the media item.
+        media_id:
+          type: string
+          description: The unique ID for the media item.
+        authors:
+          $ref: "#/components/schemas/PartyReferences"
+        occurrence_date_time:
+          type: string
+          description: The date and time the media was created or captured.
+          format: date-time
+          example: 2026-11-15T21:15:36Z
+        name:
+          type: string
+          description: A hyperlink to the media's content.
+        media_format_type:
+          $ref: "#/components/schemas/MediaFormatTypes"
+        media_href:
+          type: string
+          description: A hyperlink to the media resource.
+          format: href
+        media_type:
+          $ref: "#/components/schemas/MediaTypes"
+        media_status_type:
+          $ref: "#/components/schemas/MediaStatusTypes"
+        media_delivery_method_type:
+          $ref: "#/components/schemas/MediaDeliveryMethodTypes"
+        media_usage_type:
+          $ref: "#/components/schemas/MediaUsageTypes"
+        media_visibility:
+          $ref: "#/components/schemas/MediaVisibility"
+        media_version:
+          type: string
+          description: The version of the media.
+        quality:
+          type: string
+          description: A numeric value representing the quality of the media.
+        resource_group:
+          $ref: "#/components/schemas/ResourceGroup"
+        signature:
+          type: string
+          description: A unique signature or hash of the media content.
+        textual_details:
+          $ref: "#/components/schemas/TextualDetails"
+        raw_content:
+          type: string
+          description: "A collection of textual details, such as titles and descriptions,\
+            \ for the media."
+        media_source:
+          type: string
+          description: The source of the media.
+        media_description:
+          type: string
+          description: The source of the media.
+        categories:
+          $ref: "#/components/schemas/Codes"
+        dpi:
+          type: string
+          description: "The dots per inch (DPI) for the media, if applicable."
+        w_pixel:
+          type: string
+          description: The width of the media in pixels.
+        h_pixel:
+          type: string
+          description: The height of the media in pixels.
+        media_resolution:
+          type: string
+          description: "The display resolution of the media (e.g., 480p, 720p, 1080p)."
+        media_duration_seconds:
+          type: string
+          description: The total duration of the media file in seconds.
+        media_sent_date_time:
+          type: string
+          description: The ISO 8601 date and time when the media was dispatched to
+            the recipient.
+          format: date-time
+          example: 2026-11-15T21:15:36Z
+        media_keys:
+          $ref: "#/components/schemas/Codes"
+        media_access_metrics:
+          $ref: "#/components/schemas/MediaAccessMetrics"
+      description: "Media item including video, images, and sound."
+    MediaAccessMetric:
+      type: object
+      properties:
+        media_access_id:
+          type: string
+          description: The unique ID for the media stream.
+        media_access_key:
+          type: string
+          description: The unique key for the media stream record.
+        media_key:
+          type: string
+          description: The unique ID for the parent media asset.
+        first_viewed_at:
+          type: string
+          description: ISO 8601 timestamp of the first access.
+        completed_at:
+          type: string
+          description: ISO 8601 timestamp when the user finished the media.
+        view_count:
+          type: string
+          description: Total number of engagement events.
+        watch_time_seconds:
+          type: string
+          description: The cumulative time in seconds the user spent viewing the media.
+        completion_percentage:
+          type: string
+          description: The furthest point reached in the media as a percentage (0-100).
+        last_viewed_date_time:
+          type: string
+          description: The ISO 8601 date and time of the most recent access.
+          format: date-time
+        device_type:
+          $ref: "#/components/schemas/DeviceTypes"
+        user_agent:
+          type: string
+          description: The browser user agent string from the most recent view.
+        buffer_count:
+          type: string
+          description: The number of times the media playback was interrupted by buffering.
+        load_time_ms:
+          type: string
+          description: The time in milliseconds it took for the media to begin playback
+            after the request.
+      description: "Represents a media stream, such as a video or audio file."
+    MediaAccessMetrics:
+      type: array
+      items:
+        $ref: "#/components/schemas/MediaAccessMetric"
+    MediaDeliveryMethodTypes:
+      type: string
+      description: types of media delivery methods.
+      enum:
+      - MMS
+      - SMS
+      - EMAIL
+      - PUSH_NOTIFICATION
+      - WHATSAPP
+      - IN_APP
+      - WEB_PORTAL
+    MediaFormatTypes:
+      type: string
+      description: types of media formats.
+      enum:
+      - PDF
+      - DOC
+      - DOCX
+      - XLS
+      - XLSX
+      - PPT
+      - PPTX
+      - AIFF
+      - BMP
+      - JPG
+      - PNG
+      - GIF
+      - ICO
+      - AVI
+      - MPG
+      - MP4
+      - WMV
+      - MOV
+      - FLV
+      - SWF
+      - MKV
+      - OCTET
+      - GZ
+      - BZ2
+      - ZIP
+      - RAR
+      - ODT
+      - MOBI
+      - HTML
+      - EPUB
+      - SVG
+      - FLAC
+      - WAV
+      - JSON
+      - YAML
+      - CSV
+      - CONTAINER
+      - OTHER
+    MediaPrivacyTypes:
+      type: string
+      description: types of media privacys.
+      enum:
+      - PUBLIC
+      - AUTHORIZED
+      - PRIVATE
+      - SCHEDULED
+      - UNLISTED
+      - ARCHIVED
+      - DRAFT
+    MediaStatusTypes:
+      type: string
+      description: types of media status.
+      enum:
+      - PENDING
+      - READY
+      - SENT
+      - DELIVERED
+      - FAILED
+      - UNREAD
+      - READ
+      - VIEWED
+      - EXPIRED
+    MediaTypes:
+      type: string
+      description: types of medias.
+      enum:
+      - OCTET
+      - TEXT
+      - HTML
+      - CSS
+      - JAVASCRIPT
+      - JSON
+      - XML
+      - IMAGE
+      - GIF
+      - SVG
+      - JPEG
+      - PNG
+      - AUDIO
+      - MP3
+      - WAV
+      - VIDEO
+      - MP4
+      - MPEG
+      - QUICKTIME
+      - STREAM
+      - APPLICATION
+      - ARCHIVE
+      - EXECUTABLE
+      - DOCUMENT
+      - PDF
+      - MODEL
+      - FONT
+      - FILE
+    MediaUsageTypes:
+      type: string
+      description: types of media usages.
+      enum:
+      - THUMBNAIL
+      - PREVIEW
+      - STANDARD
+      - HIGH_QUALITY
+      - LOW_QUALITY
+      - ORIGINAL
+      - HERO
+      - BANNER
+      - AVATAR
+      - GALLERY
+      - READ
+      - OTHER
+    MediaVisibility:
+      type: object
+      properties:
+        media_visibility_key:
+          type: string
+          description: The unique key for the media visibility record.
+        visibility_key:
+          type: string
+          description: The unique key for visibility.
+        media_privacy_type:
+          $ref: "#/components/schemas/MediaPrivacyTypes"
+        externally_hosted_indicator:
+          type: boolean
+          description: A boolean indicator for whether the media is hosted externally.
+          example: false
+      description: "Represents the visibility and hosting details for media, such\
+        \ as privacy settings and scheduling."
+    Medias:
+      type: array
+      items:
+        $ref: "#/components/schemas/Media"
     Memo:
       type: array
       items:
@@ -958,7 +1372,7 @@ components:
           type: string
           description: The date and time of the event.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         narrative_group:
           type: string
           description: The group to which the narrative belongs.
@@ -1224,7 +1638,7 @@ components:
           type: string
           description: Timestamp indicating when this specific reference was established.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         org_indicator:
           type: boolean
           description: Indicates if the party is an organization (true) or an individual
@@ -1233,6 +1647,10 @@ components:
         identifiers:
           $ref: "#/components/schemas/Identifiers"
       description: External system identifier
+    PartyReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/PartyReference"
     PartyRelationshipTypes:
       type: string
       description: types of party relationships.
@@ -1893,6 +2311,26 @@ components:
       - ALL_DATA
       - CUSTOM
       - UNKNOWN
+    ResourceGroup:
+      type: object
+      properties:
+        resource_group_key:
+          type: string
+          description: The unique key for the resource group.
+        resource_group_id:
+          type: string
+          description: The unique ID for the resource group.
+        resource_group_name:
+          type: string
+          description: The name of the resource group.
+        resource_type:
+          $ref: "#/components/schemas/ResourceTypes"
+        resource_ids:
+          $ref: "#/components/schemas/Codes"
+        resource_group_keys:
+          $ref: "#/components/schemas/Codes"
+      description: "Represents a grouping identifier for media resources, including\
+        \ unique keys, names, and associated resource types."
     ResourceTypes:
       type: string
       description: types of resources.
@@ -1963,6 +2401,35 @@ components:
       - LOCAL_DELIVERY
       - FREIGHT
       - PICKUP
+    ServiceMilestoneTypes:
+      type: string
+      description: types of service milestones.
+      enum:
+      - BOOKING
+      - EXPECTED_ARRIVAL
+      - ARRIVAL
+      - CHECK_IN
+      - PRE_INSPECTION
+      - DIAGNOSTIC_START
+      - DIAGNOSTIC_COMPLETE
+      - ESTIMATE_APPROVED
+      - SERVICE_START
+      - ROAD_TEST
+      - SERVICE_PAUSED
+      - SERVICE_COMPLETION
+      - SUBLET_DISPATCH
+      - SUBLET_IN_PROGRESS
+      - SUBLET_RETURN
+      - QUALITY_CONTROL
+      - STAGED_FOR_PICKUP
+      - CHECK_OUT
+      - RELEASE
+      - INFORMATIONAL
+      - MILESTONE
+      - PICKUP
+      - WAYPOINT
+      - DROP_OFF
+      - UNKNOWN
     ShipmentEvent:
       type: object
       properties:
@@ -2004,17 +2471,17 @@ components:
           type: string
           description: The timestamp when the shipment event physically occurred.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         recorded_date_time:
           type: string
           description: The timestamp when the shipment event was recorded by the platform.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         effective_date_time:
           type: string
           description: The timestamp when the shipment event state becomes effective.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         event_source:
           maxLength: 120
           minLength: 1
@@ -2070,7 +2537,7 @@ components:
           description: The timestamp when the shipment was initiated or the record
             was created.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         unit_of_measures:
           $ref: "#/components/schemas/UnitOfMeasures"
         estimated_delivery_period:
@@ -2149,6 +2616,59 @@ components:
       - OFFICE_MANAGER
       - MARKETING_MANAGER
       - OTHER
+    TextualDetail:
+      type: object
+      properties:
+        textual_detail_key:
+          type: string
+          description: textual.detail.textual.detail.key.desc
+        textual_detail_id:
+          type: string
+          description: textual.detail.textual.detail.id.desc
+        comments:
+          $ref: "#/components/schemas/Memo"
+        locale_codes:
+          $ref: "#/components/schemas/Codes"
+        notes:
+          $ref: "#/components/schemas/Memo"
+        short_description:
+          type: string
+          description: textual.detail.short.description.desc
+        text_key:
+          type: string
+          description: textual.detail.text.key.desc
+        name:
+          type: string
+          description: textual.detail.name.desc
+        value:
+          type: string
+          description: textual.detail.value.desc
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+        groups:
+          $ref: "#/components/schemas/Codes"
+        label:
+          type: string
+          description: textual.detail.label.desc
+        alt_text:
+          type: string
+          description: textual.detail.alt.text.desc
+        textual_detail_code:
+          type: string
+          description: textual.detail.textual.detail.code.desc
+        tags:
+          $ref: "#/components/schemas/Codes"
+        uom_display:
+          type: string
+          description: textual.detail.uom.display.desc
+        uom_code:
+          type: string
+          description: textual.detail.uom.code.desc
+      description: nullable
+    TextualDetails:
+      type: array
+      items:
+        $ref: "#/components/schemas/TextualDetail"
     TimeSlot:
       type: object
       properties:
@@ -2255,7 +2775,7 @@ components:
           type: string
           description: Date and time when this specific tracking update was recorded.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         shipment_state_type:
           $ref: "#/components/schemas/ShipmentStateTypes"
         status_description:
@@ -2287,18 +2807,18 @@ components:
           description: The estimated delivery timestamp provided by the carrier or
             logistics provider.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         actual_delivery_date_time:
           type: string
           description: The actual delivery timestamp confirmed by the carrier or recipient.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         last_updated_date_time:
           type: string
           description: The timestamp documenting the most recent tracking update received
             from the carrier or logistics platform.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         delivery_exception_indicator:
           type: boolean
           description: "Indicates whether the shipment encountered a delivery exception,\
@@ -2348,6 +2868,17 @@ components:
       - COURIER
       - FREIGHT
       - ROUTE_TRUCK
+    TransportationSchedulingTypes:
+      type: string
+      description: types of transportation schedulings.
+      enum:
+      - CUSTOMER_DEFINED
+      - PROVIDER_CALCULATED
+      - DELIVERY_DEADLINE
+      - FLEXIBLE
+      - PICKUP_WINDOW
+      - APPOINTMENT_REQUIRED
+      - AS_SOON_AS_POSSIBLE
     UnitOfMeasure:
       type: object
       properties:
@@ -2410,6 +2941,113 @@ components:
       - EXPIRATION_DATE
       - MIN_PAYMENT_PERCENT
       - MIN_PAYMENT_AMOUNT
+    VehicleConditionInspectionReference:
+      type: object
+      properties:
+        vehicle_condition_inspection_id:
+          type: string
+          description: Unique system identifier of the referenced vehicle condition
+            inspection.
+          example: "987654321"
+        vehicle_condition_inspection_key:
+          type: string
+          description: Unique business key identifying the referenced vehicle condition
+            inspection across STAR transportation domain resources.
+          example: VCI-2026-000145-01
+        inspection_sequence_number:
+          type: string
+          description: Sequence number distinguishing multiple inspections associated
+            with the same transportation order or workflow.
+          example: "2"
+        inspection_correlation_key:
+          type: string
+          description: "Correlation key linking the inspection to related transportation\
+            \ orders, sessions, shipments, or workflow events."
+          example: CORR-2026-000145
+        inspection_milestone_type:
+          $ref: "#/components/schemas/ServiceMilestoneTypes"
+        inspection_status_type:
+          $ref: "#/components/schemas/InspectionStatusTypes"
+        inspection_date_time:
+          type: string
+          description: "Date and time when the referenced vehicle condition inspection\
+            \ was conducted, expressed as an ISO 8601 timestamp with timezone offset."
+          format: date-time
+          example: 2026-11-16T14:30:00-05:00
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+      description: "Reference to a vehicle condition inspection, including its unique\
+        \ identifiers, inspection milestone, lifecycle status, occurrence date and\
+        \ time, and system-specific identifiers."
+    VehicleConditionInspectionReferences:
+      type: array
+      items:
+        $ref: "#/components/schemas/VehicleConditionInspectionReference"
+    VehicleDeliveryException:
+      type: object
+      properties:
+        delivery_exception_key:
+          type: string
+          description: Unique delivery exception identifier.
+          example: DEX-2026-001
+        vehicle_transfer_item_reference:
+          $ref: "#/components/schemas/VehicleTransferItemReference"
+        vehicle_trip_step_key:
+          type: string
+          description: Identifier of the associated VehicleTripStep.
+          example: VTRIPSTEP-882211
+        vehicle_condition_inspection_references:
+          $ref: "#/components/schemas/VehicleConditionInspectionReferences"
+        shipment_references:
+          $ref: "#/components/schemas/ShipmentReferences"
+        delivery_exception_date_time:
+          type: string
+          description: Time delivery exception was reported in ISO 8601 format.
+          format: date-time
+          example: 2026-11-15T21:15:36Z
+        delivery_exception_type:
+          type: string
+          description: "Type such as DELIVERY_REFUSED, DAMAGE, WRONG_DESTINATION,\
+            \ or MISSING_DOCUMENTS."
+          example: DELIVERY_REFUSED
+        delivery_exception_status_type:
+          type: string
+          description: "Resolution status such as OPEN, INVESTIGATING, RESOLVED, or\
+            \ CLOSED."
+          example: OPEN
+        refusal_reason_code:
+          type: string
+          description: Reason for recipient refusal.
+          example: DAMAGE_AT_DELIVERY
+        refusing_party_reference:
+          $ref: "#/components/schemas/PartyReference"
+        custody_transfer_key:
+          type: string
+          description: Related custody transfer attempt or custody record; refusal
+            does not imply acceptance.
+          example: CUST-2026-001
+        resolution_type:
+          type: string
+          description: "Resolution such as REDELIVER, REDIRECT, RETURN, ACCEPTED,\
+            \ or CLAIM_OPENED."
+          example: REDIRECT
+        resolution_date_time:
+          type: string
+          description: Timestamp when exception resolution was confirmed.
+          format: date-time
+          example: 2026-11-18T11:00:00-05:00
+        damage_claim_key:
+          type: string
+          description: Associated VehicleTransportDamageClaim identifier when applicable.
+          example: DCLM-2026-001
+        address_references:
+          $ref: "#/components/schemas/AddressReferences"
+        medias:
+          $ref: "#/components/schemas/Medias"
+        comments:
+          $ref: "#/components/schemas/Narratives"
+      description: VehicleDeliveryException for vehicle transportation operational
+        accountability and evidence.
     VehicleLogisticsProfile:
       type: object
       properties:
@@ -2515,7 +3153,7 @@ components:
           description: "The date and time when the vehicle logistics profile information\
             \ was observed, created, received, or became effective."
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         shipment_events:
           $ref: "#/components/schemas/ShipmentEvents"
         rail_position:
@@ -2688,6 +3326,130 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/VehicleReference"
+    VehicleTransferItem:
+      type: object
+      properties:
+        vehicle_transfer_item_key:
+          type: string
+          description: A unique business key identifying this vehicle transfer item
+            within the transportation domain.
+          example: VTI-2026-000145-01
+        vehicle_transfer_item_id:
+          type: string
+          description: A unique system-generated identifier for the vehicle transfer
+            item.
+          example: "987654321"
+        vehicle_reference:
+          $ref: "#/components/schemas/VehicleReference"
+        transport_method_types:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TransportMethodTypes"
+        service_level_type:
+          $ref: "#/components/schemas/ServiceLevelTypes"
+        requested_pickup_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        requested_delivery_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        special_handling_instructions:
+          $ref: "#/components/schemas/Narratives"
+        transfer_item_status_type:
+          $ref: "#/components/schemas/VehicleTransferItemStatusTypes"
+        vehicle_condition_inspection_references:
+          $ref: "#/components/schemas/VehicleConditionInspectionReferences"
+        shipment_references:
+          $ref: "#/components/schemas/ShipmentReferences"
+        estimated_pickup_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        estimated_delivery_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        confirmed_pickup_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        confirmed_delivery_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        actual_pickup_date_time:
+          type: string
+          description: Actual date and time the vehicle was physically picked up and
+            custody was transferred to the transportation provider. This value is
+            derived from the confirmed pickup event.
+          format: date-time
+          example: 2026-11-17T10:35:00-05:00
+        actual_delivery_date_time:
+          type: string
+          description: Actual date and time the vehicle was physically delivered to
+            the destination and the delivery handoff was recorded. This value is derived
+            from the confirmed delivery event.
+          format: date-time
+          example: 2026-11-19T14:25:00-05:00
+        transport_group_key:
+          type: string
+          description: "Logical grouping key used to associate vehicle transfer items\
+            \ that must or should be transported together. Items sharing this key\
+            \ belong to the same transportation group, potentially across multiple\
+            \ vehicle transfer orders. The applicable grouping policy determines whether\
+            \ transportation together is mandatory or preferred."
+          example: TG-2026-000145-01
+        vehicle_delivery_exceptions:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VehicleDeliveryException"
+      description: "Represents an individual vehicle included in a vehicle transfer\
+        \ order, including its transportation requirements, requested pickup and delivery\
+        \ periods, fulfillment status, inspection references, and shipment references."
+    VehicleTransferItemReference:
+      type: object
+      properties:
+        vehicle_transfer_item_key:
+          type: string
+          description: Unique business key identifying the referenced vehicle transfer
+            item within the transportation domain.
+          example: VTI-2026-000145-01
+        vehicle_transfer_item_id:
+          type: string
+          description: System-generated identifier associated with the referenced
+            vehicle transfer item.
+          example: "987654321"
+        vehicle_reference:
+          $ref: "#/components/schemas/VehicleReference"
+        transport_group_key:
+          type: string
+          description: Logical grouping key associating the referenced vehicle transfer
+            item with other items sharing transportation grouping requirements. The
+            grouping policy determines whether transportation together is mandatory
+            or preferred.
+          example: TG-2026-000145-01
+        identifiers:
+          $ref: "#/components/schemas/Identifiers"
+      description: "Reference identifying an individual vehicle transfer item, including\
+        \ its business key, system identifier, vehicle reference, transportation grouping\
+        \ key, and external identifiers. Used to associate transportation activities,\
+        \ trip steps, shipments, and other operational records with the originating\
+        \ vehicle transfer item."
+    VehicleTransferItemStatusTypes:
+      type: string
+      description: types of vehicle transfer item status.
+      enum:
+      - REQUESTED
+      - CONFIRMED
+      - SCHEDULED
+      - ASSIGNED
+      - PICKED_UP
+      - IN_TRANSIT
+      - DELIVERED
+      - COMPLETED
+      - ON_HOLD
+      - CANCELLED
+      - FAILED
+      - DELIVERY_EXCEPTION
+      - TERMINATION_REQUESTED
+      - TERMINATED
+      - RETURNED
     VehicleTransferOrder:
       type: object
       properties:
@@ -2710,6 +3472,12 @@ components:
           type: string
           description: "The dealer, OEM, or logistics transfer order number."
           example: TO-ATL-MIA-77821
+        transfer_request_correlation_key:
+          type: string
+          description: Shared correlation key identifying multiple vehicle transfer
+            orders that originate from the same customer transportation request. Each
+            order retains its independent identity and lifecycle.
+          example: REQ-2026-1001
         transport_method_types:
           maxItems: 255
           minItems: 1
@@ -2763,7 +3531,7 @@ components:
           description: The date and time when the transfer order was created or became
             effective.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         carrier_reference:
           $ref: "#/components/schemas/CarrierReference"
         shipment_codes:
@@ -2774,12 +3542,12 @@ components:
           type: string
           description: The estimated arrival date and time for the vehicle transfer.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         actual_arrival_date_time:
           type: string
           description: The actual arrival date and time for the vehicle transfer.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         tracking_information:
           $ref: "#/components/schemas/TrackingInformation"
         estimated_transportation_cost:
@@ -2796,12 +3564,27 @@ components:
           type: string
           description: The date and time until which the quoted fares remain valid.
           format: date-time
-          example: 2026-10-29T07:51:46Z
+          example: 2026-11-15T21:15:36Z
         quote_indicator:
           type: boolean
           description: Indicates whether this transfer order represents a quotation
             (true) or a confirmed order (false).
           example: false
+        vehicle_transfer_items:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VehicleTransferItem"
+        transportation_scheduling_type:
+          $ref: "#/components/schemas/TransportationSchedulingTypes"
+        transport_grouping_type:
+          $ref: "#/components/schemas/VehicleTransportGroupingTypes"
+        requested_pickup_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        requested_delivery_period:
+          $ref: "#/components/schemas/EffectivePeriod"
       description: Represents a driving trip info.
     VehicleTransferOrderStatusTypes:
       type: string
@@ -2845,3 +3628,14 @@ components:
       - DISPOSAL
       - OTHER
       - UNKNOWN
+    VehicleTransportGroupingTypes:
+      type: string
+      description: types of vehicle transport groupings.
+      enum:
+      - SAME_SHIPMENT_REQUIRED
+      - SAME_CARRIER_REQUIRED
+      - SAME_DELIVERY_REQUIRED
+      - GROUPING_PREFERRED
+      - INDEPENDENT
+      - SAME_DRIVER_REQUIRED
+      - SPLIT_ALLOWED

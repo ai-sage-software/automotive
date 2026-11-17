@@ -1,0 +1,277 @@
+openapi: 3.0.1
+info:
+  title: Automotive Retail Systems API - RepricingPolicy
+  description: "A standardized interface for Automotive Retail operations, built upon\
+    \ a formal Retail Ontology. It enables seamless integration \n\n**Key Capabilities:**\n\
+    * **Catalog Management:** Unified definitions for parts, assemblies, and BOMs.\n\
+    * **Inventory Orchestration:** Real-time visibility into warehouse and dealership\
+    \ stock.\n* **Financial Workflows:** Automated invoicing and batch processing\
+    \ for high-volume retail transactions.\n\nDesigned for high-reliability CI/CD\
+    \ environments and asynchronous batch processing."
+  contact:
+    name: STAR Standards Platform Architecture
+    url: https://www.starstandard.org
+    email: architecture@starstandard.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://api.starstandard.org/v1
+  description: Production server
+- url: https://sandbox.starstandard.org/v1
+  description: Sandbox for testing
+paths: {}
+components:
+  schemas:
+    Code:
+      type: object
+      properties:
+        code_id:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Internal system-generated unique identifier for the code record.
+          example: cd-9902-v1
+        code_key:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code_context:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: Unique business reference key used to identify the code's context.
+          example: VEHICLE_STATUS_CODE
+        code:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: The literal value or mnemonic represented by this record.
+          example: IN_TRANSIT
+        description:
+          maxLength: 255
+          minLength: 5
+          type: string
+          description: A human-readable explanation of what the code represents.
+          example: Indicates the vehicle has left the factory but not yet arrived
+            at the dealer.
+      description: not nullable
+    Codes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Code"
+    DurationUomTypes:
+      type: string
+      description: types of duration uoms.
+      enum:
+      - MINUTES
+      - HOURS
+      - DAYS
+      - DAY_OF_MONTH
+      - WEEKS
+      - BI_WEEKS
+      - SEMI_MONTHS
+      - MONTHS
+      - QUARTERS
+      - SEMI_YEARS
+      - YEARS
+      - MULTI_YEARS
+      - CUSTOM
+      - OCCURRENCE
+      - UNLIMITED
+      - NONE
+      - OTHER
+    EffectivePeriod:
+      type: object
+      properties:
+        effective_period_key:
+          type: string
+          description: Unique natural business key identifying the effective period
+            record.
+          example: EP-2024-REG-001
+        active_indicator:
+          type: boolean
+          description: Indicates if this period is currently considered valid and
+            enforceable within the domain.
+          example: true
+        exclusive_indicator:
+          type: boolean
+          description: "If true, this period represents the only valid time window,\
+            \ overriding overlapping periods."
+          example: false
+        start_date_time:
+          type: string
+          description: The inclusive start point of the period in ISO 8601 format.
+          format: date-time
+          example: 2026-11-15T21:22:02Z
+        complete_date_time:
+          type: string
+          description: The exclusive end point of the period (completion) in ISO 8601
+            format.
+          format: date-time
+          example: 2026-11-15T21:22:02Z
+        duration_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        duration_value:
+          pattern: ^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$
+          type: string
+          description: The length of the period expressed in ISO 8601 duration format.
+          example: P1Y2M10D
+        recur_uom_type:
+          $ref: "#/components/schemas/DurationUomTypes"
+        recur_count:
+          type: string
+          description: Number of times the period repeats. Use -1 for infinite.
+          example: "12"
+        recur_values:
+          $ref: "#/components/schemas/Codes"
+        recur_criteria:
+          type: string
+          description: Natural language or DSL expression of complex recurrence logic.
+          example: Every last Friday of the month
+        recur_indicator:
+          type: boolean
+          description: Flag indicating if this period repeats based on the defined
+            criteria.
+          example: true
+      description: "Defines a temporal range and recurrence logic for business validity,\
+        \ such as license expirations or service intervals."
+    RepricingPolicy:
+      type: object
+      properties:
+        repricing_policy_id:
+          type: string
+          description: Unique identifier for the repricing policy.
+          example: POL-00001
+        repricing_policy_key:
+          type: string
+          description: Stable business key for the repricing policy.
+          example: POL-TRANSPORT-2026
+        policy_name:
+          type: string
+          description: Business name of the repricing policy.
+          example: Vehicle Transportation Repricing
+        domain_code:
+          type: string
+          description: "Business domain to which this policy applies, such as PARTS,\
+            \ VEHICLE_SALES, or VEHICLE_TRANSPORT."
+          example: VEHICLE_TRANSPORT
+        policy_version:
+          type: string
+          description: Version of the policy used when evaluating a quote.
+          example: "1.0"
+        provider_code:
+          type: string
+          description: Optional provider-specific scope; null means provider neutral.
+          example: RUNBUGGY
+        policy_status_type:
+          type: string
+          description: "Policy lifecycle status, such as DRAFT, ACTIVE, or RETIRED."
+          example: ACTIVE
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        repricing_rules:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/RepricingRule"
+        default_repricing_action_type:
+          type: string
+          description: "Fallback action if no rule matches: REQUIRED, CONDITIONAL,\
+            \ or NOT_REQUIRED."
+          example: CONDITIONAL
+      description: Reusable policy governing whether modifications to previously priced
+        constraints require repricing across business domains.
+    RepricingPolicyCreate:
+      required:
+      - repricing_policy_key
+      type: object
+      description: RepricingPolicy Create for Post
+      allOf:
+      - $ref: "#/components/schemas/RepricingPolicy"
+    RepricingPolicyUpdate:
+      type: object
+      properties:
+        policy_version:
+          type: string
+          description: Version of the policy used when evaluating a quote.
+          example: "1.0"
+        default_repricing_action_type:
+          type: string
+          description: "Fallback action if no rule matches: REQUIRED, CONDITIONAL,\
+            \ or NOT_REQUIRED."
+          example: CONDITIONAL
+        domain_code:
+          type: string
+          description: "Business domain to which this policy applies, such as PARTS,\
+            \ VEHICLE_SALES, or VEHICLE_TRANSPORT."
+          example: VEHICLE_TRANSPORT
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+        policy_name:
+          type: string
+          description: Business name of the repricing policy.
+          example: Vehicle Transportation Repricing
+        policy_status_type:
+          type: string
+          description: "Policy lifecycle status, such as DRAFT, ACTIVE, or RETIRED."
+          example: ACTIVE
+        provider_code:
+          type: string
+          description: Optional provider-specific scope; null means provider neutral.
+          example: RUNBUGGY
+        repricing_rules:
+          maxItems: 255
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/RepricingRule"
+      description: RepricingPolicy Update for Patch and Put
+    RepricingRule:
+      type: object
+      properties:
+        repricing_rule_key:
+          type: string
+          description: Unique business key of the repricing rule.
+          example: RPR-ADDRESS-CHANGE
+        constraint_path:
+          type: string
+          description: "Canonical path of the priced constraint; for collections,\
+            \ use a stable item or stop key rather than a list index."
+          example: "fare_route_stop_criteria[*].address_reference"
+        change_type:
+          type: string
+          description: "Change operation evaluated by this rule: ADDED, REMOVED, MODIFIED,\
+            \ or ANY."
+          example: MODIFIED
+        comparison_type:
+          type: string
+          description: "Comparison semantics: EXACT, NUMERIC_TOLERANCE, DATE_WINDOW,\
+            \ or SET_MEMBERSHIP."
+          example: EXACT
+        tolerance_value:
+          type: string
+          description: Optional threshold interpreted according to comparison type
+            and units.
+          example: "0"
+        tolerance_unit:
+          type: string
+          description: Optional unit for the comparison tolerance.
+          example: MILES
+        repricing_action_type:
+          type: string
+          description: "Result when the rule matches: REQUIRED, CONDITIONAL, or NOT_REQUIRED."
+          example: REQUIRED
+        rule_description:
+          type: string
+          description: Business explanation for the repricing rule.
+        effective_period:
+          $ref: "#/components/schemas/EffectivePeriod"
+      description: Generic field-level rule specifying when a change to priced criteria
+        requires a new price.
